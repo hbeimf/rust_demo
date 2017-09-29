@@ -5,6 +5,11 @@ cook book
 
 https://rustcc.gitbooks.io/rustprimer/content/quickstart/rust-travel.html
 
+en 
+
+https://doc.rust-lang.org/book/second-edition/
+
+
 
 cargo doc 
 
@@ -19,3 +24,13 @@ http://www.csdn.net/article/1970-01-01/2826359
 https://github.com/carllerche/mio
 https://github.com/carllerche/eventual
 https://github.com/zonyitoo/coio-rs
+
+
+
+
+
+
+
+
+
+

@@ -27,6 +27,11 @@ https://github.com/zonyitoo/coio-rs
 
 
 
+=================================
+doc 
+
+http://wiki.jikexueyuan.com/project/rust/guessing-game.html
+
 
 
 

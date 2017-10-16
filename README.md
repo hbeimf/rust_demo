@@ -1,3 +1,9 @@
+[root@localhost rust_demo]# cargo -V
+cargo 0.21.0 (5b4b8b2ae 2017-08-12)
+[root@localhost rust_demo]# rustc --version
+rustc 1.20.0 (f3d6973f4 2017-08-27)
+[root@localhost rust_demo]# 
+
 # rust_demo
 
 

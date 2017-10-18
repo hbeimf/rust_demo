@@ -75,3 +75,4 @@ https://rocket.rs/
 orm 
 http://diesel.rs/
 
+https://github.com/diesel-rs/diesel

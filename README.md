@@ -82,6 +82,8 @@ CockroachDB
 
 tidb
 
+https://github.com/blacktear23/documents/blob/master/TiDB-OLAP-Optimization.md
+
 
 
 

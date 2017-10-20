@@ -1,4 +1,4 @@
 pub fn test() -> String {
-    println!("test string mod!!");
+    println!("test time mod!!");
     "test".to_string()
 }

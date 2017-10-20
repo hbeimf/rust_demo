@@ -4,7 +4,7 @@ use std::string::String;
 
 
 pub fn test() -> String {
-    println!("test string mod!!");
+    println!("test string mod!! ===============");
     let new_str = replace("hello world!", "hello", "hi");
     println!("new str: {}", new_str);
 

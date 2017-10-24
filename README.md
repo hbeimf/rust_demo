@@ -85,5 +85,9 @@ tidb
 https://github.com/blacktear23/documents/blob/master/TiDB-OLAP-Optimization.md
 
 
+====================================
 
+lifetime doc 
+
+http://blog.csdn.net/renhuailin/article/details/46471233
 

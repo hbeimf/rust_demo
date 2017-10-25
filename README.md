@@ -82,6 +82,12 @@ CockroachDB
 
 tidb
 
+http://geek.csdn.net/news/detail/52122
+http://www.techweb.com.cn/network/system/2017-06-24/2540403.shtml
+
+Codis 
+http://www.cnblogs.com/xuanzhi201111/p/4425194.html
+
 https://github.com/blacktear23/documents/blob/master/TiDB-OLAP-Optimization.md
 
 OceanBase

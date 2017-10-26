@@ -5,6 +5,8 @@ fn main() {
     libfun::string::test();
     libfun::time::test();
     libfun::learn::test();
+    libfun::stack::test();
+    
     
     
 }

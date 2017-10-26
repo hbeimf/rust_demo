@@ -6,7 +6,6 @@ fn main() {
     libfun::time::test();
     libfun::learn::test();
     libfun::stack::test();
-    
-    
+    libfun::queue::test();
     
 }

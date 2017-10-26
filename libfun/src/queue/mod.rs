@@ -4,7 +4,8 @@ struct Queue<T> {
 }
 
 impl <T> Queue<T> {
-    fn new() -> Self {
+    // fn new() -> Self {
+    fn new() -> Queue<T> {   
         Queue{qdata: Vec::new()}
     }
 

@@ -90,22 +90,3 @@ fn main() {
     // connection; here, we just immediately return a new instance.
     server.serve(|| Ok(Echo));
 }
-
-
-
-
-// Downloading slab v0.3.0
-//  Downloading smallvec v0.4.4
-//  Downloading tokio-core v0.1.10
-//  Downloading tokio-io v0.1.3
-//  Downloading net2 v0.2.31
-//  Downloading tokio-service v0.1.0
-//  Downloading futures v0.1.16
-//  Downloading take v0.1.0
-//  Downloading slab v0.4.0
-//  Downloading mio v0.6.11
-//  Downloading scoped-tls v0.1.0
-//  Downloading iovec v0.1.1
-//  Downloading bytes v0.4.5
-//  Downloading lazycell v0.5.1
-//  Downloading cfg-if v0.1.2

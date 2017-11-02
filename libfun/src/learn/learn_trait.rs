@@ -1,3 +1,4 @@
+// http://www.cnblogs.com/redclock/p/4995954.html
 trait Node {
     fn move_to(&mut self, x: f32, y: f32);
     fn draw(&self);

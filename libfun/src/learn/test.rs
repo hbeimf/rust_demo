@@ -1,9 +1,10 @@
-// extern crate libfun;
-use learn::learn_array;
+use learn;
+use stack;
 
 pub fn test() -> String {
     println!("test learn mod!! ===============");
-    learn_array::test();
+    learn::learn_array::test();
+    stack::test();
     "test".to_string()
 }
 

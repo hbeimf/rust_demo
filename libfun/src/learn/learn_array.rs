@@ -1,7 +1,7 @@
 
 pub fn test() {
     let a = [1,2,3,4,5];  
-    let b = [0;20];  
+    let b = [0;2];  
     println!("{}",a.len());  
     println!("{}",b.len());  
     println!("{:?}",a);  

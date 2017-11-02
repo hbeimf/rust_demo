@@ -23,7 +23,7 @@ impl Node for EmptyNode {
 
 
 impl EmptyNode {  
-    fn test_fun(&mut self, x: f32, y: f32) {
+    fn set_to(&mut self, x: f32, y: f32) {
         self.x = x;
         self.y = y;
     }
@@ -32,7 +32,7 @@ impl EmptyNode {
 pub fn test(){
     let mut obj = EmptyNode{ x: 10.0, y: 20.0 };
     obj.draw();
-    obj.test_fun(11.0, 12.1);
+    obj.set_to(11.0, 12.1);
     obj.draw();
 }
 

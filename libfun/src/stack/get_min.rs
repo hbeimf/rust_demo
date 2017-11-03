@@ -1,3 +1,5 @@
+// http://wiki.jikexueyuan.com/project/rust/traits.html
+
 #[derive(Debug)]
 struct Min<T> {
     top: Option<Box<Node<T>>>,

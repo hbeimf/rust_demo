@@ -40,34 +40,23 @@ impl<T> Min<T> {
         // set min top
         
         let next_top = self.min_top.take();
+        let new_v = match next_top.clone() {
+            None => {
+                val
+            },
+            Some(x) => {
+                if val.get_val() <= x.val.get_val() {
+                    val  
+                } else {
+                    x.val
+                }
 
-        // match next_top {
-        //     None => {
-        //         println!("first push");
-        //         let mut node_top = Node::new(val);
-        //         node_top.next = self.min_top.take();
-        //         self.min_top = Some(Box::new(node_top));   
-        //     },
-        //     Some(x) => {
-        //         println!("second+ push");
-        //         let tt = x.val.get_val();
-        //         println!("tt:{}", tt);
-        //         if val.get_val() <= tt {
-        //             println!("here");
-        //             let mut node_top = Node::new(val);
-        //             node_top.next = self.min_top.take();
-        //             // node_top.next = next_top;
-        //             self.min_top = Some(Box::new(node_top)); 
-                    
-        //         } else {
-        //             // set top again
-        //             println!("there");
-                    
-        //         }
-        //     }, 
-        // };
+            }, 
+        };
 
-        let mut node_top = Node::new(val);
+        println!("new vvv: {}", new_v.get_val());
+
+        let mut node_top = Node::new(new_v);
         node_top.next = next_top;
         self.min_top = Some(Box::new(node_top));   
     }
@@ -122,8 +111,10 @@ impl <'a> TraitGetVal<i32> for &'a TestStruct {
 // =================================
 
 pub fn test() {
-    let a = TestStruct{ a: 55 };
+    let a = TestStruct{ a: 5 };
     let b = TestStruct{ a: 9 };
+    let c = TestStruct{ a: 2 };
+    
     // println!("val: {:?}", a);
     
     let mut s = Min::<&TestStruct>::new();
@@ -133,10 +124,16 @@ pub fn test() {
     println!("{:?}", s);
     s.push(&b);
     println!("{:?}", s);
+    s.push(&c);
+    println!("{:?}", s);
 
     let (val, min) = s.pop();
     println!("(val, min) = ({:?}, {:?})", val, min);
-    // println!("{:?}", min);
+    let (val, min) = s.pop();
+    println!("(val, min) = ({:?}, {:?})", val, min);
+    let (val, min) = s.pop();
+    println!("(val, min) = ({:?}, {:?})", val, min);
+    
     
     println!("{:?}", s);
 

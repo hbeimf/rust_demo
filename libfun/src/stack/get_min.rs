@@ -42,16 +42,26 @@ impl<T> Min<T> {
         let next_top = self.min_top.take();
         // match next_top {
         //     None => {
+        //         println!("first push");
         //         let mut node_top = Node::new(val);
-        //         node_top.next = None;
+        //         node_top.next = self.min_top.take();
         //         self.min_top = Some(Box::new(node_top));   
         //     },
         //     Some(x) => {
+        //         println!("second+ push");
         //         let tt = x.val.get_val();
-        //         if tt > val.get_val() {
+        //         println!("tt:{}", tt);
+        //         if val.get_val() <= tt {
         //             println!("here");
+        //             let mut node_top = Node::new(val);
+        //             node_top.next = self.min_top.take();
+        //             // node_top.next = next_top;
+        //             self.min_top = Some(Box::new(node_top)); 
+                    
         //         } else {
+        //             // set top again
         //             println!("there");
+                    
         //         }
         //     }, 
         // };
@@ -111,7 +121,7 @@ impl <'a> TraitGetVal<i32> for &'a TestStruct {
 // =================================
 
 pub fn test() {
-    let a = TestStruct{ a: 5 };
+    let a = TestStruct{ a: 55 };
     let b = TestStruct{ a: 9 };
     println!("val: {:?}", a);
     
@@ -119,8 +129,10 @@ pub fn test() {
     // assert_eq!(s.pop(), None);
 
     s.push(&a);
+    println!("{:?}", s);
     s.push(&b);
     println!("{:?}", s);
+
     let (val, min) = s.pop();
     println!("{:?}", val);
     println!("{:?}", min);

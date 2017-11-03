@@ -18,6 +18,7 @@ impl Node for EmptyNode {
     fn move_to(&mut self, x: f32, y: f32) {
         self.x = x;
         self.y = y;
+        self.draw();
     }
 }
 
@@ -34,6 +35,9 @@ pub fn test(){
     obj.draw();
     obj.set_to(11.0, 12.1);
     obj.draw();
+    obj.move_to(11.3, 12.2);
+    obj.draw();
+    
 }
 
 

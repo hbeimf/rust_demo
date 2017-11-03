@@ -1,5 +1,5 @@
 #[derive(Debug)]
-struct MinStack<T> {
+struct Min<T> {
     top: Option<Box<Node<T>>>,
     min_top: Option<Box<Node<T>>>,
 }
@@ -17,9 +17,9 @@ impl <T> Node<T> {
     }
 }
 
-impl<T> MinStack<T> {
-    fn new() -> MinStack<T> {
-        MinStack{ top: None, min_top: None }
+impl<T> Min<T> {
+    fn new() -> Min<T> {
+        Min{ top: None, min_top: None }
     }
 
     fn push(&mut self, val: T) -> ()  where T:TraitGetVal<i32> {    
@@ -111,7 +111,7 @@ pub fn test() {
     // println!("val1: {}", a.get_val());
     // println!("val2: {}", &a.get_val());
     
-    let mut s = MinStack::<&TestStruct>::new();
+    let mut s = Min::<&TestStruct>::new();
     assert_eq!(s.pop(), None);
 
     s.push(&a);

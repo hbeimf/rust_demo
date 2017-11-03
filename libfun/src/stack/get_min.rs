@@ -40,6 +40,7 @@ impl<T> Min<T> {
         // set min top
         
         let next_top = self.min_top.take();
+
         // match next_top {
         //     None => {
         //         println!("first push");
@@ -123,7 +124,7 @@ impl <'a> TraitGetVal<i32> for &'a TestStruct {
 pub fn test() {
     let a = TestStruct{ a: 55 };
     let b = TestStruct{ a: 9 };
-    println!("val: {:?}", a);
+    // println!("val: {:?}", a);
     
     let mut s = Min::<&TestStruct>::new();
     // assert_eq!(s.pop(), None);
@@ -134,8 +135,8 @@ pub fn test() {
     println!("{:?}", s);
 
     let (val, min) = s.pop();
-    println!("{:?}", val);
-    println!("{:?}", min);
+    println!("(val, min) = ({:?}, {:?})", val, min);
+    // println!("{:?}", min);
     
     println!("{:?}", s);
 

@@ -1,19 +1,19 @@
 #[derive(Debug)]
 struct MinStack<T> {
-    top: Option<Box<StackNode<T>>>,
-    min_top: Option<Box<StackNode<T>>>,
+    top: Option<Box<Node<T>>>,
+    min_top: Option<Box<Node<T>>>,
 }
 
 #[derive(Clone,Debug)]
-struct StackNode<T> {
+struct Node<T> {
     val: T,
-    next: Option<Box<StackNode<T>>>,
+    next: Option<Box<Node<T>>>,
 }
 
 
-impl <T> StackNode<T> {
-    fn new(val: T) -> StackNode<T> {
-        StackNode { val: val, next: None }
+impl <T> Node<T> {
+    fn new(value: T) -> Node<T> {
+        Node { val: value, next: None }
     }
 }
 
@@ -28,7 +28,7 @@ impl<T> MinStack<T> {
         println!("val xx: {}", val.get_val());
         
         // set top 
-        let mut node = StackNode::new(val);
+        let mut node = Node::new(val);
         // println!("val xxss: {}", val.get_val());
         let next = self.top.take();
         node.next = next;
@@ -41,7 +41,7 @@ impl<T> MinStack<T> {
         match min_next {
             None => {
                 
-                // let mut top_node = StackNode::new(val);
+                // let mut top_node = Node::new(val);
                 // let top_next = self.min_top.take();
                 // top_node.next = top_next;
                 // self.min_top = Some(Box::new(top_node));
@@ -100,6 +100,14 @@ pub fn test() {
     let a = TestStruct{ a: 5 };
     let b = TestStruct{ a: 9 };
     println!("val: {:?}", a);
+
+    // let node = Node::new(&a);
+    // let node1 = Node::new(&a);
+    
+    // println!("node: {}", node.val.get_val());
+    // println!("node11: {}", node1.val.get_val());
+    
+
     // println!("val1: {}", a.get_val());
     // println!("val2: {}", &a.get_val());
     

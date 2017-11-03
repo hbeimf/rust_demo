@@ -31,56 +31,39 @@ impl<T> Min<T> {
         
         // set top 
         let mut node = Node::new(val);
+        // println!("val xxss: {}", val.get_val());
         let next = self.top.take();
         node.next = next;
         self.top = Some(Box::new(node));
     
-        // println!("val xxss: {}", val.get_val());
+        println!("val xxss: {}", val.get_val());
 
         // set min top
-        
-        let next_top = self.min_top.take();
-        // match next_top {
-        //     None => {
-        //         let mut node_top = Node::new(val);
-        //         node_top.next = None;
-        //         self.min_top = Some(Box::new(node_top));   
-        //     },
-        //     Some(x) => {
-        //         let tt = x.val.get_val();
-        //         if tt > val.get_val() {
-        //             println!("here");
-        //         } else {
-        //             println!("there");
-        //         }
-        //     }, 
-        // };
-
-        let mut node_top = Node::new(val);
-        node_top.next = next_top;
-        self.min_top = Some(Box::new(node_top));   
+        let min_next = self.min_top.take();
+        match min_next {
+            None => {
+                
+                // let mut top_node = Node::new(val);
+                // let top_next = self.min_top.take();
+                // top_node.next = top_next;
+                // self.min_top = Some(Box::new(top_node));
+            },
+            // Some(mut x) => {
+            Some(x) => {
+                println!("val: {}", x.val.get_val());
+            },
+        };
     }
 
-    fn pop(&mut self) -> (Option<T>, Option<T>) {
+    fn pop(&mut self) -> Option<T> {
         let val = self.top.take();
-        let top = match val {
+        match val {
             None => None,
             Some(mut x) => {
                 self.top = x.next.take();
                 Some(x.val)
             },
-        };
-
-        let val1 = self.min_top.take();
-        let top1 = match val1 {
-            None => None,
-            Some(mut x) => {
-                self.min_top = x.next.take();
-                Some(x.val)
-            },
-        };
-        
-        (top, top1)
+        }
     }
 }
 
@@ -96,11 +79,11 @@ struct TestStruct {
     a: i32,
 }
 
-// impl TraitGetVal<i32> for TestStruct {
-//     fn get_val(&self) -> i32 {
-//         self.a
-//     }
-// }
+impl TraitGetVal<i32> for TestStruct {
+    fn get_val(&self) -> i32 {
+        self.a
+    }
+}
 
 impl <'a> TraitGetVal<i32> for &'a TestStruct {
     fn get_val(&self) -> i32 {
@@ -130,23 +113,12 @@ pub fn test() {
     // println!("val1: {}", a.get_val());
     // println!("val2: {}", &a.get_val());
     
-    let mut s = Min::<&TestStruct>::new();
-    // assert_eq!(s.pop(), None);
+    let mut s = Min::<TestStruct>::new();
+    assert_eq!(s.pop(), None);
 
-    s.push(&a);
-    s.push(&b);
+    s.push(a);
+    s.push(b);
     println!("{:?}", s);
-    let (val, min) = s.pop();
-    println!("{:?}", val);
-    println!("{:?}", min);
-    
-    println!("{:?}", s);
-    
-    
-
-    // println!("{:?}", s.pop());
-    // println!("{:?}", s.pop());
-    
 
     // assert_eq!(s.pop(), Some(&b));
     // assert_eq!(s.pop(), Some(&a));

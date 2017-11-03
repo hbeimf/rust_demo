@@ -22,28 +22,33 @@ impl<T> MinStack<T> {
         MinStack{ top: None, min_top: None }
     }
 
-    fn push(&mut self, val: T) -> ()  where T:TGetVal<i32> {    
+    fn push(&mut self, val: T) -> ()  where T:TraitGetVal<i32> {    
     // fn push(&mut self, val: T) -> ()  {    
              
         println!("val xx: {}", val.get_val());
+        
         // set top 
         let mut node = StackNode::new(val);
+        // println!("val xxss: {}", val.get_val());
         let next = self.top.take();
         node.next = next;
         self.top = Some(Box::new(node));
-        
+    
+        // println!("val xxss: {}", val.get_val());
+
         // set min top
         let min_next = self.min_top.take();
         match min_next {
             None => {
+                
                 // let mut top_node = StackNode::new(val);
                 // let top_next = self.min_top.take();
                 // top_node.next = top_next;
                 // self.min_top = Some(Box::new(top_node));
             },
-            Some(mut x) => {
-                // println!("val: {}", x.get_val());
-
+            // Some(mut x) => {
+            Some(x) => {
+                println!("val: {}", x.val.get_val());
             },
         };
     }
@@ -63,7 +68,7 @@ impl<T> MinStack<T> {
 
 // =============================
 // #[derive(Debug)]
-trait TGetVal<T> {
+trait TraitGetVal<T> {
     fn get_val(&self) -> T;
 }
 
@@ -72,17 +77,21 @@ struct TestStruct {
     a: i32,
 }
 
-impl TGetVal<i32> for TestStruct {
+// impl TraitGetVal<i32> for TestStruct {
+//     fn get_val(&self) -> i32 {
+//         self.a
+//     }
+// }
+
+impl <'a> TraitGetVal<i32> for &'a TestStruct {
     fn get_val(&self) -> i32 {
         self.a
     }
 }
 
-impl <'a> TGetVal<i32> for &'a TestStruct {
-    fn get_val(&self) -> i32 {
-        self.a
-    }
-}
+// impl <'a> Copy for &'a TestStruct { 
+
+// }
 
 
 // =================================
@@ -94,8 +103,6 @@ pub fn test() {
     // println!("val1: {}", a.get_val());
     // println!("val2: {}", &a.get_val());
     
-    
-
     let mut s = MinStack::<&TestStruct>::new();
     assert_eq!(s.pop(), None);
 
@@ -106,6 +113,7 @@ pub fn test() {
     assert_eq!(s.pop(), Some(&b));
     assert_eq!(s.pop(), Some(&a));
     assert_eq!(s.pop(), None);
+    println!("print val: {:?}", a);
 }
 
 

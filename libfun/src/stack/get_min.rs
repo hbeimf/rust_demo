@@ -21,8 +21,7 @@ impl<T> MinStack<T> {
         MinStack{ top: None }
     }
 
-    fn push(&mut self, val: T) -> ()  where T:TGetVal<i32> {
-    // fn push(&mut self, val: T) {        
+    fn push(&mut self, val: T) -> ()  where T:TGetVal<i32> {         
         println!("val: {}", val.get_val());
         let mut node = StackNode::new(val);
         let next = self.top.take();

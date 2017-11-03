@@ -108,27 +108,12 @@ impl <'a> TraitGetVal<i32> for &'a TestStruct {
     }
 }
 
-// impl <'a> Copy for &'a TestStruct { 
-
-// }
-
-
 // =================================
 
 pub fn test() {
     let a = TestStruct{ a: 5 };
     let b = TestStruct{ a: 9 };
     println!("val: {:?}", a);
-
-    // let node = Node::new(&a);
-    // let node1 = Node::new(&a);
-    
-    // println!("node: {}", node.val.get_val());
-    // println!("node11: {}", node1.val.get_val());
-    
-
-    // println!("val1: {}", a.get_val());
-    // println!("val2: {}", &a.get_val());
     
     let mut s = Min::<&TestStruct>::new();
     // assert_eq!(s.pop(), None);
@@ -141,17 +126,7 @@ pub fn test() {
     println!("{:?}", min);
     
     println!("{:?}", s);
-    
-    
 
-    // println!("{:?}", s.pop());
-    // println!("{:?}", s.pop());
-    
-
-    // assert_eq!(s.pop(), Some(&b));
-    // assert_eq!(s.pop(), Some(&a));
-    // assert_eq!(s.pop(), None);
-    // println!("print val: {:?}", a);
 }
 
 

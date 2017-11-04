@@ -116,6 +116,9 @@ impl ws::Handler for ChatHandler {
     }
 
     fn on_message(&mut self, msg: ws::Message) -> ws::Result<()> {
+        println!("msg: {}", msg);
+        // self.out.broadcast(msg.clone().as_text());
+
         if let Ok(text_msg) = msg.clone().as_text() {
             if let Ok(wrapper) = serde_json::from_str::<Wrapper>(text_msg) {
                 if let Ok(simple_msg) = serde_json::from_value::<Message>(wrapper.content.clone()) {

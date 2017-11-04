@@ -52,21 +52,26 @@ pub fn test() {
     let c = TestStruct{ a: 1 };
     
 
-    let mut s = Stack::<&TestStruct>::new();
-    // assert_eq!(s.pop(), None);
+    let mut stack = Stack::<&TestStruct>::new();
+    let mut help_stack = Stack::<&TestStruct>::new();
+    
+    // assert_eq!(s.pop(), None);  
+    println!("help:{:?}", help_stack);
 
-    s.push(&a);
-    s.push(&b);
-    s.push(&c);
+    stack.push(&a);
+    stack.push(&b);
+    stack.push(&c);
+    help_stack.push(&a);
 
-    println!("{:?}", s);
+    println!("{:?}", stack);
 
-    s.pop();
-    println!("{:?}", s);
-    s.pop();
-    println!("{:?}", s);
-    s.pop();
-    println!("{:?}", s);
+    // sort 
+    stack.pop();
+    println!("{:?}", stack);
+    stack.pop();
+    println!("{:?}", stack);
+    stack.pop();
+    println!("{:?}", stack);
     
 
     // assert_eq!(s.pop(), Some(&b));

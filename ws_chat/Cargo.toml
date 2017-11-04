@@ -1,0 +1,14 @@
+[package]
+name = "ws_chat"
+version = "0.1.0"
+authors = ["mao <5622876@qq.com>"]
+
+[dependencies]
+ws = "*"
+log = "*"
+time = "*"
+env_logger = "*"
+serde = "*"
+serde_json = "*"
+serde_derive = "*"
+

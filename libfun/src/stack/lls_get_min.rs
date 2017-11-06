@@ -1,4 +1,6 @@
+// use std::cmp;
 use stack::linked_list_stack::LinkedListStack;
+
 
 #[derive(Debug)]
 pub struct Min<T> {
@@ -14,7 +16,8 @@ impl <T> Min<T> {
         }
     }
 
-    pub fn push(&mut self, val: T) -> () where T:Clone {    
+    pub fn push(&mut self, val: T) -> () where T:Clone {   
+        // println!("push: {}", val.clone()); 
         self.top.push(val.clone());
 
         // let New = match self.help.pop() {
@@ -30,7 +33,10 @@ impl <T> Min<T> {
         //         x
         //     } 
         // };
-        // println!("{:?}", New);
+        // let yes = cmp::min(val.clone(), New);
+
+
+        // println!("{}", yes);
         // self.help.push(New);
 
         self.help.push(val.clone());
@@ -42,12 +48,21 @@ impl <T> Min<T> {
 
 }
 
+#[derive(PartialEq, Eq, Debug, Copy, Clone)]
+struct Node{
+    a: i32,
+}
+
 pub fn test() {
-    let mut s = Min::<i32>::new();
+    let a = Node{a: 3};
+    let b = Node{a: 4};
+    let c = Node{a: 5};
+    
+    let mut s = Min::<&Node>::new();
     println!("{:?}", s);
-    s.push(3);
-    s.push(4);
-    s.push(5);
+    s.push(&a);
+    s.push(&b);
+    s.push(&c);
     
     println!("{:?}", s);
     let (v, min) = s.pop();

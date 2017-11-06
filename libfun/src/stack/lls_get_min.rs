@@ -16,6 +16,23 @@ impl <T> Min<T> {
 
     pub fn push(&mut self, val: T) -> () where T:Clone {    
         self.top.push(val.clone());
+
+        // let New = match self.help.pop() {
+        //     None => {
+        //         val.clone()
+        //     },
+        //     Some(x) => {
+        //         // if x > val.clone() {
+        //         //     val.clone()
+        //         // } else {
+        //         //     x
+        //         // }
+        //         x
+        //     } 
+        // };
+        // println!("{:?}", New);
+        // self.help.push(New);
+
         self.help.push(val.clone());
     }
 
@@ -33,7 +50,10 @@ pub fn test() {
     s.push(5);
     
     println!("{:?}", s);
-    s.pop();
+    let (v, min) = s.pop();
+
+    println!("(v, min) = ({:?}, {:?})", v, min);
+
     println!("{:?}", s);
     
 

@@ -58,12 +58,12 @@ pub fn test() {
     let d = Node{val: 2};
     
     
-    let mut s = Min::<Node>::new();
+    let mut s = Min::<&Node>::new();
     println!("{:?}", s);
-    s.push(a);
-    s.push(b);
-    s.push(c);
-    s.push(d);
+    s.push(&a);
+    s.push(&b);
+    s.push(&c);
+    s.push(&d);
     
     
     println!("{:?}", s);

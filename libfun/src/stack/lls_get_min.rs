@@ -29,9 +29,13 @@ pub fn test() {
     let mut s = Min::<i32>::new();
     println!("{:?}", s);
     s.push(3);
+    s.push(4);
+    s.push(5);
+    
     println!("{:?}", s);
     s.pop();
-
+    println!("{:?}", s);
+    
 
 }
 

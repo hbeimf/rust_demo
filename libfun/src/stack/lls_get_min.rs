@@ -7,19 +7,19 @@ pub struct Min<T> {
 }
 
 impl <T> Min<T> {
-    fn new() -> Min<T> {
+    pub fn new() -> Min<T> {
         Min{ 
             top: LinkedListStack::<T>::new(), 
             help: LinkedListStack::<T>::new() 
         }
     }
 
-    fn push(&mut self, val: T) -> () where T:Clone {    
+    pub fn push(&mut self, val: T) -> () where T:Clone {    
         self.top.push(val.clone());
         self.help.push(val.clone());
     }
 
-    fn pop(&mut self) -> (Option<T>, Option<T>) {    
+    pub fn pop(&mut self) -> (Option<T>, Option<T>) {    
         (self.top.pop(), self.help.pop())
     }
 

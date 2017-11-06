@@ -7,8 +7,8 @@ pub fn test() -> String {
     // stack::get_min::test();
     // stack::get_sort::test();
     // stack::linked_list_stack::test();
-    stack::lls_get_min::test();
-    // stack::lls_cmp::test();
+    // stack::lls_get_min::test();
+    stack::lls_cmp::test();
     
     
 

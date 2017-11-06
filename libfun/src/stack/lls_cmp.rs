@@ -1,6 +1,8 @@
-// use std::cmp;
+use std::cmp;
+use std::cmp::Ordering;
 use stack::linked_list_stack::LinkedListStack;
 
+// https://doc.rust-lang.org/std/cmp/trait.Ord.html
 
 #[derive(Debug)]
 pub struct Min<T> {
@@ -14,9 +16,18 @@ impl <T> Min<T> {
         }
     }
 
-    pub fn push(&mut self, val: T) -> () where T:Clone {   
-        // println!("push: {:?}", val.clone()); 
-        self.top.push(val.clone());  
+    pub fn push(&mut self, val: T) -> () where T:Clone + Ord {   
+        let n = match self.top.pop() {
+            None => {
+                val.clone()        
+            },
+            Some(x) => {
+                self.top.push(x.clone());
+                cmp::min(val, x)
+            } 
+        };
+
+        self.top.push(n);  
     }
 
     pub fn pop(&mut self) -> Option<T> {    
@@ -25,15 +36,21 @@ impl <T> Min<T> {
 
 }
 
-#[derive(PartialEq, Eq, Debug, Copy, Clone)]
+#[derive(PartialEq, PartialOrd, Eq, Debug, Copy, Clone)]
 struct Node{
-    a: i32,
+    val: i32,
+}
+
+impl Ord for Node {
+    fn cmp(&self, other: &Node) -> Ordering {
+        self.val.cmp(&other.val)
+    }
 }
 
 pub fn test() {
-    let a = Node{a: 3};
-    let b = Node{a: 4};
-    let c = Node{a: 5};
+    let a = Node{val: 3};
+    let b = Node{val: 4};
+    let c = Node{val: 5};
     
     let mut s = Min::<Node>::new();
     println!("{:?}", s);

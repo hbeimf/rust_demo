@@ -6,32 +6,36 @@ use stack::linked_list_stack::LinkedListStack;
 
 #[derive(Debug)]
 pub struct Min<T> {
-    top: LinkedListStack<T>
+    top: LinkedListStack<T>,
+    help: LinkedListStack<T>,
 }
 
 impl <T> Min<T> {
     pub fn new() -> Min<T> {
         Min{ 
-            top: LinkedListStack::<T>::new()
+            top: LinkedListStack::<T>::new(),
+            help: LinkedListStack::<T>::new()
         }
     }
 
-    pub fn push(&mut self, val: T) -> () where T:Clone + Ord {   
-        let n = match self.top.pop() {
+    pub fn push(&mut self, val: T) -> () where T:Clone + Ord {  
+        self.top.push(val.clone());
+
+        let n = match self.help.pop() {
             None => {
                 val.clone()        
             },
             Some(x) => {
-                self.top.push(x.clone());
+                self.help.push(x.clone());
                 cmp::min(val, x)
             } 
         };
 
-        self.top.push(n);  
+        self.help.push(n);  
     }
 
-    pub fn pop(&mut self) -> Option<T> {    
-        self.top.pop()
+    pub fn pop(&mut self) -> (Option<T>, Option<T>) {    
+        (self.top.pop(), self.help.pop())
     }
 
 }
@@ -51,14 +55,28 @@ pub fn test() {
     let a = Node{val: 3};
     let b = Node{val: 4};
     let c = Node{val: 5};
+    let d = Node{val: 2};
+    
     
     let mut s = Min::<Node>::new();
     println!("{:?}", s);
     s.push(a);
     s.push(b);
     s.push(c);
+    s.push(d);
+    
     
     println!("{:?}", s);
+
+    let (val, min) = s.pop();
+    println!("(val, min) = ({:?}, {:?})", val, min);
+
+    let (val, min) = s.pop();
+    println!("(val, min) = ({:?}, {:?})", val, min);
+    
+    let (val, min) = s.pop();
+    println!("(val, min) = ({:?}, {:?})", val, min);
+    
    
     
 

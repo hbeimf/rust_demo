@@ -15,7 +15,7 @@ impl <T> Min<T> {
     }
 
     pub fn push(&mut self, val: T) -> () where T:Clone {   
-        // println!("push: {}", val.clone()); 
+        // println!("push: {:?}", val.clone()); 
         self.top.push(val.clone());  
     }
 
@@ -35,11 +35,11 @@ pub fn test() {
     let b = Node{a: 4};
     let c = Node{a: 5};
     
-    let mut s = Min::<&Node>::new();
+    let mut s = Min::<Node>::new();
     println!("{:?}", s);
-    s.push(&a);
-    s.push(&b);
-    s.push(&c);
+    s.push(a);
+    s.push(b);
+    s.push(c);
     
     println!("{:?}", s);
    

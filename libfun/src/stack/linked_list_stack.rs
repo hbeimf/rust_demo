@@ -10,15 +10,15 @@ pub struct LinkedListStack<T> {
 
 impl <T> LinkedListStack<T> {
 
-    fn new() -> LinkedListStack<T> {
+    pub fn new() -> LinkedListStack<T> {
         LinkedListStack{ top: LinkedList::<T>::new()}
     }
 
-    fn push(&mut self, val: T) {    
+    pub fn push(&mut self, val: T) {    
         self.top.push_front(val);
     }
 
-    fn pop(&mut self) -> Option<T> {    
+    pub fn pop(&mut self) -> Option<T> {    
         self.top.pop_front()
     }
     

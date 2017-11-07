@@ -4,5 +4,7 @@ pub mod learn;
 pub mod stack;
 pub mod list;
 pub mod queue;
+pub mod sort;
+
 
 

@@ -1,5 +1,6 @@
 // use learn;
-use stack;
+// use stack;
+use sort;
 
 pub fn test() -> String {
     // println!("test learn mod!! ===============");
@@ -8,7 +9,7 @@ pub fn test() -> String {
     // stack::get_sort::test();
     // stack::linked_list_stack::test();
     // stack::lls_get_min::test();
-    stack::lls_get_min_t::test();
+    sort::qsort::test();
     
     
 

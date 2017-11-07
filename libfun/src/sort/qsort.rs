@@ -64,6 +64,12 @@ pub fn test() {
     assert_eq!([1, 2, 3, 4, 5, 6, 7, 8], numbers); 
 
     println!("{:?}", numbers);
+
+    let mut strings = ["ccc", "eee", "aaa", "ddd", "bbb", "ggg", "fff"];
+    quicksort(&mut strings);
+    assert_eq!(["aaa", "bbb", "ccc", "ddd", "eee", "fff", "ggg"], strings);
+
+     println!("{:?}", strings);
 }
 
 

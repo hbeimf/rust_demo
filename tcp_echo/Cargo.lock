@@ -1,15 +1,3 @@
-[root]
-name = "tcp_echo"
-version = "0.1.0"
-dependencies = [
- "bytes 0.4.5 (registry+https://github.com/rust-lang/crates.io-index)",
- "futures 0.1.16 (registry+https://github.com/rust-lang/crates.io-index)",
- "tokio-core 0.1.10 (registry+https://github.com/rust-lang/crates.io-index)",
- "tokio-io 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "tokio-proto 0.1.1 (git+https://github.com/tokio-rs/tokio-proto)",
- "tokio-service 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
 [[package]]
 name = "bitflags"
 version = "0.7.0"
@@ -153,6 +141,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "take"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "tcp_echo"
+version = "0.1.0"
+dependencies = [
+ "bytes 0.4.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "futures 0.1.16 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tokio-core 0.1.10 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tokio-io 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tokio-proto 0.1.1 (git+https://github.com/tokio-rs/tokio-proto)",
+ "tokio-service 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "tokio-core"

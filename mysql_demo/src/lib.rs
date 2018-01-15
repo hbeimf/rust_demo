@@ -1,3 +1,5 @@
+
+#[macro_use]
 extern crate diesel;
 // extern crate diesel_codegen;
 extern crate r2d2;

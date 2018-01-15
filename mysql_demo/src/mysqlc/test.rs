@@ -23,8 +23,8 @@ pub fn test() {
 // // extern crate mysqlc;
 
 // use mysqlc::*;
-// // use mysqlc::models::*;
-// // use diesel::prelude::*;
+// use mysqlc::models::*;
+// use diesel::prelude::*;
 
 // fn test() {
 //     use mysqlc::schema::posts::dsl::*;

@@ -14,10 +14,42 @@ pub fn test() {
 	}
 }
 
-pub fn select() {
+// pub fn select() {
 
 
-}
+// }
+
+// extern crate diesel;
+// // extern crate mysqlc;
+
+// use mysqlc::*;
+// // use mysqlc::models::*;
+// // use diesel::prelude::*;
+
+// fn test() {
+//     use mysqlc::schema::posts::dsl::*;
+
+//     let pool = init::init_pool();
+//     let connection = pool.get();
+
+//     // let connection = establish_connection();
+
+
+//     let results = posts
+//         .filter(published.eq(true))
+//         .limit(5)
+//         .load::<Post>(&connection)
+//         .expect("Error loading posts");
+
+//     println!("Displaying {} posts", results.len());
+//     for post in results {
+//         println!("{}", post.title);
+//         println!("-----------\n");
+//         println!("{}", post.body);
+//     }
+// }
+
+
 
 
 

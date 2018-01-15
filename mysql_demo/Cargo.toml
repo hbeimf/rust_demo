@@ -4,3 +4,5 @@ version = "0.1.0"
 authors = ["maomao <you@example.com>"]
 
 [dependencies]
+r2d2 = "0.8.2"
+r2d2_mysql = "3.0.0"

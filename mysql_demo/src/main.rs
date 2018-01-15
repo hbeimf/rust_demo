@@ -4,9 +4,8 @@ extern crate diesel;
 extern crate r2d2;
 extern crate r2d2_diesel;
 
-// use r2d2;
-//use diesel::mysql::MysqlConnection;
-use diesel::mysql::*;
+use diesel::mysql::MysqlConnection;
+// use diesel::mysql::*;
 use r2d2_diesel::ConnectionManager;
 
 use std::thread;

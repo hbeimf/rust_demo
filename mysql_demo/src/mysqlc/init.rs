@@ -11,7 +11,7 @@ use std::thread;
 pub type Pool = r2d2::Pool<ConnectionManager<MysqlConnection>>;
 
 pub fn init_pool() -> Pool {
-    let manager = ConnectionManager::<MysqlConnection>::new("mysql://root:123456@localhost:3306/system");
+    let manager = ConnectionManager::<MysqlConnection>::new("mysql://root:123456@localhost:3306/test");
     r2d2::Pool::new(manager).expect("db pool")
 }
 

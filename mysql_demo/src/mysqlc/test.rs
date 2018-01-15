@@ -1,8 +1,9 @@
 use std::thread;
 
+use mysqlc;
 use mysqlc::init;
 
-pub fn test() {
+pub fn test_bak() {
 	let pool = init::init_pool();
 
 	for _ in 0..10i32 {
@@ -13,6 +14,38 @@ pub fn test() {
 		});
 	}
 }
+
+pub fn test() {
+	let pool = init::init_pool();
+	// let connection = pool.get();
+	// assert!(connection.is_ok());
+
+	match pool.get() {
+	            Ok(conn) => {
+	            		mysqlc::create_post(&conn, "titletest", "body test");
+	            },
+	            // Err(_) => Outcome::Failure((Status::ServiceUnavailable, ()))
+	            _ => {
+	            		println!("something else");
+	            }
+	}
+
+	// match connection {
+	// 	Some(conn) => {
+	// 		mysqlc::create_post(conn, "titletest", "body test");
+	// 	},
+	// 	_ => {
+	// 		println!("something else");
+	// 	}
+	// }
+
+	
+}
+
+
+
+
+
 
 // pub fn select() {
 

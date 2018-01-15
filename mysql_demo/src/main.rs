@@ -25,7 +25,6 @@ fn main() {
 		let pool = pool.clone();
 		thread::spawn(move || {
 			let connection = pool.get();
-
 			assert!(connection.is_ok());
 		});
 	}

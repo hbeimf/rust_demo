@@ -47,22 +47,14 @@ pub fn create_post(conn: &MysqlConnection, title: &str, body: &str) -> Post {
 
 
 // select 
+pub fn select(connection: &MysqlConnection) {
+    // use self::schema::posts::dsl::*;
+    use mysqlc::schema::posts::dsl::{posts, published};
 
-// extern crate diesel;
-// extern crate diesel_demo_step_3_mysql;
-
-// use diesel_demo_step_3_mysql::*;
-// use self::models::*;
-// use diesel::prelude::*;
-
-fn select(connection: &MysqlConnection) {
-    use self::schema::posts::dsl::*;
-
-    // let connection = establish_connection();
     let results = posts
-        .filter(published.eq(true))
+        .filter(published.eq(false))
         .limit(5)
-        .load::<Post>(&connection)
+        .load::<Post>(connection)
         .expect("Error loading posts");
 
     println!("Displaying {} posts", results.len());

@@ -20,7 +20,8 @@ pub fn test() {
 	
 	match pool.get() {
 	            Ok(conn) => {
-	            		mysqlc::table_post::create_post(&conn, "titletest", "body test");
+	            		// insert 
+	            		// mysqlc::table_post::create_post(&conn, "titletest", "body test");
 	            		mysqlc::table_post::select(&conn);
 
 	            },

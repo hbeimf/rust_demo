@@ -53,7 +53,7 @@ pub fn select(connection: &MysqlConnection) {
 
     let results = posts
         .filter(published.eq(false))
-        .limit(5)
+        // .limit(5)
         .load::<Post>(connection)
         .expect("Error loading posts");
 

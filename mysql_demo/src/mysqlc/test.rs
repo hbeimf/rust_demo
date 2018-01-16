@@ -17,9 +17,7 @@ pub fn test_bak() {
 
 pub fn test() {
 	let pool = pool::init_pool();
-	// let connection = pool.get();
-	// assert!(connection.is_ok());
-
+	
 	match pool.get() {
 	            Ok(conn) => {
 	            		mysqlc::table_post::create_post(&conn, "titletest", "body test");
@@ -28,17 +26,6 @@ pub fn test() {
 	            _ => {
 	            		println!("something else");
 	            }
-	}
-
-	// match connection {
-	// 	Some(conn) => {
-	// 		mysqlc::create_post(conn, "titletest", "body test");
-	// 	},
-	// 	_ => {
-	// 		println!("something else");
-	// 	}
-	// }
-
-	
+	}	
 }
 

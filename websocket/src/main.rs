@@ -53,5 +53,5 @@ fn main() {
   // Rc is a reference-counted box for sharing the count between handlers
   // since each handler needs to own its contents.
   let count = Rc::new(Cell::new(0));
-  listen("127.0.0.1:3012", |out| { Server { out: out, count: count.clone() } }).unwrap()
+  listen("127.0.0.1:8080", |out| { Server { out: out, count: count.clone() } }).unwrap()
 } 

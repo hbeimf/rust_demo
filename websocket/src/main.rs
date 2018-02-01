@@ -9,6 +9,7 @@ use std::cell::Cell;
 use ws::{listen, Handler, Sender, Result, Message, Handshake, CloseCode, Error};
 
 struct Server {
+    client_id: u32,
     out: Sender,
     count: Rc<Cell<u32>>,
 }
@@ -17,12 +18,14 @@ impl Handler for Server {
 
     fn on_open(&mut self, _: Handshake) -> Result<()> {
         // We have a new connection, so we increment the connection counter
+        self.client_id = self.count.get() + 1;
         Ok(self.count.set(self.count.get() + 1))
     }
 
     fn on_message(&mut self, msg: Message) -> Result<()> {
         // Tell the user the current count
-        println!("The number of live connections is {}", self.count.get());
+        // println!("The number of live connections is {}", self.count.get());
+        println!("=========== The client_id is {}, The number of live connections is {}", self.client_id, self.count.get());
         println!("{}", msg);
         // Echo the message back
         self.out.send(msg)
@@ -53,5 +56,5 @@ fn main() {
   // Rc is a reference-counted box for sharing the count between handlers
   // since each handler needs to own its contents.
   let count = Rc::new(Cell::new(0));
-  listen("127.0.0.1:8080", |out| { Server { out: out, count: count.clone() } }).unwrap()
+  listen("127.0.0.1:8080", |out| { Server { client_id: 0, out: out, count: count.clone() } }).unwrap()
 } 

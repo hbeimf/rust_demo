@@ -1,0 +1,6 @@
+[package]
+name = "rfun"
+version = "0.1.0"
+authors = ["maomao <you@example.com>"]
+
+[dependencies]

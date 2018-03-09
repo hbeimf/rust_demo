@@ -44,6 +44,7 @@ pub fn explode<'a>(s: &'a str, subs: &'a str) -> Vec<&'a str> {
 
 
 // http://blog.csdn.net/guiqulaxi920/article/details/78823541
+// https://docs.rs/itertools/0.7.7/itertools/
 // 换用新的迭代器，直接使用join 方法
 fn implode(v: Vec<&str>, s: &str) -> String {
 	let result = v.iter().join(s);

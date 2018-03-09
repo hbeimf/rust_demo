@@ -1,6 +1,6 @@
 
 extern crate itertools;
-pub use itertools::Itertools;
+use itertools::Itertools;
 
 
 pub mod string;

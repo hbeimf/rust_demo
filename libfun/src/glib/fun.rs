@@ -10,7 +10,7 @@ pub fn explode<'a>(s: &'a str, subs: &'a str) -> Vec<&'a str> {
 	s.split(subs).collect()
 }
 
-pub fn implode(v: Vec<&str>, s: &str) -> String {
+pub fn implode_v1(v: Vec<&str>, s: &str) -> String {
 	let mut result = String::from("");
 	for i in &v { 
 		result.push_str(i);
@@ -19,8 +19,18 @@ pub fn implode(v: Vec<&str>, s: &str) -> String {
 	result
 }
 
+
+fn implode(v: Vec<&str>, s: &str) -> String {
+	let result = v.iter().fold(String::new(), |mut res, everyone| {
+		res.push_str(everyone);
+		res.push_str(s);
+		res
+	});
+	result
+}
+
 pub fn test() {
-	let demo_str = "hello$world $this $space $explode"; 
+	let demo_str = "hello$world $this $space XX$explode"; 
 	println!("demostr: {:?}", demo_str);
 	let r = explode(demo_str, "$");
 	println!("explode: {:?}", r);

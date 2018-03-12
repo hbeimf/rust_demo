@@ -19,28 +19,26 @@ use super::super::Itertools;
 // 	println!("XX: {}.", list);
 // }
 
-pub fn explode<'a>(s: &'a str, subs: &'a str) -> Vec<&'a str> {
-	s.split(subs).collect()
+
+
+pub fn implode_bak_v1(v: Vec<&str>, s: &str) -> String {
+	let mut result = String::from("");
+	for i in &v { 
+		result.push_str(i);
+		result.push_str(s);
+	}
+	result
 }
 
-// pub fn implode_v1(v: Vec<&str>, s: &str) -> String {
-// 	let mut result = String::from("");
-// 	for i in &v { 
-// 		result.push_str(i);
-// 		result.push_str(s);
-// 	}
-// 	result
-// }
 
-
-// fn implode(v: Vec<&str>, s: &str) -> String {
-// 	let result = v.iter().fold(String::new(), |mut res, everyone| {
-// 		res.push_str(everyone);
-// 		res.push_str(s);
-// 		res
-// 	});
-// 	result
-// }
+pub fn implode_bak_v2(v: Vec<&str>, s: &str) -> String {
+	let result = v.iter().fold(String::new(), |mut res, everyone| {
+		res.push_str(everyone);
+		res.push_str(s);
+		res
+	});
+	result
+}
 
 
 // http://blog.csdn.net/guiqulaxi920/article/details/78823541
@@ -51,14 +49,20 @@ fn implode(v: Vec<&str>, s: &str) -> String {
 	result
 }
 
+pub fn explode<'a>(s: &'a str, subs: &'a str) -> Vec<&'a str> {
+	s.split(subs).collect()
+}
 
 pub fn test() {
 	let demo_str = "hello$world $this $space XX$explode"; 
 	println!("demostr: {:?}", demo_str);
 	let r = explode(demo_str, "$");
+	println!("demostr: {:?}", demo_str);
 	println!("explode: {:?}", r);
+
 	let s = implode(r, "$");
-	println!("implode: {:?}", s);	
+	println!("implode: {:?}", s);
+	// println!("explode: {:?}", r);	
 }
 
 

@@ -44,7 +44,7 @@ pub fn implode_bak_v2(v: Vec<&str>, s: &str) -> String {
 // http://blog.csdn.net/guiqulaxi920/article/details/78823541
 // https://docs.rs/itertools/0.7.7/itertools/
 // 换用新的迭代器，直接使用join 方法
-fn implode(v: &Vec<&str>, s: &str) -> String {
+pub fn implode(v: &Vec<&str>, s: &str) -> String {
 	let result = v.iter().join(s);
 	result
 }

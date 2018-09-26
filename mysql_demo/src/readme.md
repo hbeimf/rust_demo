@@ -19,3 +19,11 @@ CREATE TABLE `posts` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='test';
 
+
+
+insert into posts (title, body, published) values('test1', 'body1', 0), ('test2', 'body2', 0), ('test3', 'body3', 1);
+
+
+# ln -s /usr/local/mysql/lib/libmysqlclient.so.18 /usr/lib
+
+

@@ -11,6 +11,6 @@ pub type Pool = r2d2::Pool<ConnectionManager<MysqlConnection>>;
 
 // 初始化连接池
 pub fn init_pool() -> Pool {
-    let manager = ConnectionManager::<MysqlConnection>::new("mysql://root:123456@localhost:3306/test");
+    let manager = ConnectionManager::<MysqlConnection>::new("mysql://root:123456@localhost:3306/xdb");
     r2d2::Pool::new(manager).expect("db pool")
 }

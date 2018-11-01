@@ -2,7 +2,6 @@
 name = "actor_chat"
 version = "0.1.0"
 authors = ["maomao <5622876@qq.com>"]
-edition = "2018"
 
 [[bin]]
 name = "server"

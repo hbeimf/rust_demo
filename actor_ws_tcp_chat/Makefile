@@ -35,8 +35,8 @@ run:
 client:
 	cargo run --bin websocket-tcp-client
 
-# test:
-# 	cd ./client_test/wsc && rebar3 shell
+ws:
+	cd ./client_test/wsc && rebar3 shell
 
 # show:
 # 	ps aux | grep gonode

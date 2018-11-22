@@ -10,6 +10,10 @@
          websocket_terminate/3
         ]).
 
+-define(LOG(X), io:format("~n==========log========{~p,~p}==============~n~p~n", [?MODULE,?LINE,X])).
+% -define(LOG(X), true).
+
+
 start_link(Index) ->
     % crypto:start(),
     % ssl:start(),
@@ -31,11 +35,18 @@ init([Index], _ConnState) ->
 %     io:format("Received msg ~p~n", [Msg]),
 %     {close, <<>>, "done"};
 
+websocket_handle({text, Msg}, _ConnState, State) ->
+    % io:format("Received msg ~p~n", [Msg]),
+    ?LOG({text, Msg}),
+    {ok, State};
 websocket_handle({binary, Bin}, _ConnState, State) ->
-	io:format("Client received binary here ~p~n", [Bin]),
+	% io:format("Client received binary here ~p~n", [Bin]),
+        ?LOG({binary, Bin}),
 	{ok, State};
 websocket_handle(Msg, _ConnState, State) ->
-    io:format("Client ~p received msg:~n~p~n", [State, Msg]),
+    % ?LOG({msg, Msg}),
+
+    % io:format("Client ~p received msg:~n~p~n", [State, Msg]),
     % timer:sleep(1000),
     % BinInt = list_to_binary(integer_to_list(State)),
     % {reply, {text, <<"hello, this is message #", BinInt/binary >>}, State + 1}.

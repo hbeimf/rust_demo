@@ -1,7 +1,0 @@
-[package]
-name = "sapper_demo"
-version = "0.1.0"
-authors = ["mao <5622876@qq.com>"]
-
-[dependencies]
-sapper = "0.1"

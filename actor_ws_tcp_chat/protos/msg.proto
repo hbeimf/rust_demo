@@ -1,0 +1,12 @@
+syntax="proto2";
+
+package MSG;
+
+
+message TestMsg{   
+    string  f1 = 1;
+    string  f2 = 2;
+    string  f3  = 3;
+
+}
+

@@ -71,6 +71,7 @@ send(Package) ->
 
 start_link() ->
 	% ?LOG({ServerID, ServerType, ServerURI, GwcURI, Max}),
+	?LOG({start, tcp_client}),
     gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 
@@ -88,13 +89,14 @@ init([]) ->
 	% {Ip, Port} = rconf:read_config(hub_server),
 	Ip = "127.0.0.1",
 	Port = 12345,
-
+	?LOG({Ip, Port}),
 	case ranch_tcp:connect(Ip, Port,[],3000) of
 		{ok,Socket} ->
-	        ok = ranch_tcp:setopts(Socket, [{active, once}]),
+        			ok = ranch_tcp:setopts(Socket, [{active, once}]),
 			% erlang:start_timer(1000, self(), {regist}),
-			self() ! {timeout, <<"Heartbeat!">>, <<"Heartbeat!">>},
-			erlang:start_timer(?TIMER_SECONDS, self(), <<"Heartbeat!">>),
+			% self() ! {timeout, <<"Heartbeat!">>, <<"Heartbeat!">>},
+			% erlang:start_timer(?TIMER_SECONDS, self(), <<"Heartbeat!">>),
+			?LOG({connect}),
 			State = #state{socket = Socket, transport = ranch_tcp, data = <<>>, ip = Ip, port = Port},
 			{ok,  State};
 		% {error,econnrefused} -> 
@@ -180,7 +182,7 @@ handle_info({tcp, Socket, CurrentPackage}, State=#state{
 	Transport:setopts(Socket, [{active, once}]),
 	PackageBin = <<LastPackage/binary, CurrentPackage/binary>>,
 
-	case parse_package_from_gs:parse_package(PackageBin, State) of
+	case parse_package(PackageBin, State) of
 		{ok, waitmore, Bin} -> 
 			{noreply, State#state{data = Bin}};
 		_ -> 
@@ -254,3 +256,19 @@ code_change(_OldVsn, State, _Extra) ->
     {ok, State}.
 
 
+% priv
+
+parse_package(Bin, State) ->
+    ?LOG({bin, Bin}),
+    case glib:unpackage(Bin) of
+        {ok, waitmore}  -> {ok, waitmore, Bin};
+        {ok,{Cmd, ValueBin},LefBin} ->
+            action(Cmd, ValueBin, State),
+            parse_package(LefBin, State);
+        _ ->
+            error       
+    end.
+
+ action(Cmd, Bin, State) ->
+ 	?LOG({Cmd, Bin, State}),
+ 	ok.

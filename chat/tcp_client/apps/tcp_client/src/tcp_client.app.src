@@ -5,7 +5,8 @@
   {mod, { tcp_client_app, []}},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
+    glib
    ]},
   {env,[]},
   {modules, []},

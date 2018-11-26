@@ -33,6 +33,9 @@ run:
 	cargo run --bin server
 
 client:
+	cd tcp_client && rebar3 shell
+
+client1:
 	cargo run --bin client
 
 # ws:

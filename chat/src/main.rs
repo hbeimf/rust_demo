@@ -7,6 +7,7 @@ extern crate serde;
 extern crate serde_json;
 extern crate tokio;
 extern crate tokio_io;
+extern crate tokio_codec;
 extern crate tokio_tcp;
 #[macro_use]
 extern crate serde_derive;
@@ -19,7 +20,9 @@ use std::str::FromStr;
 
 use actix::prelude::*;
 use futures::Stream;
-use tokio_io::codec::FramedRead;
+// use tokio_io::codec::FramedRead;
+use tokio_codec::FramedRead;
+
 use tokio_io::AsyncRead;
 use tokio_tcp::{TcpListener, TcpStream};
 

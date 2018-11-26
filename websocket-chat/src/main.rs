@@ -243,10 +243,10 @@ fn main() {
             .resource("/ws/", |r| r.route().f(chat_route))
         // static resources
             .handler("/static/", fs::StaticFiles::new("static/").unwrap())
-    }).bind("127.0.0.1:8080")
+    }).bind("127.0.0.1:5566")
         .unwrap()
         .start();
 
-    println!("Started http server: 127.0.0.1:8080");
+    println!("Started http server: 127.0.0.1:5566");
     let _ = sys.run();
 }

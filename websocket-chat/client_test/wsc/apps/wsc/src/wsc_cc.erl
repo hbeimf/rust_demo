@@ -19,7 +19,7 @@ start_link(Index) ->
     % ssl:start(),
     % websocket_client:start_link("wss://echo.websocket.org", ?MODULE, []).
   
-    websocket_client:start_link("ws://localhost:8888/ws/", ?MODULE, [Index]).
+    websocket_client:start_link("ws://localhost:5566/ws/", ?MODULE, [Index]).
 
     
 

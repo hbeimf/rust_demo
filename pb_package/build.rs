@@ -17,7 +17,7 @@ fn generate_interop() {
     protobuf_codegen_pure::run(protobuf_codegen_pure::Args {
         out_dir: "src/protos",
         includes: &["protos"],
-        input: &["protos/a.proto"],
+        input: &["protos/msg.proto"],
         customize: Default::default(),
     }).unwrap();
 }

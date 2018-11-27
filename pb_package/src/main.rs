@@ -42,6 +42,7 @@ fn main() {
 
 // https://docs.rs/byteorder/1.2.7/byteorder/
 // https://github.com/BurntSushi/byteorder
+// http://blog.zhukunqian.com/?cat=32
 
 fn package(cmd:u32, pb:Vec<u8>) -> Vec<u8> {
     let len:u32 = pb.len() as u32 + 4 + 4;

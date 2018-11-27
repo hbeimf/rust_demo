@@ -13,8 +13,7 @@ extern crate byteorder;
 
 // use byteorder::{ReadBytesExt, WriteBytesExt, BigEndian, LittleEndian};
 use byteorder::{ReadBytesExt, WriteBytesExt, LittleEndian};
-
-
+use std::io::Cursor;
 // use protobuf::Message;
 use protobuf::*;
 mod protos;
@@ -71,7 +70,7 @@ fn package(cmd:u32, pb:Vec<u8>) -> Vec<u8> {
 
 fn unpackage(package: Vec<u8>) {
     println!("unpackage: {:?}", package);
-    use std::io::Cursor;
+    
     // use byteorder::{BigEndian, ReadBytesExt};
 
     let mut rdr = Cursor::new(package);
@@ -82,7 +81,7 @@ fn unpackage(package: Vec<u8>) {
 
     let len = rdr.read_u32::<LittleEndian>().unwrap();
     let cmd = rdr.read_u32::<LittleEndian>().unwrap();
-    println!("len:{} , cmd: {}", len, cmd);
+    println!("len:{} , cmd: {}, pb: {:?}", len, cmd, rdr);
 
 }
 

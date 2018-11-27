@@ -11,7 +11,9 @@
 extern crate protobuf;
 extern crate byteorder;
 
-use byteorder::{ReadBytesExt, WriteBytesExt, BigEndian, LittleEndian};
+// use byteorder::{ReadBytesExt, WriteBytesExt, BigEndian, LittleEndian};
+use byteorder::{ReadBytesExt, WriteBytesExt, LittleEndian};
+
 
 // use protobuf::Message;
 use protobuf::*;
@@ -36,7 +38,7 @@ fn main() {
     let package = package(cmd, serialized);
     println!("package: {:?}", package);
 
-    unpackage();
+    unpackage(package);
 }
 
 // https://docs.rs/byteorder/1.2.7/byteorder/
@@ -67,15 +69,20 @@ fn package(cmd:u32, pb:Vec<u8>) -> Vec<u8> {
 }
 
 
-fn unpackage() {
+fn unpackage(package: Vec<u8>) {
+    println!("unpackage: {:?}", package);
     use std::io::Cursor;
     // use byteorder::{BigEndian, ReadBytesExt};
 
-    let mut rdr = Cursor::new(vec![2, 5, 3, 0]);
+    let mut rdr = Cursor::new(package);
     // Note that we use type parameters to indicate which kind of byte order
     // we want!
-    assert_eq!(517, rdr.read_u16::<BigEndian>().unwrap());
-    assert_eq!(768, rdr.read_u16::<BigEndian>().unwrap());
+    // assert_eq!(517, rdr.read_u16::<BigEndian>().unwrap());
+    // assert_eq!(768, rdr.read_u16::<BigEndian>().unwrap());
+
+    let len = rdr.read_u32::<LittleEndian>().unwrap();
+    let cmd = rdr.read_u32::<LittleEndian>().unwrap();
+    println!("len:{} , cmd: {}", len, cmd);
 
 }
 

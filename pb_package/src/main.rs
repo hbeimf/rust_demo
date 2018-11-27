@@ -30,4 +30,31 @@ fn main() {
     // decode 
     let parsed = parse_from_bytes::<protos::msg::TestMsg>(&serialized).unwrap();
     println!("decode: {:?}", parsed);
+
+    package();
+    unpackage();
 }
+
+// https://docs.rs/byteorder/1.2.7/byteorder/
+// https://github.com/BurntSushi/byteorder
+
+fn package() {
+    let mut wtr = vec![];
+    wtr.write_u16::<LittleEndian>(517).unwrap();
+    wtr.write_u16::<LittleEndian>(768).unwrap();
+    assert_eq!(wtr, vec![5, 2, 0, 3]);
+}
+
+
+fn unpackage() {
+    use std::io::Cursor;
+    // use byteorder::{BigEndian, ReadBytesExt};
+
+    let mut rdr = Cursor::new(vec![2, 5, 3, 0]);
+    // Note that we use type parameters to indicate which kind of byte order
+    // we want!
+    assert_eq!(517, rdr.read_u16::<BigEndian>().unwrap());
+    assert_eq!(768, rdr.read_u16::<BigEndian>().unwrap());
+
+}
+

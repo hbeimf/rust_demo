@@ -117,25 +117,30 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
                 self.hb = Instant::now();
             }
             ws::Message::Text(text) => {
-                    println!("WEBSOCKET text MESSAGE: {:?}", text);
-                    let m = text.trim();
-                
-                    let msg = if let Some(ref name) = self.name {
-                        format!("{}: {}", name, m)
-                    } else {
-                        m.to_owned()
-                    };
-                    // send message to chat server
-                    ctx.state().addr.do_send(server::ClientMessage {
-                        id: self.id,
-                        msg: msg,
-                        room: self.room.clone(),
-                    })
+                println!("WEBSOCKET text MESSAGE: {:?}", text);
+                let m = text.trim();
+            
+                let msg = if let Some(ref name) = self.name {
+                    format!("{}: {}", name, m)
+                } else {
+                    m.to_owned()
+                };
+                // send message to chat server
+                ctx.state().addr.do_send(server::ClientMessage {
+                    id: self.id,
+                    msg: msg,
+                    room: self.room.clone(),
+                })
 
             }
             ws::Message::Binary(bin) => {
-                    println!("Unexpected binary");
-
+                // println!("Unexpected binary");
+                println!("Unexpected binary123 {:?}", bin);
+                // ctx.state().addr.do_send(server::ClientMessage {
+                //     id: self.id,
+                //     msg: bin,
+                //     room: self.room.clone(),
+                // })
             }
             ws::Message::Close(_) => {
                 ctx.stop();

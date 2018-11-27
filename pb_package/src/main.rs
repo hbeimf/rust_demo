@@ -43,42 +43,18 @@ fn main() {
 // https://docs.rs/byteorder/1.2.7/byteorder/
 // https://github.com/BurntSushi/byteorder
 
-// fn test_package() {
-//     package();
-//     unpackage(); 
-// }
-
-
 fn package(cmd:u32, pb:Vec<u8>) -> Vec<u8> {
-    println!("cmd: {}", cmd);
-    println!("pb: {:?}", pb);
-
     let len:u32 = pb.len() as u32 + 4 + 4;
     let mut package = vec![];
     package.write_u32::<LittleEndian>(len).unwrap();
     package.write_u32::<LittleEndian>(cmd).unwrap();
-
-    // let mut vec = vec![1];
     package.extend_from_slice(&pb);
-    // assert_eq!(vec, [1, 2, 3, 4]);
-
-    // println!("package: {:?}", package);
-    // assert_eq!(wtr, vec![5, 2, 0, 3]);
     package
 }
 
 
 fn unpackage(package: Vec<u8>) {
-    println!("unpackage: {:?}", package);
-    
-    // use byteorder::{BigEndian, ReadBytesExt};
-
     let mut rdr = Cursor::new(package);
-    // Note that we use type parameters to indicate which kind of byte order
-    // we want!
-    // assert_eq!(517, rdr.read_u16::<BigEndian>().unwrap());
-    // assert_eq!(768, rdr.read_u16::<BigEndian>().unwrap());
-
     let len = rdr.read_u32::<LittleEndian>().unwrap();
     let cmd = rdr.read_u32::<LittleEndian>().unwrap();
     println!("len:{} , cmd: {}, pb: {:?}", len, cmd, rdr);

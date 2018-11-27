@@ -31,18 +31,39 @@ fn main() {
     let parsed = parse_from_bytes::<protos::msg::TestMsg>(&serialized).unwrap();
     println!("decode: {:?}", parsed);
 
-    package();
+    // test_package();
+    let cmd:u32 = 123456;
+    let package = package(cmd, serialized);
+    println!("package: {:?}", package);
+
     unpackage();
 }
 
 // https://docs.rs/byteorder/1.2.7/byteorder/
 // https://github.com/BurntSushi/byteorder
 
-fn package() {
-    let mut wtr = vec![];
-    wtr.write_u16::<LittleEndian>(517).unwrap();
-    wtr.write_u16::<LittleEndian>(768).unwrap();
-    assert_eq!(wtr, vec![5, 2, 0, 3]);
+// fn test_package() {
+//     package();
+//     unpackage(); 
+// }
+
+
+fn package(cmd:u32, pb:Vec<u8>) -> Vec<u8> {
+    println!("cmd: {}", cmd);
+    println!("pb: {:?}", pb);
+
+    let len:u32 = pb.len() as u32 + 4 + 4;
+    let mut package = vec![];
+    package.write_u32::<LittleEndian>(len).unwrap();
+    package.write_u32::<LittleEndian>(cmd).unwrap();
+
+    // let mut vec = vec![1];
+    package.extend_from_slice(&pb);
+    // assert_eq!(vec, [1, 2, 3, 4]);
+
+    // println!("package: {:?}", package);
+    // assert_eq!(wtr, vec![5, 2, 0, 3]);
+    package
 }
 
 

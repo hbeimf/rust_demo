@@ -58,9 +58,7 @@ fn unpackage(package: Vec<u8>) {
     let mut p1 = package.clone();
     let vec2 = p1.split_off(8);
 
-    let parsed = parse_from_bytes::<protos::msg::TestMsg>(&vec2).unwrap();
-    println!("decode11: {:?}", parsed);
-
+    
     // let mut vec = vec![1,2,3];
     // let vec2 = vec.split_off(1);
     // assert_eq!(vec, [1]);
@@ -70,6 +68,10 @@ fn unpackage(package: Vec<u8>) {
     let len = rdr.read_u32::<LittleEndian>().unwrap();
     let cmd = rdr.read_u32::<LittleEndian>().unwrap();
     println!("len:{} , cmd: {}, pb: {:?}", len, cmd, vec2);
+
+    let parsed = parse_from_bytes::<protos::msg::TestMsg>(&vec2).unwrap();
+    println!("unpackage: {:?}", parsed);
+
 
 }
 

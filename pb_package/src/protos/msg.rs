@@ -24,9 +24,9 @@ use protobuf::ProtobufEnum as ProtobufEnum_imported_for_functions;
 #[derive(PartialEq,Clone,Default)]
 pub struct TestMsg {
     // message fields
-    pub name: ::protobuf::Chars,
-    pub nick_name: ::protobuf::Chars,
-    pub phone: ::protobuf::Chars,
+    pub name: ::std::string::String,
+    pub nick_name: ::std::string::String,
+    pub phone: ::std::string::String,
     // special fields
     pub unknown_fields: ::protobuf::UnknownFields,
     pub cached_size: ::protobuf::CachedSize,
@@ -40,23 +40,23 @@ impl TestMsg {
     // string name = 1;
 
     pub fn clear_name(&mut self) {
-        ::protobuf::Clear::clear(&mut self.name);
+        self.name.clear();
     }
 
     // Param is passed by value, moved
-    pub fn set_name(&mut self, v: ::protobuf::Chars) {
+    pub fn set_name(&mut self, v: ::std::string::String) {
         self.name = v;
     }
 
     // Mutable pointer to the field.
     // If field is not initialized, it is initialized with default value first.
-    pub fn mut_name(&mut self) -> &mut ::protobuf::Chars {
+    pub fn mut_name(&mut self) -> &mut ::std::string::String {
         &mut self.name
     }
 
     // Take field
-    pub fn take_name(&mut self) -> ::protobuf::Chars {
-        ::std::mem::replace(&mut self.name, ::protobuf::Chars::new())
+    pub fn take_name(&mut self) -> ::std::string::String {
+        ::std::mem::replace(&mut self.name, ::std::string::String::new())
     }
 
     pub fn get_name(&self) -> &str {
@@ -66,23 +66,23 @@ impl TestMsg {
     // string nick_name = 2;
 
     pub fn clear_nick_name(&mut self) {
-        ::protobuf::Clear::clear(&mut self.nick_name);
+        self.nick_name.clear();
     }
 
     // Param is passed by value, moved
-    pub fn set_nick_name(&mut self, v: ::protobuf::Chars) {
+    pub fn set_nick_name(&mut self, v: ::std::string::String) {
         self.nick_name = v;
     }
 
     // Mutable pointer to the field.
     // If field is not initialized, it is initialized with default value first.
-    pub fn mut_nick_name(&mut self) -> &mut ::protobuf::Chars {
+    pub fn mut_nick_name(&mut self) -> &mut ::std::string::String {
         &mut self.nick_name
     }
 
     // Take field
-    pub fn take_nick_name(&mut self) -> ::protobuf::Chars {
-        ::std::mem::replace(&mut self.nick_name, ::protobuf::Chars::new())
+    pub fn take_nick_name(&mut self) -> ::std::string::String {
+        ::std::mem::replace(&mut self.nick_name, ::std::string::String::new())
     }
 
     pub fn get_nick_name(&self) -> &str {
@@ -92,23 +92,23 @@ impl TestMsg {
     // string phone = 3;
 
     pub fn clear_phone(&mut self) {
-        ::protobuf::Clear::clear(&mut self.phone);
+        self.phone.clear();
     }
 
     // Param is passed by value, moved
-    pub fn set_phone(&mut self, v: ::protobuf::Chars) {
+    pub fn set_phone(&mut self, v: ::std::string::String) {
         self.phone = v;
     }
 
     // Mutable pointer to the field.
     // If field is not initialized, it is initialized with default value first.
-    pub fn mut_phone(&mut self) -> &mut ::protobuf::Chars {
+    pub fn mut_phone(&mut self) -> &mut ::std::string::String {
         &mut self.phone
     }
 
     // Take field
-    pub fn take_phone(&mut self) -> ::protobuf::Chars {
-        ::std::mem::replace(&mut self.phone, ::protobuf::Chars::new())
+    pub fn take_phone(&mut self) -> ::std::string::String {
+        ::std::mem::replace(&mut self.phone, ::std::string::String::new())
     }
 
     pub fn get_phone(&self) -> &str {
@@ -126,13 +126,13 @@ impl ::protobuf::Message for TestMsg {
             let (field_number, wire_type) = is.read_tag_unpack()?;
             match field_number {
                 1 => {
-                    ::protobuf::rt::read_singular_proto3_carllerche_string_into(wire_type, is, &mut self.name)?;
+                    ::protobuf::rt::read_singular_proto3_string_into(wire_type, is, &mut self.name)?;
                 },
                 2 => {
-                    ::protobuf::rt::read_singular_proto3_carllerche_string_into(wire_type, is, &mut self.nick_name)?;
+                    ::protobuf::rt::read_singular_proto3_string_into(wire_type, is, &mut self.nick_name)?;
                 },
                 3 => {
-                    ::protobuf::rt::read_singular_proto3_carllerche_string_into(wire_type, is, &mut self.phone)?;
+                    ::protobuf::rt::read_singular_proto3_string_into(wire_type, is, &mut self.phone)?;
                 },
                 _ => {
                     ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
@@ -212,17 +212,17 @@ impl ::protobuf::Message for TestMsg {
         unsafe {
             descriptor.get(|| {
                 let mut fields = ::std::vec::Vec::new();
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeCarllercheChars>(
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "name",
                     |m: &TestMsg| { &m.name },
                     |m: &mut TestMsg| { &mut m.name },
                 ));
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeCarllercheChars>(
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "nick_name",
                     |m: &TestMsg| { &m.nick_name },
                     |m: &mut TestMsg| { &mut m.nick_name },
                 ));
-                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeCarllercheChars>(
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
                     "phone",
                     |m: &TestMsg| { &m.phone },
                     |m: &mut TestMsg| { &mut m.phone },

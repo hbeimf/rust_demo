@@ -18,7 +18,12 @@ fn generate_interop() {
         out_dir: "src/protos",
         includes: &["protos"],
         input: &["protos/msg.proto"],
-        customize: Default::default(),
+        // customize: Default::default(),
+        customize: protobuf_codegen_pure::Customize {
+            carllerche_bytes_for_bytes: Some(true),
+            carllerche_bytes_for_string: Some(true),
+            ..Default::default()
+        },
     }).unwrap();
 }
 

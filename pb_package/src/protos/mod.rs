@@ -1,4 +1,4 @@
-mod msg;
+pub mod msg;
 
 
 

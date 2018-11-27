@@ -1,0 +1,34 @@
+[[package]]
+name = "pb_package"
+version = "0.1.0"
+dependencies = [
+ "protobuf 2.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "protobuf-codegen-pure 2.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "protobuf"
+version = "2.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "protobuf-codegen"
+version = "2.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "protobuf 2.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "protobuf-codegen-pure"
+version = "2.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "protobuf 2.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "protobuf-codegen 2.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[metadata]
+"checksum protobuf 2.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "cbd08d128db199b1c6bb662e343d7d1a8f6d0060b411675766d88e5146a4bb38"
+"checksum protobuf-codegen 2.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "c5730e51a78ee86d308caaafeb4b01a0bd79fb92b9ab5a8fd4b94c56786e0862"
+"checksum protobuf-codegen-pure 2.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "9b0e4940ec64bbd5a7379b315b97452ca9182f3db697ff630f2bb19b3f9fa379"

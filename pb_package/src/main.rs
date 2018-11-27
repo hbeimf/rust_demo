@@ -9,6 +9,9 @@
 
 
 extern crate protobuf;
+extern crate byteorder;
+
+use byteorder::{ReadBytesExt, WriteBytesExt, BigEndian, LittleEndian};
 
 // use protobuf::Message;
 use protobuf::*;

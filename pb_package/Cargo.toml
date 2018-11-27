@@ -6,6 +6,7 @@ authors = ["maomao <5622876@qq.com>"]
 
 [dependencies]
 protobuf = "2.2.0"
+byteorder = "1.1"
 
 [build-dependencies]
 protobuf-codegen-pure = "2.2.0"

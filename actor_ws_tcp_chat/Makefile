@@ -39,7 +39,7 @@ ws:
 	cd ./client_test/wsc && rebar3 shell
 
 gen:
-	cd protos && protoc --rust_out . msg.proto
+	cd protos && /home/maomao/.cargo/bin/pb-rs ./msg.proto
 
 # show:
 # 	ps aux | grep gonode

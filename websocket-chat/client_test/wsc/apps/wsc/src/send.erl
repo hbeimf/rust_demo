@@ -35,8 +35,8 @@ test_bin() ->
 
 test1() -> 
 	TestMsg = #'TestMsg'{
-                        name = <<"tom">>,
-                        nick_name = <<"nick_name">>,
+                        name = <<"jim green">>,
+                        nick_name = <<"nick_name123456">>,
                         phone = <<"15912341234">> 
                     },
     TestMsgBin = msg_proto:encode_msg(TestMsg),

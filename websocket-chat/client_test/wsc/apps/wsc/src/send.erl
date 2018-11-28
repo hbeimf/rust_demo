@@ -35,13 +35,13 @@ test_bin() ->
 
 test1() -> 
 	TestMsg = #'TestMsg'{
-                        name = <<"Jim">>,
-                        nick_name = <<"jim nick">>,
-                        phone = <<"13812341234">> 
+                        name = <<"tom">>,
+                        nick_name = <<"nick_name">>,
+                        phone = <<"15912341234">> 
                     },
     TestMsgBin = msg_proto:encode_msg(TestMsg),
 
-    Package = glibpack:package(123456, TestMsgBin),
+    Package = glib:package(123456, TestMsgBin),
 	{ok, Pid} = get_client(),
 	Pid ! {binary, Package},
 	ok.

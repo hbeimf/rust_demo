@@ -141,6 +141,12 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
             ws::Message::Binary(bin) => {
                 // println!("Unexpected binary");
                 println!("Unexpected binary123 {:?}", bin);
+                // glib::decode_msg(bin.as_ref().to_vec());
+                let package = bin.as_ref().to_vec();
+                // println!("packageX {:?}", package);
+                // let unpackage = glib::unpackage(package);
+                glib::test_unpackage(package);
+                
                 // ctx.state().addr.do_send(server::ClientMessage {
                 //     id: self.id,
                 //     msg: bin,

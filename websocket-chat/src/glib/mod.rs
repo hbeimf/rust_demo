@@ -33,6 +33,12 @@ pub fn test() {
     }
 }
 
+
+pub fn test_unpackage(package: Vec<u8>) {
+
+
+}
+
 pub fn decode_msg(pb:Vec<u8>) -> protos::msg::TestMsg {
     let test_msg : protos::msg::TestMsg = parse_from_bytes::<protos::msg::TestMsg>(&pb).unwrap();
     // println!("decode: {:?}", parsed);

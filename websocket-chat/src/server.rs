@@ -9,7 +9,7 @@ use std::collections::{HashMap, HashSet};
 
 /// Chat server sends this messages to session
 #[derive(Message, Debug)]
-pub struct Message(pub String, pub Vec<u8>);
+pub struct Message(pub Vec<u8>);
 
 /// Chat server sends this messages to session
 // #[derive(Message)]
@@ -30,16 +30,16 @@ pub struct Disconnect {
     pub id: usize,
 }
 
-/// Send message to specific room
-#[derive(Message)]
-pub struct ClientMessage {
-    /// Id of the client session
-    pub id: usize,
-    /// Peer message
-    pub msg: String,
-    /// Room name
-    pub room: String,
-}
+// /// Send message to specific room
+// #[derive(Message)]
+// pub struct ClientMessage {
+//     /// Id of the client session
+//     pub id: usize,
+//     /// Peer message
+//     pub msg: String,
+//     /// Room name
+//     pub room: String,
+// }
 
 
 /// Send message to specific room
@@ -53,21 +53,21 @@ pub struct ClientMessageBin {
     pub room: String,
 }
 
-/// List of available rooms
-pub struct ListRooms;
+// /// List of available rooms
+// pub struct ListRooms;
 
-impl actix::Message for ListRooms {
-    type Result = Vec<String>;
-}
+// impl actix::Message for ListRooms {
+//     type Result = Vec<String>;
+// }
 
-/// Join room, if room does not exists create new one.
-#[derive(Message)]
-pub struct Join {
-    /// Client id
-    pub id: usize,
-    /// Room name
-    pub name: String,
-}
+// /// Join room, if room does not exists create new one.
+// #[derive(Message)]
+// pub struct Join {
+//     /// Client id
+//     pub id: usize,
+//     /// Room name
+//     pub name: String,
+// }
 
 /// `ChatServer` manages chat rooms and responsible for coordinating chat
 /// session. implementation is super primitive
@@ -92,25 +92,25 @@ impl Default for ChatServer {
 }
 
 impl ChatServer {
-    /// Send message to all users in the room
-    fn send_message(&self, room: &str, message: &str, skip_id: usize) {
-        if let Some(sessions) = self.rooms.get(room) {
-            for id in sessions {
-                if *id != skip_id {
-                    if let Some(addr) = self.sessions.get(id) {
-                        let _ = addr.do_send(Message(message.to_owned(), Vec::new()));
-                    }
-                }
-            }
-        }
-    }
+    // /// Send message to all users in the room
+    // fn send_message(&self, room: &str, message: &str, skip_id: usize) {
+    //     if let Some(sessions) = self.rooms.get(room) {
+    //         for id in sessions {
+    //             if *id != skip_id {
+    //                 if let Some(addr) = self.sessions.get(id) {
+    //                     // let _ = addr.do_send(Message(message.to_owned()));
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     fn send_message_bin(&self, room: &str, message: &Vec<u8>, skip_id: usize) {
         if let Some(sessions) = self.rooms.get(room) {
             for id in sessions {
                 if *id != skip_id {
                     if let Some(addr) = self.sessions.get(id) {
-                        let _ = addr.do_send(Message("".to_owned(), message.to_vec()));
+                        let _ = addr.do_send(Message(message.to_vec()));
                     }
                 }
             }
@@ -136,9 +136,10 @@ impl Handler<Connect> for ChatServer {
         println!("Someone joined");
 
         // notify all users in same room
-        self.send_message(&"Main".to_owned(), "Someone joined", 0);
+        // self.send_message(&"Main".to_owned(), "Someone joined", 0);
 
         // register session with random id
+        // ==== 这个重要的属性不能随机生成，手动指定更好=====
         let id = self.rng.borrow_mut().gen::<usize>();
         self.sessions.insert(id, msg.addr);
 
@@ -170,19 +171,19 @@ impl Handler<Disconnect> for ChatServer {
         }
         // send message to other users
         for room in rooms {
-            self.send_message(&room, "Someone disconnected", 0);
+            // self.send_message(&room, "Someone disconnected", 0);
         }
     }
 }
 
 /// Handler for Message message.
-impl Handler<ClientMessage> for ChatServer {
-    type Result = ();
+// impl Handler<ClientMessage> for ChatServer {
+//     type Result = ();
 
-    fn handle(&mut self, msg: ClientMessage, _: &mut Context<Self>) {
-        self.send_message(&msg.room, msg.msg.as_str(), msg.id);
-    }
-}
+//     fn handle(&mut self, msg: ClientMessage, _: &mut Context<Self>) {
+//         self.send_message(&msg.room, msg.msg.as_str(), msg.id);
+//     }
+// }
 
 /// Handler for Message message.
 impl Handler<ClientMessageBin> for ChatServer {
@@ -193,45 +194,45 @@ impl Handler<ClientMessageBin> for ChatServer {
     }
 }
 
-/// Handler for `ListRooms` message.
-impl Handler<ListRooms> for ChatServer {
-    type Result = MessageResult<ListRooms>;
+// / Handler for `ListRooms` message.
+// impl Handler<ListRooms> for ChatServer {
+//     type Result = MessageResult<ListRooms>;
 
-    fn handle(&mut self, _: ListRooms, _: &mut Context<Self>) -> Self::Result {
-        let mut rooms = Vec::new();
+//     fn handle(&mut self, _: ListRooms, _: &mut Context<Self>) -> Self::Result {
+//         let mut rooms = Vec::new();
 
-        for key in self.rooms.keys() {
-            rooms.push(key.to_owned())
-        }
+//         for key in self.rooms.keys() {
+//             rooms.push(key.to_owned())
+//         }
 
-        MessageResult(rooms)
-    }
-}
+//         MessageResult(rooms)
+//     }
+// }
 
-/// Join room, send disconnect message to old room
-/// send join message to new room
-impl Handler<Join> for ChatServer {
-    type Result = ();
+// /// Join room, send disconnect message to old room
+// /// send join message to new room
+// impl Handler<Join> for ChatServer {
+//     type Result = ();
 
-    fn handle(&mut self, msg: Join, _: &mut Context<Self>) {
-        let Join { id, name } = msg;
-        let mut rooms = Vec::new();
+//     fn handle(&mut self, msg: Join, _: &mut Context<Self>) {
+//         let Join { id, name } = msg;
+//         let mut rooms = Vec::new();
 
-        // remove session from all rooms
-        for (n, sessions) in &mut self.rooms {
-            if sessions.remove(&id) {
-                rooms.push(n.to_owned());
-            }
-        }
-        // send message to other users
-        for room in rooms {
-            self.send_message(&room, "Someone disconnected", 0);
-        }
+//         // remove session from all rooms
+//         for (n, sessions) in &mut self.rooms {
+//             if sessions.remove(&id) {
+//                 rooms.push(n.to_owned());
+//             }
+//         }
+//         // send message to other users
+//         for room in rooms {
+//             self.send_message(&room, "Someone disconnected", 0);
+//         }
 
-        if self.rooms.get_mut(&name).is_none() {
-            self.rooms.insert(name.clone(), HashSet::new());
-        }
-        self.send_message(&name, "Someone connected", id);
-        self.rooms.get_mut(&name).unwrap().insert(id);
-    }
-}
+//         if self.rooms.get_mut(&name).is_none() {
+//             self.rooms.insert(name.clone(), HashSet::new());
+//         }
+//         self.send_message(&name, "Someone connected", id);
+//         self.rooms.get_mut(&name).unwrap().insert(id);
+//     }
+// }

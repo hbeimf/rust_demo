@@ -44,7 +44,7 @@ fn chat_route(req: &HttpRequest<WsChatSessionState>) -> Result<HttpResponse, Err
             id: 0,
             hb: Instant::now(),
             room: "Main".to_owned(),
-            name: None,
+            // name: None,
         },
     )
 }
@@ -57,8 +57,8 @@ struct WsChatSession {
     hb: Instant,
     /// joined room
     room: String,
-    /// peer name
-    name: Option<String>,
+    // /// peer name
+    // name: Option<String>,
 }
 
 impl Actor for WsChatSession {
@@ -107,16 +107,16 @@ impl Handler<server::Message> for WsChatSession {
     // server 处理逻辑后将回复发送到此处
     fn handle(&mut self, msg: server::Message, ctx: &mut Self::Context) {
         println!("transport: {:?}", msg);
-        let server::Message(str_reply, bin_reply) = msg;
+        let server::Message(bin_reply) = msg;
         // ctx.text(msg.0);
         // ctx.text(str_reply);
-        if bin_reply.len() == 0 {
-            // 回复text 串
-            ctx.text(str_reply);
-        } else {
+        // if bin_reply.len() == 0 {
+        //     // 回复text 串
+        //     ctx.text(str_reply);
+        // } else {
             // 回复二进制数据
             ctx.binary(bin_reply);
-        }   
+        // }   
         
         // ws::Message::Binary::from(msg.1)
     }
@@ -139,30 +139,39 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
             }
             ws::Message::Text(text) => {
                 println!("WEBSOCKET text MESSAGE: {:?}", text);
-                let m = text.trim();
+                // let m = text.trim();
             
-                let msg = if let Some(ref name) = self.name {
-                    format!("{}: {}", name, m)
-                } else {
-                    m.to_owned()
-                };
-                // send message to chat server
-                ctx.state().addr.do_send(server::ClientMessage {
-                    id: self.id,
-                    msg: msg,
-                    room: self.room.clone(),
-                })
+                // let msg = if let Some(ref name) = self.name {
+                //     format!("{}: {}", name, m)
+                // } else {
+                //     m.to_owned()
+                // };
+                // // send message to chat server
+                // ctx.state().addr.do_send(server::ClientMessage {
+                //     id: self.id,
+                //     msg: msg,
+                //     room: self.room.clone(),
+                // })
+
+                // 不关注字符串消息，直接关闭连接 
+                ctx.stop()
 
             }
             ws::Message::Binary(bin) => {
+                glib::test();
                 // println!("Unexpected binary");
-                println!("Unexpected binary123 {:?}", bin);
+                println!("binary message {:?}", bin);
                 // glib::decode_msg(bin.as_ref().to_vec());
                 let package = bin.as_ref().to_vec();
                 // println!("packageX {:?}", package);
                 // let unpackage = glib::unpackage(package);
                 // glib::test_unpackage(package);
-                
+               
+                println!("state, id: {}", self.id);
+                println!("state, room: {}", self.room);
+                // println!("state, name: {}", self.name);
+
+
                 ctx.state().addr.do_send(server::ClientMessageBin {
                     id: self.id,
                     msg: package,
@@ -205,7 +214,7 @@ impl WsChatSession {
 }
 
 fn main() {
-    glib::test();
+    // glib::test();
     let _ = env_logger::init();
     let sys = actix::System::new("websocket-example");
 

@@ -1,13 +1,3 @@
-// extern crate protobuf;
-// mod protos;
-
-
-// fn main() {
-//     println!("Hello, world!");
-// }
-
-
-
 extern crate protobuf;
 extern crate byteorder;
 

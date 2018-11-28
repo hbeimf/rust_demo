@@ -75,6 +75,10 @@ impl Actor for WsChatSession {
         // before processing any other events.
         // HttpContext::state() is instance of WsChatSessionState, state is shared
         // across all routes within application
+
+        // 向server注册客户端 ，此处逻辑可以移除
+        // 等到收到某个登录消息后，将uid，name一起放到Connect消息里发送
+        // server::Connect 结构体内加上uid, name 
         let addr = ctx.address();
         ctx.state()
             .addr
@@ -95,12 +99,14 @@ impl Actor for WsChatSession {
 
     fn stopping(&mut self, ctx: &mut Self::Context) -> Running {
         // notify chat server
+        // session actor 结束了，通知 server actor
         ctx.state().addr.do_send(server::Disconnect { id: self.id });
         Running::Stop
     }
 }
 
 /// Handle messages from chat server, we simply send it to peer websocket
+// 发送数据给客户端 ， 
 impl Handler<server::Message> for WsChatSession {
     type Result = ();
 
@@ -124,6 +130,7 @@ impl Handler<server::Message> for WsChatSession {
 
 
 /// WebSocket message handler
+// 接收来自客户端的数据， 只接收二进制数据， text 类型的数据收到后，连接将强制关闭，
 impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
 
     // 收到消息后发给server actor
@@ -139,25 +146,12 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
             }
             ws::Message::Text(text) => {
                 println!("WEBSOCKET text MESSAGE: {:?}", text);
-                // let m = text.trim();
-            
-                // let msg = if let Some(ref name) = self.name {
-                //     format!("{}: {}", name, m)
-                // } else {
-                //     m.to_owned()
-                // };
-                // // send message to chat server
-                // ctx.state().addr.do_send(server::ClientMessage {
-                //     id: self.id,
-                //     msg: msg,
-                //     room: self.room.clone(),
-                // })
-
                 // 不关注字符串消息，直接关闭连接 
                 ctx.stop()
 
             }
             ws::Message::Binary(bin) => {
+                // 只接收二进制数据包，按照协议解析完成逻辑即可，
                 glib::test();
                 // println!("Unexpected binary");
                 println!("binary message {:?}", bin);
@@ -185,6 +179,8 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
     }
 }
 
+
+// 心跳 ping 
 impl WsChatSession {
     /// helper method that sends ping to client every second.
     ///

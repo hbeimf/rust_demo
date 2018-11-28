@@ -42,6 +42,8 @@ test1() ->
     TestMsgBin = msg_proto:encode_msg(TestMsg),
 
     Package = glib:package(123456, TestMsgBin),
+
+    ?LOG({send_binary, Package}),
 	{ok, Pid} = get_client(),
 	Pid ! {binary, Package},
 	ok.

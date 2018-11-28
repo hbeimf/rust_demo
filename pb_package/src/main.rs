@@ -20,35 +20,44 @@ mod protos;
 
 fn main() {
 	//encode
-    let mut test_msg = protos::msg::TestMsg::new();
-    test_msg.set_name("tom".to_owned());
-    test_msg.set_nick_name("nick_name".to_owned());
-    test_msg.set_phone("15912341234".to_owned());
+    let msg_pb :Vec<u8> = encode_msg();
 
-    let serialized :Vec<u8> = test_msg.write_to_bytes().unwrap();
-    println!("encode: {:?}", serialized);
-
-    // decode 
-    let parsed = parse_from_bytes::<protos::msg::TestMsg>(&serialized).unwrap();
-    println!("decode: {:?}", parsed);
-
-    // test_package();
+    // package
     let cmd:u32 = 123456;
-    let package = package(cmd, serialized);
+    let package = package(cmd, msg_pb);
     println!("package: {:?}", package);
 
+    // unpackage
     let unpackage = unpackage(package);
     match unpackage {
         Some(ResultPackage{len:_len, cmd:_cmd, pb}) => {
-            let parsed = parse_from_bytes::<protos::msg::TestMsg>(&pb).unwrap();
-            println!("unpackage: {:?}", parsed);
+            // decode
+            let test_msg = decode_msg(pb);
+            println!("name: {:?}", test_msg.get_name());
+            println!("nick_name:{:?}", test_msg.get_nick_name());
+            println!("phone: {:?}", test_msg.get_phone());
 
         }
         None => {
             println!("unpackage ");
         }
     }
-    // println!("unpackage xx: {:?}", unpackage);
+}
+
+fn decode_msg(pb:Vec<u8>) -> protos::msg::TestMsg {
+    let test_msg : protos::msg::TestMsg = parse_from_bytes::<protos::msg::TestMsg>(&pb).unwrap();
+    // println!("decode: {:?}", parsed);
+    test_msg
+}
+
+fn encode_msg() -> Vec<u8> {
+    let mut test_msg = protos::msg::TestMsg::new();
+    test_msg.set_name("tom".to_owned());
+    test_msg.set_nick_name("nick_name".to_owned());
+    test_msg.set_phone("15912341234".to_owned());
+
+    let msg :Vec<u8> = test_msg.write_to_bytes().unwrap();
+    msg
 }
 
 // https://docs.rs/byteorder/1.2.7/byteorder/

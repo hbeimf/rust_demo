@@ -21,8 +21,8 @@ use actix_web::server::HttpServer;
 use actix_web::{fs, http, ws, App, Error, HttpRequest, HttpResponse};
 
 mod server;
-// mod protos;
-// mod glib;
+mod protos;
+mod glib;
 
 
 /// How often heartbeat pings are sent
@@ -183,6 +183,7 @@ impl WsChatSession {
 }
 
 fn main() {
+    glib::test();
     let _ = env_logger::init();
     let sys = actix::System::new("websocket-example");
 

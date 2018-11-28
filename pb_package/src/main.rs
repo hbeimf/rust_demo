@@ -37,7 +37,18 @@ fn main() {
     let package = package(cmd, serialized);
     println!("package: {:?}", package);
 
-    unpackage(package);
+    let unpackage = unpackage(package);
+    match unpackage {
+        Some(ResultPackage{len:_len, cmd:_cmd, pb}) => {
+            let parsed = parse_from_bytes::<protos::msg::TestMsg>(&pb).unwrap();
+            println!("unpackage: {:?}", parsed);
+
+        }
+        None => {
+            println!("unpackage ");
+        }
+    }
+    // println!("unpackage xx: {:?}", unpackage);
 }
 
 // https://docs.rs/byteorder/1.2.7/byteorder/
@@ -54,24 +65,20 @@ fn package(cmd:u32, pb:Vec<u8>) -> Vec<u8> {
 }
 
 
-fn unpackage(package: Vec<u8>) {
-    let mut p1 = package.clone();
-    let vec2 = p1.split_off(8);
+pub struct ResultPackage {
+    len:u32,
+    cmd:u32,
+    pb:Vec<u8>,
+}
 
-    
-    // let mut vec = vec![1,2,3];
-    // let vec2 = vec.split_off(1);
-    // assert_eq!(vec, [1]);
-    // assert_eq!(vec2, [2, 3]);
+fn unpackage(package: Vec<u8>) -> Option<ResultPackage> {
+    let mut p1 = package.clone();
+    let pb:Vec<u8> = p1.split_off(8);
 
     let mut rdr = Cursor::new(package);
-    let len = rdr.read_u32::<LittleEndian>().unwrap();
-    let cmd = rdr.read_u32::<LittleEndian>().unwrap();
-    println!("len:{} , cmd: {}, pb: {:?}", len, cmd, vec2);
-
-    let parsed = parse_from_bytes::<protos::msg::TestMsg>(&vec2).unwrap();
-    println!("unpackage: {:?}", parsed);
-
-
+    let len:u32 = rdr.read_u32::<LittleEndian>().unwrap();
+    let cmd:u32 = rdr.read_u32::<LittleEndian>().unwrap();
+    println!("len:{} , cmd: {}, pb: {:?}", len, cmd, pb);
+    Some(ResultPackage{len:len, cmd:cmd, pb:pb})
 }
 

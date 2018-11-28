@@ -104,13 +104,29 @@ impl Actor for WsChatSession {
 impl Handler<server::Message> for WsChatSession {
     type Result = ();
 
+    // server 处理逻辑后将回复发送到此处
     fn handle(&mut self, msg: server::Message, ctx: &mut Self::Context) {
-        ctx.text(msg.0);
+        println!("transport: {:?}", msg);
+        let server::Message(str_reply, bin_reply) = msg;
+        // ctx.text(msg.0);
+        // ctx.text(str_reply);
+        if bin_reply.len() == 0 {
+            // 回复text 串
+            ctx.text(str_reply);
+        } else {
+            // 回复二进制数据
+            ctx.binary(bin_reply);
+        }   
+        
+        // ws::Message::Binary::from(msg.1)
     }
 }
 
+
 /// WebSocket message handler
 impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
+
+    // 收到消息后发给server actor
     fn handle(&mut self, msg: ws::Message, ctx: &mut Self::Context) {
         // println!("WEBSOCKET MESSAGE: {:?}", msg);
         match msg {
@@ -145,13 +161,13 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
                 let package = bin.as_ref().to_vec();
                 // println!("packageX {:?}", package);
                 // let unpackage = glib::unpackage(package);
-                glib::test_unpackage(package);
+                // glib::test_unpackage(package);
                 
-                // ctx.state().addr.do_send(server::ClientMessage {
-                //     id: self.id,
-                //     msg: bin,
-                //     room: self.room.clone(),
-                // })
+                ctx.state().addr.do_send(server::ClientMessageBin {
+                    id: self.id,
+                    msg: package,
+                    room: self.room.clone(),
+                })
             }
             ws::Message::Close(_) => {
                 ctx.stop();

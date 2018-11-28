@@ -34,22 +34,22 @@ pub fn test() {
 }
 
 
-pub fn test_unpackage(package: Vec<u8>) {
-    let unpackage = unpackage(package);
-    match unpackage {
-        Some(ResultPackage{len:_len, cmd:_cmd, pb}) => {
-            // decode
-            let test_msg = decode_msg(pb);
-            println!("name: {:?}", test_msg.get_name());
-            println!("nick_name:{:?}", test_msg.get_nick_name());
-            println!("phone: {:?}", test_msg.get_phone());
+// pub fn test_unpackage(package: Vec<u8>) {
+//     let unpackage = unpackage(package);
+//     match unpackage {
+//         Some(ResultPackage{len:_len, cmd:_cmd, pb}) => {
+//             // decode
+//             let test_msg = decode_msg(pb);
+//             println!("name: {:?}", test_msg.get_name());
+//             println!("nick_name:{:?}", test_msg.get_nick_name());
+//             println!("phone: {:?}", test_msg.get_phone());
 
-        }
-        None => {
-            println!("unpackage ");
-        }
-    }
-}
+//         }
+//         None => {
+//             println!("unpackage ");
+//         }
+//     }
+// }
 
 pub fn decode_msg(pb:Vec<u8>) -> protos::msg::TestMsg {
     let test_msg : protos::msg::TestMsg = parse_from_bytes::<protos::msg::TestMsg>(&pb).unwrap();

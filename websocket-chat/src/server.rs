@@ -8,8 +8,12 @@ use std::cell::RefCell;
 use std::collections::{HashMap, HashSet};
 
 /// Chat server sends this messages to session
-#[derive(Message)]
-pub struct Message(pub String);
+#[derive(Message, Debug)]
+pub struct Message(pub String, pub Vec<u8>);
+
+/// Chat server sends this messages to session
+// #[derive(Message)]
+// pub struct MessageBin(pub Vec<u8>);
 
 /// Message for chat server communications
 
@@ -33,6 +37,18 @@ pub struct ClientMessage {
     pub id: usize,
     /// Peer message
     pub msg: String,
+    /// Room name
+    pub room: String,
+}
+
+
+/// Send message to specific room
+#[derive(Message)]
+pub struct ClientMessageBin {
+    /// Id of the client session
+    pub id: usize,
+    /// Peer message
+    pub msg: Vec<u8>,
     /// Room name
     pub room: String,
 }
@@ -82,12 +98,25 @@ impl ChatServer {
             for id in sessions {
                 if *id != skip_id {
                     if let Some(addr) = self.sessions.get(id) {
-                        let _ = addr.do_send(Message(message.to_owned()));
+                        let _ = addr.do_send(Message(message.to_owned(), Vec::new()));
                     }
                 }
             }
         }
     }
+
+    fn send_message_bin(&self, room: &str, message: &Vec<u8>, skip_id: usize) {
+        if let Some(sessions) = self.rooms.get(room) {
+            for id in sessions {
+                if *id != skip_id {
+                    if let Some(addr) = self.sessions.get(id) {
+                        let _ = addr.do_send(Message("".to_owned(), message.to_vec()));
+                    }
+                }
+            }
+        }
+    }
+       
 }
 
 /// Make actor from `ChatServer`
@@ -152,6 +181,15 @@ impl Handler<ClientMessage> for ChatServer {
 
     fn handle(&mut self, msg: ClientMessage, _: &mut Context<Self>) {
         self.send_message(&msg.room, msg.msg.as_str(), msg.id);
+    }
+}
+
+/// Handler for Message message.
+impl Handler<ClientMessageBin> for ChatServer {
+    type Result = ();
+
+    fn handle(&mut self, msg: ClientMessageBin, _: &mut Context<Self>) {
+        self.send_message_bin(&msg.room, &msg.msg, msg.id);
     }
 }
 

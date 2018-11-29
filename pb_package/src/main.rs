@@ -1,3 +1,7 @@
+extern crate easy_logging;
+#[macro_use] extern crate log;
+// https://crates.io/crates/easy-logging
+
 extern crate protobuf;
 extern crate byteorder;
 
@@ -9,13 +13,20 @@ use protobuf::*;
 mod protos;
 
 fn main() {
+    // 初始化日志功能
+    easy_logging::init(module_path!(), log::Level::Debug).unwrap();
+    // easy_logging::init(module_path!(), log::Level::Info).unwrap();
+
+    // debug!("Test debug message.");
+    // info!("Test info message.");
+
 	//encode
     let msg_pb :Vec<u8> = encode_msg();
 
     // package
     let cmd:u32 = 123456;
     let package = package(cmd, msg_pb);
-    println!("package: {:?}", package);
+    debug!("package: {:?}", package);
 
     // unpackage
     let unpackage = unpackage(package);
@@ -23,9 +34,11 @@ fn main() {
         Some(ResultPackage{len:_len, cmd:_cmd, pb}) => {
             // decode
             let test_msg = decode_msg(pb);
-            println!("name: {:?}", test_msg.get_name());
-            println!("nick_name:{:?}", test_msg.get_nick_name());
-            println!("phone: {:?}", test_msg.get_phone());
+            debug!("name: {:?}", test_msg.get_name());
+            debug!("nick_name:{:?}", test_msg.get_nick_name());
+            debug!("phone: {:?}", test_msg.get_phone());
+
+
 
         }
         None => {
@@ -77,7 +90,7 @@ fn unpackage(package: Vec<u8>) -> Option<ResultPackage> {
     let mut rdr = Cursor::new(package);
     let len:u32 = rdr.read_u32::<LittleEndian>().unwrap();
     let cmd:u32 = rdr.read_u32::<LittleEndian>().unwrap();
-    println!("len:{} , cmd: {}, pb: {:?}", len, cmd, pb);
+    info!("len:{} , cmd: {}, pb: {:?}", len, cmd, pb);
     Some(ResultPackage{len:len, cmd:cmd, pb:pb})
 }
 

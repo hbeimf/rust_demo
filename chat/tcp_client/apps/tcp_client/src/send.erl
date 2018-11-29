@@ -33,6 +33,13 @@
 % 	ok.
 
 
+
+test() ->
+	lists:foreach(fun(Index) -> 
+		test1()
+	end, [1,2,3,4,5,6]),
+	ok.
+
 test1() -> 
 	TestMsg = #'TestMsg'{
                         name = <<"jim green">>,

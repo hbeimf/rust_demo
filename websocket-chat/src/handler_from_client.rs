@@ -143,8 +143,8 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
                 // println!("packageX {:?}", package);
                 // let unpackage = glib::unpackage(package);
                 // glib::test_unpackage(package);
-                let package1 = package.clone();
-                parse_package_from_client::parse_package(package1, self, ctx);
+                // let package1 = package.clone();
+                parse_package_from_client::parse_package(package, self, ctx);
                 // parse_package(package1, self, ctx);
 
                

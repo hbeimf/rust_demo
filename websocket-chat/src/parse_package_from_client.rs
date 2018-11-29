@@ -12,7 +12,7 @@ pub fn parse_package(package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws:
     // println!("binary message {:?}", unpackage);
 
     match unpackage {
-        Some(glib::ResultPackage{len:_len, cmd:_cmd, pb}) => {
+        Some(glib::UnPackageResult{len:_len, cmd:_cmd, pb}) => {
             // decode
             let test_msg = glib::decode_msg(pb);
             println!("name: {:?}", test_msg.get_name());

@@ -19,7 +19,7 @@ pub fn test() {
     // unpackage
     let unpackage = unpackage(package);
     match unpackage {
-        Some(ResultPackage{len:_len, cmd:_cmd, pb}) => {
+        Some(UnPackageResult{len:_len, cmd:_cmd, pb}) => {
             // decode
             let test_msg = decode_msg(pb);
             println!("name: {:?}", test_msg.get_name());
@@ -37,7 +37,7 @@ pub fn test() {
 // pub fn test_unpackage(package: Vec<u8>) {
 //     let unpackage = unpackage(package);
 //     match unpackage {
-//         Some(ResultPackage{len:_len, cmd:_cmd, pb}) => {
+//         Some(UnPackageResult{len:_len, cmd:_cmd, pb}) => {
 //             // decode
 //             let test_msg = decode_msg(pb);
 //             println!("name: {:?}", test_msg.get_name());
@@ -81,13 +81,13 @@ pub fn package(cmd:u32, pb:Vec<u8>) -> Vec<u8> {
 }
 
 
-pub struct ResultPackage {
+pub struct UnPackageResult {
     pub len:u32,
     pub cmd:u32,
     pub pb:Vec<u8>,
 }
 
-pub fn unpackage(package: Vec<u8>) -> Option<ResultPackage> {
+pub fn unpackage(package: Vec<u8>) -> Option<UnPackageResult> {
     let mut p1 = package.clone();
     let pb:Vec<u8> = p1.split_off(8);
 
@@ -95,5 +95,5 @@ pub fn unpackage(package: Vec<u8>) -> Option<ResultPackage> {
     let len:u32 = rdr.read_u32::<LittleEndian>().unwrap();
     let cmd:u32 = rdr.read_u32::<LittleEndian>().unwrap();
     println!("len:{} , cmd: {}, pb: {:?}", len, cmd, pb);
-    Some(ResultPackage{len:len, cmd:cmd, pb:pb})
+    Some(UnPackageResult{len:len, cmd:cmd, pb:pb})
 }

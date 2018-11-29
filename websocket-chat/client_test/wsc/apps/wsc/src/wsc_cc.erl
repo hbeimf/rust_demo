@@ -41,7 +41,7 @@ websocket_handle({text, Msg}, _ConnState, State) ->
     {ok, State};
 websocket_handle({binary, Bin}, _ConnState, State) ->
 	% io:format("Client received binary here ~p~n", [Bin]),
-        ?LOG({binary, Bin}),
+        ?LOG({binary, Bin, {index, State}}),
 	{ok, State};
 websocket_handle(Msg, _ConnState, State) ->
     % ?LOG({msg, Msg}),

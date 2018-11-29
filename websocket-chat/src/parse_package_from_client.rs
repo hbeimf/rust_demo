@@ -36,6 +36,11 @@ fn action(cmd:u32, pb:Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::Websock
     let cmd:u32 = 123;
     let reply_package = glib::package(cmd, encode);
 
+    // 直接发给客户端
+    let reply_package1 = reply_package.clone();
+    ctx.binary(reply_package1);
+
+    // 给其它在线的客户发个广播
     ctx.state().addr.do_send(server::ClientMessageBin {
         id: client.id,
         msg: reply_package,

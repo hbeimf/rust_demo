@@ -13,7 +13,7 @@
 -export([]).
 
 % gen_server callbacks
--export([start_link/0]).
+-export([start_link/1]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
 
@@ -69,10 +69,10 @@ send(Package) ->
 %     gen_server:start_link({local, ?MODULE}, ?MODULE, [ServerID, ServerType, ServerURI, GwcURI, Max], []).
 
 
-start_link() ->
+start_link(Index) ->
 	% ?LOG({ServerID, ServerType, ServerURI, GwcURI, Max}),
 	?LOG({start, tcp_client}),
-    gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
+    gen_server:start_link(?MODULE, [Index], []).
 
 
 % --------------------------------------------------------------------
@@ -83,7 +83,7 @@ start_link() ->
 %          ignore               |
 %          {stop, Reason}
 % --------------------------------------------------------------------
-init([]) ->
+init([_Index]) ->
 
 	% ?LOG({ServerID, ServerType, ServerURI, GwcURI, Max}),
 	% {Ip, Port} = rconf:read_config(hub_server),

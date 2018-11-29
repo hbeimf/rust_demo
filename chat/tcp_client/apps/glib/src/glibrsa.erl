@@ -1,7 +1,7 @@
 -module(glibrsa).
 % -compile(export_all).
 -export([encode/1, decode/1, test/0, test/1]).
--include_lib("glib/include/log.hrl").
+-include("log.hrl").
 % ====================================
 read_rsa_key(FileName) ->
     {ok, PemBin} = file:read_file(FileName),

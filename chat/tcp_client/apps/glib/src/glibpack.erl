@@ -13,6 +13,11 @@
 % -define( UINT, 32/unsigned-big-integer).
 % -define( USHORT, 16/unsigned-big-integer).
 	
+% glibpack:test().
+test() ->
+	Pack = package(123, <<"hello world!">>),
+	unpackage(Pack).
+
 unpackage(PackageBin) when erlang:byte_size(PackageBin) >= 4 ->
 	% io:format("parse package =========~n~n"),
 	case parse_head(PackageBin) of

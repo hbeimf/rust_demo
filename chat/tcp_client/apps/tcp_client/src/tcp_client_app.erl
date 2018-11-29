@@ -15,7 +15,8 @@
 %%====================================================================
 
 start(_StartType, _StartArgs) ->
-	tcp_client_handler:start_link(),
+	% tcp_client_handler:start_link(),
+	send:init(),
     tcp_client_sup:start_link().
 
 %%--------------------------------------------------------------------

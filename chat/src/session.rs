@@ -11,7 +11,7 @@ use server::{self, ChatServer};
 
 /// Chat server sends this messages to session
 #[derive(Message)]
-pub struct Message(pub String);
+pub struct Message(pub Vec<u8>);
 
 /// `ChatSession` actor is responsible for tcp peer communications.
 pub struct ChatSession {
@@ -33,6 +33,7 @@ impl Actor for ChatSession {
 
     fn started(&mut self, ctx: &mut Self::Context) {
         // we'll start heartbeat process on session start.
+        // 启动心跳包检查， 心跳包协议 还没搞好，先关闭
         self.hb(ctx);
 
         // register self in chat server. `AsyncContext::wait` register
@@ -66,35 +67,35 @@ impl actix::io::WriteHandler<io::Error> for ChatSession {}
 /// To use `Framed` with an actor, we have to implement `StreamHandler` trait
 impl StreamHandler<ChatRequest, io::Error> for ChatSession {
     /// This is main event loop for client requests
-    fn handle(&mut self, msg: ChatRequest, ctx: &mut Self::Context) {
+    fn handle(&mut self, msg: ChatRequest, _ctx: &mut Self::Context) {
         match msg {
-            ChatRequest::List => {
-                // Send ListRooms message to chat server and wait for response
-                println!("List rooms");
-                self.addr.send(server::ListRooms)
-                    .into_actor(self)     // <- create actor compatible future
-                    .then(|res, act, _| {
-                        match res {
-                            Ok(rooms) => act.framed.write(ChatResponse::Rooms(rooms)),
-                            _ => println!("Something is wrong"),
-                        }
-                        actix::fut::ok(())
-                    }).wait(ctx)
-                // .wait(ctx) pauses all events in context,
-                // so actor wont receive any new messages until it get list of rooms back
-            }
-            ChatRequest::Join(name) => {
-                println!("Join to room: {}", name);
-                self.room = name.clone();
-                self.addr.do_send(server::Join {
-                    id: self.id,
-                    name: name.clone(),
-                });
-                self.framed.write(ChatResponse::Joined(name));
-            }
+            // ChatRequest::List => {
+            //     // Send ListRooms message to chat server and wait for response
+            //     println!("List rooms");
+            //     self.addr.send(server::ListRooms)
+            //         .into_actor(self)     // <- create actor compatible future
+            //         .then(|res, act, _| {
+            //             match res {
+            //                 Ok(rooms) => act.framed.write(ChatResponse::Rooms(rooms)),
+            //                 _ => println!("Something is wrong"),
+            //             }
+            //             actix::fut::ok(())
+            //         }).wait(ctx)
+            //     // .wait(ctx) pauses all events in context,
+            //     // so actor wont receive any new messages until it get list of rooms back
+            // }
+            // ChatRequest::Join(name) => {
+            //     println!("Join to room: {}", name);
+            //     self.room = name.clone();
+            //     self.addr.do_send(server::Join {
+            //         id: self.id,
+            //         name: name.clone(),
+            //     });
+            //     self.framed.write(ChatResponse::Joined(name));
+            // }
             ChatRequest::Message(message) => {
                 // send message to chat server
-                println!("Peer message: {}", message);
+                println!("Peer message: {:?}", message);
                 self.addr.do_send(server::Message {
                     id: self.id,
                     msg: message,
@@ -102,7 +103,8 @@ impl StreamHandler<ChatRequest, io::Error> for ChatSession {
                 })
             }
             // we update heartbeat time on ping from peer
-            ChatRequest::Ping => self.hb = Instant::now(),
+            // 心跳包放到 Message 里去解决
+            // ChatRequest::Ping => self.hb = Instant::now(),
         }
     }
 }
@@ -138,19 +140,22 @@ impl ChatSession {
     /// also this method check heartbeats from client
     fn hb(&self, ctx: &mut actix::Context<Self>) {
         ctx.run_later(Duration::new(1, 0), |act, ctx| {
-            // check client heartbeats
-            if Instant::now().duration_since(act.hb) > Duration::new(10, 0) {
-                // heartbeat timed out
-                println!("Client heartbeat failed, disconnecting!");
+            // 没收到心跳包就关闭连接逻辑 先注释 起来
+            // // check client heartbeats
+            // if Instant::now().duration_since(act.hb) > Duration::new(10, 0) {
+            //     // heartbeat timed out
+            //     println!("Client heartbeat failed, disconnecting!");
 
-                // notify chat server
-                act.addr.do_send(server::Disconnect { id: act.id });
+            //     // notify chat server
+            //     act.addr.do_send(server::Disconnect { id: act.id });
 
-                // stop actor
-                ctx.stop();
-            }
+            //     // stop actor
+            //     ctx.stop();
+            // }
 
-            act.framed.write(ChatResponse::Ping);
+            // 此处发送的心跳包解不出来, 用新的二进制协议来发
+            // act.framed.write(ChatResponse::Ping);
+
             act.hb(ctx);
         });
     }

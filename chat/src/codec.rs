@@ -9,14 +9,14 @@ use tokio_io::codec::{Decoder, Encoder};
 #[derive(Serialize, Deserialize, Debug, Message)]
 #[serde(tag = "cmd", content = "data")]
 pub enum ChatRequest {
-    /// List rooms
-    List,
-    /// Join rooms
-    Join(String),
+    // /// List rooms
+    // List,
+    // /// Join rooms
+    // Join(String),
     /// Send message
-    Message(String),
-    /// Ping
-    Ping,
+    Message(Vec<u8>),
+    // /// Ping
+    // Ping,
 }
 
 /// Server response
@@ -32,7 +32,7 @@ pub enum ChatResponse {
     Joined(String),
 
     /// Message
-    Message(String),
+    Message(Vec<u8>),
 }
 
 /// Codec for Client -> Server transport

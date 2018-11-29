@@ -5,8 +5,8 @@ use actix::*;
 use actix_web::{ ws, Error, HttpRequest, HttpResponse};
 
 use server;
-use glib;
-// use parse_package_from_client;
+// use glib;
+use parse_package_from_client;
 
 /// How often heartbeat pings are sent
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
@@ -34,12 +34,12 @@ pub fn chat_route(req: &HttpRequest<WsChatSessionState>) -> Result<HttpResponse,
 
 pub struct WsChatSession {
     /// unique session id
-    id: usize,
+    pub id: usize,
     /// Client must send ping at least once per 10 seconds (CLIENT_TIMEOUT),
     /// otherwise we drop connection.
-    hb: Instant,
+    pub hb: Instant,
     /// joined room
-    room: String,
+    pub room: String,
     // /// peer name
     // name: Option<String>,
 }
@@ -144,8 +144,8 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
                 // let unpackage = glib::unpackage(package);
                 // glib::test_unpackage(package);
                 let package1 = package.clone();
-                // parse_package_from_client::parse_package(package1, ctx);
-                parse_package(package1, self, ctx);
+                parse_package_from_client::parse_package(package1, self, ctx);
+                // parse_package(package1, self, ctx);
 
                
                 println!("state, id: {}", self.id);
@@ -198,32 +198,32 @@ impl WsChatSession {
 
 // priv ========================
 
-pub fn parse_package(package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>)  {
-    glib::test();
+// pub fn parse_package(package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>)  {
+//     glib::test();
 
-    println!("============================== ");
-    let package1 = package.clone();
-    let unpackage = glib::unpackage(package1);
-    // println!("binary message {:?}", unpackage);
+//     println!("============================== ");
+//     let package1 = package.clone();
+//     let unpackage = glib::unpackage(package1);
+//     // println!("binary message {:?}", unpackage);
 
-    match unpackage {
-        Some(glib::ResultPackage{len:_len, cmd:_cmd, pb}) => {
-            // decode
-            let test_msg = glib::decode_msg(pb);
-            println!("name: {:?}", test_msg.get_name());
-            println!("nick_name:{:?}", test_msg.get_nick_name());
-            println!("phone: {:?}", test_msg.get_phone());
+//     match unpackage {
+//         Some(glib::ResultPackage{len:_len, cmd:_cmd, pb}) => {
+//             // decode
+//             let test_msg = glib::decode_msg(pb);
+//             println!("name: {:?}", test_msg.get_name());
+//             println!("nick_name:{:?}", test_msg.get_nick_name());
+//             println!("phone: {:?}", test_msg.get_phone());
 
-        }
-        None => {
-            println!("unpackage ");
-        }
-    }
+//         }
+//         None => {
+//             println!("unpackage ");
+//         }
+//     }
 
-    ctx.state().addr.do_send(server::ClientMessageBin {
-        id: client.id,
-        msg: package,
-        room: client.room.clone(),
-    })
+//     ctx.state().addr.do_send(server::ClientMessageBin {
+//         id: client.id,
+//         msg: package,
+//         room: client.room.clone(),
+//     })
 
-}
+// }

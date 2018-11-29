@@ -1,7 +1,7 @@
 use glib;
 
 
-pub fn parse_package(package: Vec<u8>)  {
+pub fn parse_package(package: Vec<u8>, ctx: ws::WebsocketContext<WsChatSession, WsChatSessionState>)  {
 	glib::test();
 
 	println!("============================== ");

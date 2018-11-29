@@ -88,12 +88,22 @@ pub struct UnPackageResult {
 }
 
 pub fn unpackage(package: Vec<u8>) -> Option<UnPackageResult> {
-    let mut p1 = package.clone();
-    let pb:Vec<u8> = p1.split_off(8);
+    let package_len:u32 = package.len() as u32;
+    if package_len < 8u32 {
+        None
+    } else {
+        let mut p1 = package.clone();
+        
+        let mut rdr = Cursor::new(package);
+        let len:u32 = rdr.read_u32::<LittleEndian>().unwrap();
+        let cmd:u32 = rdr.read_u32::<LittleEndian>().unwrap();
 
-    let mut rdr = Cursor::new(package);
-    let len:u32 = rdr.read_u32::<LittleEndian>().unwrap();
-    let cmd:u32 = rdr.read_u32::<LittleEndian>().unwrap();
-    println!("len:{} , cmd: {}, pb: {:?}", len, cmd, pb);
-    Some(UnPackageResult{len:len, cmd:cmd, pb:pb})
+        if package_len != len {
+            None
+        } else {
+            let pb:Vec<u8> = p1.split_off(8);
+            // println!("len:{} , cmd: {}, pb: {:?}", len, cmd, pb);
+            Some(UnPackageResult{len:len, cmd:cmd, pb:pb})
+        }       
+    }
 }

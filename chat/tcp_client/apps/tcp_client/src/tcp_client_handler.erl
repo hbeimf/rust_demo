@@ -31,7 +31,9 @@
 -export([send/0, send/1]).
 
 
+-include_lib("glib/include/msg_proto.hrl").
 -include_lib("glib/include/log.hrl").
+-include_lib("glib/include/cmdid.hrl").
 % -include("gs_tcp_state.hrl").
 % -include("gwc_proto.hrl").
 % -include("cmd_gs.hrl").
@@ -264,12 +266,18 @@ parse_package(Bin, State) ->
     case glib:unpackage(Bin) of
         {ok, waitmore}  -> {ok, waitmore, Bin};
         {ok, {Cmd, DataBin},LefBin} ->
-            action({Cmd, DataBin}, State),
+            action(Cmd, DataBin, State),
             parse_package(LefBin, State);
         _ ->
             error       
     end.
 
- action(Bin, State) ->
- 	?LOG({Bin, State}),
+ action(Cmd, DataBin, State) ->
+
+ 	#'TestMsg'{name = Name, 'nick_name' = NickName,
+ 	 phone= Phone} = msg_proto:decode_msg(DataBin,'TestMsg'),
+
+ 	?LOG({Cmd, DataBin, State}),
+ 	
+ 	?LOG({Name, NickName, Phone}),
  	ok.

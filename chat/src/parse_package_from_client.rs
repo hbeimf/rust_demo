@@ -50,8 +50,9 @@ fn action(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Cont
     let reply_package = glib::package(cmd, encode);
 
     // 直接发给客户端
-    let reply_package1 = reply_package.clone();
-    client.framed.write(ChatResponse::Message(reply_package1));
+    // let reply_package1 = reply_package.clone();
+    println!("reply_package: {:?}", reply_package);
+    client.framed.write(ChatResponse::Message(reply_package));
 
     // // 给其它在线的客户发个广播
     // ctx.state().addr.do_send(server::ClientMessageBin {

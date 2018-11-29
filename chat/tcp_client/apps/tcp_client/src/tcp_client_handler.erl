@@ -263,8 +263,8 @@ parse_package(Bin, State) ->
     ?LOG({bin, Bin}),
     case glib:unpackage(Bin) of
         {ok, waitmore}  -> {ok, waitmore, Bin};
-        {ok, ValueBin,LefBin} ->
-            action(ValueBin, State),
+        {ok, {Cmd, DataBin},LefBin} ->
+            action({Cmd, DataBin}, State),
             parse_package(LefBin, State);
         _ ->
             error       

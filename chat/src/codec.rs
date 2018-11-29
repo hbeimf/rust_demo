@@ -1,8 +1,10 @@
 #![allow(dead_code)]
 // use byteorder::{BigEndian, ByteOrder};
 use byteorder::{LittleEndian, ByteOrder};
-use bytes::{BufMut, BytesMut};
-use serde_json as json;
+// use bytes::{BufMut, BytesMut};
+use bytes::{ BytesMut};
+
+// use serde_json as json;
 use std::io;
 use tokio_io::codec::{Decoder, Encoder};
 
@@ -87,18 +89,32 @@ impl Encoder for ChatCodec {
     type Item = ChatResponse;
     type Error = io::Error;
 
+    // fn encode(
+    //     &mut self, msg: ChatResponse, dst: &mut BytesMut,
+    // ) -> Result<(), Self::Error> {
+    //     let msg = json::to_string(&msg).unwrap();
+    //     let msg_ref: &[u8] = msg.as_ref();
+
+    //     dst.reserve(msg_ref.len() + 2);
+    //     dst.put_u16_be(msg_ref.len() as u16);
+    //     dst.put(msg_ref);
+
+    //     Ok(())
+    // }
+
     fn encode(
         &mut self, msg: ChatResponse, dst: &mut BytesMut,
     ) -> Result<(), Self::Error> {
-        let msg = json::to_string(&msg).unwrap();
-        let msg_ref: &[u8] = msg.as_ref();
+        // let msg_ref: &[u8] = msg.as_ref();
+        let ChatResponse::Message(package) = msg;
+        println!("reply: {:?}", package);
 
-        dst.reserve(msg_ref.len() + 2);
-        dst.put_u16_be(msg_ref.len() as u16);
-        dst.put(msg_ref);
+        // https://github.com/carllerche/bytes/blob/v0.4.x/src/bytes.rs
+        dst.extend_from_slice(package.as_ref());
 
         Ok(())
     }
+    
 }
 
 // /// Codec for Server -> Client transport

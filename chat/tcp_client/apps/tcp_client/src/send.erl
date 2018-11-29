@@ -37,7 +37,7 @@
 test() ->
 	lists:foreach(fun(Index) -> 
 		test1()
-	end, [1,2,3,4,5,6]),
+	end, lists:seq(1, 100)),
 	ok.
 
 test1() -> 

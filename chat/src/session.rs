@@ -9,6 +9,8 @@ use tokio_tcp::TcpStream;
 use codec::{ChatCodec, ChatRequest, ChatResponse};
 use server::{self, ChatServer};
 
+use parse_package_from_client;
+
 /// Chat server sends this messages to session
 #[derive(Message)]
 pub struct Message(pub Vec<u8>);
@@ -67,7 +69,7 @@ impl actix::io::WriteHandler<io::Error> for ChatSession {}
 /// To use `Framed` with an actor, we have to implement `StreamHandler` trait
 impl StreamHandler<ChatRequest, io::Error> for ChatSession {
     /// This is main event loop for client requests
-    fn handle(&mut self, msg: ChatRequest, _ctx: &mut Self::Context) {
+    fn handle(&mut self, msg: ChatRequest, ctx: &mut Self::Context) {
         match msg {
             // ChatRequest::List => {
             //     // Send ListRooms message to chat server and wait for response
@@ -93,14 +95,16 @@ impl StreamHandler<ChatRequest, io::Error> for ChatSession {
             //     });
             //     self.framed.write(ChatResponse::Joined(name));
             // }
-            ChatRequest::Message(message) => {
+            ChatRequest::Message(package) => {
                 // send message to chat server
-                println!("Peer message: {:?}", message);
-                self.addr.do_send(server::Message {
-                    id: self.id,
-                    msg: message,
-                    room: self.room.clone(),
-                })
+                println!("Peer message XXXX: {:?}", package);
+
+                parse_package_from_client::parse_package(package, self, ctx);
+                // self.addr.do_send(server::Message {
+                //     id: self.id,
+                //     msg: message,
+                //     room: self.room.clone(),
+                // })
             }
             // we update heartbeat time on ping from peer
             // 心跳包放到 Message 里去解决

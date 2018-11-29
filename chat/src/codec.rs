@@ -62,14 +62,18 @@ impl Decoder for ChatCodec {
 
     // {len:4, <<cmd:4, pb/binary>>}
     fn decode(&mut self, src: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
-      
+        println!("Peer message");
         if src.len() < 4 {
             return Ok(None);
         }
         let len = LittleEndian::read_u32(src.as_ref()) as usize;
+        println!("len: {}", len);
 
-        if src.len() >= len + 4 {
+        if src.len() >= len {
             let buf = src.split_to(len);
+            let v = buf.to_vec();
+            println!("buf: {:?}", v.clone());
+
             Ok(Some(ChatRequest::Message(buf.to_vec())))
         } else {
             Ok(None)

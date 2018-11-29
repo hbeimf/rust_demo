@@ -15,6 +15,8 @@ extern crate serde_derive;
 #[macro_use]
 extern crate actix;
 
+extern crate protobuf;
+
 use std::net;
 use std::str::FromStr;
 
@@ -29,6 +31,10 @@ use tokio_tcp::{TcpListener, TcpStream};
 mod codec;
 mod server;
 mod session;
+mod parse_package_from_client;
+mod glib;
+mod msg_proto;
+mod protos;
 
 use codec::ChatCodec;
 use server::ChatServer;

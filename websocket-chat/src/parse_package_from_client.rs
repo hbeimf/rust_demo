@@ -2,6 +2,7 @@ use glib;
 use handler_from_client::{WsChatSession, WsChatSessionState};
 use actix_web::{ ws};
 use server;
+use actix::ActorContext;
 
 // 解包
 pub fn parse_package(package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>)  {
@@ -13,7 +14,9 @@ pub fn parse_package(package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws:
             action(cmd, pb, client, ctx);
         }
         None => {
-            println!("unpackage ");
+        	// 如果解包失败，直接关掉连接
+            println!("unpackage error ...");
+            ctx.stop();
         }
     }
 }

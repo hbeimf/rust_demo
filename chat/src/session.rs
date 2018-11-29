@@ -2,7 +2,7 @@
 //! proxies commands from peer to `ChatServer`.
 use actix::prelude::*;
 use std::io;
-use std::time::{Duration, Instant};
+// use std::time::{Duration, Instant};
 use tokio_io::io::WriteHalf;
 use tokio_tcp::TcpStream;
 
@@ -19,9 +19,9 @@ pub struct ChatSession {
     id: usize,
     /// this is address of chat server
     addr: Addr<ChatServer>,
-    /// Client must send ping at least once per 10 seconds, otherwise we drop
-    /// connection.
-    hb: Instant,
+    // /// Client must send ping at least once per 10 seconds, otherwise we drop
+    // /// connection.
+    // hb: Instant,
     /// joined room
     room: String,
     /// Framed wrapper
@@ -32,9 +32,9 @@ impl Actor for ChatSession {
     type Context = actix::Context<Self>;
 
     fn started(&mut self, ctx: &mut Self::Context) {
-        // we'll start heartbeat process on session start.
-        // 启动心跳包检查， 心跳包协议 还没搞好，先关闭
-        self.hb(ctx);
+        // // we'll start heartbeat process on session start.
+        // // 启动心跳包检查， 心跳包协议 还没搞好，先关闭
+        // self.hb(ctx);
 
         // register self in chat server. `AsyncContext::wait` register
         // future within context, but context waits until this future resolves
@@ -130,33 +130,33 @@ impl ChatSession {
             addr,
             framed,
             id: 0,
-            hb: Instant::now(),
+            // hb: Instant::now(),
             room: "Main".to_owned(),
         }
     }
 
-    /// helper method that sends ping to client every second.
-    ///
-    /// also this method check heartbeats from client
-    fn hb(&self, ctx: &mut actix::Context<Self>) {
-        ctx.run_later(Duration::new(1, 0), |act, ctx| {
-            // 没收到心跳包就关闭连接逻辑 先注释 起来
-            // // check client heartbeats
-            // if Instant::now().duration_since(act.hb) > Duration::new(10, 0) {
-            //     // heartbeat timed out
-            //     println!("Client heartbeat failed, disconnecting!");
+    // /// helper method that sends ping to client every second.
+    // ///
+    // /// also this method check heartbeats from client
+    // fn hb(&self, ctx: &mut actix::Context<Self>) {
+    //     ctx.run_later(Duration::new(1, 0), |act, ctx| {
+    //         // 没收到心跳包就关闭连接逻辑 先注释 起来
+    //         // // check client heartbeats
+    //         // if Instant::now().duration_since(act.hb) > Duration::new(10, 0) {
+    //         //     // heartbeat timed out
+    //         //     println!("Client heartbeat failed, disconnecting!");
 
-            //     // notify chat server
-            //     act.addr.do_send(server::Disconnect { id: act.id });
+    //         //     // notify chat server
+    //         //     act.addr.do_send(server::Disconnect { id: act.id });
 
-            //     // stop actor
-            //     ctx.stop();
-            // }
+    //         //     // stop actor
+    //         //     ctx.stop();
+    //         // }
 
-            // 此处发送的心跳包解不出来, 用新的二进制协议来发
-            // act.framed.write(ChatResponse::Ping);
+    //         // 此处发送的心跳包解不出来, 用新的二进制协议来发
+    //         // act.framed.write(ChatResponse::Ping);
 
-            act.hb(ctx);
-        });
-    }
+    //         act.hb(ctx);
+    //     });
+    // }
 }

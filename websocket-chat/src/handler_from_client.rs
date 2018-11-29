@@ -5,7 +5,8 @@ use actix::*;
 use actix_web::{ ws, Error, HttpRequest, HttpResponse};
 
 use server;
-use glib;
+// use glib;
+use parse_package_from_client;
 
 /// How often heartbeat pings are sent
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
@@ -134,7 +135,7 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
             }
             ws::Message::Binary(bin) => {
                 // 只接收二进制数据包，按照协议解析完成逻辑即可，
-                glib::test();
+                // glib::test();
                 // println!("Unexpected binary");
                 println!("binary message {:?}", bin);
                 // glib::decode_msg(bin.as_ref().to_vec());
@@ -142,6 +143,8 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
                 // println!("packageX {:?}", package);
                 // let unpackage = glib::unpackage(package);
                 // glib::test_unpackage(package);
+                let package1 = package.clone();
+                parse_package_from_client::parse_package(package1);
                
                 println!("state, id: {}", self.id);
                 println!("state, room: {}", self.room);

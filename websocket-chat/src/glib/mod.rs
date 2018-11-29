@@ -82,9 +82,9 @@ pub fn package(cmd:u32, pb:Vec<u8>) -> Vec<u8> {
 
 
 pub struct ResultPackage {
-    len:u32,
-    cmd:u32,
-    pb:Vec<u8>,
+    pub len:u32,
+    pub cmd:u32,
+    pub pb:Vec<u8>,
 }
 
 pub fn unpackage(package: Vec<u8>) -> Option<ResultPackage> {

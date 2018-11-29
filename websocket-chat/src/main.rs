@@ -17,6 +17,8 @@ mod server;
 mod protos;
 mod glib;
 mod handler_from_client;
+mod parse_package_from_client;
+
 
 use actix::*;
 use actix_web::server::HttpServer;

@@ -64,17 +64,17 @@ impl Decoder for ChatCodec {
 
     // {len:4, <<cmd:4, pb/binary>>}
     fn decode(&mut self, src: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
-        println!("Peer message");
+        debug!("Peer message");
         if src.len() < 4 {
             return Ok(None);
         }
         let len = LittleEndian::read_u32(src.as_ref()) as usize;
-        println!("len: {}", len);
+        debug!("len: {}", len);
 
         if src.len() >= len {
             let buf = src.split_to(len);
             let v = buf.to_vec();
-            println!("buf: {:?}", v.clone());
+            debug!("buf: {:?}", v.clone());
 
             Ok(Some(ChatRequest::Message(buf.to_vec())))
         } else {
@@ -107,7 +107,7 @@ impl Encoder for ChatCodec {
     ) -> Result<(), Self::Error> {
         // let msg_ref: &[u8] = msg.as_ref();
         let ChatResponse::Message(package) = msg;
-        println!("reply: {:?}", package);
+        debug!("reply: {:?}", package);
 
         // https://github.com/carllerche/bytes/blob/v0.4.x/src/bytes.rs
         dst.extend_from_slice(package.as_ref());

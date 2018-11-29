@@ -16,6 +16,9 @@ extern crate serde_derive;
 extern crate actix;
 
 extern crate protobuf;
+extern crate easy_logging;
+#[macro_use] extern crate log;
+// https://crates.io/crates/easy-logging
 
 use std::net;
 use std::str::FromStr;
@@ -74,6 +77,10 @@ impl Handler<TcpConnect> for Server {
 }
 
 fn main() {
+    // 初始化日志功能
+    easy_logging::init(module_path!(), log::Level::Debug).unwrap();
+    // easy_logging::init(module_path!(), log::Level::Info).unwrap();
+
     actix::System::run(|| {
         // Start chat server actor
         let server = ChatServer::default().start();
@@ -95,6 +102,6 @@ fn main() {
             Server { chat: server }
         });
 
-        println!("Running chat server on 127.0.0.1:12345");
+        debug!("Running chat server on 127.0.0.1:12345");
     });
 }

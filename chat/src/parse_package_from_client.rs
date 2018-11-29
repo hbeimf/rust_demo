@@ -30,7 +30,7 @@ pub fn parse_package(package: Vec<u8>, client: &mut ChatSession, ctx: &mut actix
         }
         None => {
         	// 如果解包失败，直接关掉连接
-            println!("unpackage error ...");
+            debug!("unpackage error ...");
             ctx.stop();
         }
     }
@@ -40,9 +40,9 @@ pub fn parse_package(package: Vec<u8>, client: &mut ChatSession, ctx: &mut actix
 fn action(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
 	//parse pb logic 
 	let test_msg = msg_proto::decode_msg(pb);
-    println!("name: {:?}", test_msg.get_name());
-    println!("nick_name:{:?}", test_msg.get_nick_name());
-    println!("phone: {:?}", test_msg.get_phone());
+    debug!("name: {:?}", test_msg.get_name());
+    debug!("nick_name:{:?}", test_msg.get_nick_name());
+    debug!("phone: {:?}", test_msg.get_phone());
 
     // reply 
     let encode:Vec<u8> = msg_proto::encode_msg();
@@ -51,7 +51,7 @@ fn action(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Cont
 
     // 直接发给客户端
     // let reply_package1 = reply_package.clone();
-    println!("reply_package: {:?}", reply_package);
+    debug!("reply_package: {:?}", reply_package);
     client.framed.write(ChatResponse::Message(reply_package));
 
     // // 给其它在线的客户发个广播

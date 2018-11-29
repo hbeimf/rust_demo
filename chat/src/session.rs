@@ -97,7 +97,7 @@ impl StreamHandler<ChatRequest, io::Error> for ChatSession {
             // }
             ChatRequest::Message(package) => {
                 // send message to chat server
-                println!("Peer message XXXX: {:?}", package);
+                debug!("Peer message XXXX: {:?}", package);
 
                 parse_package_from_client::parse_package(package, self, ctx);
                 // self.addr.do_send(server::Message {

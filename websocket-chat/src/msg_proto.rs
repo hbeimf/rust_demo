@@ -1,5 +1,3 @@
-// use byteorder::{ReadBytesExt, WriteBytesExt, LittleEndian};
-// use std::io::Cursor;
 use protobuf::*;
 
 use super::protos;

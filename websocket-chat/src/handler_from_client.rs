@@ -96,18 +96,9 @@ impl Handler<server::Message> for WsChatSession {
     // server 处理逻辑后将回复发送到此处
     fn handle(&mut self, msg: server::Message, ctx: &mut Self::Context) {
         println!("transport: {:?}", msg);
-        let server::Message(bin_reply) = msg;
-        // ctx.text(msg.0);
-        // ctx.text(str_reply);
-        // if bin_reply.len() == 0 {
-        //     // 回复text 串
-        //     ctx.text(str_reply);
-        // } else {
-            // 回复二进制数据
-            ctx.binary(bin_reply);
-        // }   
-        
-        // ws::Message::Binary::from(msg.1)
+        let server::Message(bin_reply) = msg;  
+        // 回复二进制数据
+        ctx.binary(bin_reply);
     }
 }
 
@@ -118,7 +109,6 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
 
     // 收到消息后发给server actor
     fn handle(&mut self, msg: ws::Message, ctx: &mut Self::Context) {
-        // println!("WEBSOCKET MESSAGE: {:?}", msg);
         match msg {
             ws::Message::Ping(msg) => {
                 self.hb = Instant::now();
@@ -135,29 +125,9 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
             }
             ws::Message::Binary(bin) => {
                 // 只接收二进制数据包，按照协议解析完成逻辑即可，
-                // glib::test();
-                // println!("Unexpected binary");
                 println!("binary message {:?}", bin);
-                // glib::decode_msg(bin.as_ref().to_vec());
                 let package = bin.as_ref().to_vec();
-                // println!("packageX {:?}", package);
-                // let unpackage = glib::unpackage(package);
-                // glib::test_unpackage(package);
-                // let package1 = package.clone();
                 parse_package_from_client::parse_package(package, self, ctx);
-                // parse_package(package1, self, ctx);
-
-               
-                println!("state, id: {}", self.id);
-                println!("state, room: {}", self.room);
-                // // println!("state, name: {}", self.name);
-
-
-                // ctx.state().addr.do_send(server::ClientMessageBin {
-                //     id: self.id,
-                //     msg: package,
-                //     room: self.room.clone(),
-                // })
             }
             ws::Message::Close(_) => {
                 ctx.stop();
@@ -196,34 +166,3 @@ impl WsChatSession {
     }
 }
 
-// priv ========================
-
-// pub fn parse_package(package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>)  {
-//     glib::test();
-
-//     println!("============================== ");
-//     let package1 = package.clone();
-//     let unpackage = glib::unpackage(package1);
-//     // println!("binary message {:?}", unpackage);
-
-//     match unpackage {
-//         Some(glib::ResultPackage{len:_len, cmd:_cmd, pb}) => {
-//             // decode
-//             let test_msg = glib::decode_msg(pb);
-//             println!("name: {:?}", test_msg.get_name());
-//             println!("nick_name:{:?}", test_msg.get_nick_name());
-//             println!("phone: {:?}", test_msg.get_phone());
-
-//         }
-//         None => {
-//             println!("unpackage ");
-//         }
-//     }
-
-//     ctx.state().addr.do_send(server::ClientMessageBin {
-//         id: client.id,
-//         msg: package,
-//         room: client.room.clone(),
-//     })
-
-// }

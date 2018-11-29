@@ -1,18 +1,18 @@
-use byteorder::{ReadBytesExt, LittleEndian};
+use byteorder::{ReadBytesExt, WriteBytesExt, LittleEndian};
 use std::io::Cursor;
 
 // https://docs.rs/byteorder/1.2.7/byteorder/
 // https://github.com/BurntSushi/byteorder
 // http://blog.zhukunqian.com/?cat=32
 
-// pub fn package(cmd:u32, pb:Vec<u8>) -> Vec<u8> {
-//     let len:u32 = pb.len() as u32 + 4 + 4;
-//     let mut package = vec![];
-//     package.write_u32::<LittleEndian>(len).unwrap();
-//     package.write_u32::<LittleEndian>(cmd).unwrap();
-//     package.extend_from_slice(&pb);
-//     package
-// }
+pub fn package(cmd:u32, pb:Vec<u8>) -> Vec<u8> {
+    let len:u32 = pb.len() as u32 + 4 + 4;
+    let mut package = vec![];
+    package.write_u32::<LittleEndian>(len).unwrap();
+    package.write_u32::<LittleEndian>(cmd).unwrap();
+    package.extend_from_slice(&pb);
+    package
+}
 
 
 pub struct UnPackageResult {

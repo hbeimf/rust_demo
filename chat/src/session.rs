@@ -27,7 +27,7 @@ pub struct ChatSession {
     /// joined room
     room: String,
     /// Framed wrapper
-    framed: actix::io::FramedWrite<WriteHalf<TcpStream>, ChatCodec>,
+    pub framed: actix::io::FramedWrite<WriteHalf<TcpStream>, ChatCodec>,
 }
 
 impl Actor for ChatSession {

@@ -197,6 +197,7 @@ handle_info({tcp, Socket, CurrentPackage}, State=#state{
 % 	{noreply, gs_tcp_state};
 
 handle_info({send, Package}, State = #state{socket = Socket}) ->
+	?LOG({send, Package}),
 	ranch_tcp:send(Socket, Package),
 	{noreply, State};
 % handle_info({timeout,_,{reconnect,{Ip,Port}}}, #gs_tcp_state{transport = Transport} = State) ->

@@ -16,21 +16,21 @@
 
 
 
-test() -> 
-	Txt = <<"hello world">>,
-	% {ok, Pid} = wsc_cc:start_link(),
-	{ok, Pid} = get_client(),
-	% Pid ! {binary, <<Bin/binary,Bin/binary,Bin/binary>>},
-	Pid ! {text, Txt},
-	ok.
+% test() -> 
+% 	Txt = <<"hello world">>,
+% 	% {ok, Pid} = wsc_cc:start_link(),
+% 	{ok, Pid} = get_client(),
+% 	% Pid ! {binary, <<Bin/binary,Bin/binary,Bin/binary>>},
+% 	Pid ! {text, Txt},
+% 	ok.
 
-test_bin() -> 
-	Bin = create_package(),
-	% binary(PackageBinary).
-	{ok, Pid} = get_client(),
-	% Pid ! {binary, <<Bin/binary,Bin/binary,Bin/binary>>},
-	Pid ! {binary, Bin},
-	ok.
+% test_bin() -> 
+% 	Bin = create_package(),
+% 	% binary(PackageBinary).
+% 	{ok, Pid} = get_client(),
+% 	% Pid ! {binary, <<Bin/binary,Bin/binary,Bin/binary>>},
+% 	Pid ! {send, Bin},
+% 	ok.
 
 
 test1() -> 
@@ -45,7 +45,7 @@ test1() ->
 
     ?LOG({send_binary, Package}),
 	{ok, Pid} = get_client(),
-	Pid ! {binary, Package},
+	Pid ! {send, Package},
 	ok.
 
 		

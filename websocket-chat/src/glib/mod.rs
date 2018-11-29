@@ -7,31 +7,31 @@ use super::protos;
 
 
 
-pub fn test() {
-	//encode
-    let msg_pb :Vec<u8> = encode_msg();
+// pub fn test() {
+// 	//encode
+//     let msg_pb :Vec<u8> = encode_msg();
 
-    // package
-    let cmd:u32 = 123456;
-    let package = package(cmd, msg_pb);
-    println!("package: {:?}", package);
+//     // package
+//     let cmd:u32 = 123456;
+//     let package = package(cmd, msg_pb);
+//     println!("package: {:?}", package);
 
-    // unpackage
-    let unpackage = unpackage(package);
-    match unpackage {
-        Some(UnPackageResult{len:_len, cmd:_cmd, pb}) => {
-            // decode
-            let test_msg = decode_msg(pb);
-            println!("name: {:?}", test_msg.get_name());
-            println!("nick_name:{:?}", test_msg.get_nick_name());
-            println!("phone: {:?}", test_msg.get_phone());
+//     // unpackage
+//     let unpackage = unpackage(package);
+//     match unpackage {
+//         Some(UnPackageResult{len:_len, cmd:_cmd, pb}) => {
+//             // decode
+//             let test_msg = decode_msg(pb);
+//             println!("name: {:?}", test_msg.get_name());
+//             println!("nick_name:{:?}", test_msg.get_nick_name());
+//             println!("phone: {:?}", test_msg.get_phone());
 
-        }
-        None => {
-            println!("unpackage ");
-        }
-    }
-}
+//         }
+//         None => {
+//             println!("unpackage ");
+//         }
+//     }
+// }
 
 
 // pub fn test_unpackage(package: Vec<u8>) {

@@ -4,7 +4,7 @@ use actix_web::{ ws};
 use server;
 
 pub fn parse_package(package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>)  {
-    glib::test();
+    // glib::test();
 
     println!("============================== ");
     let package1 = package.clone();
@@ -25,9 +25,14 @@ pub fn parse_package(package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws:
         }
     }
 
+    // reply 
+    let encode:Vec<u8> = glib::encode_msg();
+    let cmd:u32 = 123;
+    let reply_package = glib::package(cmd, encode);
+
     ctx.state().addr.do_send(server::ClientMessageBin {
         id: client.id,
-        msg: package,
+        msg: reply_package,
         room: client.room.clone(),
     })
 

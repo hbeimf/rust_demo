@@ -5,6 +5,16 @@ https://crates.io/
 ```
 
 
+```
+
+[root@localhost rust_demo]# cargo -V
+cargo 1.31.0-nightly (2d0863f65 2018-10-20)
+[root@localhost rust_demo]# rustc --version
+rustc 1.31.0-nightly (f99911a4a 2018-10-23)
+[root@localhost rust_demo]# 
+
+```
+
 
 version
 

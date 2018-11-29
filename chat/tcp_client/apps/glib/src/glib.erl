@@ -5,53 +5,53 @@
 
 -define( UINT, 32/unsigned-little-integer).
 % -define( INT, 32/signed-little-integer).
--define( USHORT, 16/unsigned-big-integer).
+-define( USHORT, 16/unsigned-little-integer).
 % -define( SHORT, 16/signed-little-integer).
 % -define( UBYTE, 8/unsigned-little-integer).
 % -define( BYTE, 8/signed-little-integer).
-
-unpackage(PackageBin) when erlang:byte_size(PackageBin) >= 2 ->
+	
+unpackage(PackageBin) when erlang:byte_size(PackageBin) >= 4 ->
 	% io:format("parse package =========~n~n"),
 	case parse_head(PackageBin) of
-		{ok, PackageLen} ->
+		{ok, PackageLen} ->	
 			parse_body(PackageLen, PackageBin);
-		Any ->
+		Any -> 
 			Any
 	end;
 unpackage(_) ->
-	{ok, waitmore}.
+	{ok, waitmore}. 
 
-parse_head(<<PackageLen:?USHORT ,_/binary>> ) ->
-	% io:format("parse head ======: ~p ~n~n", [PackageLen]),
+parse_head(<<PackageLen:?UINT ,_/binary>> ) ->
+	% io:format("parse head ======: ~p ~n~n", [PackageLen]), 
 	{ok, PackageLen};
 parse_head(_) ->
 	error.
 
 parse_body(PackageLen, _ ) when PackageLen > 9000 ->
-	error;
+	error; 
 parse_body(PackageLen, PackageBin) ->
 	% io:format("parse body -----------~n~n"),
-	case PackageBin of
+	case PackageBin of 
 		<<RightPackage:PackageLen/binary,NextPageckage/binary>> ->
-			<<_Len:?USHORT, DataBin/binary>> = RightPackage,
+			<<_Len:?UINT, Cmd:?UINT, DataBin/binary>> = RightPackage,
 			% tcp_controller:action(Cmd, DataBin),
 			% unpackage(NextPageckage);
-			{ok, DataBin, NextPageckage};
+			{ok, {Cmd, DataBin}, NextPageckage};
 		_ -> {ok, waitmore}
 	end.
 
 package(Cmd, DataBin) ->
-	Len = byte_size(DataBin)+2,
-	<<Len:?USHORT, DataBin/binary>>.
+	Len = byte_size(DataBin)+8,
+	<<Len:?UINT, Cmd:?UINT, DataBin/binary>>.
 
 
-test() ->
+test() -> 
 	B = package(123, <<"hello world!">>),
 	unpackage(B).
 
 
 % glib:uid().
-uid() ->
+uid() -> 
 	esnowflake:generate_id().
 
 
@@ -85,15 +85,15 @@ file_exists(Dir) ->
 			filelib:is_file(Dir)
 	end.
 
-% 时间转时间戳，格式：{{2013,11,13}, {18,0,0}}
-datetime_to_timestamp(DateTime) ->
-	calendar:datetime_to_gregorian_seconds(DateTime) -  calendar:datetime_to_gregorian_seconds({{1970,1,1},{0,0,0}}).
+% 时间转时间戳，格式：{{2013,11,13}, {18,0,0}}  
+datetime_to_timestamp(DateTime) ->  
+	calendar:datetime_to_gregorian_seconds(DateTime) -  calendar:datetime_to_gregorian_seconds({{1970,1,1},{0,0,0}}).  
 
-% 时间戳转时间
-timestamp_to_datetime(Timestamp) ->
-	calendar:gregorian_seconds_to_datetime(Timestamp +  calendar:datetime_to_gregorian_seconds({{1970,1,1},{0,0,0}})).
+% 时间戳转时间  
+timestamp_to_datetime(Timestamp) ->  
+	calendar:gregorian_seconds_to_datetime(Timestamp +  calendar:datetime_to_gregorian_seconds({{1970,1,1},{0,0,0}})).  
 
-get_date() ->
+get_date() -> 
 	T = libfun:time(),
 	{{Y, Mon, D}, {H, M, S}} = timestamp_to_datetime(T),
 	lists:concat([Y, "-", Mon, "-" , D, " ", H, ":", M, ":", S]).
@@ -106,7 +106,7 @@ time() ->
 
 
 root_dir() ->
-	replace(os:cmd("pwd"), "\n", "/").
+	replace(os:cmd("pwd"), "\n", "/"). 
 
 append(Dir, Data) ->
 	case file_exists(Dir) of
@@ -116,12 +116,12 @@ append(Dir, Data) ->
 			file:write_file(Dir, Data, [append])
 	end.
 
-replace() ->
+replace() -> 
 	S = replace("xxx'yyy'zzz", "'", "\\'"),
 	io:format("str: ~p ~n ", [S]).
 
 replace(Str, SubStr, NewStr) ->
-	replace("", Str, SubStr, NewStr).
+	replace("", Str, SubStr, NewStr). 
 
 replace(Result, Str, SubStr, NewStr) ->
 	case string:str(Str, SubStr) of
@@ -187,7 +187,7 @@ to_binary(X) -> term_to_binary(X).
 to_integer(X) when is_list(X) -> list_to_integer(X);
 to_integer(X) when is_binary(X) -> binary_to_integer(X);
 to_integer(X) when is_integer(X) -> X;
-to_integer(X) -> X.
+to_integer(X) -> X.	
 
 trim(Str) ->
 	string:strip(Str).
@@ -216,7 +216,7 @@ rtrim(Str, SubStr) ->
 				Length ->
 					Head = string:substr(NewStr, Length + 1, LengthNewSubStr),
 					case string:equal(Head, NewSubStr) of
-						true ->
+						true ->		
 							Tail = string:substr(NewStr, 1, Length),
 							rtrim(Tail, SubStr);
 						false ->
@@ -239,7 +239,7 @@ ltrim(Str, SubStr) ->
 				Length ->
 					Head = string:substr(NewStr, 1, LengthNewSubStr),
 					case string:equal(Head, NewSubStr) of
-						true ->
+						true ->		
 							Tail = string:substr(NewStr, LengthNewSubStr+1, Length),
 							ltrim(Tail, SubStr);
 						false ->
@@ -308,8 +308,8 @@ del_dir(Dir) ->
 
 % =====================================
 
-get_ip() ->
+get_ip() -> 
 	{ok, L} = inet:getif(),
-	lists:foldl(fun({Ip, _, _}, Reply) ->
+	lists:foldl(fun({Ip, _, _}, Reply) -> 
 		[Ip|Reply]
 	end, [], L).

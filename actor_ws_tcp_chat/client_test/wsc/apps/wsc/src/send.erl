@@ -16,7 +16,7 @@
 
 
 
-test() -> 
+test1() -> 
 	Txt = <<"hello world">>,
 	% {ok, Pid} = wsc_cc:start_link(),
 	{ok, Pid} = get_client(),
@@ -33,7 +33,7 @@ test_bin() ->
 	ok.
 
 
-test1() -> 
+test() -> 
 	TestMsg = #'TestMsg'{
                         name = <<"jim green">>,
                         nick_name = <<"nick_name123456">>,

@@ -32,7 +32,7 @@ use actix_web::{fs, http, App, HttpResponse};
 mod codec;
 mod server;
 mod session;
-mod parse_package_from_client;
+mod parse_package_from_tcp;
 mod glib;
 mod msg_proto;
 mod protos;

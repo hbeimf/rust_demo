@@ -17,7 +17,7 @@ use codec::{ChatCodec, ChatRequest, ChatResponse};
 use server::{self, ChatServer};
 
 // ===================================
-use parse_package_from_client;
+use parse_package_from_tcp;
 
 /// Chat server sends this messages to session
 #[derive(Message)]
@@ -119,7 +119,7 @@ impl StreamHandler<ChatRequest, io::Error> for ChatSession {
                 // })
                 debug!("Peer message XXXX: {:?}", package);
                 debug!("room: {:?}", self.room);
-                parse_package_from_client::parse_package(package, self, ctx);   
+                parse_package_from_tcp::parse_package(package, self, ctx);   
             }
             // // we update heartbeat time on ping from peer
             // ChatRequest::Ping => self.hb = Instant::now(),

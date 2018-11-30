@@ -4,6 +4,29 @@
 https://crates.io/
 ```
 
+```
+
+在Linux和Mac上安装Rust(稳定的二进制)的一个简单的方法，只需要在shell中运行以下命令：
+$ curl -sSf https://static.rust-lang.org/rustup.sh | sh
+
+一个简单的方法来安装测试版二进制的Rust在Linux和Mac上，只需要在shell中运行这个：
+$ curl -sSf https://static.rust-lang.org/rustup.sh | sh -s -- --channel=beta
+一个简单的方法来安装Rust的二进制在Linux和Mac上，只需要在shell中运行这个命令：
+$ curl -sSf https://static.rust-lang.org/rustup.sh | sh -s -- --channel=nightly
+
+```
+
+```
+[root@localhost rust_demo]# cargo -V
+cargo 1.30.0 (a1a4ad372 2018-11-02)
+[root@localhost rust_demo]# rustc --version
+rustc 1.30.1 (1433507eb 2018-11-07)
+[root@localhost rust_demo]#
+
+
+```
+
+
 
 ```
 

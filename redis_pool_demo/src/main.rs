@@ -3,19 +3,13 @@ extern crate easy_logging;
 // https://crates.io/crates/easy-logging
 
 extern crate r2d2_redis;
+use std::ops::Deref;
+// use std::thread;
 
-
-use r2d2_redis::{r2d2, RedisConnectionManager};
+use r2d2_redis::{r2d2, redis, RedisConnectionManager};
 use r2d2_redis::redis::Commands;
 
-// use bincode::rustc_serialize::{encode, decode};
-// // use redis::Commands;
-// use r2d2_redis::redis::RedisResult;
-// use r2d2_redis::redis::ToRedisArgs;
-// use r2d2_redis::redis::FromRedisValue;
-// use r2d2_redis::redis::RedisError;
-// use r2d2_redis::redis::Value;
-
+// https://docs.rs/redis/0.9.1/redis/
 fn main() {
 	// 初始化日志功能
     easy_logging::init(module_path!(), log::Level::Debug).unwrap();
@@ -28,16 +22,18 @@ fn main() {
         .build(manager)
         .unwrap();
 
+    for _i in 0..10i32 {
+        let conn = pool.get().unwrap();
+        // conn.set("key1", 123i32).unwrap();
+        let reply = redis::cmd("PING").query::<String>(conn.deref()).unwrap();
+        let _ : () = redis::cmd("SET").arg("my_key").arg(123).query(conn.deref()).unwrap();
+        let val : i32 = conn.get("my_key").unwrap();
 
-	let conn = pool.get().unwrap();
-    let n: i64 = conn.incr("counter", 1).unwrap();
-    debug!("Counter increased to {}", n);
+        debug!("reply:{}, val:{}", reply, val);
 
-
-    // conn.set("my_key", EncodeWrapper(42) );
-
-    let res: u64 = conn.get("counter").unwrap();
-    debug!("get {}", res);
-     
+        let n: i64 = conn.incr("counter", 1).unwrap();
+        debug!("Counter increased to {}", n);
+    }
+  
 }
 

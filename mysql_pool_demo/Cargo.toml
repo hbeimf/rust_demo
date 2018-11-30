@@ -5,6 +5,6 @@ authors = ["maomao <5622876@qq.com>"]
 
 
 [dependencies]
-r2d2_mysql="*"
-r2d2 = "*"
-mysql = "*"
+r2d2_mysql = "9.0.0"
+r2d2 = "0.8.3"
+mysql = "14.1.1"

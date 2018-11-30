@@ -7,6 +7,9 @@ use std::thread;
 use mysql::{Opts,OptsBuilder};
 use r2d2_mysql::MysqlConnectionManager;
 
+// demo link 
+// https://github.com/outersky/r2d2-mysql/blob/master/src/lib.rs
+
 fn main() {
     // let db_url =  env::var("DATABASE_URL").unwrap();
     let db_url =  "mysql://root:123456@localhost:3306/xdb";

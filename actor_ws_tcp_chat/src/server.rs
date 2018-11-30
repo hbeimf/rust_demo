@@ -85,13 +85,28 @@ impl Default for ChatServer {
 }
 
 impl ChatServer {
-    /// Send message to all users in the room
-    fn send_message(&self, room: &str, message: &str, skip_id: usize) {
+    // /// Send message to all users in the room
+    // fn send_message(&self, room: &str, message: &str, skip_id: usize) {
+    //     if let Some(sessions) = self.rooms.get(room) {
+    //         for id in sessions {
+    //             if *id != skip_id {
+    //                 if let Some(addr) = self.sessions.get(id) {
+    //                     // let _ = addr.do_send(session::Message(message.to_owned()));
+    //                     let _ = addr.do_send(session::Message(message));
+
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+
+
+    fn send_message(&self, room: &str, message: &Vec<u8>, skip_id: usize) {
         if let Some(sessions) = self.rooms.get(room) {
             for id in sessions {
                 if *id != skip_id {
                     if let Some(addr) = self.sessions.get(id) {
-                        // let _ = addr.do_send(session::Message(message.to_owned()));
+                        let _ = addr.do_send(session::Message(message.to_vec()));
                     }
                 }
             }
@@ -116,7 +131,7 @@ impl Handler<Connect> for ChatServer {
         println!("Someone joined");
 
         // notify all users in same room
-        self.send_message(&"Main".to_owned(), "Someone joined", 0);
+        // self.send_message(&"Main".to_owned(), "Someone joined", 0);
 
         // register session with random id
         let id = self.rng.borrow_mut().gen::<usize>();
@@ -148,10 +163,10 @@ impl Handler<Disconnect> for ChatServer {
                 }
             }
         }
-        // send message to other users
-        for room in rooms {
-            self.send_message(&room, "Someone disconnected", 0);
-        }
+        // // send message to other users
+        // for room in rooms {
+        //     self.send_message(&room, "Someone disconnected", 0);
+        // }
     }
 }
 
@@ -161,6 +176,8 @@ impl Handler<Message> for ChatServer {
 
     fn handle(&mut self, msg: Message, _: &mut Context<Self>) {
         // self.send_message(&msg.room, msg.msg.as_str(), msg.id);
+        self.send_message(&msg.room, &msg.msg, msg.id);
+
     }
 }
 
@@ -170,7 +187,7 @@ impl Handler<ClientMessageBin> for ChatServer {
     type Result = ();
 
     fn handle(&mut self, msg: ClientMessageBin, _: &mut Context<Self>) {
-        // self.send_message_bin(&msg.room, &msg.msg, msg.id);
+        self.send_message(&msg.room, &msg.msg, msg.id);
     }
 }
 

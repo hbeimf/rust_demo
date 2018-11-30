@@ -5,6 +5,8 @@ use actix::*;
 use actix_web::{ ws, Error, HttpRequest, HttpResponse};
 
 use server;
+use session;
+
 // use glib;
 use parse_package_from_ws;
 
@@ -62,22 +64,22 @@ impl Actor for WsChatSession {
         // 向server注册客户端 ，此处逻辑可以移除
         // 等到收到某个登录消息后，将uid，name一起放到Connect消息里发送
         // server::Connect 结构体内加上uid, name 
-        // let addr = ctx.address();
-        // ctx.state()
-        //     .addr
-        //     .send(server::Connect {
-        //         addr: addr.recipient(),
-        //     })
-        //     .into_actor(self)
-        //     .then(|res, act, ctx| {
-        //         match res {
-        //             Ok(res) => act.id = res,
-        //             // something is wrong with chat server
-        //             _ => ctx.stop(),
-        //         }
-        //         fut::ok(())
-        //     })
-        //     .wait(ctx);
+        let addr = ctx.address();
+        ctx.state()
+            .addr
+            .send(server::Connect {
+                addr: addr.recipient(),
+            })
+            .into_actor(self)
+            .then(|res, act, ctx| {
+                match res {
+                    Ok(res) => act.id = res,
+                    // something is wrong with chat server
+                    _ => ctx.stop(),
+                }
+                fut::ok(())
+            })
+            .wait(ctx);
     }
 
     fn stopping(&mut self, ctx: &mut Self::Context) -> Running {
@@ -90,11 +92,11 @@ impl Actor for WsChatSession {
 
 /// Handle messages from chat server, we simply send it to peer websocket
 // 发送数据给客户端 ， 
-impl Handler<server::Message> for WsChatSession {
+impl Handler<session::Message> for WsChatSession {
     type Result = ();
 
     // server 处理逻辑后将回复发送到此处
-    fn handle(&mut self, msg: server::Message, ctx: &mut Self::Context) {
+    fn handle(&mut self, msg: session::Message, ctx: &mut Self::Context) {
         // // println!("transport: {:?}", msg);
         // let server::Message(bin_reply) = msg;  
         // // 回复二进制数据

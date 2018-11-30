@@ -16,6 +16,12 @@ extern crate serde_derive;
 extern crate actix;
 extern crate actix_web;
 
+extern crate protobuf;
+extern crate easy_logging;
+#[macro_use] extern crate log;
+// https://crates.io/crates/easy-logging
+
+
 use actix::*;
 use actix_web::server::HttpServer;
 use actix_web::{fs, http, ws, App, Error, HttpRequest, HttpResponse};
@@ -234,7 +240,11 @@ impl WsChatSession {
 }
 
 fn main() {
-    let _ = env_logger::init();
+    // 初始化日志功能
+    easy_logging::init(module_path!(), log::Level::Debug).unwrap();
+    // easy_logging::init(module_path!(), log::Level::Info).unwrap();
+
+    // let _ = env_logger::init();
     let sys = actix::System::new("websocket-example");
 
     // Start chat server actor in separate thread
@@ -269,6 +279,6 @@ fn main() {
         .unwrap()
         .start();
 
-    println!("Started http server: 127.0.0.1:8888");
+    debug!("Started http server: 127.0.0.1:8888");
     let _ = sys.run();
 }

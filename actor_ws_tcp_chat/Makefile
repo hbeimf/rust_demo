@@ -32,6 +32,9 @@
 run:
 	cargo run --bin websocket-tcp-server
 
+tcp:
+	cd tcp_client && rebar3 shell
+
 client:
 	cargo run --bin websocket-tcp-client
 

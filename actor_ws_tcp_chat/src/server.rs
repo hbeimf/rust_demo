@@ -30,26 +30,26 @@ pub struct Message {
     /// Id of the client session
     pub id: usize,
     /// Peer message
-    pub msg: String,
+    pub msg: Vec<u8>,
     /// Room name
     pub room: String,
 }
 
-/// List of available rooms
-pub struct ListRooms;
+// /// List of available rooms
+// pub struct ListRooms;
 
-impl actix::Message for ListRooms {
-    type Result = Vec<String>;
-}
+// impl actix::Message for ListRooms {
+//     type Result = Vec<String>;
+// }
 
-/// Join room, if room does not exists create new one.
-#[derive(Message)]
-pub struct Join {
-    /// Client id
-    pub id: usize,
-    /// Room name
-    pub name: String,
-}
+// /// Join room, if room does not exists create new one.
+// #[derive(Message)]
+// pub struct Join {
+//     /// Client id
+//     pub id: usize,
+//     /// Room name
+//     pub name: String,
+// }
 
 /// `ChatServer` manages chat rooms and responsible for coordinating chat
 /// session. implementation is super primitive
@@ -80,7 +80,7 @@ impl ChatServer {
             for id in sessions {
                 if *id != skip_id {
                     if let Some(addr) = self.sessions.get(id) {
-                        let _ = addr.do_send(session::Message(message.to_owned()));
+                        // let _ = addr.do_send(session::Message(message.to_owned()));
                     }
                 }
             }
@@ -149,49 +149,49 @@ impl Handler<Message> for ChatServer {
     type Result = ();
 
     fn handle(&mut self, msg: Message, _: &mut Context<Self>) {
-        self.send_message(&msg.room, msg.msg.as_str(), msg.id);
+        // self.send_message(&msg.room, msg.msg.as_str(), msg.id);
     }
 }
 
-/// Handler for `ListRooms` message.
-impl Handler<ListRooms> for ChatServer {
-    type Result = MessageResult<ListRooms>;
+// /// Handler for `ListRooms` message.
+// impl Handler<ListRooms> for ChatServer {
+//     type Result = MessageResult<ListRooms>;
 
-    fn handle(&mut self, _: ListRooms, _: &mut Context<Self>) -> Self::Result {
-        let mut rooms = Vec::new();
+//     fn handle(&mut self, _: ListRooms, _: &mut Context<Self>) -> Self::Result {
+//         let mut rooms = Vec::new();
 
-        for key in self.rooms.keys() {
-            rooms.push(key.to_owned())
-        }
+//         for key in self.rooms.keys() {
+//             rooms.push(key.to_owned())
+//         }
 
-        MessageResult(rooms)
-    }
-}
+//         MessageResult(rooms)
+//     }
+// }
 
-/// Join room, send disconnect message to old room
-/// send join message to new room
-impl Handler<Join> for ChatServer {
-    type Result = ();
+// /// Join room, send disconnect message to old room
+// /// send join message to new room
+// impl Handler<Join> for ChatServer {
+//     type Result = ();
 
-    fn handle(&mut self, msg: Join, _: &mut Context<Self>) {
-        let Join { id, name } = msg;
-        let mut rooms = Vec::new();
+//     fn handle(&mut self, msg: Join, _: &mut Context<Self>) {
+//         let Join { id, name } = msg;
+//         let mut rooms = Vec::new();
 
-        // remove session from all rooms
-        for (n, sessions) in &mut self.rooms {
-            if sessions.remove(&id) {
-                rooms.push(n.to_owned());
-            }
-        }
-        // send message to other users
-        for room in rooms {
-            self.send_message(&room, "Someone disconnected", 0);
-        }
+//         // remove session from all rooms
+//         for (n, sessions) in &mut self.rooms {
+//             if sessions.remove(&id) {
+//                 rooms.push(n.to_owned());
+//             }
+//         }
+//         // send message to other users
+//         for room in rooms {
+//             self.send_message(&room, "Someone disconnected", 0);
+//         }
 
-        if self.rooms.get_mut(&name).is_none() {
-            self.rooms.insert(name.clone(), HashSet::new());
-        }
-        self.send_message(&name, "Someone connected", id);
-        self.rooms.get_mut(&name).unwrap().insert(id);
-    }
-}
+//         if self.rooms.get_mut(&name).is_none() {
+//             self.rooms.insert(name.clone(), HashSet::new());
+//         }
+//         self.send_message(&name, "Someone connected", id);
+//         self.rooms.get_mut(&name).unwrap().insert(id);
+//     }
+// }

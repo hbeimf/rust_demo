@@ -2,7 +2,9 @@
 //! proxies commands from peer to `ChatServer`.
 use futures::Stream;
 use std::str::FromStr;
-use std::time::{Duration, Instant};
+// use std::time::{Duration, Instant};
+// use std::time::{Instant};
+
 use std::{io, net};
 use tokio_codec::FramedRead;
 use tokio_io::io::WriteHalf;
@@ -14,9 +16,12 @@ use actix::prelude::*;
 use codec::{ChatCodec, ChatRequest, ChatResponse};
 use server::{self, ChatServer};
 
+// ===================================
+use parse_package_from_client;
+
 /// Chat server sends this messages to session
 #[derive(Message)]
-pub struct Message(pub String);
+pub struct Message(pub Vec<u8>);
 
 /// `ChatSession` actor is responsible for tcp peer communications.
 pub struct ChatSession {
@@ -24,13 +29,13 @@ pub struct ChatSession {
     id: usize,
     /// this is address of chat server
     addr: Addr<ChatServer>,
-    /// Client must send ping at least once per 10 seconds, otherwise we drop
-    /// connection.
-    hb: Instant,
+    // /// Client must send ping at least once per 10 seconds, otherwise we drop
+    // /// connection.
+    // hb: Instant,
     /// joined room
     room: String,
     /// Framed wrapper
-    framed: actix::io::FramedWrite<WriteHalf<TcpStream>, ChatCodec>,
+    pub framed: actix::io::FramedWrite<WriteHalf<TcpStream>, ChatCodec>,
 }
 
 impl Actor for ChatSession {
@@ -39,8 +44,8 @@ impl Actor for ChatSession {
     type Context = Context<Self>;
 
     fn started(&mut self, ctx: &mut Self::Context) {
-        // we'll start heartbeat process on session start.
-        self.hb(ctx);
+        // // we'll start heartbeat process on session start.
+        // self.hb(ctx);
 
         // register self in chat server. `AsyncContext::wait` register
         // future within context, but context waits until this future resolves
@@ -76,45 +81,48 @@ impl StreamHandler<ChatRequest, io::Error> for ChatSession {
     /// This is main event loop for client requests
     fn handle(&mut self, msg: ChatRequest, ctx: &mut Context<Self>) {
         match msg {
-            ChatRequest::List => {
-                // Send ListRooms message to chat server and wait for response
-                println!("List rooms");
-                self.addr
-                    .send(server::ListRooms)
-                    .into_actor(self)
-                    .then(|res, act, ctx| {
-                        match res {
-                            Ok(rooms) => {
-                                act.framed.write(ChatResponse::Rooms(rooms));
-                            }
-                            _ => println!("Something is wrong"),
-                        }
-                        actix::fut::ok(())
-                    })
-                    .wait(ctx)
-                // .wait(ctx) pauses all events in context,
-                // so actor wont receive any new messages until it get list of rooms back
-            }
-            ChatRequest::Join(name) => {
-                println!("Join to room: {}", name);
-                self.room = name.clone();
-                self.addr.do_send(server::Join {
-                    id: self.id,
-                    name: name.clone(),
-                });
-                self.framed.write(ChatResponse::Joined(name));
-            }
-            ChatRequest::Message(message) => {
+            // ChatRequest::List => {
+            //     // Send ListRooms message to chat server and wait for response
+            //     println!("List rooms");
+            //     self.addr
+            //         .send(server::ListRooms)
+            //         .into_actor(self)
+            //         .then(|res, act, ctx| {
+            //             match res {
+            //                 Ok(rooms) => {
+            //                     act.framed.write(ChatResponse::Rooms(rooms));
+            //                 }
+            //                 _ => println!("Something is wrong"),
+            //             }
+            //             actix::fut::ok(())
+            //         })
+            //         .wait(ctx)
+            //     // .wait(ctx) pauses all events in context,
+            //     // so actor wont receive any new messages until it get list of rooms back
+            // }
+            // ChatRequest::Join(name) => {
+            //     println!("Join to room: {}", name);
+            //     self.room = name.clone();
+            //     self.addr.do_send(server::Join {
+            //         id: self.id,
+            //         name: name.clone(),
+            //     });
+            //     self.framed.write(ChatResponse::Joined(name));
+            // }
+            ChatRequest::Message(package) => {
                 // send message to chat server
-                println!("Peer message: {}", message);
-                self.addr.do_send(server::Message {
-                    id: self.id,
-                    msg: message,
-                    room: self.room.clone(),
-                })
+                // println!("Peer message: {}", message);
+                // self.addr.do_send(server::Message {
+                //     id: self.id,
+                //     msg: message,
+                //     room: self.room.clone(),
+                // })
+                debug!("Peer message XXXX: {:?}", package);
+                debug!("room: {:?}", self.room);
+                parse_package_from_client::parse_package(package, self, ctx);   
             }
-            // we update heartbeat time on ping from peer
-            ChatRequest::Ping => self.hb = Instant::now(),
+            // // we update heartbeat time on ping from peer
+            // ChatRequest::Ping => self.hb = Instant::now(),
         }
     }
 }
@@ -139,33 +147,33 @@ impl ChatSession {
         ChatSession {
             id: 0,
             addr: addr,
-            hb: Instant::now(),
+            // hb: Instant::now(),
             room: "Main".to_owned(),
             framed: framed,
         }
     }
 
-    /// helper method that sends ping to client every second.
-    ///
-    /// also this method check heartbeats from client
-    fn hb(&self, ctx: &mut Context<Self>) {
-        ctx.run_interval(Duration::new(1, 0), |act, ctx| {
-            // check client heartbeats
-            if Instant::now().duration_since(act.hb) > Duration::new(10, 0) {
-                // heartbeat timed out
-                println!("Client heartbeat failed, disconnecting!");
+    // /// helper method that sends ping to client every second.
+    // ///
+    // /// also this method check heartbeats from client
+    // fn hb(&self, ctx: &mut Context<Self>) {
+    //     ctx.run_interval(Duration::new(1, 0), |act, ctx| {
+    //         // check client heartbeats
+    //         if Instant::now().duration_since(act.hb) > Duration::new(10, 0) {
+    //             // heartbeat timed out
+    //             println!("Client heartbeat failed, disconnecting!");
 
-                // notify chat server
-                act.addr.do_send(server::Disconnect { id: act.id });
+    //             // notify chat server
+    //             act.addr.do_send(server::Disconnect { id: act.id });
 
-                // stop actor
-                ctx.stop();
-            }
+    //             // stop actor
+    //             ctx.stop();
+    //         }
 
-            act.framed.write(ChatResponse::Ping);
-            // if we can not send message to sink, sink is closed (disconnected)
-        });
-    }
+    //         // act.framed.write(ChatResponse::Ping);
+    //         // if we can not send message to sink, sink is closed (disconnected)
+    //     });
+    // }
 }
 
 /// Define tcp server that will accept incoming tcp connection and create

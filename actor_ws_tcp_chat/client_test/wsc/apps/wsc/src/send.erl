@@ -9,6 +9,13 @@
 	val
 }).
 
+
+-include_lib("glib/include/msg_proto.hrl").
+-include_lib("glib/include/log.hrl").
+-include_lib("glib/include/cmdid.hrl").
+
+
+
 test() -> 
 	Txt = <<"hello world">>,
 	% {ok, Pid} = wsc_cc:start_link(),
@@ -24,6 +31,23 @@ test_bin() ->
 	% Pid ! {binary, <<Bin/binary,Bin/binary,Bin/binary>>},
 	Pid ! {binary, Bin},
 	ok.
+
+
+test1() -> 
+	TestMsg = #'TestMsg'{
+                        name = <<"jim green">>,
+                        nick_name = <<"nick_name123456">>,
+                        phone = <<"15912341234">> 
+                    },
+    TestMsgBin = msg_proto:encode_msg(TestMsg),
+
+    Package = glib:package(123456, TestMsgBin),
+
+    ?LOG({send_binary, Package}),
+	{ok, Pid} = get_client(),
+	Pid ! {binary, Package},
+	ok.
+
 		
 create_package() -> 
 	<<"hello world">>.

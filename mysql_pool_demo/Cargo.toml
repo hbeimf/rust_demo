@@ -5,6 +5,9 @@ authors = ["maomao <5622876@qq.com>"]
 
 
 [dependencies]
+log = "0.4.6"
+easy-logging = "*"
+
 r2d2_mysql = "9.0.0"
 r2d2 = "0.8.3"
 mysql = "14.1.1"

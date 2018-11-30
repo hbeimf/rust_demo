@@ -35,6 +35,17 @@ pub struct Message {
     pub room: String,
 }
 
+/// Send message to specific room
+#[derive(Message)]
+pub struct ClientMessageBin {
+    /// Id of the client session
+    pub id: usize,
+    /// Peer message
+    pub msg: Vec<u8>,
+    /// Room name
+    pub room: String,
+}
+
 // /// List of available rooms
 // pub struct ListRooms;
 
@@ -152,6 +163,17 @@ impl Handler<Message> for ChatServer {
         // self.send_message(&msg.room, msg.msg.as_str(), msg.id);
     }
 }
+
+
+/// Handler for Message message.
+impl Handler<ClientMessageBin> for ChatServer {
+    type Result = ();
+
+    fn handle(&mut self, msg: ClientMessageBin, _: &mut Context<Self>) {
+        // self.send_message_bin(&msg.room, &msg.msg, msg.id);
+    }
+}
+
 
 // /// Handler for `ListRooms` message.
 // impl Handler<ListRooms> for ChatServer {

@@ -23,8 +23,10 @@ extern crate easy_logging;
 
 
 use actix::*;
-// use actix_web::server::HttpServer;
+use actix_web::server::HttpServer;
 // use actix_web::{fs, http, ws, App, Error, HttpRequest, HttpResponse};
+use actix_web::{fs, http, App, HttpResponse};
+
 // use std::time::{Instant, Duration};
 
 mod codec;
@@ -34,6 +36,9 @@ mod parse_package_from_client;
 mod glib;
 mod msg_proto;
 mod protos;
+mod handler_from_client;
+mod parse_package_from_ws;
+// mod server_ws;
 
 // /// How often heartbeat pings are sent
 // const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
@@ -211,28 +216,32 @@ fn main() {
         Ok(())
     }));
 
-    // // Create Http server with websocket support
-    // HttpServer::new(move || {
-    //     // Websocket sessions state
-    //     let state = WsChatSessionState {
-    //         addr: server.clone(),
-    //     };
+    // Create Http server with websocket support
+    HttpServer::new(move || {
+        // Websocket sessions state
+        // let state = WsChatSessionState {
+        //     addr: server.clone(),
+        // };
+        let state = handler_from_client::WsChatSessionState {
+            addr: server.clone(),
+        };
 
-    //     App::with_state(state)
-    //         // redirect to websocket.html
-    //         .resource("/", |r| r.method(http::Method::GET).f(|_| {
-    //             HttpResponse::Found()
-    //                 .header("LOCATION", "/static/websocket.html")
-    //                 .finish()
-    //         }))
-    //         // websocket
-    //         .resource("/ws/", |r| r.route().f(chat_route))
-    //         // static resources
-    //         .handler("/static/", fs::StaticFiles::new("static/").unwrap())
-    // }).bind("127.0.0.1:8888")
-    //     .unwrap()
-    //     .start();
+        App::with_state(state)
+            // redirect to websocket.html
+            .resource("/", |r| r.method(http::Method::GET).f(|_| {
+                HttpResponse::Found()
+                    .header("LOCATION", "/static/websocket.html")
+                    .finish()
+            }))
+            // websocket
+            // .resource("/ws/", |r| r.route().f(chat_route))
+            .resource("/ws/", |r| r.route().f(handler_from_client::chat_route))
+            // static resources
+            .handler("/static/", fs::StaticFiles::new("static/").unwrap())
+    }).bind("127.0.0.1:5566")
+        .unwrap()
+        .start();
 
-    debug!("Started http server: 127.0.0.1:8888");
+    debug!("Started http server: 127.0.0.1:5566");
     let _ = sys.run();
 }

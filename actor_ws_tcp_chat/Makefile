@@ -35,14 +35,14 @@ run:
 tcp:
 	cd tcp_client && rebar3 shell
 
-client:
-	cargo run --bin websocket-tcp-client
+# client:
+# 	cargo run --bin websocket-tcp-client
 
 ws:
 	cd ./client_test/wsc && rebar3 shell
 
-gen:
-	cd protos && /home/maomao/.cargo/bin/pb-rs ./msg.proto
+# gen:
+# 	cd protos && /home/maomao/.cargo/bin/pb-rs ./msg.proto
 
 # show:
 # 	ps aux | grep gonode

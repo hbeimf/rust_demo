@@ -21,6 +21,7 @@ extern crate easy_logging;
 #[macro_use] extern crate log;
 // https://crates.io/crates/easy-logging
 
+// extern crate mysqlc;
 
 use actix::*;
 use actix_web::server::HttpServer;
@@ -40,6 +41,8 @@ mod handler_from_client_ws;
 mod parse_package_from_ws;
 
 fn main() {
+    // mysqlc::mysqlc::test::test();
+
     // 初始化日志功能
     easy_logging::init(module_path!(), log::Level::Debug).unwrap();
     // easy_logging::init(module_path!(), log::Level::Info).unwrap();

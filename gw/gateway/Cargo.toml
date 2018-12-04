@@ -34,6 +34,8 @@ log = "0.4.6"
 easy-logging = "*"
 
 mysqlc={path = "../mysqlc"}
+redisc={path = "../redisc"}
+
 
 [build-dependencies]
 protobuf-codegen-pure = "2.2.0"

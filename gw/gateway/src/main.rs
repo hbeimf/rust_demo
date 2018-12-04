@@ -22,6 +22,7 @@ extern crate easy_logging;
 // https://crates.io/crates/easy-logging
 
 extern crate mysqlc;
+extern crate redisc;
 
 use actix::*;
 use actix_web::server::HttpServer;
@@ -42,6 +43,7 @@ mod parse_package_from_ws;
 
 fn main() {
     // mysqlc::mysqlc::test::test();
+    // redisc::test();
 
     // 初始化日志功能
     easy_logging::init(module_path!(), log::Level::Debug).unwrap();

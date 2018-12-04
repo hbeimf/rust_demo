@@ -1,7 +1,7 @@
-extern crate diesel;
-// extern crate diesel_codegen;
-extern crate r2d2;
-extern crate r2d2_diesel;
+// extern crate diesel;
+// // extern crate diesel_codegen;
+// extern crate r2d2;
+// extern crate r2d2_diesel;
 
 use diesel::mysql::MysqlConnection;
 use r2d2_diesel::ConnectionManager;

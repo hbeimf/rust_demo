@@ -1,7 +1,8 @@
 use std::thread;
 
-use mysqlc;
-use mysqlc::pool;
+// use mysqlc;
+use pool;
+use table_post;
 
 pub fn test_bak() {
 	let pool = pool::init_pool();
@@ -21,8 +22,8 @@ pub fn test() {
 	match pool.get() {
 	            Ok(conn) => {
 	            		// insert 
-	            		mysqlc::table_post::create_post(&conn, "titletest", "body test");
-	            		mysqlc::table_post::select(&conn);
+	            		table_post::create_post(&conn, "titletest", "body test");
+	            		table_post::select(&conn);
 
 	            },
 	            // Err(_) => Outcome::Failure((Status::ServiceUnavailable, ()))

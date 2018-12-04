@@ -6,10 +6,10 @@
 //   PRIMARY KEY (`id`)
 // ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='test';
 
-extern crate diesel;
+// extern crate diesel;
 
 use diesel::prelude::*;
-use mysqlc::schema::posts;
+use schema::posts;
 
 #[derive(Queryable)]
 pub struct Post {
@@ -30,7 +30,7 @@ pub struct NewPost<'a> {
 
 // insert 
 pub fn create_post(conn: &MysqlConnection, title: &str, body: &str) -> Post {
-    use mysqlc::schema::posts::dsl::{id, posts};
+    use schema::posts::dsl::{id, posts};
 
     let new_post = NewPost {
         title: title,
@@ -49,7 +49,7 @@ pub fn create_post(conn: &MysqlConnection, title: &str, body: &str) -> Post {
 // select 
 pub fn select(connection: &MysqlConnection) {
     // use self::schema::posts::dsl::*;
-    use mysqlc::schema::posts::dsl::{posts, published};
+    use schema::posts::dsl::{posts, published};
 
     let results = posts
         .filter(published.eq(false))

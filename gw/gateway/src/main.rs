@@ -47,7 +47,7 @@ fn main() {
     easy_logging::init(module_path!(), log::Level::Debug).unwrap();
     // easy_logging::init(module_path!(), log::Level::Info).unwrap();
 
-    mysqlc::mysqlc::test::test();
+    mysqlc::test::test();
     redisc::test();
 
 

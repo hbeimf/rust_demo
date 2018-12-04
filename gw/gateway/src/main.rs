@@ -41,7 +41,7 @@ mod handler_from_client_ws;
 mod parse_package_from_ws;
 
 fn main() {
-    mysqlc::mysqlc::test::test();
+    // mysqlc::mysqlc::test::test();
 
     // 初始化日志功能
     easy_logging::init(module_path!(), log::Level::Debug).unwrap();

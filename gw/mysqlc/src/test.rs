@@ -22,7 +22,7 @@ pub fn test() {
 	match pool.get() {
 	            Ok(conn) => {
 	            		// insert 
-	            		table_post::create_post(&conn, "titletest", "body test");
+	            		// table_post::create_post(&conn, "titletest", "body test");
 	            		table_post::select(&conn);
 
 	            },

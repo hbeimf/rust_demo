@@ -60,9 +60,11 @@ pub fn select(connection: &MysqlConnection) {
     println!("Displaying {} posts", results.len());
     for post in results {
         println!("{}", post.id);
+
         println!("{}", post.title);
         println!("{}", post.body);
         println!("-----------\n");
+        break;
     }
 }
 

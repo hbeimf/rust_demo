@@ -42,12 +42,14 @@ mod handler_from_client_ws;
 mod parse_package_from_ws;
 
 fn main() {
-    // mysqlc::mysqlc::test::test();
-    // redisc::test();
-
+    
     // 初始化日志功能
     easy_logging::init(module_path!(), log::Level::Debug).unwrap();
     // easy_logging::init(module_path!(), log::Level::Info).unwrap();
+
+    mysqlc::mysqlc::test::test();
+    redisc::test();
+
 
     // let _ = env_logger::init();
     let sys = actix::System::new("websocket-example");

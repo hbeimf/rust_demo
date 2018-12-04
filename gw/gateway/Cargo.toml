@@ -13,7 +13,7 @@ name = "websocket-tcp-client"
 path = "src/client.rs"
 
 [dependencies]
-rand = "*"
+rand = "0.5.5"
 bytes = "0.4"
 byteorder = "1.1"
 futures = "0.1"

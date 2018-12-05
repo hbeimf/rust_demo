@@ -5,3 +5,4 @@ authors = ["maomao <5622876@qq.com>"]
 
 [dependencies]
 r2d2_redis = "0.8.0"
+singleton = "0.2.2"

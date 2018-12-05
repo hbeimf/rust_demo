@@ -29,6 +29,8 @@
 # 	rm -rf ./bin/api.master.test.tar.gz
 # 	rm -rf ./bin/api.master.release.tar.gz
 
+all: run
+
 run:
 	cd ./gw && cargo run --bin websocket-tcp-server
 

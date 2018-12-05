@@ -28,7 +28,10 @@ struct RedisPool{
 
 impl Default for RedisPool {
     fn default() -> Self {
-        let manager = RedisConnectionManager::new("redis://localhost:6379").unwrap();
+        let redis_config = sys_config::config_redis();
+        let manager = RedisConnectionManager::new(redis_config.as_ref()).unwrap();
+        // let manager = RedisConnectionManager::new("redis://localhost:6379").unwrap();
+
         let pool = r2d2::Pool::builder().build(manager).unwrap();
         RedisPool{pool:pool}
     }
@@ -108,7 +111,7 @@ pub fn incr() {
 
 // https://docs.rs/redis/0.9.1/redis/
 pub fn test() {
-    sys_config::test_config();
+    // sys_config::test_config();
 	// // 初始化日志功能
  //    easy_logging::init(module_path!(), log::Level::println);
  //    // easy_logging::init(module_path!(), log::Level::Info).unwrap();

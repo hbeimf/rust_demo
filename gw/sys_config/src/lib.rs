@@ -23,7 +23,16 @@ impl Default for SysConfig {
 static SYS_CONFIG_INSTANCE: Singleton<SysConfig> = make_singleton!();
 
 
+pub fn config_redis() -> String {
+	let config = &SYS_CONFIG_INSTANCE.get().config;
+	let redis_config: String = config.get("redis", "config").unwrap();
+	redis_config
+}
+
+
 pub fn test_config() {
+	config_redis();
+
 	let config = &SYS_CONFIG_INSTANCE.get().config;
 
     // let config = Ini::from_file(INPUT).unwrap();

@@ -70,10 +70,11 @@ impl Actor for ChatClient {
     }
 
     fn stopped(&mut self, _: &mut Context<Self>) {
-        println!("Disconnected");
+        debug!("Disconnected");
 
         // Stop application on disconnect
-        System::current().stop();
+        // 如运行下面这句将导制整个进程退出
+        // System::current().stop();
     }
 }
 
@@ -112,8 +113,9 @@ impl StreamHandler<Message, ProtocolError> for ChatClient {
     }
 
     fn finished(&mut self, ctx: &mut Context<Self>) {
-        println!("Server disconnected");
-        // ctx.stop()
+        debug!("连接断开了,  Server disconnected");
+        // 连接断开的时候，actor 必须也跟着结束 
+        ctx.stop()
     }
 }
 

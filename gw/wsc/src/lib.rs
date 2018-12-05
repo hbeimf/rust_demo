@@ -9,46 +9,46 @@ extern crate actix_web;
 extern crate futures;
 
 use std::time::Duration;
-use std::{io, thread};
+// use std::{io, thread};
 
 use actix::*;
 use actix_web::ws::{Client, ClientWriter, Message, ProtocolError};
 use futures::Future;
 
 pub fn test() {
-    // ::std::env::set_var("RUST_LOG", "actix_web=info");
-    // let _ = env_logger::init();
-    // let sys = actix::System::new("ws-example");
+   	start_wsc();
+}
 
-    Arbiter::spawn(
+pub fn start_wsc() {
+	Arbiter::spawn(
         Client::new("ws://localhost:7788/websocket")
             .connect()
             .map_err(|e| {
-                println!("Error: {}", e);
+                println!("Error XXXXX=====================: {}", e);
                 ()
             })
             .map(|(reader, writer)| {
-                let addr = ChatClient::create(|ctx| {
+                let _addr = ChatClient::create(|ctx| {
                     ChatClient::add_stream(reader, ctx);
                     ChatClient(writer)
                 });
 
-                // start console loop
-                thread::spawn(move || loop {
-                    let mut cmd = String::new();
-                    if io::stdin().read_line(&mut cmd).is_err() {
-                        println!("error");
-                        return;
-                    }
-                    addr.do_send(ClientCommand(cmd));
-                });
+                // // start console loop
+                // thread::spawn(move || loop {
+                //     let mut cmd = String::new();
+                //     if io::stdin().read_line(&mut cmd).is_err() {
+                //         println!("error");
+                //         return;
+                //     }
+                //     addr.do_send(ClientCommand(cmd));
+                // });
 
                 ()
             }),
     )
-
-    // let _ = sys.run();
 }
+
+
 
 struct ChatClient(ClientWriter);
 
@@ -59,6 +59,7 @@ impl Actor for ChatClient {
     type Context = Context<Self>;
 
     fn started(&mut self, ctx: &mut Context<Self>) {
+    	println!("wsc started");
         // start heartbeats otherwise server will disconnect after 10 seconds
         self.hb(ctx)
     }

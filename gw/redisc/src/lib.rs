@@ -10,6 +10,7 @@ use r2d2_redis::{r2d2, redis, RedisConnectionManager};
 use r2d2_redis::redis::{Commands};
 
 
+// https://github.com/crlf0710/singleton-rs/blob/master/src/bin/trial.rs
 #[macro_use]
 extern crate singleton;
 use singleton::{Singleton};

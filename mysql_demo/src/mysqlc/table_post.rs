@@ -63,6 +63,7 @@ pub fn select(connection: &MysqlConnection) {
         println!("{}", post.title);
         println!("{}", post.body);
         println!("-----------\n");
+        break;
     }
 }
 

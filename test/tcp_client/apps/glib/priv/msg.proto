@@ -1,0 +1,11 @@
+syntax="proto3";
+
+package msg;
+
+
+message TestMsg{   
+    string  name = 1;
+    string  nick_name = 2;
+    string  phone  = 3;
+
+}

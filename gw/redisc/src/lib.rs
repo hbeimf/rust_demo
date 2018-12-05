@@ -15,6 +15,11 @@ use r2d2_redis::redis::{Commands};
 extern crate singleton;
 use singleton::{Singleton};
 
+// https://github.com/pinecrew/tini/blob/master/examples/read.rs
+extern crate tini;
+use tini::Ini;
+static INPUT: &'static str = "/erlang/rust_demo/gw/config.ini";
+
 
 struct RedisPool{
     pool:r2d2_redis::r2d2::Pool<r2d2_redis::RedisConnectionManager>
@@ -30,6 +35,21 @@ impl Default for RedisPool {
 
 static REDIS_INSTANCE: Singleton<RedisPool> = make_singleton!();
 
+
+pub fn test_config() {
+    let config = Ini::from_file(INPUT).unwrap();
+
+    // if you are sure
+    let name1: i32 = config.get("section_one", "name1").unwrap();
+
+    // if you aren't sure
+    let name5: bool = config.get("section_one", "name5").unwrap_or(false); // non-existing key
+
+    // check
+    println!("name1: {}", name1);
+    println!("name5: {}", name5);
+
+}
 
 pub fn test_pool() {
     let redis = REDIS_INSTANCE.get(); 
@@ -87,6 +107,7 @@ pub fn incr() {
 
 // https://docs.rs/redis/0.9.1/redis/
 pub fn test() {
+    test_config();
 	// // 初始化日志功能
  //    easy_logging::init(module_path!(), log::Level::println);
  //    // easy_logging::init(module_path!(), log::Level::Info).unwrap();

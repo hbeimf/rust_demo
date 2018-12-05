@@ -30,6 +30,7 @@ use actix_web::server::HttpServer;
 use actix_web::{fs, http, App, HttpResponse};
 
 // use std::time::{Instant, Duration};
+extern crate sys_config;
 
 mod codec;
 mod server;
@@ -51,6 +52,10 @@ fn main() {
     redisc::test();
 
 
+    let websocket_config = sys_config::config_websocket();
+    let tcp_config = sys_config::config_tcp();
+
+
     // let _ = env_logger::init();
     let sys = actix::System::new("websocket-example");
 
@@ -60,7 +65,7 @@ fn main() {
     // Start tcp server in separate thread
     let srv = server.clone();
     Arbiter::new("tcp-server").do_send::<msgs::Execute>(msgs::Execute::new(move || {
-        session::TcpServer::new("127.0.0.1:12345", srv);
+        session::TcpServer::new(tcp_config.as_ref(), srv);
         Ok(())
     }));
 
@@ -86,10 +91,11 @@ fn main() {
             .resource("/ws/", |r| r.route().f(handler_from_client_ws::chat_route))
             // static resources
             .handler("/static/", fs::StaticFiles::new("static/").unwrap())
-    }).bind("127.0.0.1:5566")
+    }).bind(websocket_config.clone())
         .unwrap()
         .start();
 
-    debug!("Started http server: 127.0.0.1:5566");
+    // debug!(websocket_config.as_ref());
+    debug!("Started http server: {}", websocket_config.clone());
     let _ = sys.run();
 }

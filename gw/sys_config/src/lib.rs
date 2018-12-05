@@ -35,6 +35,18 @@ pub fn config_mysql() -> String {
 	mysql_config
 }
 
+pub fn config_websocket() -> String {
+    let config = &SYS_CONFIG_INSTANCE.get().config;
+    let mysql_config: String = config.get("websocket", "config").unwrap();
+    mysql_config
+}
+
+pub fn config_tcp() -> String {
+    let config = &SYS_CONFIG_INSTANCE.get().config;
+    let mysql_config: String = config.get("tcp", "config").unwrap();
+    mysql_config
+}
+
 
 pub fn test_config() {
 	config_redis();

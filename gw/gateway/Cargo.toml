@@ -35,6 +35,7 @@ easy-logging = "*"
 
 mysqlc={path = "../mysqlc"}
 redisc={path = "../redisc"}
+sys_config={path = "../sys_config"}
 
 
 [build-dependencies]

@@ -1,0 +1,41 @@
+// https://github.com/crlf0710/singleton-rs/blob/master/src/bin/trial.rs
+#[macro_use]
+extern crate singleton;
+use singleton::{Singleton};
+
+// https://github.com/pinecrew/tini/blob/master/examples/read.rs
+extern crate tini;
+use tini::Ini;
+// static INPUT: &'static str = "/erlang/rust_demo/gw/config.ini";
+
+
+struct SysConfig{
+    config:tini::Ini
+}
+
+impl Default for SysConfig {
+    fn default() -> Self {
+        let config = Ini::from_file("/erlang/rust_demo/gw/config.ini").unwrap();
+        SysConfig{config:config}
+    }
+}
+
+static SYS_CONFIG_INSTANCE: Singleton<SysConfig> = make_singleton!();
+
+
+pub fn test_config() {
+	let config = &SYS_CONFIG_INSTANCE.get().config;
+
+    // let config = Ini::from_file(INPUT).unwrap();
+
+    // if you are sure
+    let name1: i32 = config.get("section_one", "name1").unwrap();
+
+    // if you aren't sure
+    let name5: bool = config.get("section_one", "name5").unwrap_or(false); // non-existing key
+
+    // check
+    println!("name1: {}", name1);
+    println!("name5: {}", name5);
+
+}

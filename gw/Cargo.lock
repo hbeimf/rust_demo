@@ -1216,6 +1216,7 @@ version = "0.1.0"
 dependencies = [
  "r2d2_redis 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "singleton 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sys_config 0.1.0",
  "tini 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -1475,6 +1476,14 @@ dependencies = [
  "quote 0.6.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "syn 0.15.22 (registry+https://github.com/rust-lang/crates.io-index)",
  "unicode-xid 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "sys_config"
+version = "0.1.0"
+dependencies = [
+ "singleton 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tini 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

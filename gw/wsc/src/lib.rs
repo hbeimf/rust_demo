@@ -1,9 +1,11 @@
+// Option<actix::Addr<ChatClient>>
+
 //! Simple websocket client.
 
 #![allow(unused_variables)]
 extern crate actix;
 extern crate actix_web;
-extern crate env_logger;
+// extern crate env_logger;
 extern crate futures;
 
 use std::time::Duration;
@@ -14,12 +16,12 @@ use actix_web::ws::{Client, ClientWriter, Message, ProtocolError};
 use futures::Future;
 
 pub fn test() {
-    ::std::env::set_var("RUST_LOG", "actix_web=info");
-    let _ = env_logger::init();
-    let sys = actix::System::new("ws-example");
+    // ::std::env::set_var("RUST_LOG", "actix_web=info");
+    // let _ = env_logger::init();
+    // let sys = actix::System::new("ws-example");
 
     Arbiter::spawn(
-        Client::new("http://127.0.0.1:8080/ws/")
+        Client::new("ws://localhost:7788/websocket")
             .connect()
             .map_err(|e| {
                 println!("Error: {}", e);
@@ -45,7 +47,7 @@ pub fn test() {
             }),
     );
 
-    let _ = sys.run();
+    // let _ = sys.run();
 }
 
 struct ChatClient(ClientWriter);

@@ -31,6 +31,8 @@ use actix_web::{fs, http, App, HttpResponse};
 
 // use std::time::{Instant, Duration};
 extern crate sys_config;
+extern crate wsc;
+
 
 mod codec;
 mod server;
@@ -58,6 +60,7 @@ fn main() {
 
     // let _ = env_logger::init();
     let sys = actix::System::new("websocket-example");
+    wsc::test();
 
     // Start chat server actor in separate thread
     let server = Arbiter::start(|_| server::ChatServer::default());

@@ -642,6 +642,7 @@ dependencies = [
  "tokio-codec 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "tokio-io 0.1.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "tokio-tcp 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "wsc 0.1.0",
 ]
 
 [[package]]
@@ -1924,6 +1925,11 @@ dependencies = [
 [[package]]
 name = "wsc"
 version = "0.1.0"
+dependencies = [
+ "actix 0.7.7 (registry+https://github.com/rust-lang/crates.io-index)",
+ "actix-web 0.7.14 (registry+https://github.com/rust-lang/crates.io-index)",
+ "futures 0.1.25 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [metadata]
 "checksum actix 0.7.7 (registry+https://github.com/rust-lang/crates.io-index)" = "17503213788d3cd8b0d2d8a70afa0f6e376bff2415338e22e53c3d1dcf7b2e4c"

@@ -45,7 +45,7 @@ pub fn test() {
 
                 ()
             }),
-    );
+    )
 
     // let _ = sys.run();
 }
@@ -107,6 +107,6 @@ impl StreamHandler<Message, ProtocolError> for ChatClient {
 
     fn finished(&mut self, ctx: &mut Context<Self>) {
         println!("Server disconnected");
-        ctx.stop()
+        // ctx.stop()
     }
 }

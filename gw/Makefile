@@ -33,13 +33,13 @@ run:
 	cargo run --bin websocket-tcp-server
 
 tcp:
-	cd tcp_client && rebar3 shell
+	cd ../test/tcp_client && rebar3 shell
 
 # client:
 # 	cargo run --bin websocket-tcp-client
 
 ws:
-	cd ./client_test/wsc && rebar3 shell
+	cd ../test/client_test/wsc && rebar3 shell
 
 # gen:
 # 	cd protos && /home/maomao/.cargo/bin/pb-rs ./msg.proto

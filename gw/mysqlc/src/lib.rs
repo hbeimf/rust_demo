@@ -6,6 +6,7 @@ extern crate r2d2;
 extern crate r2d2_diesel;
 
 // pub mod mysqlc;
+extern crate sys_config;
 
 pub mod test;
 pub mod pool;

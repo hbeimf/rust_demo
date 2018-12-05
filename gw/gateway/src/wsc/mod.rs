@@ -29,7 +29,7 @@ pub fn start_wsc(addr: actix::Addr<WsChatSession>) {
         Client::new("ws://localhost:7788/websocket")
             .connect()
             .map_err(|e| {
-                println!("Error XXXXX=====================: {}", e);
+                debug!("wsc 连接出错了=====================: {}", e);
                 ()
             })
             .map(|(reader, writer)| {

@@ -1,6 +1,0 @@
--sname tcp_client
-
--setcookie tcp_client_cookie
-
-+K true
-+A30

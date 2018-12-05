@@ -29,6 +29,12 @@ pub fn config_redis() -> String {
 	redis_config
 }
 
+pub fn config_mysql() -> String {
+	let config = &SYS_CONFIG_INSTANCE.get().config;
+	let mysql_config: String = config.get("mysql", "config").unwrap();
+	mysql_config
+}
+
 
 pub fn test_config() {
 	config_redis();

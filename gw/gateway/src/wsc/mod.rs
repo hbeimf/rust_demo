@@ -8,6 +8,9 @@ extern crate actix_web;
 // extern crate env_logger;
 extern crate futures;
 
+// extern crate gateway;
+use handler_from_client_ws::{WsChatSession};
+
 use std::time::Duration;
 // use std::{io, thread};
 
@@ -15,11 +18,13 @@ use actix::*;
 use actix_web::ws::{Client, ClientWriter, Message, ProtocolError};
 use futures::Future;
 
-pub fn test() {
-   	start_wsc();
-}
+// pub fn test() {
+//    	start_wsc();
+// }
 
-pub fn start_wsc() {
+
+// 建立一个wscl连接后必须给addr发送一个消息，通知连接已建立成功
+pub fn start_wsc(addr: actix::Addr<WsChatSession>) {
 	Arbiter::spawn(
         Client::new("ws://localhost:7788/websocket")
             .connect()
@@ -50,7 +55,7 @@ pub fn start_wsc() {
 
 
 
-struct ChatClient(ClientWriter);
+pub struct ChatClient(ClientWriter);
 
 #[derive(Message)]
 struct ClientCommand(String);
@@ -111,3 +116,4 @@ impl StreamHandler<Message, ProtocolError> for ChatClient {
         // ctx.stop()
     }
 }
+

@@ -1,9 +1,0 @@
-[package]
-name = "wsc"
-version = "0.1.0"
-authors = ["maomao <5622876@qq.com>"]
-
-[dependencies]
-futures = "0.1"
-actix = "0.7"
-actix-web = "0.7"

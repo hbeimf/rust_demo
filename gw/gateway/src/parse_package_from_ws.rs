@@ -3,12 +3,14 @@ use handler_from_client_ws::{WsChatSession, WsChatSessionState};
 use actix_web::{ ws};
 use server;
 use actix::ActorContext;
-
+use actix::*;
 use msg_proto;
+
+use wsc;
 
 // 解包
 pub fn parse_package(package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>)  {
-
+    // let _addr = ctx.address();
     let unpackage = glib::unpackage(package);
 
     match unpackage {
@@ -40,6 +42,19 @@ fn action(cmd:u32, pb:Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::Websock
     let reply_package1 = reply_package.clone();
     ctx.binary(reply_package1);
     ctx.text("hello".to_owned());
+
+    match client.addr_wsc {
+        Some(ref the_addr_wsc) => {
+            debug!("connected wsc");
+        },
+        _ => {
+            // 当没有与后端节点的连接时，建立一个连接  ctx.address()
+            debug!("no connected wsc!!");
+            // let addr_wsc = ctx.address();
+            let addr = ctx.address();
+            wsc::start_wsc(addr);
+        }
+    };
 
 
     // 给其它在线的客户发个广播

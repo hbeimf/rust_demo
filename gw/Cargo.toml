@@ -5,5 +5,4 @@ members = [
     "mysqlc",
     "redisc",
     "sys_config",
-    "wsc",
 ]

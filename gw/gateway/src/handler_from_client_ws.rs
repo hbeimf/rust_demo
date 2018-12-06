@@ -102,6 +102,7 @@ impl Handler<session::Message> for WsChatSession {
 
     // server 处理逻辑后将回复发送到此处
     fn handle(&mut self, msg: session::Message, ctx: &mut Self::Context) {
+        debug!("收到消息 msg: {:?}", msg);
         // // println!("transport: {:?}", msg);
         // let server::Message(bin_reply) = msg;  
         // // 回复二进制数据

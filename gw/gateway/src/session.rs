@@ -20,7 +20,7 @@ use server::{self, ChatServer};
 use parse_package_from_tcp;
 
 /// Chat server sends this messages to session
-#[derive(Message)]
+#[derive(Message, Debug)]
 pub struct Message(pub Vec<u8>);
 
 /// `ChatSession` actor is responsible for tcp peer communications.

@@ -25,7 +25,7 @@ use actix::*;
 use actix::prelude::*;
 use futures::Future;
 use std::str::FromStr;
-// use std::time::Duration;
+use std::time::Duration;
 // use std::{io, net, process, thread};
 use std::{io, net};
 
@@ -35,6 +35,8 @@ use tokio_io::AsyncRead;
 use tokio_tcp::TcpStream;
 
 use codec;
+
+use glib;
 
 pub fn test() {
     // let sys = actix::System::new("chat-client");
@@ -97,7 +99,7 @@ impl Actor for ChatClient {
     fn started(&mut self, ctx: &mut Context<Self>) {
     	debug!("建立了一个tcp连接？？！！");
         // start heartbeats otherwise server will disconnect after 10 seconds
-        // self.hb(ctx)
+        self.hb(ctx)
     }
 
     fn stopped(&mut self, _: &mut Context<Self>) {
@@ -108,17 +110,20 @@ impl Actor for ChatClient {
     }
 }
 
-// impl ChatClient {
-//     fn hb(&self, ctx: &mut Context<Self>) {
-//         ctx.run_later(Duration::new(1, 0), |act, ctx| {
-//             act.framed.write(codec::ChatRequest::Ping);
-//             act.hb(ctx);
+impl ChatClient {
+    fn hb(&self, ctx: &mut Context<Self>) {
+        ctx.run_later(Duration::new(1, 0), |act, ctx| {
+            // act.framed.write(codec::ChatRequest::Ping);
+            let ping:Vec<u8> = vec![];
+            let msg_ping = glib::package(100u32, ping);
+            act.framed.write(codec::ChatRequest::Message(msg_ping));
+            act.hb(ctx);
 
-//             // client should also check for a timeout here, similar to the
-//             // server code
-//         });
-//     }
-// }
+            // client should also check for a timeout here, similar to the
+            // server code
+        });
+    }
+}
 
 impl actix::io::WriteHandler<io::Error> for ChatClient {}
 

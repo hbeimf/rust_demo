@@ -116,35 +116,49 @@ impl Handler<session::Message> for WsChatSession {
     }
 }
 
-impl Handler<wsc::WscAddrMsg> for WsChatSession {
+impl Handler<wsc::ConnectWscAddrMsg> for WsChatSession {
     type Result = ();
 
     // server 处理逻辑后将回复发送到此处
-    fn handle(&mut self, wsc_addr_msg: wsc::WscAddrMsg, ctx: &mut Self::Context) {
+    fn handle(&mut self, wsc_addr_msg: wsc::ConnectWscAddrMsg, ctx: &mut Self::Context) {
         debug!("收到新建立连接的addr");
         self.addr_wsc = Some(wsc_addr_msg.addr);
-
-        // // println!("transport: {:?}", msg);
-        // let server::Message(bin_reply) = msg;  
-        // // 回复二进制数据
-        // ctx.binary(bin_reply);
     }
 }
 
-impl Handler<tcpc::TcpcAddrMsg> for WsChatSession {
+impl Handler<wsc::DeconnectWscAddrMsg> for WsChatSession {
     type Result = ();
 
     // server 处理逻辑后将回复发送到此处
-    fn handle(&mut self, tcpc_addr_msg: tcpc::TcpcAddrMsg, ctx: &mut Self::Context) {
-        debug!("收到新建立连接的addr");
-        self.addr_tcpc = Some(tcpc_addr_msg.addr);
-
-        // // println!("transport: {:?}", msg);
-        // let server::Message(bin_reply) = msg;  
-        // // 回复二进制数据
-        // ctx.binary(bin_reply);
+    fn handle(&mut self, wsc_addr_msg: wsc::DeconnectWscAddrMsg, ctx: &mut Self::Context) {
+        debug!("wsc连接断开了！");
+        self.addr_wsc = None;
     }
 }
+
+
+impl Handler<tcpc::ConnectTcpcAddrMsg> for WsChatSession {
+    type Result = ();
+
+    // server 处理逻辑后将回复发送到此处
+    fn handle(&mut self, tcpc_addr_msg: tcpc::ConnectTcpcAddrMsg, ctx: &mut Self::Context) {
+        debug!("tcpc连接建立成功！！");
+        self.addr_tcpc = Some(tcpc_addr_msg.addr);
+    }
+}
+
+
+impl Handler<tcpc::DeconnectTcpcAddrMsg> for WsChatSession {
+    type Result = ();
+
+    // server 处理逻辑后将回复发送到此处
+    fn handle(&mut self, tcpc_addr_msg: tcpc::DeconnectTcpcAddrMsg, ctx: &mut Self::Context) {
+        debug!("tcpc连接断开了！");
+        self.addr_tcpc = None;
+    }
+}
+
+
 
 
 /// WebSocket message handler

@@ -97,9 +97,15 @@ pub struct ChatClient {
 // struct ClientCommand(String);
 
 #[derive(Message)]
-pub struct TcpcAddrMsg{
+pub struct ConnectTcpcAddrMsg{
     pub addr: actix::Addr<ChatClient>,
 }
+
+#[derive(Message)]
+pub struct DeconnectTcpcAddrMsg{
+    
+}
+
 
 #[derive(Message, Debug)]
 pub struct PackageFromClient(pub Vec<u8>);
@@ -111,7 +117,7 @@ impl Actor for ChatClient {
     	debug!("建立了一个tcp连接？？！！");
     	// 当连接建立的时候，将addr 发送给 client_addr
         let tcpc_addr = ctx.address();
-        let tcpc_addr_msg = TcpcAddrMsg{
+        let tcpc_addr_msg = ConnectTcpcAddrMsg{
             addr: tcpc_addr,
         };
 
@@ -122,7 +128,12 @@ impl Actor for ChatClient {
     }
 
     fn stopped(&mut self, _: &mut Context<Self>) {
-        println!("tcp连接断开了！！");
+        debug!("tcp连接断开了！！");
+
+        let tcpc_addr_msg = DeconnectTcpcAddrMsg{
+        };
+
+        self.client_addr.do_send(tcpc_addr_msg);
 
         // Stop application on disconnect
         // System::current().stop();

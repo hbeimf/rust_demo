@@ -64,9 +64,13 @@ pub struct ChatClient{
 struct ClientCommand(String);
 
 #[derive(Message)]
-pub struct WscAddrMsg{
+pub struct ConnectWscAddrMsg{
     pub addr: actix::Addr<ChatClient>,
 }
+
+#[derive(Message)]
+pub struct DeconnectWscAddrMsg{}
+
 
 #[derive(Message, Debug)]
 pub struct PackageFromClient(pub Vec<u8>);
@@ -78,7 +82,7 @@ impl Actor for ChatClient {
     	debug!("与节点建立了一个websocket连接");
         // 当连接建立的时候，将addr 发送给 client_addr
         let wsc_addr = ctx.address();
-        let wsc_addr_msg = WscAddrMsg{
+        let wsc_addr_msg = ConnectWscAddrMsg{
             addr: wsc_addr,
         };
 
@@ -90,6 +94,8 @@ impl Actor for ChatClient {
 
     fn stopped(&mut self, _: &mut Context<Self>) {
         debug!("websocket连接完蛋了");
+        let deconnect_wsc_addr_msg = DeconnectWscAddrMsg{};
+        self.client_addr.do_send(deconnect_wsc_addr_msg);
 
         // Stop application on disconnect
         // 如运行下面这句将导制整个进程退出

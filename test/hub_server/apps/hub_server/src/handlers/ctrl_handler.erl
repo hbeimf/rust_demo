@@ -5,6 +5,8 @@
 -include_lib("inner_msg_proto.hrl").
 -include_lib("inner_cmd.hrl").
 -include_lib("state.hrl").
+-include_lib("ws_server/include/log.hrl").
+
 
 % 注册代理 
 action(?INNER_CMD_REGIST_PROXY, DataBin, #state{transport = _Transport,socket=Socket} = _State) ->
@@ -67,7 +69,14 @@ action(?INNER_CMD_SYNC_CLIENTS, DataBin, #state{transport = _Transport, socket= 
 
 
 % 未匹配的消息直接忽略
-action(_Type, _DataBin, _State) ->
+action(0, _DataBin, _State) ->
+	% ?LOG({Type, DataBin}),
+	% P = tcp_package:package(Type+1, DataBin),
+	% self() ! {tcp_send, P},
+	% io:format("~n ================================= ~ntype:~p, bin: ~p ~n ", [Type, DataBin]). 
+	ok;
+action(Type, DataBin, _State) ->
+	?LOG({Type, DataBin}),
 	% P = tcp_package:package(Type+1, DataBin),
 	% self() ! {tcp_send, P},
 	% io:format("~n ================================= ~ntype:~p, bin: ~p ~n ", [Type, DataBin]). 

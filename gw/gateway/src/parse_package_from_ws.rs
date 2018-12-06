@@ -48,7 +48,7 @@ fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession, ctx
     match client.addr_wsc {
         Some(ref the_addr_wsc) => {
             debug!("与后端已经建立了wsc连接， 直接使用就可以了！！！！！！！！！");
-            let package_from_client = wsc::PackageFromClient(package);
+            let package_from_client = wsc::PackageFromClient(package.clone());
             the_addr_wsc.do_send(package_from_client);
         },
         _ => {
@@ -64,8 +64,8 @@ fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession, ctx
     match client.addr_tcpc {
         Some(ref the_addr_tcpc) => {
             debug!("与后端已经建立了tcpc连接， 直接使用就可以了！！！！！！！！！");
-            // let package_from_client = wsc::PackageFromClient(package);
-            // the_addr_tcpc.do_send(package_from_client);
+            let package_from_client = tcpc::PackageFromClient(package.clone());
+            the_addr_tcpc.do_send(package_from_client);
         },
         _ => {
             // 当没有与后端节点的连接时，建立一个连接  ctx.address()

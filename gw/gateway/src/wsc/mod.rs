@@ -64,13 +64,13 @@ impl Actor for ChatClient {
     type Context = Context<Self>;
 
     fn started(&mut self, ctx: &mut Context<Self>) {
-    	println!("wsc started");
+    	debug!("与节点建立了一个websocket连接");
         // start heartbeats otherwise server will disconnect after 10 seconds
         self.hb(ctx)
     }
 
     fn stopped(&mut self, _: &mut Context<Self>) {
-        debug!("Disconnected");
+        debug!("websocket连接完蛋了");
 
         // Stop application on disconnect
         // 如运行下面这句将导制整个进程退出

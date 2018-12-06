@@ -68,6 +68,8 @@ pub struct WscAddrMsg{
     pub addr: actix::Addr<ChatClient>,
 }
 
+#[derive(Message, Debug)]
+pub struct PackageFromClient(pub Vec<u8>);
 
 impl Actor for ChatClient {
     type Context = Context<Self>;
@@ -115,6 +117,20 @@ impl Handler<ClientCommand> for ChatClient {
         self.wsc_write.text(msg.0)
     }
 }
+
+// 客户端转发过来的包，
+impl Handler<PackageFromClient> for ChatClient {
+    type Result = ();
+
+    fn handle(&mut self, package: PackageFromClient, ctx: &mut Context<Self>) {
+        debug!("客户端转发过来的包: {:?}", package);
+        self.wsc_write.binary(package.0)
+    }
+}
+
+
+
+
 
 /// Handle server websocket messages
 impl StreamHandler<Message, ProtocolError> for ChatClient {

@@ -11,11 +11,11 @@ use wsc;
 // 解包
 pub fn parse_package(package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>)  {
     // let _addr = ctx.address();
-    let unpackage = glib::unpackage(package);
+    let unpackage = glib::unpackage(package.clone());
 
     match unpackage {
         Some(glib::UnPackageResult{len:_len, cmd, pb}) => {
-            action(cmd, pb, client, ctx);
+            action(cmd, pb, package, client, ctx);
         }
         None => {
         	// 如果解包失败，直接关掉连接
@@ -26,7 +26,7 @@ pub fn parse_package(package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws:
 }
 
 // 业务逻辑部分
-fn action(cmd:u32, pb:Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>) {
+fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>) {
 	//parse pb logic 
 	let test_msg = msg_proto::decode_msg(pb);
     debug!("name: {:?}", test_msg.get_name());
@@ -46,6 +46,8 @@ fn action(cmd:u32, pb:Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::Websock
     match client.addr_wsc {
         Some(ref the_addr_wsc) => {
             debug!("与后端已经建立了wsc连接， 直接使用就可以了！！！！！！！！！");
+            let package_from_client = wsc::PackageFromClient(package);
+            the_addr_wsc.do_send(package_from_client);
         },
         _ => {
             // 当没有与后端节点的连接时，建立一个连接  ctx.address()

@@ -17,6 +17,16 @@ $ curl -sSf https://static.rust-lang.org/rustup.sh | sh -s -- --channel=nightly
 ```
 
 ```
+
+[root@localhost rust_demo]# rustc -V
+rustc 1.30.1 (1433507eb 2018-11-07)
+[root@localhost rust_demo]# cargo --version
+cargo 1.30.0 (a1a4ad372 2018-11-02)
+[root@localhost rust_demo]#
+```
+
+
+```
 [root@localhost rust_demo]# cargo -V
 cargo 1.30.0 (a1a4ad372 2018-11-02)
 [root@localhost rust_demo]# rustc --version

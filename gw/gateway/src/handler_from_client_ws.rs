@@ -9,6 +9,8 @@ use session;
 
 // use glib;
 use parse_package_from_ws;
+use wsc;
+use tcpc;
 
 /// How often heartbeat pings are sent
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
@@ -30,6 +32,8 @@ pub fn chat_route(req: &HttpRequest<WsChatSessionState>) -> Result<HttpResponse,
             hb: Instant::now(),
             room: "Main".to_owned(),
             // name: None,
+            addr_wsc:None,
+            addr_tcpc:None,
         },
     )
 }
@@ -44,6 +48,13 @@ pub struct WsChatSession {
     pub room: String,
     // /// peer name
     // name: Option<String>,
+
+    // 启动一个与后端连接的 wsc，这里放这个连接actor的 addr
+    pub addr_wsc: Option<actix::Addr<wsc::ChatClient>>,
+
+    // 启动一个与后端连接的 tcpc，这里放这个连接actor的 addr
+    pub addr_tcpc: Option<actix::Addr<tcpc::ChatClient>>,
+       
 }
 
 impl Actor for WsChatSession {
@@ -97,6 +108,37 @@ impl Handler<session::Message> for WsChatSession {
 
     // server 处理逻辑后将回复发送到此处
     fn handle(&mut self, msg: session::Message, ctx: &mut Self::Context) {
+        debug!("收到消息 msg: {:?}", msg);
+        // // println!("transport: {:?}", msg);
+        // let server::Message(bin_reply) = msg;  
+        // // 回复二进制数据
+        // ctx.binary(bin_reply);
+    }
+}
+
+impl Handler<wsc::WscAddrMsg> for WsChatSession {
+    type Result = ();
+
+    // server 处理逻辑后将回复发送到此处
+    fn handle(&mut self, wsc_addr_msg: wsc::WscAddrMsg, ctx: &mut Self::Context) {
+        debug!("收到新建立连接的addr");
+        self.addr_wsc = Some(wsc_addr_msg.addr);
+
+        // // println!("transport: {:?}", msg);
+        // let server::Message(bin_reply) = msg;  
+        // // 回复二进制数据
+        // ctx.binary(bin_reply);
+    }
+}
+
+impl Handler<tcpc::TcpcAddrMsg> for WsChatSession {
+    type Result = ();
+
+    // server 处理逻辑后将回复发送到此处
+    fn handle(&mut self, tcpc_addr_msg: tcpc::TcpcAddrMsg, ctx: &mut Self::Context) {
+        debug!("收到新建立连接的addr");
+        self.addr_tcpc = Some(tcpc_addr_msg.addr);
+
         // // println!("transport: {:?}", msg);
         // let server::Message(bin_reply) = msg;  
         // // 回复二进制数据
@@ -126,6 +168,8 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
 
             }
             ws::Message::Binary(bin) => {
+                // let _addr = ctx.address();
+                // test_addr(ctx);
                 // 只接收二进制数据包，按照协议解析完成逻辑即可，
                 debug!("binary message {:?}", bin);
                 let package = bin.as_ref().to_vec();
@@ -137,6 +181,10 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
         }
     }
 }
+
+// fn test_addr(ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>) {
+//     let _addr = ctx.address();  
+// }
 
 
 // 心跳 ping 

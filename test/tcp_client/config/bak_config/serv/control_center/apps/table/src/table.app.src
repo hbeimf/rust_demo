@@ -1,0 +1,16 @@
+{application, table,
+ [{description, "An OTP application"},
+  {vsn, "0.1.3"},
+  {registered, []},
+  {mod, { table_app, []}},
+  {applications,
+   [kernel,
+    stdlib
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {maintainers, []},
+  {licenses, []},
+  {links, []}
+ ]}.

@@ -1,0 +1,130 @@
+//len(4) cmd(4) data(PB)
+syntax = "proto3";
+
+package GWC;
+
+message BroadcastByUID {
+    //请求认证 Cmd=1
+    repeated Uids uids = 1; //用户身份
+    bytes payload = 2; //透传消息体
+}
+
+message Uids {
+    string uid = 1; //
+}
+
+message Broadcast {
+    //请求认证 Cmd=2
+    string serverType = 1; //服务器类型
+    string serverID = 2; //服务器ID  自行分配
+    bytes payload = 3; //透传消息体
+}
+
+
+message HeartbeatReq {
+    //心跳 cmd=3
+    //心跳消息
+}
+
+message HeartbeatRes {
+    //心跳 cmd=4
+    //心跳回应
+}
+
+message NotifyClose {
+    //心跳 cmd=5 uid断开连接，网关通知游戏服
+    string uid = 1;
+}
+
+message TickUser {
+    //心跳 cmd=6 踢用户
+    string uid = 1;
+}
+
+message getOnlineUserNumReq {
+    //获取在线用户数 cmd=7
+    string serverType = 1; //服务器类型   当 serverType 和 serverID全部为空的时候，返回全服在线用户数
+    string serverID = 2; //服务器ID  自行分配
+    string seqID = 3; //请求序列ID
+}
+
+message getOnlineUserNumRes {
+    //获取在线用户数 cmd=8
+    int32 num = 1;
+    string serverType = 2; //服务器类型   当 serverType 和 serverID全部为空的时候，返回全服在线用户数
+    string serverID = 3; //服务器ID  自行分配
+    string seqID = 4; //请求序列ID
+}
+message isOnlineReq {
+    //判断用户是否在线请求 cmd=9
+    string uid = 1;
+    string seqID = 2; //请求序列ID
+}
+
+message isOnlineRes {
+    //判断用户是否在线响应 cmd=10
+    int32 online = 1; //1: online 0:offline
+    string seqID = 2; //请求序列ID
+}
+
+message forbiddenIp {
+    //对 ip 进行封禁操作 cmd=11
+    int32 type = 1; //1: add 添加 封禁ip 2:del 解除封禁ip
+    string ip = 2; //具体的ip
+}
+
+message BroadcastToGameServer {
+    // 对游戏服进行广播，当serverType或 serverID为空串时，对所有游戏服进行广播 Cmd=12
+    string serverType = 1; //服务器类型
+    string serverID = 2; //服务器ID  自行分配
+    bytes payload = 3; //广播消息体
+}
+message isPlayingGameReq {
+    //判断用户是否在游戏中， cmd=13
+    string uid = 1;
+    string seqID = 2; //请求序列ID
+}
+message isPlayingGameRes {
+    //cmd=14
+    int32 isPlaying = 1;
+    string seqID = 2; //请求序列ID
+}
+
+//用户上分广播  Cmd=15
+message UserAddGold {
+    string uid = 1;
+    uint64 addGold = 2;     //用户上分金币（增量）
+}
+
+
+message ReportServerInfo {
+    //上报服务器信息 http
+    string serverType = 1; //服务器类型
+    //  serverType：
+    //    0000 控制节点， 如果选择换服到0000类型的节点，就回复 CommonStatus
+    //    100 账号中心（ws）
+    //    1000 大厅    （ws）
+    //    1001 3D捕鱼     (ws)
+    //    1002 百人二八杠  (ws)
+    //    1003 压庄龙虎    (ws)
+    //    1004 扎金花      (ws)
+    //    1005 通比牌九     (ws)
+    //    1006 抢庄牛牛     (ws)
+    //    1007 红黑大战     (ws)
+    //    1008 十三水       (ws)
+    //    1009 斗地主       (ws)
+    //    1010 德州扑克     (ws)
+    //    1011 百家乐       (ws)
+    //    1012 三公         (ws)
+    //    1013 跑得快        (ws)
+    //    1014 极速扎金花     (ws)
+    //    1015 21点          (ws)
+
+    string serverID = 2; //服务器ID  自行分配
+
+    string serverURI = 3; //提供服务的内网地址 ws://192.168.1.1:8000
+    string gwcURI = 4; //提供控制节点的内网地址 ws://192.168.1.1:8001
+    int32 max = 5; //最大承载用户数
+}
+
+

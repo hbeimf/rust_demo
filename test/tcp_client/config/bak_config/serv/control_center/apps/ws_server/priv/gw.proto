@@ -1,0 +1,62 @@
+syntax="proto3";
+
+package GW;
+
+
+message GetEntranceReq{   //请求获取入口 cmd=1 客户端发起请求
+    string  identity = 1;
+    string  channel_id = 2;
+    string  server_type  = 3;
+
+}
+message GetEntranceRes{      //获取入口回复  cmd=2 请求入口地址的回应  【网关回复】
+    string  entrace_url  = 1;
+}
+
+message VerifyReq {    //请求认证 cmd=3  http
+    string identity = 1; //用户身份
+    string channel_id = 2;
+}
+
+message VerifyRes{          //请求认证回复 cmd=4 供客户端使用
+    int32  code  = 1;       //错误编码， 0：成功， 非0：失败
+    string uid = 2;      //如果id 不为 ""， 说明
+}
+
+message EnterGameReq{      //请求进入游戏 此协议由客户端统一调用 cmd=5 客户端发起请求
+    string  uid  = 1;
+    string  server_type  = 2; //游戏ID
+    string  server_id = 3;      //服务器ID
+}
+
+message EnterGameRes{      //进入游戏回复 cmd=6【网关回复】
+    int32  code  = 1;
+    string msg = 2;
+}
+
+
+message CommonStatus {  //通用信息 cmd=10
+    int32 code = 1;
+    string msg = 2;
+}
+
+//cmd = 100透传
+
+
+//以下接口全部去掉或者部分接口移到 gwc中
+//message CloseReq{          //断开用户连接 action = 1011  此协议是网关发送给各个服务器， 协议格式 len|100（2字节）|0(2字节)|0（4字节）| 原有消息体
+//    string uid = 1;
+//}
+//message CloseRes{           //断开的回复  action = 1012
+//    int32  code  = 1;       //断开结果的错误码， 成功： 0，失败 ： 1
+//   string uid = 2;
+//    string server_type = 3;
+//    string server_id = 4;
+//}
+//message ConnectReq{         //action = 1013  网关与服务器建立连接后，推送此协议  cmd<=100
+//    string uid = 1;
+//}
+//message NotifyClose{        //action = 1014 当前端客户端断开连接，网关通知游戏服，用户断开 cmd=5
+//    string uid = 1;
+//}
+

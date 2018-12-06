@@ -33,6 +33,7 @@ use actix_web::{fs, http, App, HttpResponse};
 extern crate sys_config;
 // extern crate wsc;
 mod wsc;
+mod tcpc;
 mod codec;
 mod server;
 mod session;

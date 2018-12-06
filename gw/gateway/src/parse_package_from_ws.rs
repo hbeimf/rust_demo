@@ -7,6 +7,8 @@ use actix::*;
 use msg_proto;
 
 use wsc;
+use tcpc;
+
 
 // 解包
 pub fn parse_package(package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>)  {
@@ -55,6 +57,9 @@ fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession, ctx
             // let addr_wsc = ctx.address();
             let addr = ctx.address();
             wsc::start_wsc(addr);
+
+            // tcp 客户端测试
+            tcpc::test();
         }
     };
 

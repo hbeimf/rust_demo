@@ -135,6 +135,7 @@ impl Handler<PackageFromClient> for ChatClient {
 /// Handle server websocket messages
 impl StreamHandler<Message, ProtocolError> for ChatClient {
     fn handle(&mut self, msg: Message, ctx: &mut Context<Self>) {
+        // 这里接收来自连接对端发来的包
         match msg {
             Message::Text(txt) => println!("Server: {:?}", txt),
             _ => (),

@@ -166,7 +166,7 @@ impl StreamHandler<codec::ChatResponse, io::Error> for ChatClient {
         match msg {
             codec::ChatResponse::Message(ref msg) => {
                 // println!("message: {}", msg);
-            }
+            },
             // codec::ChatResponse::Joined(ref msg) => {
             //     println!("!!! joined: {}", msg);
             // }

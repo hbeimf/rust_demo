@@ -17,7 +17,7 @@ use codec::{ChatCodec, ChatRequest, ChatResponse};
 use server::{self, ChatServer};
 
 // ===================================
-use parse_package_from_tcp;
+use tcps::parse_package_from_tcp;
 
 /// Chat server sends this messages to session
 #[derive(Message, Debug)]

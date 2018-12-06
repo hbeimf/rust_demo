@@ -36,14 +36,15 @@ mod wsc;
 mod tcpc;
 mod codec;
 mod server;
-mod session;
-mod parse_package_from_tcp;
+// mod session;
+// mod parse_package_from_tcp;
 mod glib;
 mod msg_proto;
 mod protos;
 // mod handler_from_client_ws;
 // mod parse_package_from_ws;
 mod wss;
+mod tcps;
 
 fn main() {
     
@@ -69,7 +70,7 @@ fn main() {
     // Start tcp server in separate thread
     let srv = server.clone();
     Arbiter::new("tcp-server").do_send::<msgs::Execute>(msgs::Execute::new(move || {
-        session::TcpServer::new(tcp_config.as_ref(), srv);
+        tcps::session::TcpServer::new(tcp_config.as_ref(), srv);
         Ok(())
     }));
 

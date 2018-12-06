@@ -7,7 +7,7 @@ use rand::{self, Rng, ThreadRng};
 use std::cell::RefCell;
 use std::collections::{HashMap, HashSet};
 
-use session;
+use tcps::session;
 
 /// Message for chat server communications
 

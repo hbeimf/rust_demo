@@ -10,6 +10,7 @@ use session;
 // use glib;
 use parse_package_from_ws;
 use wsc;
+use tcpc;
 
 /// How often heartbeat pings are sent
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
@@ -32,6 +33,7 @@ pub fn chat_route(req: &HttpRequest<WsChatSessionState>) -> Result<HttpResponse,
             room: "Main".to_owned(),
             // name: None,
             addr_wsc:None,
+            addr_tcpc:None,
         },
     )
 }
@@ -49,6 +51,10 @@ pub struct WsChatSession {
 
     // 启动一个与后端连接的 wsc，这里放这个连接actor的 addr
     pub addr_wsc: Option<actix::Addr<wsc::ChatClient>>,
+
+    // 启动一个与后端连接的 tcpc，这里放这个连接actor的 addr
+    pub addr_tcpc: Option<actix::Addr<tcpc::ChatClient>>,
+       
 }
 
 impl Actor for WsChatSession {

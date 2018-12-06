@@ -57,9 +57,22 @@ fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession, ctx
             // let addr_wsc = ctx.address();
             let addr = ctx.address();
             wsc::start_wsc(addr);
+        }
+    };
 
+
+    match client.addr_tcpc {
+        Some(ref the_addr_tcpc) => {
+            debug!("与后端已经建立了tcpc连接， 直接使用就可以了！！！！！！！！！");
+            // let package_from_client = wsc::PackageFromClient(package);
+            // the_addr_tcpc.do_send(package_from_client);
+        },
+        _ => {
+            // 当没有与后端节点的连接时，建立一个连接  ctx.address()
+            debug!("还没建立tcpc连接, 现在马上建立一个!!");
+            let addr = ctx.address();
             // tcp 客户端测试
-            tcpc::test();
+            tcpc::start_tcpc(addr);
         }
     };
 

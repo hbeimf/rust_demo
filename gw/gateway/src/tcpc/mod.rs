@@ -37,8 +37,9 @@ use tokio_tcp::TcpStream;
 use codec;
 
 use glib;
+use handler_from_client_ws::{WsChatSession};
 
-pub fn test() {
+pub fn start_tcpc(addr: actix::Addr<WsChatSession>) {
     // let sys = actix::System::new("chat-client");
 
     // Connect to server
@@ -86,7 +87,7 @@ pub fn test() {
     // sys.run();
 }
 
-struct ChatClient {
+pub struct ChatClient {
     framed: actix::io::FramedWrite<WriteHalf<TcpStream>, codec::ClientChatCodec>,
 }
 

@@ -45,11 +45,11 @@ fn action(cmd:u32, pb:Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::Websock
 
     match client.addr_wsc {
         Some(ref the_addr_wsc) => {
-            debug!("connected wsc");
+            debug!("与后端已经建立了wsc连接， 直接使用就可以了！！！！！！！！！");
         },
         _ => {
             // 当没有与后端节点的连接时，建立一个连接  ctx.address()
-            debug!("no connected wsc!!");
+            debug!("还没建立wsc连接, 现在马上建立一个!!");
             // let addr_wsc = ctx.address();
             let addr = ctx.address();
             wsc::start_wsc(addr);

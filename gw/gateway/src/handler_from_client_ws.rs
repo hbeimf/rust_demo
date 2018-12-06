@@ -110,6 +110,21 @@ impl Handler<session::Message> for WsChatSession {
     }
 }
 
+impl Handler<wsc::WscAddrMsg> for WsChatSession {
+    type Result = ();
+
+    // server 处理逻辑后将回复发送到此处
+    fn handle(&mut self, wsc_addr_msg: wsc::WscAddrMsg, ctx: &mut Self::Context) {
+        debug!("收到新建立连接的addr");
+        self.addr_wsc = Some(wsc_addr_msg.addr);
+
+        // // println!("transport: {:?}", msg);
+        // let server::Message(bin_reply) = msg;  
+        // // 回复二进制数据
+        // ctx.binary(bin_reply);
+    }
+}
+
 
 /// WebSocket message handler
 // 接收来自客户端的数据， 只接收二进制数据， text 类型的数据收到后，连接将强制关闭，

@@ -35,7 +35,7 @@ pub fn start_wsc(addr: actix::Addr<WsChatSession>) {
             .map(|(reader, writer)| {
                 let _addr = ChatClient::create(|ctx| {
                     ChatClient::add_stream(reader, ctx);
-                    ChatClient(writer)
+                    ChatClient{wsc_write:writer, client_addr:addr}
                 });
 
                 // // start console loop
@@ -55,16 +55,33 @@ pub fn start_wsc(addr: actix::Addr<WsChatSession>) {
 
 
 
-pub struct ChatClient(ClientWriter);
+pub struct ChatClient{
+    wsc_write: ClientWriter, 
+    client_addr: actix::Addr<WsChatSession>,
+}
 
 #[derive(Message)]
 struct ClientCommand(String);
+
+#[derive(Message)]
+pub struct WscAddrMsg{
+    pub addr: actix::Addr<ChatClient>,
+}
+
 
 impl Actor for ChatClient {
     type Context = Context<Self>;
 
     fn started(&mut self, ctx: &mut Context<Self>) {
     	debug!("与节点建立了一个websocket连接");
+        // 当连接建立的时候，将addr 发送给 client_addr
+        let wsc_addr = ctx.address();
+        let wsc_addr_msg = WscAddrMsg{
+            addr: wsc_addr,
+        };
+
+        self.client_addr.do_send(wsc_addr_msg);
+
         // start heartbeats otherwise server will disconnect after 10 seconds
         self.hb(ctx)
     }
@@ -81,7 +98,7 @@ impl Actor for ChatClient {
 impl ChatClient {
     fn hb(&self, ctx: &mut Context<Self>) {
         ctx.run_later(Duration::new(1, 0), |act, ctx| {
-            act.0.ping("");
+            act.wsc_write.ping("");
             act.hb(ctx);
 
             // client should also check for a timeout here, similar to the
@@ -95,7 +112,7 @@ impl Handler<ClientCommand> for ChatClient {
     type Result = ();
 
     fn handle(&mut self, msg: ClientCommand, ctx: &mut Context<Self>) {
-        self.0.text(msg.0)
+        self.wsc_write.text(msg.0)
     }
 }
 

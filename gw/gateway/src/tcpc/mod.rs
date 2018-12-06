@@ -21,12 +21,13 @@
 // use tokio_io;
 // use tokio_tcp;
 
+use actix::*;
 use actix::prelude::*;
 use futures::Future;
 use std::str::FromStr;
 // use std::time::Duration;
 // use std::{io, net, process, thread};
-use std::{io, net, thread};
+use std::{io, net};
 
 use tokio_codec::FramedRead;
 use tokio_io::io::WriteHalf;
@@ -59,21 +60,22 @@ pub fn test() {
                 });
 
                 // start console loop
-                thread::spawn(move || loop {
-                    let mut cmd = String::new();
-                    if io::stdin().read_line(&mut cmd).is_err() {
-                        println!("error");
-                        return;
-                    }
+                // thread::spawn(move || loop {
+                //     let mut cmd = String::new();
+                //     if io::stdin().read_line(&mut cmd).is_err() {
+                //         println!("error");
+                //         return;
+                //     }
 
-                    // addr.do_send(ClientCommand(cmd));
-                    ()
-                });
+                //     // addr.do_send(ClientCommand(cmd));
+                //     ()
+                // });
 
                 futures::future::ok(())
             })
             .map_err(|e| {
                 debug!("不能建立连接: {}", e);
+                ()
                 // process::exit(1)
             }),
     );
@@ -93,12 +95,13 @@ impl Actor for ChatClient {
     type Context = Context<Self>;
 
     fn started(&mut self, ctx: &mut Context<Self>) {
+    	debug!("建立了一个tcp连接？？！！");
         // start heartbeats otherwise server will disconnect after 10 seconds
         // self.hb(ctx)
     }
 
     fn stopped(&mut self, _: &mut Context<Self>) {
-        println!("Disconnected");
+        println!("tcp连接断开了！！");
 
         // Stop application on disconnect
         // System::current().stop();

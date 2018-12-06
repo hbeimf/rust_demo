@@ -207,6 +207,8 @@ impl StreamHandler<codec::ChatResponse, io::Error> for ChatClient {
         match msg {
             codec::ChatResponse::Message(ref msg) => {
                 // println!("message: {}", msg);
+
+                debug!("tcpc 收到来自dev端的package: {:?}", msg);
             },
             // codec::ChatResponse::Joined(ref msg) => {
             //     println!("!!! joined: {}", msg);

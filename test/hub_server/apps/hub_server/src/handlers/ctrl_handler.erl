@@ -77,8 +77,8 @@ action(100, _DataBin, _State) ->
 	ok;
 action(Type, DataBin, _State) ->
 	?LOG({Type, DataBin}),
-	% P = tcp_package:package(Type+1, DataBin),
-	% self() ! {tcp_send, P},
+	P = glib:package(Type+1, DataBin),
+	self() ! {tcp_send, P},
 	% io:format("~n ================================= ~ntype:~p, bin: ~p ~n ", [Type, DataBin]). 
 	ok.
 

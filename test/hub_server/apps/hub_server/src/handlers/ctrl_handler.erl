@@ -69,7 +69,7 @@ action(?INNER_CMD_SYNC_CLIENTS, DataBin, #state{transport = _Transport, socket= 
 
 
 % 未匹配的消息直接忽略
-action(0, _DataBin, _State) ->
+action(100, _DataBin, _State) ->
 	% ?LOG({Type, DataBin}),
 	% P = tcp_package:package(Type+1, DataBin),
 	% self() ! {tcp_send, P},

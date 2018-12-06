@@ -17,6 +17,7 @@
 
 % -record(state, {socket, transport, data}).
 -include_lib("state.hrl").
+-include_lib("ws_server/include/log.hrl").
 
 % http://blog.csdn.net/yuanfengyun/article/details/49329327
 % http://www.cnblogs.com/bicowang/p/4263227.html
@@ -115,10 +116,12 @@ code_change(_OldVsn, State, _Extra) ->
 %% Internal functions
 %% ====================================================================
 parse_package(Bin, State) ->
-	case tcp_package:unpackage(Bin) of
+	% case tcp_package:unpackage(Bin) of
+	case glib:unpackage(Bin) of
 		{ok, waitmore}  -> {ok, waitmore, Bin};
 		{ok,{Type, ValueBin},LefBin} ->
 			ctrl_handler:action(Type, ValueBin, State),
+			% ?LOG({Type, ValueBin}),
 			parse_package(LefBin, State);
 		_ ->
 			error		

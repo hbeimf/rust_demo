@@ -79,7 +79,7 @@ fn main() {
         // let state = WsChatSessionState {
         //     addr: server.clone(),
         // };
-        let state = wss::handler_from_client_ws::WsChatSessionState {
+        let state = wss::handler::WsChatSessionState {
             addr: server.clone(),
         };
 
@@ -92,7 +92,7 @@ fn main() {
             }))
             // websocket
             // .resource("/ws/", |r| r.route().f(chat_route))
-            .resource("/ws/", |r| r.route().f(wss::handler_from_client_ws::chat_route))
+            .resource("/ws/", |r| r.route().f(wss::handler::chat_route))
             // static resources
             .handler("/static/", fs::StaticFiles::new("static/").unwrap())
     }).bind(websocket_config.clone())

@@ -37,7 +37,7 @@ use tokio_tcp::TcpStream;
 use codec;
 
 use glib;
-use wss::handler_from_client_ws::{WsChatSession};
+use wss::handler::{WsChatSession};
 
 pub fn start_tcpc(addr_from: actix::Addr<WsChatSession>) {
     // let sys = actix::System::new("chat-client");

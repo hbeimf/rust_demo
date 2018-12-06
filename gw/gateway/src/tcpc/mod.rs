@@ -39,7 +39,7 @@ use codec;
 use glib;
 use handler_from_client_ws::{WsChatSession};
 
-pub fn start_tcpc(addr: actix::Addr<WsChatSession>) {
+pub fn start_tcpc(addr_from: actix::Addr<WsChatSession>) {
     // let sys = actix::System::new("chat-client");
 
     // Connect to server
@@ -59,6 +59,7 @@ pub fn start_tcpc(addr: actix::Addr<WsChatSession>) {
                             codec::ClientChatCodec,
                             ctx,
                         ),
+                        client_addr:addr_from
                     }
                 });
 
@@ -89,16 +90,30 @@ pub fn start_tcpc(addr: actix::Addr<WsChatSession>) {
 
 pub struct ChatClient {
     framed: actix::io::FramedWrite<WriteHalf<TcpStream>, codec::ClientChatCodec>,
+    client_addr: actix::Addr<WsChatSession>,
 }
 
 // #[derive(Message)]
 // struct ClientCommand(String);
+
+#[derive(Message)]
+pub struct TcpcAddrMsg{
+    pub addr: actix::Addr<ChatClient>,
+}
 
 impl Actor for ChatClient {
     type Context = Context<Self>;
 
     fn started(&mut self, ctx: &mut Context<Self>) {
     	debug!("建立了一个tcp连接？？！！");
+    	// 当连接建立的时候，将addr 发送给 client_addr
+        let tcpc_addr = ctx.address();
+        let tcpc_addr_msg = TcpcAddrMsg{
+            addr: tcpc_addr,
+        };
+
+        self.client_addr.do_send(tcpc_addr_msg);
+
         // start heartbeats otherwise server will disconnect after 10 seconds
         self.hb(ctx)
     }

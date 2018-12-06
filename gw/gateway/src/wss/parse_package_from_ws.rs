@@ -1,5 +1,5 @@
 use glib;
-use handler_from_client_ws::{WsChatSession, WsChatSessionState};
+use wss::handler_from_client_ws::{WsChatSession, WsChatSessionState};
 use actix_web::{ ws};
 use server;
 use actix::ActorContext;

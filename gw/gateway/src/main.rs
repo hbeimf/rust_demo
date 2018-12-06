@@ -41,8 +41,9 @@ mod parse_package_from_tcp;
 mod glib;
 mod msg_proto;
 mod protos;
-mod handler_from_client_ws;
-mod parse_package_from_ws;
+// mod handler_from_client_ws;
+// mod parse_package_from_ws;
+mod wss;
 
 fn main() {
     
@@ -78,7 +79,7 @@ fn main() {
         // let state = WsChatSessionState {
         //     addr: server.clone(),
         // };
-        let state = handler_from_client_ws::WsChatSessionState {
+        let state = wss::handler_from_client_ws::WsChatSessionState {
             addr: server.clone(),
         };
 
@@ -91,7 +92,7 @@ fn main() {
             }))
             // websocket
             // .resource("/ws/", |r| r.route().f(chat_route))
-            .resource("/ws/", |r| r.route().f(handler_from_client_ws::chat_route))
+            .resource("/ws/", |r| r.route().f(wss::handler_from_client_ws::chat_route))
             // static resources
             .handler("/static/", fs::StaticFiles::new("static/").unwrap())
     }).bind(websocket_config.clone())

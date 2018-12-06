@@ -8,7 +8,7 @@ use server;
 use session;
 
 // use glib;
-use parse_package_from_ws;
+use wss::parse_package_from_ws;
 use wsc;
 use tcpc;
 

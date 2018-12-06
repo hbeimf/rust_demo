@@ -1,8 +1,0 @@
-syntax="proto3";
-
-package MESSAGE;
-
-message Broadcast{   //全服广播   cmd = 200
-    string msg_type = 1;
-    string msg_body = 2;
-}

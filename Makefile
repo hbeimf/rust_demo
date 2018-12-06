@@ -43,6 +43,10 @@ tcp:
 ws:
 	cd ./test/client_test/wsc && rebar3 shell
 
+
+dev:
+	cd ./test/hub_server && rebar3 shell
+
 # gen:
 # 	cd protos && /home/maomao/.cargo/bin/pb-rs ./msg.proto
 

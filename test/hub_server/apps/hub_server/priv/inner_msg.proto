@@ -1,0 +1,36 @@
+package framework.innermsg;
+
+//注册代理: 101
+message InnerRegistProxy {
+	required int32 id = 1; //  代理id
+	required string ip = 2; //代理 ip
+	required int32 port = 3; //代理端口
+}
+
+//客户端登录: 103
+message InnerLogin {
+	required int32 user_id = 1; //客户端userid
+	required string token = 2; //客户端登录token
+	required int32 proxy_id = 3; //代理id
+	required string ip = 4; //客户端ip
+	required int32 login_time = 5; //客户端登录时间 
+}
+
+//客户端登录回复: 104
+message InnerLoginReply {
+	required int32 user_id = 1; //客户端userid
+	required int32 error_type = 2; //出错类型1: token 不存在， reply2: 登录成功，3: 登录成功，但要向当前客户端之前的登录账号发送重复登录的消息 ，4: token 检查出错 
+	required string msg = 3; //出错描述
+}
+
+//客户端退出登录: 105
+message InnerLogout {
+	required int32 user_id = 1; //客户端userid
+	required string token = 2; //客户端登录token
+	required int32 proxy_id = 3; //代理id
+}
+
+// 同步代理客户到 hub:  106
+message InnerSyncClients {
+	repeated InnerLogin  clients = 1; //客户端登录账号信息
+}

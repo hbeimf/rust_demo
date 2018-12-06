@@ -1,0 +1,17 @@
+{application, rconf,
+ [{description, "An OTP application"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, { rconf_app, []}},
+  {applications,
+   [kernel,
+    stdlib,
+    zucchini
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {maintainers, []},
+  {licenses, []},
+  {links, []}
+ ]}.

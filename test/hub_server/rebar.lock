@@ -1,0 +1,14 @@
+{"1.1.0",
+[{<<"ranch">>,
+  {git,"git://github.com/ninenines/ranch.git",
+       {ref,"a004ad710eddd0c21aaccc30d5633a76b06164b5"}},
+  0},
+ {<<"sync">>,{pkg,<<"sync">>,<<"0.1.3">>},0},
+ {<<"zucchini">>,
+  {git,"https://github.com/devinus/zucchini.git",
+       {ref,"429c9e0f9f67911c1825fbebff7d0fdc59e56b90"}},
+  0}]}.
+[
+{pkg_hash,[
+ {<<"sync">>, <<"C5785FE1311542B76355F403B8E0B35E30DBBEE1F5E89968748CEA4D0A20D289">>}]}
+].

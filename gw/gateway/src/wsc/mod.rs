@@ -26,7 +26,7 @@ use futures::Future;
 // 建立一个wscl连接后必须给addr发送一个消息，通知连接已建立成功
 pub fn start_wsc(addr: actix::Addr<WsChatSession>) {
 	Arbiter::spawn(
-        Client::new("ws://localhost:7788/websocket")
+        Client::new("ws://localhost:7766/websocket")
             .connect()
             .map_err(|e| {
                 debug!("wsc 连接出错了=====================: {}", e);

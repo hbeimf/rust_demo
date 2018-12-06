@@ -43,7 +43,7 @@ pub fn start_tcpc(addr_from: actix::Addr<WsChatSession>) {
     // let sys = actix::System::new("chat-client");
 
     // Connect to server
-    let addr = net::SocketAddr::from_str("127.0.0.1:12345").unwrap();
+    let addr = net::SocketAddr::from_str("127.0.0.1:8002").unwrap();
     Arbiter::spawn(
         TcpStream::connect(&addr)
             .and_then(|stream| {

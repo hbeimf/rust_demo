@@ -172,7 +172,7 @@ impl Encoder for ClientChatCodec {
         // Ok(())
 
         let ChatRequest::Message(package) = msg;
-        debug!("reply: {:?}", package);
+        // debug!("reply: {:?}", package);
 
         // https://github.com/carllerche/bytes/blob/v0.4.x/src/bytes.rs
         dst.extend_from_slice(package.as_ref());

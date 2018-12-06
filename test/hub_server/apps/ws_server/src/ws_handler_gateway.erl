@@ -50,6 +50,9 @@ websocket_handle({binary, CurrentPackage}, Req, State= #state_gateway{gateway_id
 		_ -> 
 			{shutdown, Req, State}
 	end;
+websocket_handle({ping, _}, Req, State) ->
+	% ?LOG({"ignore date", Data}),
+	{ok, Req, State};
 websocket_handle(Data, Req, State) ->
 	?LOG({"ignore date", Data}),
 	{ok, Req, State}.
@@ -82,5 +85,5 @@ websocket_info(_Info, Req, State) ->
 
 websocket_terminate(_Reason, _Req, _State = #state_gateway{gateway_id = GateWayId}) ->
 	?LOG({gw_closed, GateWayId}),
-	table_gateway_list:delete(GateWayId),
+	% table_gateway_list:delete(GateWayId),
 	ok.

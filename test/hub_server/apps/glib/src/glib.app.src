@@ -1,15 +1,12 @@
-{application, hub_server,
+{application, glib,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { hub_server_app, []}},
+  {mod, { glib_app, []}},
   {applications,
    [kernel,
     stdlib,
-    rconf,
-    ws_server,
-    glib,
-    ranch
+    esnowflake
    ]},
   {env,[]},
   {modules, []},

@@ -1,14 +1,12 @@
-{application, hub_server,
+{application, sys_config,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { hub_server_app, []}},
+  {mod, { sys_config_app, []}},
   {applications,
    [kernel,
     stdlib,
-    rconf,
-    ws_server,
-    ranch
+    zucchini
    ]},
   {env,[]},
   {modules, []},

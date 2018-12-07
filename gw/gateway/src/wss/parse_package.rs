@@ -1,7 +1,7 @@
 use glib;
 use wss::handler::{WsChatSession, WsChatSessionState};
 use actix_web::{ ws};
-use server;
+use hub::server;
 use actix::ActorContext;
 use actix::*;
 use pb::msg_proto;

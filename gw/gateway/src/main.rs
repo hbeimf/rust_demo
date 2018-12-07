@@ -35,7 +35,8 @@ extern crate sys_config;
 mod wsc;
 mod tcpc;
 mod codec;
-mod server;
+// mod server;
+mod hub;
 // mod session;
 // mod parse_package_from_tcp;
 mod glib;
@@ -66,7 +67,7 @@ fn main() {
     // wsc::test();
 
     // Start chat server actor in separate thread
-    let server = Arbiter::start(|_| server::ChatServer::default());
+    let server = Arbiter::start(|_| hub::server::ChatServer::default());
 
     // Start tcp server in separate thread
     let srv = server.clone();

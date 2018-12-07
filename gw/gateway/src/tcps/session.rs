@@ -14,7 +14,7 @@ use tokio_tcp::{TcpListener, TcpStream};
 use actix::prelude::*;
 
 use codec::{ChatCodec, ChatRequest, ChatResponse};
-use server::{self, ChatServer};
+use hub::server::{self, ChatServer};
 
 // ===================================
 use tcps::parse_package_from_tcp;

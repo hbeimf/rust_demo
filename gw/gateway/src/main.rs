@@ -26,25 +26,19 @@ extern crate redisc;
 
 use actix::*;
 use actix_web::server::HttpServer;
-// use actix_web::{fs, http, ws, App, Error, HttpRequest, HttpResponse};
-use actix_web::{fs, http, App, HttpResponse};
+// use actix_web::{fs, http, App, HttpResponse};
+use actix_web::*;
 
-// use std::time::{Instant, Duration};
+
 extern crate sys_config;
-// extern crate wsc;
+
 mod wsc;
 mod tcpc;
 mod codec;
-// mod server;
 mod hub;
-// mod session;
-// mod parse_package_from_tcp;
 mod glib;
-// mod msg_proto;
 mod pb;
 mod protos;
-// mod handler_from_client_ws;
-// mod parse_package_from_ws;
 mod wss;
 mod tcps;
 
@@ -87,17 +81,17 @@ fn main() {
         };
 
         App::with_state(state)
-            // redirect to websocket.html
-            .resource("/", |r| r.method(http::Method::GET).f(|_| {
-                HttpResponse::Found()
-                    .header("LOCATION", "/static/websocket.html")
-                    .finish()
-            }))
+            // // redirect to websocket.html
+            // .resource("/", |r| r.method(http::Method::GET).f(|_| {
+            //     HttpResponse::Found()
+            //         .header("LOCATION", "/static/websocket.html")
+            //         .finish()
+            // }))
             // websocket
             // .resource("/ws/", |r| r.route().f(chat_route))
             .resource("/ws/", |r| r.route().f(wss::handler::chat_route))
-            // static resources
-            .handler("/static/", fs::StaticFiles::new("static/").unwrap())
+            // // static resources
+            // .handler("/static/", fs::StaticFiles::new("static/").unwrap())
     }).bind(websocket_config.clone())
         .unwrap()
         .start();

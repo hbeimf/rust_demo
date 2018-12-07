@@ -4,7 +4,7 @@ use tcps::session::{ChatSession};
 // use server;
 use actix::ActorContext;
 
-use msg_proto;
+use pb::msg_proto;
 
 use codec::{ChatResponse};
 

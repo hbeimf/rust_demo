@@ -4,7 +4,7 @@ use actix_web::{ ws};
 use server;
 use actix::ActorContext;
 use actix::*;
-use msg_proto;
+use pb::msg_proto;
 
 use wsc;
 use tcpc;

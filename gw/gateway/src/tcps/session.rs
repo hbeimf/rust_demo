@@ -185,7 +185,9 @@ pub struct TcpServer {
 impl TcpServer {
     pub fn new(s: &str, chat: Addr<ChatServer>) {
         // Create server listener
-        let addr = net::SocketAddr::from_str("127.0.0.1:12345").unwrap();
+        // let addr = net::SocketAddr::from_str("127.0.0.1:12345").unwrap();
+        let addr = net::SocketAddr::from_str(s).unwrap();
+
         let listener = TcpListener::bind(&addr).unwrap();
 
         // Our chat server `Server` is an actor, first we need to start it

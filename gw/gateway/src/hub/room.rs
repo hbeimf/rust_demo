@@ -3,18 +3,29 @@
 //! room through `RoomActor`.
 
 use actix::prelude::*;
-use rand::{self, Rng, ThreadRng};
+use rand::{self, Rng};
+// use rand::{self, Rng, ThreadRng};
+
 use std::cell::RefCell;
 use std::collections::{HashMap, HashSet};
 use tcps::session;
 pub use hub::msg_room::{Connect, Disconnect, Message, ClientMessageBin};
 
+// use actix::prelude::Request;
+
+
+pub fn get_uid() -> u32 {
+    let rng = RefCell::new(rand::thread_rng());
+    let id = rng.borrow_mut().gen::<u32>();
+    id
+}
+
 /// `RoomActor` manages chat rooms and responsible for coordinating chat
 /// session. implementation is super primitive
 pub struct RoomActor {
-    sessions: HashMap<usize, Recipient<session::Message>>,
-    rooms: HashMap<String, HashSet<usize>>,
-    rng: RefCell<ThreadRng>,
+    sessions: HashMap<u32, Recipient<session::Message>>,
+    rooms: HashMap<String, HashSet<u32>>,
+    // rng: RefCell<ThreadRng>,
 }
 
 impl Default for RoomActor {
@@ -26,13 +37,13 @@ impl Default for RoomActor {
         RoomActor {
             sessions: HashMap::new(),
             rooms: rooms,
-            rng: RefCell::new(rand::thread_rng()),
+            // rng: RefCell::new(rand::thread_rng()),
         }
     }
 }
 
 impl RoomActor {
-    fn send_message(&self, room: &str, message: &Vec<u8>, skip_id: usize) {
+    fn send_message(&self, room: &str, message: &Vec<u8>, skip_id: u32) {
         if let Some(sessions) = self.rooms.get(room) {
             for id in sessions {
                 if *id != skip_id {
@@ -56,7 +67,7 @@ impl Actor for RoomActor {
 ///
 /// Register new session and assign unique id to this session
 impl Handler<Connect> for RoomActor {
-    type Result = usize;
+    type Result = u32;
 
     fn handle(&mut self, msg: Connect, _: &mut Context<Self>) -> Self::Result {
         println!("Someone joined");
@@ -65,14 +76,15 @@ impl Handler<Connect> for RoomActor {
         // self.send_message(&"Main".to_owned(), "Someone joined", 0);
 
         // register session with random id
-        let id = self.rng.borrow_mut().gen::<usize>();
-        self.sessions.insert(id, msg.addr);
+        // let id = self.rng.borrow_mut().gen::<u32>();
+
+        self.sessions.insert(msg.uid, msg.addr);
 
         // auto join session to Main room
-        self.rooms.get_mut(&"Main".to_owned()).unwrap().insert(id);
+        self.rooms.get_mut(&"Main".to_owned()).unwrap().insert(msg.uid);
 
         // send id back
-        id
+        msg.uid
     }
 }
 

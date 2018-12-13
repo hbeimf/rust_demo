@@ -40,7 +40,7 @@ pub fn chat_route(req: &HttpRequest<WsChatSessionState>) -> Result<HttpResponse,
 
 pub struct WsChatSession {
     /// unique session id
-    pub id: usize,
+    pub id: u32,
     /// Client must send ping at least once per 10 seconds (CLIENT_TIMEOUT),
     /// otherwise we drop connection.
     pub hb: Instant,
@@ -75,22 +75,23 @@ impl Actor for WsChatSession {
         // 向server注册客户端 ，此处逻辑可以移除
         // 等到收到某个登录消息后，将uid，name一起放到Connect消息里发送
         // room::Connect 结构体内加上uid, name 
-        let addr = ctx.address();
-        ctx.state()
-            .addr
-            .send(room::Connect {
-                addr: addr.recipient(),
-            })
-            .into_actor(self)
-            .then(|res, act, ctx| {
-                match res {
-                    Ok(res) => act.id = res,
-                    // something is wrong with chat server
-                    _ => ctx.stop(),
-                }
-                fut::ok(())
-            })
-            .wait(ctx);
+        // let addr = ctx.address();
+        // ctx.state()
+        //     .addr
+        //     .send(room::Connect {
+        //         uid: 123456u32,
+        //         addr: addr.recipient(),
+        //     })
+        //     .into_actor(self)
+        //     .then(|res, act, ctx| {
+        //         match res {
+        //             Ok(res) => act.id = res,
+        //             // something is wrong with chat server
+        //             _ => ctx.stop(),
+        //         }
+        //         fut::ok(())
+        //     })
+        //     .wait(ctx);
     }
 
     fn stopping(&mut self, ctx: &mut Self::Context) -> Running {

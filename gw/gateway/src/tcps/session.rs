@@ -26,7 +26,7 @@ pub struct Message(pub Vec<u8>);
 /// `ChatSession` actor is responsible for tcp peer communications.
 pub struct ChatSession {
     /// unique session id
-    id: usize,
+    id: u32,
     /// this is address of chat server
     addr: Addr<RoomActor>,
     // /// Client must send ping at least once per 10 seconds, otherwise we drop
@@ -50,21 +50,22 @@ impl Actor for ChatSession {
         // register self in chat server. `AsyncContext::wait` register
         // future within context, but context waits until this future resolves
         // before processing any other events.
-        let addr = ctx.address();
-        self.addr
-            .send(room::Connect {
-                addr: addr.recipient(),
-            })
-            .into_actor(self)
-            .then(|res, act, ctx| {
-                match res {
-                    Ok(res) => act.id = res,
-                    // something is wrong with chat server
-                    _ => ctx.stop(),
-                }
-                actix::fut::ok(())
-            })
-            .wait(ctx);
+        // let addr = ctx.address();
+        // self.addr
+        //     .send(room::Connect {
+        //         uid: 123456u32,
+        //         addr: addr.recipient(),
+        //     })
+        //     .into_actor(self)
+        //     .then(|res, act, ctx| {
+        //         match res {
+        //             Ok(res) => act.id = res,
+        //             // something is wrong with chat server
+        //             _ => ctx.stop(),
+        //         }
+        //         actix::fut::ok(())
+        //     })
+        //     .wait(ctx);
     }
 
     fn stopping(&mut self, ctx: &mut Self::Context) -> Running {

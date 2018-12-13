@@ -9,6 +9,8 @@ use pb::msg_proto;
 use wsc;
 use tcpc;
 
+// use actix::prelude::Request;
+
 
 // 解包
 pub fn parse_package(package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>)  {
@@ -75,6 +77,31 @@ fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession, ctx
             tcpc::start_tcpc(addr);
         }
     };
+
+    let uid = room::get_uid();
+    debug!("客户端注册到roomActor: {}", uid);
+    let addr_client = ctx.address();
+    // ctx.state().addr.send(room::Connect {
+    //         uid: uid,
+    //         addr: addr_client.recipient(),
+    // });
+    
+    ctx.state()
+        .addr
+        .send(room::Connect {
+            uid: uid,
+            addr: addr_client.recipient(),
+        })
+        .into_actor(client)
+        .then(|res, act, ctx| {
+            match res {
+                Ok(res) => act.id = res,
+                // something is wrong with chat server
+                _ => ctx.stop(),
+            }
+            fut::ok(())
+        })
+        .wait(ctx);
 
 
     // 给其它在线的客户发个广播

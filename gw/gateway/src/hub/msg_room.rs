@@ -41,3 +41,19 @@ pub struct ClientMessageBin {
     /// Room name
     pub room: String,
 }
+
+// /// List of available rooms
+// pub struct ListRooms;
+
+// impl actix::Message for ListRooms {
+//     type Result = Vec<String>;
+// }
+
+// /// Join room, if room does not exists create new one.
+// #[derive(Message)]
+// pub struct Join {
+//     /// Client id
+//     pub id: usize,
+//     /// Room name
+//     pub name: String,
+// }

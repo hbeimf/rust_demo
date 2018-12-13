@@ -6,26 +6,8 @@ use actix::prelude::*;
 use rand::{self, Rng, ThreadRng};
 use std::cell::RefCell;
 use std::collections::{HashMap, HashSet};
-
 use tcps::session;
-
 pub use hub::msg_room::{Connect, Disconnect, Message, ClientMessageBin};
-
-// /// List of available rooms
-// pub struct ListRooms;
-
-// impl actix::Message for ListRooms {
-//     type Result = Vec<String>;
-// }
-
-// /// Join room, if room does not exists create new one.
-// #[derive(Message)]
-// pub struct Join {
-//     /// Client id
-//     pub id: usize,
-//     /// Room name
-//     pub name: String,
-// }
 
 /// `RoomActor` manages chat rooms and responsible for coordinating chat
 /// session. implementation is super primitive
@@ -50,22 +32,6 @@ impl Default for RoomActor {
 }
 
 impl RoomActor {
-    // /// Send message to all users in the room
-    // fn send_message(&self, room: &str, message: &str, skip_id: usize) {
-    //     if let Some(sessions) = self.rooms.get(room) {
-    //         for id in sessions {
-    //             if *id != skip_id {
-    //                 if let Some(addr) = self.sessions.get(id) {
-    //                     // let _ = addr.do_send(session::Message(message.to_owned()));
-    //                     let _ = addr.do_send(session::Message(message));
-
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
-
     fn send_message(&self, room: &str, message: &Vec<u8>, skip_id: usize) {
         if let Some(sessions) = self.rooms.get(room) {
             for id in sessions {

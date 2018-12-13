@@ -107,7 +107,7 @@ fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession, ctx
 
     // handler_cast()
     // 给其它在线的客户发个广播
-    ctx.state().addr.do_send(room::ClientMessageBin {
+    ctx.state().addr.do_send(room::Message {
         id: client.id,
         msg: reply_package,
         room: client.room.clone(),

@@ -9,7 +9,7 @@ use rand::{self, Rng};
 use std::cell::RefCell;
 use std::collections::{HashMap, HashSet};
 use tcps::session;
-pub use hub::msg_room::{Connect, Disconnect, Message, ClientMessageBin};
+pub use hub::msg_room::{Connect, Disconnect, Message};
 
 // use actix::prelude::Request;
 
@@ -125,14 +125,14 @@ impl Handler<Message> for RoomActor {
 }
 
 
-/// Handler for Message message.
-impl Handler<ClientMessageBin> for RoomActor {
-    type Result = ();
+// /// Handler for Message message.
+// impl Handler<ClientMessageBin> for RoomActor {
+//     type Result = ();
 
-    fn handle(&mut self, msg: ClientMessageBin, _: &mut Context<Self>) {
-        self.send_message(&msg.room, &msg.msg, msg.id);
-    }
-}
+//     fn handle(&mut self, msg: ClientMessageBin, _: &mut Context<Self>) {
+//         self.send_message(&msg.room, &msg.msg, msg.id);
+//     }
+// }
 
 
 // /// Handler for `ListRooms` message.

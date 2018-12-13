@@ -8,6 +8,7 @@ use tcps::session;
 /// Message for chat server communications
 
 // /// New chat session is created
+// handler_call()
 #[derive(Message)]
 #[rtype(u32)]
 pub struct Connect {
@@ -21,7 +22,7 @@ pub struct Connect {
 //     pub addr: Recipient<session::Message>,
 // }
 
-/// Session is disconnected
+// handler_cast()
 #[derive(Message)]
 pub struct Disconnect {
     pub id: u32,
@@ -38,16 +39,15 @@ pub struct Message {
     pub room: String,
 }
 
-/// Send message to specific room
-#[derive(Message)]
-pub struct ClientMessageBin {
-    /// Id of the client session
-    pub id: u32,
-    /// Peer message
-    pub msg: Vec<u8>,
-    /// Room name
-    pub room: String,
-}
+// #[derive(Message)]
+// pub struct ClientMessageBin {
+//     /// Id of the client session
+//     pub id: u32,
+//     /// Peer message
+//     pub msg: Vec<u8>,
+//     /// Room name
+//     pub room: String,
+// }
 
 // /// List of available rooms
 // pub struct ListRooms;

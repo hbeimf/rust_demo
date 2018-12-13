@@ -1,7 +1,7 @@
 use glib;
 use wss::handler::{WsChatSession, WsChatSessionState};
 use actix_web::{ ws};
-use hub::server;
+use hub::room;
 use actix::ActorContext;
 use actix::*;
 use pb::msg_proto;
@@ -78,7 +78,7 @@ fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession, ctx
 
 
     // 给其它在线的客户发个广播
-    ctx.state().addr.do_send(server::ClientMessageBin {
+    ctx.state().addr.do_send(room::ClientMessageBin {
         id: client.id,
         msg: reply_package,
         room: client.room.clone(),

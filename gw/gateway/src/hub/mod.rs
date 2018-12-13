@@ -1,1 +1,2 @@
-pub mod server;
+pub mod msg;
+pub mod room;

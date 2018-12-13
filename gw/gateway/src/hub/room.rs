@@ -1,6 +1,6 @@
-//! `ChatServer` is an actor. It maintains list of connection client session.
+//! `RoomActor` is an actor. It maintains list of connection client session.
 //! And manages available rooms. Peers send messages to other peers in same
-//! room through `ChatServer`.
+//! room through `RoomActor`.
 
 use actix::prelude::*;
 use rand::{self, Rng, ThreadRng};
@@ -62,21 +62,21 @@ pub struct ClientMessageBin {
 //     pub name: String,
 // }
 
-/// `ChatServer` manages chat rooms and responsible for coordinating chat
+/// `RoomActor` manages chat rooms and responsible for coordinating chat
 /// session. implementation is super primitive
-pub struct ChatServer {
+pub struct RoomActor {
     sessions: HashMap<usize, Recipient<session::Message>>,
     rooms: HashMap<String, HashSet<usize>>,
     rng: RefCell<ThreadRng>,
 }
 
-impl Default for ChatServer {
-    fn default() -> ChatServer {
+impl Default for RoomActor {
+    fn default() -> RoomActor {
         // default room
         let mut rooms = HashMap::new();
         rooms.insert("Main".to_owned(), HashSet::new());
 
-        ChatServer {
+        RoomActor {
             sessions: HashMap::new(),
             rooms: rooms,
             rng: RefCell::new(rand::thread_rng()),
@@ -84,7 +84,7 @@ impl Default for ChatServer {
     }
 }
 
-impl ChatServer {
+impl RoomActor {
     // /// Send message to all users in the room
     // fn send_message(&self, room: &str, message: &str, skip_id: usize) {
     //     if let Some(sessions) = self.rooms.get(room) {
@@ -114,8 +114,8 @@ impl ChatServer {
     }
 }
 
-/// Make actor from `ChatServer`
-impl Actor for ChatServer {
+/// Make actor from `RoomActor`
+impl Actor for RoomActor {
     /// We are going to use simple Context, we just need ability to communicate
     /// with other actors.
     type Context = Context<Self>;
@@ -124,7 +124,7 @@ impl Actor for ChatServer {
 /// Handler for Connect message.
 ///
 /// Register new session and assign unique id to this session
-impl Handler<Connect> for ChatServer {
+impl Handler<Connect> for RoomActor {
     type Result = usize;
 
     fn handle(&mut self, msg: Connect, _: &mut Context<Self>) -> Self::Result {
@@ -146,7 +146,7 @@ impl Handler<Connect> for ChatServer {
 }
 
 /// Handler for Disconnect message.
-impl Handler<Disconnect> for ChatServer {
+impl Handler<Disconnect> for RoomActor {
     type Result = ();
 
     fn handle(&mut self, msg: Disconnect, _: &mut Context<Self>) {
@@ -171,7 +171,7 @@ impl Handler<Disconnect> for ChatServer {
 }
 
 /// Handler for Message message.
-impl Handler<Message> for ChatServer {
+impl Handler<Message> for RoomActor {
     type Result = ();
 
     fn handle(&mut self, msg: Message, _: &mut Context<Self>) {
@@ -183,7 +183,7 @@ impl Handler<Message> for ChatServer {
 
 
 /// Handler for Message message.
-impl Handler<ClientMessageBin> for ChatServer {
+impl Handler<ClientMessageBin> for RoomActor {
     type Result = ();
 
     fn handle(&mut self, msg: ClientMessageBin, _: &mut Context<Self>) {
@@ -193,7 +193,7 @@ impl Handler<ClientMessageBin> for ChatServer {
 
 
 // /// Handler for `ListRooms` message.
-// impl Handler<ListRooms> for ChatServer {
+// impl Handler<ListRooms> for RoomActor {
 //     type Result = MessageResult<ListRooms>;
 
 //     fn handle(&mut self, _: ListRooms, _: &mut Context<Self>) -> Self::Result {
@@ -209,7 +209,7 @@ impl Handler<ClientMessageBin> for ChatServer {
 
 // /// Join room, send disconnect message to old room
 // /// send join message to new room
-// impl Handler<Join> for ChatServer {
+// impl Handler<Join> for RoomActor {
 //     type Result = ();
 
 //     fn handle(&mut self, msg: Join, _: &mut Context<Self>) {

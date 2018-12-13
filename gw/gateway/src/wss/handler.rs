@@ -1,10 +1,10 @@
 use std::time::{Instant, Duration};
 
 use actix::*;
-// use actix_web::server::HttpServer;
+// use actix_web::room::HttpServer;
 use actix_web::{ ws, Error, HttpRequest, HttpResponse};
 
-use hub::server;
+use hub::room;
 use tcps::session;
 
 // use glib;
@@ -20,7 +20,7 @@ const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
 /// This is our websocket route state, this state is shared with all route
 /// instances via `HttpContext::state()`
 pub struct WsChatSessionState {
-    pub addr: Addr<server::ChatServer>,
+    pub addr: Addr<room::RoomActor>,
 }
 
 /// Entry point for our route
@@ -61,7 +61,7 @@ impl Actor for WsChatSession {
     type Context = ws::WebsocketContext<Self, WsChatSessionState>;
 
     /// Method is called on actor start.
-    /// We register ws session with ChatServer
+    /// We register ws session with RoomActor
     fn started(&mut self, ctx: &mut Self::Context) {
         // we'll start heartbeat process on session start.
         self.hb(ctx);
@@ -74,11 +74,11 @@ impl Actor for WsChatSession {
 
         // 向server注册客户端 ，此处逻辑可以移除
         // 等到收到某个登录消息后，将uid，name一起放到Connect消息里发送
-        // server::Connect 结构体内加上uid, name 
+        // room::Connect 结构体内加上uid, name 
         let addr = ctx.address();
         ctx.state()
             .addr
-            .send(server::Connect {
+            .send(room::Connect {
                 addr: addr.recipient(),
             })
             .into_actor(self)
@@ -96,7 +96,7 @@ impl Actor for WsChatSession {
     fn stopping(&mut self, ctx: &mut Self::Context) -> Running {
         // notify chat server
         // session actor 结束了，通知 server actor
-        ctx.state().addr.do_send(server::Disconnect { id: self.id });
+        ctx.state().addr.do_send(room::Disconnect { id: self.id });
         Running::Stop
     }
 }
@@ -110,7 +110,7 @@ impl Handler<session::Message> for WsChatSession {
     fn handle(&mut self, msg: session::Message, ctx: &mut Self::Context) {
         debug!("收到消息 msg: {:?}", msg);
         // // println!("transport: {:?}", msg);
-        // let server::Message(bin_reply) = msg;  
+        // let room::Message(bin_reply) = msg;  
         // // 回复二进制数据
         // ctx.binary(bin_reply);
     }
@@ -216,7 +216,7 @@ impl WsChatSession {
                 // notify chat server
                 ctx.state()
                     .addr
-                    .do_send(server::Disconnect { id: act.id });
+                    .do_send(room::Disconnect { id: act.id });
 
                 // stop actor
                 ctx.stop();

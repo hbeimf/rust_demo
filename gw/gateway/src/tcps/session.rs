@@ -1,5 +1,5 @@
 //! `ClientSession` is an actor, it manages peer tcp connection and
-//! proxies commands from peer to `ChatServer`.
+//! proxies commands from peer to `RoomActor`.
 use futures::Stream;
 use std::str::FromStr;
 // use std::time::{Duration, Instant};
@@ -14,7 +14,7 @@ use tokio_tcp::{TcpListener, TcpStream};
 use actix::prelude::*;
 
 use codec::{ChatCodec, ChatRequest, ChatResponse};
-use hub::server::{self, ChatServer};
+use hub::room::{self, RoomActor};
 
 // ===================================
 use tcps::parse_package_from_tcp;
@@ -28,7 +28,7 @@ pub struct ChatSession {
     /// unique session id
     id: usize,
     /// this is address of chat server
-    addr: Addr<ChatServer>,
+    addr: Addr<RoomActor>,
     // /// Client must send ping at least once per 10 seconds, otherwise we drop
     // /// connection.
     // hb: Instant,
@@ -52,7 +52,7 @@ impl Actor for ChatSession {
         // before processing any other events.
         let addr = ctx.address();
         self.addr
-            .send(server::Connect {
+            .send(room::Connect {
                 addr: addr.recipient(),
             })
             .into_actor(self)
@@ -69,7 +69,7 @@ impl Actor for ChatSession {
 
     fn stopping(&mut self, ctx: &mut Self::Context) -> Running {
         // notify chat server
-        self.addr.do_send(server::Disconnect { id: self.id });
+        self.addr.do_send(room::Disconnect { id: self.id });
         Running::Stop
     }
 }
@@ -141,7 +141,7 @@ impl Handler<Message> for ChatSession {
 /// Helper methods
 impl ChatSession {
     pub fn new(
-        addr: Addr<ChatServer>,
+        addr: Addr<RoomActor>,
         framed: actix::io::FramedWrite<WriteHalf<TcpStream>, ChatCodec>,
     ) -> ChatSession {
         ChatSession {
@@ -179,11 +179,11 @@ impl ChatSession {
 /// Define tcp server that will accept incoming tcp connection and create
 /// chat actors.
 pub struct TcpServer {
-    chat: Addr<ChatServer>,
+    chat: Addr<RoomActor>,
 }
 
 impl TcpServer {
-    pub fn new(s: &str, chat: Addr<ChatServer>) {
+    pub fn new(s: &str, chat: Addr<RoomActor>) {
         // Create server listener
         // let addr = net::SocketAddr::from_str("127.0.0.1:12345").unwrap();
         let addr = net::SocketAddr::from_str(s).unwrap();

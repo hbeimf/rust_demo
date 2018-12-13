@@ -85,7 +85,8 @@ fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession, ctx
     //         uid: uid,
     //         addr: addr_client.recipient(),
     // });
-    
+
+    // handler_call()
     ctx.state()
         .addr
         .send(room::Connect {
@@ -104,6 +105,7 @@ fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession, ctx
         .wait(ctx);
 
 
+    // handler_cast()
     // 给其它在线的客户发个广播
     ctx.state().addr.do_send(room::ClientMessageBin {
         id: client.id,

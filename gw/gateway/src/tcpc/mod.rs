@@ -114,7 +114,7 @@ impl Actor for ChatClient {
     type Context = Context<Self>;
 
     fn started(&mut self, ctx: &mut Context<Self>) {
-    	debug!("建立了一个tcp连接？？！！");
+    	// debug!("建立了一个tcp连接？？！！");
     	// 当连接建立的时候，将addr 发送给 client_addr
         let tcpc_addr = ctx.address();
         let tcpc_addr_msg = ConnectTcpcAddrMsg{
@@ -128,7 +128,7 @@ impl Actor for ChatClient {
     }
 
     fn stopped(&mut self, _: &mut Context<Self>) {
-        debug!("tcp连接断开了！！");
+        // debug!("tcp连接断开了！！");
 
         let tcpc_addr_msg = DeconnectTcpcAddrMsg{
         };
@@ -145,7 +145,7 @@ impl Handler<PackageFromClient> for ChatClient {
     type Result = ();
 
     fn handle(&mut self, package: PackageFromClient, ctx: &mut Context<Self>) {
-        debug!("客户端转发过来的包: {:?}", package);
+        // debug!("客户端转发过来的包: {:?}", package);
         // self.wsc_write.binary(package.0)
         self.framed.write(codec::ChatRequest::Message(package.0));
     }

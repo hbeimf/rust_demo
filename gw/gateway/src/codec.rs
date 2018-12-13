@@ -146,7 +146,7 @@ impl Decoder for ClientChatCodec {
         if src.len() >= len {
             let buf = src.split_to(len);
             let v = buf.to_vec();
-            debug!("buf: {:?}", v.clone());
+            // debug!("buf: {:?}", v.clone());
 
             Ok(Some(ChatResponse::Message(buf.to_vec())))
         } else {

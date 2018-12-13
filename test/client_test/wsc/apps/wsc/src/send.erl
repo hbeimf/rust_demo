@@ -70,7 +70,7 @@ init_ws_clients() ->
 	lists:foreach(fun(Index) -> 
 		{ok, Pid} = wsc_cc:start_link(Index),
 		ets:insert(?WS_CLIENTS, #ws_clients{key=Index, val=Pid})
-	end, [1,2,3,4,5,6]),
+	end, [1,2,3]),
 
 	ok.
 

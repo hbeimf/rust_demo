@@ -268,10 +268,167 @@ impl ::protobuf::reflect::ProtobufValue for TestMsg {
     }
 }
 
+#[derive(PartialEq,Clone,Default)]
+pub struct Login {
+    // message fields
+    pub uid: i32,
+    // special fields
+    pub unknown_fields: ::protobuf::UnknownFields,
+    pub cached_size: ::protobuf::CachedSize,
+}
+
+impl Login {
+    pub fn new() -> Login {
+        ::std::default::Default::default()
+    }
+
+    // int32 uid = 1;
+
+    pub fn clear_uid(&mut self) {
+        self.uid = 0;
+    }
+
+    // Param is passed by value, moved
+    pub fn set_uid(&mut self, v: i32) {
+        self.uid = v;
+    }
+
+    pub fn get_uid(&self) -> i32 {
+        self.uid
+    }
+}
+
+impl ::protobuf::Message for Login {
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
+            match field_number {
+                1 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    let tmp = is.read_int32()?;
+                    self.uid = tmp;
+                },
+                _ => {
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u32 {
+        let mut my_size = 0;
+        if self.uid != 0 {
+            my_size += ::protobuf::rt::value_size(1, self.uid, ::protobuf::wire_format::WireTypeVarint);
+        }
+        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
+        self.cached_size.set(my_size);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
+        if self.uid != 0 {
+            os.write_int32(1, self.uid)?;
+        }
+        os.write_unknown_fields(self.get_unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn get_cached_size(&self) -> u32 {
+        self.cached_size.get()
+    }
+
+    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
+        &self.unknown_fields
+    }
+
+    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
+        &mut self.unknown_fields
+    }
+
+    fn as_any(&self) -> &::std::any::Any {
+        self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
+    }
+
+    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
+        Self::descriptor_static()
+    }
+
+    fn new() -> Login {
+        Login::new()
+    }
+
+    fn descriptor_static() -> &'static ::protobuf::reflect::MessageDescriptor {
+        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
+        };
+        unsafe {
+            descriptor.get(|| {
+                let mut fields = ::std::vec::Vec::new();
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
+                    "uid",
+                    |m: &Login| { &m.uid },
+                    |m: &mut Login| { &mut m.uid },
+                ));
+                ::protobuf::reflect::MessageDescriptor::new::<Login>(
+                    "Login",
+                    fields,
+                    file_descriptor_proto()
+                )
+            })
+        }
+    }
+
+    fn default_instance() -> &'static Login {
+        static mut instance: ::protobuf::lazy::Lazy<Login> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const Login,
+        };
+        unsafe {
+            instance.get(Login::new)
+        }
+    }
+}
+
+impl ::protobuf::Clear for Login {
+    fn clear(&mut self) {
+        self.clear_uid();
+        self.unknown_fields.clear();
+    }
+}
+
+impl ::std::fmt::Debug for Login {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for Login {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
 static file_descriptor_proto_data: &'static [u8] = b"\
     \n\tmsg.proto\x12\x03msg\"E\n\x07TestMsg\x12\x10\n\x04name\x18\x01\x20\
     \x01(\tB\x02\x18\0\x12\x15\n\tnick_name\x18\x02\x20\x01(\tB\x02\x18\0\
-    \x12\x11\n\x05phone\x18\x03\x20\x01(\tB\x02\x18\0B\0b\x06proto3\
+    \x12\x11\n\x05phone\x18\x03\x20\x01(\tB\x02\x18\0\"\x18\n\x05Login\x12\
+    \x0f\n\x03uid\x18\x01\x20\x01(\x05B\x02\x18\0B\0b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {

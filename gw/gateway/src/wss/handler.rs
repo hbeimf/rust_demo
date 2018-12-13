@@ -109,7 +109,7 @@ impl Handler<session::Message> for WsChatSession {
 
     // server 处理逻辑后将回复发送到此处
     fn handle(&mut self, msg: session::Message, ctx: &mut Self::Context) {
-        debug!("收到消息 msg: {:?}", msg);
+        // debug!("收到消息 msg: {:?}", msg);
         // // println!("transport: {:?}", msg);
         // let room::Message(bin_reply) = msg;  
         // // 回复二进制数据
@@ -122,7 +122,7 @@ impl Handler<wsc::ConnectWscAddrMsg> for WsChatSession {
 
     // server 处理逻辑后将回复发送到此处
     fn handle(&mut self, wsc_addr_msg: wsc::ConnectWscAddrMsg, ctx: &mut Self::Context) {
-        debug!("收到新建立连接的addr");
+        // debug!("收到新建立连接的addr");
         self.addr_wsc = Some(wsc_addr_msg.addr);
     }
 }
@@ -132,7 +132,7 @@ impl Handler<wsc::DeconnectWscAddrMsg> for WsChatSession {
 
     // server 处理逻辑后将回复发送到此处
     fn handle(&mut self, wsc_addr_msg: wsc::DeconnectWscAddrMsg, ctx: &mut Self::Context) {
-        debug!("wsc连接断开了！");
+        // debug!("wsc连接断开了！");
         self.addr_wsc = None;
     }
 }
@@ -143,7 +143,7 @@ impl Handler<tcpc::ConnectTcpcAddrMsg> for WsChatSession {
 
     // server 处理逻辑后将回复发送到此处
     fn handle(&mut self, tcpc_addr_msg: tcpc::ConnectTcpcAddrMsg, ctx: &mut Self::Context) {
-        debug!("tcpc连接建立成功！！");
+        // debug!("tcpc连接建立成功！！");
         self.addr_tcpc = Some(tcpc_addr_msg.addr);
     }
 }
@@ -154,7 +154,7 @@ impl Handler<tcpc::DeconnectTcpcAddrMsg> for WsChatSession {
 
     // server 处理逻辑后将回复发送到此处
     fn handle(&mut self, tcpc_addr_msg: tcpc::DeconnectTcpcAddrMsg, ctx: &mut Self::Context) {
-        debug!("tcpc连接断开了！");
+        // debug!("tcpc连接断开了！");
         self.addr_tcpc = None;
     }
 }
@@ -177,7 +177,7 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
                 self.hb = Instant::now();
             }
             ws::Message::Text(text) => {
-                println!("WEBSOCKET text MESSAGE: {:?}", text);
+                // println!("WEBSOCKET text MESSAGE: {:?}", text);
                 // 不关注字符串消息，直接关闭连接 
                 ctx.stop()
 
@@ -186,7 +186,7 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
                 // let _addr = ctx.address();
                 // test_addr(ctx);
                 // 只接收二进制数据包，按照协议解析完成逻辑即可，
-                debug!("binary message {:?}", bin);
+                // debug!("binary message {:?}", bin);
                 let package = bin.as_ref().to_vec();
                 parse_package::parse_package(package, self, ctx);
             }
@@ -212,7 +212,7 @@ impl WsChatSession {
             // check client heartbeats
             if Instant::now().duration_since(act.hb) > CLIENT_TIMEOUT {
                 // heartbeat timed out
-                println!("Websocket Client heartbeat failed, disconnecting!");
+                // println!("Websocket Client heartbeat failed, disconnecting!");
 
                 // notify chat server
                 ctx.state()

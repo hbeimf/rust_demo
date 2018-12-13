@@ -10,7 +10,11 @@
          websocket_terminate/3
         ]).
 
--define(LOG(X), io:format("~n==========log========{~p,~p}==============~n~p~n", [?MODULE,?LINE,X])).
+-include_lib("glib/include/msg_proto.hrl").
+-include_lib("glib/include/log.hrl").
+-include_lib("glib/include/cmdid.hrl").
+
+% -define(LOG(X), io:format("~n==========log========{~p,~p}==============~n~p~n", [?MODULE,?LINE,X])).
 % -define(LOG(X), true).
 
 
@@ -21,11 +25,41 @@ start_link(Index) ->
   
     websocket_client:start_link("ws://localhost:5566/ws/", ?MODULE, [Index]).
 
+
+send_test_msg() ->
+    TestMsg = #'TestMsg'{
+                        name = <<"jim green">>,
+                        nick_name = <<"nick_name123456">>,
+                        phone = <<"15912341234">> 
+                    },
+    TestMsgBin = msg_proto:encode_msg(TestMsg),
+    Package = glib:package(10001, TestMsgBin),
+    self() ! {binary, Package},
+    ok.
+
+
+send_login() ->
+    Uid = glib:uid() rem 100000, 
+    Login = #'Login'{
+                        uid = Uid 
+                    },
+    TestMsgBin = msg_proto:encode_msg(Login),
+    Package = glib:package(10000, TestMsgBin),
+    self() ! {binary, Package},
+    ok.
+
+
     
 
 init([Index], _ConnState) ->
     % websocket_client:cast(self(), {text, <<"message 1">>}),
     % io:format("client pid: ~p ~n", [self()]),
+
+    send_login(),
+    send_test_msg(),
+
+    
+
 
     {ok, Index}.
 

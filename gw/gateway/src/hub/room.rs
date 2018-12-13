@@ -3,10 +3,10 @@
 //! room through `RoomActor`.
 
 use actix::prelude::*;
-use rand::{self, Rng};
+// use rand::{self, Rng};
 // use rand::{self, Rng, ThreadRng};
 
-use std::cell::RefCell;
+// use std::cell::RefCell;
 use std::collections::{HashMap, HashSet};
 use tcps::session;
 pub use hub::msg_room::{Connect, Disconnect, Message};
@@ -14,11 +14,11 @@ pub use hub::msg_room::{Connect, Disconnect, Message};
 // use actix::prelude::Request;
 
 
-pub fn get_uid() -> u32 {
-    let rng = RefCell::new(rand::thread_rng());
-    let id = rng.borrow_mut().gen::<u32>();
-    id
-}
+// pub fn get_uid() -> u32 {
+//     let rng = RefCell::new(rand::thread_rng());
+//     let id = rng.borrow_mut().gen::<u32>();
+//     id
+// }
 
 /// `RoomActor` manages chat rooms and responsible for coordinating chat
 /// session. implementation is super primitive

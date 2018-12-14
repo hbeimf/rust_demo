@@ -54,7 +54,7 @@ pub struct WsChatSession {
     // name: Option<String>,
 
     // 启动一个与后端连接的 wsc，这里放这个连接actor的 addr
-    pub addr_wsc: Option<actix::Addr<wsc::ChatClient>>,
+    pub addr_wsc: Option<actix::Addr<wsc::gen_server::ChatClient>>,
 
     // 启动一个与后端连接的 tcpc，这里放这个连接actor的 addr
     pub addr_tcpc: Option<actix::Addr<tcpc::ChatClient>>,
@@ -121,21 +121,21 @@ impl Handler<session::Message> for WsChatSession {
     }
 }
 
-impl Handler<wsc::ConnectWscAddrMsg> for WsChatSession {
+impl Handler<wsc::gen_server::ConnectWscAddrMsg> for WsChatSession {
     type Result = ();
 
     // server 处理逻辑后将回复发送到此处
-    fn handle(&mut self, wsc_addr_msg: wsc::ConnectWscAddrMsg, ctx: &mut Self::Context) {
+    fn handle(&mut self, wsc_addr_msg: wsc::gen_server::ConnectWscAddrMsg, ctx: &mut Self::Context) {
         // debug!("收到新建立连接的addr");
         self.addr_wsc = Some(wsc_addr_msg.addr);
     }
 }
 
-impl Handler<wsc::DeconnectWscAddrMsg> for WsChatSession {
+impl Handler<wsc::gen_server::DeconnectWscAddrMsg> for WsChatSession {
     type Result = ();
 
     // server 处理逻辑后将回复发送到此处
-    fn handle(&mut self, wsc_addr_msg: wsc::DeconnectWscAddrMsg, ctx: &mut Self::Context) {
+    fn handle(&mut self, wsc_addr_msg: wsc::gen_server::DeconnectWscAddrMsg, ctx: &mut Self::Context) {
         // debug!("wsc连接断开了！");
         self.addr_wsc = None;
     }

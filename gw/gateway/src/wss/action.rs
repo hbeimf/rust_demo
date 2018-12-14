@@ -57,7 +57,7 @@ pub fn action_10000(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSe
     match client.addr_wsc {
         Some(ref the_addr_wsc) => {
             // debug!("与后端已经建立了wsc连接， 直接使用就可以了！！！！！！！！！");
-            let package_from_client = wsc::PackageFromClient(package.clone());
+            let package_from_client = wsc::gen_server::PackageFromClient(package.clone());
             the_addr_wsc.do_send(package_from_client);
             
         },
@@ -66,7 +66,7 @@ pub fn action_10000(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSe
             // debug!("还没建立wsc连接, 现在马上建立一个!!");
             // let addr_wsc = ctx.address();
             let addr = ctx.address();
-            wsc::start_wsc(addr);
+            wsc::gen_server::start_wsc(addr);
         }
     };
 

@@ -1,3 +1,7 @@
+use glib;
+use wss::action;
+use actix::ActorContext;
+
 use std::time::{Instant, Duration};
 
 use actix::*;
@@ -8,7 +12,7 @@ use hub::room;
 use tcps::session;
 
 // use glib;
-use wss::parse;
+// use wss::parse;
 use wsc;
 use tcpc;
 
@@ -188,11 +192,37 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
                 // 只接收二进制数据包，按照协议解析完成逻辑即可，
                 // debug!("binary message {:?}", bin);
                 let package = bin.as_ref().to_vec();
-                parse::parse_package(package, self, ctx);
+                parse_package(package, self, ctx);
             }
             ws::Message::Close(_) => {
                 ctx.stop();
             },
+        }
+    }
+}
+
+
+// 解包
+pub fn parse_package(package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>)  {
+    // let _addr = ctx.address();
+    let unpackage = glib::unpackage(package.clone());
+
+    match unpackage {
+        Some(glib::UnPackageResult{len:_len, cmd, pb}) => {
+            match cmd {
+                10000 => {
+                    action::action_10000(cmd, pb, package, client, ctx);
+                }
+                _ => {
+                    action::action(cmd, pb, package, client, ctx);   
+                }
+            }
+            // action(cmd, pb, package, client, ctx);
+        }
+        None => {
+            // 如果解包失败，直接关掉连接
+            debug!("unpackage error ...");
+            ctx.stop();
         }
     }
 }

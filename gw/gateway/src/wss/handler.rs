@@ -8,7 +8,7 @@ use hub::room;
 use tcps::session;
 
 // use glib;
-use wss::parse_package;
+use wss::parse;
 use wsc;
 use tcpc;
 
@@ -188,7 +188,7 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
                 // 只接收二进制数据包，按照协议解析完成逻辑即可，
                 // debug!("binary message {:?}", bin);
                 let package = bin.as_ref().to_vec();
-                parse_package::parse_package(package, self, ctx);
+                parse::parse_package(package, self, ctx);
             }
             ws::Message::Close(_) => {
                 ctx.stop();

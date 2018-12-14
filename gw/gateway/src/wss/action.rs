@@ -1,5 +1,7 @@
 use glib;
 use wss::handler::{WsChatSession, WsChatSessionState};
+// use wss::action;
+
 use actix_web::{ ws};
 use hub::room;
 use actix::ActorContext;
@@ -9,39 +11,12 @@ use pb::msg_proto;
 use wsc;
 use tcpc;
 
-// use actix::prelude::Request;
-
-
-// 解包
-pub fn parse_package(package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>)  {
-    // let _addr = ctx.address();
-    let unpackage = glib::unpackage(package.clone());
-
-    match unpackage {
-        Some(glib::UnPackageResult{len:_len, cmd, pb}) => {
-            match cmd {
-                10000 => {
-                    action_10000(cmd, pb, package, client, ctx);
-                }
-                _ => {
-                    action(cmd, pb, package, client, ctx);   
-                }
-            }
-            // action(cmd, pb, package, client, ctx);
-        }
-        None => {
-        	// 如果解包失败，直接关掉连接
-            debug!("unpackage error ...");
-            ctx.stop();
-        }
-    }
-}
 
 // message Login{   
 //     int32  uid = 1;
 // }
 // Login 
-fn action_10000(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>) {
+pub fn action_10000(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>) {
     //parse pb logic 
     let login_msg = msg_proto::decode_login(pb);
     debug!("uid: {:?}", login_msg.get_uid());
@@ -114,7 +89,7 @@ fn action_10000(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSessio
 }
 
 // 业务逻辑部分
-fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>) {
+pub fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>) {
 	//parse pb logic 
 	// let test_msg = msg_proto::decode_msg(pb);
     // debug!("name: {:?}, nick_name:{:?}, phone: {:?}", test_msg.get_name(), test_msg.get_nick_name(), test_msg.get_phone());

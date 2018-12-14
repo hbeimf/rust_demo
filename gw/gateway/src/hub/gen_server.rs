@@ -9,7 +9,7 @@ use actix::prelude::*;
 // use std::cell::RefCell;
 use std::collections::{HashMap, HashSet};
 use tcps::session;
-pub use hub::msg_room::{Connect, Disconnect, Message};
+pub use hub::msg::{Connect, Disconnect, Message};
 
 // use actix::prelude::Request;
 

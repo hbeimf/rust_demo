@@ -1,4 +1,4 @@
-pub mod msg_room;
+pub mod msg;
 // pub mod room;
 pub mod gen_server;
 

@@ -14,7 +14,8 @@ use tokio_tcp::{TcpListener, TcpStream};
 use actix::prelude::*;
 
 use tcps::codec::{ChatCodec, ChatRequest, ChatResponse};
-use hub::room::{self, RoomActor};
+use hub;
+use hub::gen_server::{RoomActor};
 
 // ===================================
 use tcps::parse_package_from_tcp;
@@ -70,7 +71,7 @@ impl Actor for ChatSession {
 
     fn stopping(&mut self, ctx: &mut Self::Context) -> Running {
         // notify chat server
-        self.addr.do_send(room::Disconnect { id: self.id });
+        self.addr.do_send(hub::gen_server::Disconnect { id: self.id });
         Running::Stop
     }
 }

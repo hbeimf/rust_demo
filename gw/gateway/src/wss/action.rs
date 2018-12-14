@@ -3,7 +3,7 @@ use wss::gen_server::{WsChatSession, WsChatSessionState};
 // use wss::action;
 
 use actix_web::{ ws};
-use hub::room;
+use hub;
 use actix::ActorContext;
 use actix::*;
 use pb::msg_proto;
@@ -30,7 +30,7 @@ pub fn action_10000(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSe
     // handler_call()
     ctx.state()
         .addr
-        .send(room::Connect {
+        .send(hub::gen_server::Connect {
             uid: uid as u32,
             addr: addr_client.recipient(),
         })
@@ -166,7 +166,7 @@ pub fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession,
 
     // handler_cast()
     // 给其它在线的客户发个广播
-    ctx.state().addr.do_send(room::Message {
+    ctx.state().addr.do_send(hub::gen_server::Message {
         id: client.id,
         msg: reply_package,
         room: client.room.clone(),

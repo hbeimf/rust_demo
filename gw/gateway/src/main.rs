@@ -61,7 +61,7 @@ fn main() {
     // wsc::test();
 
     // Start chat server actor in separate thread
-    let server = Arbiter::start(|_| hub::room::RoomActor::default());
+    let server = Arbiter::start(|_| hub::gen_server::RoomActor::default());
 
     // Start tcp server in separate thread
     let srv = server.clone();

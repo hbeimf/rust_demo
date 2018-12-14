@@ -109,11 +109,11 @@ impl Handler<session::Message> for WsChatSession {
 
     // server 处理逻辑后将回复发送到此处
     fn handle(&mut self, msg: session::Message, ctx: &mut Self::Context) {
-        // debug!("收到消息 msg: {:?}", msg);
-        // // println!("transport: {:?}", msg);
-        // let room::Message(bin_reply) = msg;  
-        // // 回复二进制数据
-        // ctx.binary(bin_reply);
+        debug!("wss actor 收到 session::Message 消息: {:?}", msg);
+        // 匹配提取二进制
+        let session::Message(msg_bin) = msg;  
+        // 回复二进制数据
+        ctx.binary(msg_bin);
     }
 }
 

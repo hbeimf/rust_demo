@@ -119,6 +119,7 @@ impl Handler<Message> for RoomActor {
 
     fn handle(&mut self, msg: Message, _: &mut Context<Self>) {
         // self.send_message(&msg.room, msg.msg.as_str(), msg.id);
+        debug!("广播消息 room:{:?}, msg:{:?}, id:{:?}", &msg.room, &msg.msg, msg.id);
         self.send_message(&msg.room, &msg.msg, msg.id);
 
     }

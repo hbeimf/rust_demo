@@ -34,7 +34,7 @@ use tokio_io::io::WriteHalf;
 use tokio_io::AsyncRead;
 use tokio_tcp::TcpStream;
 
-use codec;
+use tcps::codec;
 
 use glib;
 use wss::handler::{WsChatSession};

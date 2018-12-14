@@ -6,7 +6,7 @@ use actix::ActorContext;
 
 use pb::msg_proto;
 
-use codec::{ChatResponse};
+use tcps::codec::{ChatResponse};
 
 // use std::net;
 // use std::str::FromStr;

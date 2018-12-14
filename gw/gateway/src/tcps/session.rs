@@ -13,7 +13,7 @@ use tokio_tcp::{TcpListener, TcpStream};
 
 use actix::prelude::*;
 
-use codec::{ChatCodec, ChatRequest, ChatResponse};
+use tcps::codec::{ChatCodec, ChatRequest, ChatResponse};
 use hub::room::{self, RoomActor};
 
 // ===================================

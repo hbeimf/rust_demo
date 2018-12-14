@@ -1,5 +1,5 @@
 use glib;
-use wss::handler::{WsChatSession, WsChatSessionState};
+use wss::gen_server::{WsChatSession, WsChatSessionState};
 // use wss::action;
 
 use actix_web::{ ws};

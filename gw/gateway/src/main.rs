@@ -76,7 +76,7 @@ fn main() {
         // let state = WsChatSessionState {
         //     addr: server.clone(),
         // };
-        let state = wss::handler::WsChatSessionState {
+        let state = wss::gen_server::WsChatSessionState {
             addr: server.clone(),
         };
 
@@ -89,7 +89,7 @@ fn main() {
             // }))
             // websocket
             // .resource("/ws/", |r| r.route().f(chat_route))
-            .resource("/ws/", |r| r.route().f(wss::handler::chat_route))
+            .resource("/ws/", |r| r.route().f(wss::gen_server::chat_route))
             // // static resources
             // .handler("/static/", fs::StaticFiles::new("static/").unwrap())
     }).bind(websocket_config.clone())

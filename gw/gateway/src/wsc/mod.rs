@@ -9,7 +9,7 @@ extern crate actix_web;
 extern crate futures;
 
 // extern crate gateway;
-use wss::handler::{WsChatSession};
+use wss::gen_server::{WsChatSession};
 
 use std::time::Duration;
 // use std::{io, thread};

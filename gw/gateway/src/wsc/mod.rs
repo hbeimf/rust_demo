@@ -149,7 +149,7 @@ impl StreamHandler<Message, ProtocolError> for ChatClient {
     }
 
     fn started(&mut self, ctx: &mut Context<Self>) {
-        println!("Connected");
+        debug!("Connected");
     }
 
     fn finished(&mut self, ctx: &mut Context<Self>) {

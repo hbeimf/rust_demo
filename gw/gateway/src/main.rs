@@ -34,7 +34,6 @@ extern crate sys_config;
 
 mod wsc;
 mod tcpc;
-// mod codec;
 mod hub;
 mod glib;
 mod pb;

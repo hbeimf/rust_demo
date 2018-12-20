@@ -13,7 +13,7 @@ use tcps::gen_server;
 
 // use glib;
 // use wss::parse;
-use wsc;
+use crate::wsc;
 use tcpc;
 
 /// How often heartbeat pings are sent

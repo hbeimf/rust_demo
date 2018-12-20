@@ -1,5 +1,5 @@
 use glib;
-use tcps::session::{ChatSession};
+use tcps::gen_server::{ChatSession};
 // use actix_web::{ ws};
 // use server;
 use actix::ActorContext;

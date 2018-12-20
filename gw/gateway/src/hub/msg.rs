@@ -3,7 +3,7 @@ use actix::prelude::*;
 // use std::cell::RefCell;
 // use std::collections::{HashMap, HashSet};
 
-use tcps::session;
+use tcps::gen_server;
 
 /// Message for chat server communications
 
@@ -13,7 +13,7 @@ use tcps::session;
 #[rtype(u32)]
 pub struct Connect {
     pub uid: u32,
-    pub addr: Recipient<session::Message>,
+    pub addr: Recipient<gen_server::Message>,
 }
 
 // #[derive(Message)]

@@ -66,7 +66,7 @@ fn main() {
     // Start tcp server in separate thread
     let srv = server.clone();
     Arbiter::new("tcp-server").do_send::<msgs::Execute>(msgs::Execute::new(move || {
-        tcps::session::TcpServer::new(tcp_config.as_ref(), srv);
+        tcps::gen_server::TcpServer::new(tcp_config.as_ref(), srv);
         Ok(())
     }));
 

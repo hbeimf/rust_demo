@@ -9,7 +9,7 @@ use actix::*;
 use actix_web::{ ws, Error, HttpRequest, HttpResponse};
 
 use hub;
-use tcps::session;
+use tcps::gen_server;
 
 // use glib;
 // use wss::parse;
@@ -108,14 +108,14 @@ impl Actor for WsChatSession {
 
 /// Handle messages from chat server, we simply send it to peer websocket
 // 发送数据给客户端 ， 
-impl Handler<session::Message> for WsChatSession {
+impl Handler<gen_server::Message> for WsChatSession {
     type Result = ();
 
     // server 处理逻辑后将回复发送到此处
-    fn handle(&mut self, msg: session::Message, ctx: &mut Self::Context) {
+    fn handle(&mut self, msg: gen_server::Message, ctx: &mut Self::Context) {
         debug!("wss actor 收到 session::Message 消息: {:?}", msg);
         // 匹配提取二进制
-        let session::Message(msg_bin) = msg;  
+        let gen_server::Message(msg_bin) = msg;  
         // 回复二进制数据
         ctx.binary(msg_bin);
     }

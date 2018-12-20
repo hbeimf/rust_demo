@@ -8,7 +8,7 @@ use actix::prelude::*;
 
 // use std::cell::RefCell;
 use std::collections::{HashMap, HashSet};
-use tcps::session;
+use tcps::gen_server;
 pub use hub::msg::{Connect, Disconnect, Message};
 
 // use actix::prelude::Request;
@@ -23,7 +23,7 @@ pub use hub::msg::{Connect, Disconnect, Message};
 /// `RoomActor` manages chat rooms and responsible for coordinating chat
 /// session. implementation is super primitive
 pub struct RoomActor {
-    sessions: HashMap<u32, Recipient<session::Message>>,
+    sessions: HashMap<u32, Recipient<gen_server::Message>>,
     rooms: HashMap<String, HashSet<u32>>,
     // rng: RefCell<ThreadRng>,
 }
@@ -48,7 +48,7 @@ impl RoomActor {
             for id in sessions {
                 if *id != skip_id {
                     if let Some(addr) = self.sessions.get(id) {
-                        let _ = addr.do_send(session::Message(message.to_vec()));
+                        let _ = addr.do_send(gen_server::Message(message.to_vec()));
                     }
                 }
             }

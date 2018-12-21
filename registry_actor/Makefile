@@ -32,6 +32,13 @@
 run:
 	cargo run 
 
+release:
+	cargo build --release
+	./target/release/registry_actor
+
+run_rel:
+	./target/release/registry_actor
+
 #tcp:
 #	cd ../test/tcp_client && rebar3 shell
 

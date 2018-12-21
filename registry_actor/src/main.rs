@@ -6,7 +6,9 @@ use actix::prelude::*;
 struct Ping;
 
 #[derive(Default)]
-struct MyActor1;
+struct MyActor1{
+	name:Option<String>
+}
 
 impl Actor for MyActor1 {
     type Context = Context<Self>;
@@ -24,6 +26,16 @@ impl Handler<Ping> for MyActor1 {
 
     fn handle(&mut self, _: Ping, _ctx: &mut Context<Self>) {
         println!("ping");
+        match self.name {
+        	Some(ref name) => {
+        		println!("使用：{:?}", name);		
+        	},
+        	None => {
+        		println!("初始化");	
+        		self.name = Some("小明".to_owned());
+        	},
+        }
+        
     }
 }
 
@@ -35,6 +47,10 @@ impl Actor for MyActor2 {
     fn started(&mut self, _: &mut Context<Self>) {
         let act = System::current().registry().get::<MyActor1>();
         act.do_send(Ping);
+        
+        let act1 = System::current().registry().get::<MyActor1>();
+        act1.do_send(Ping);
+
     }
 }
 

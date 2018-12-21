@@ -1,5 +1,5 @@
 extern crate actix;
-
+// https://docs.rs/actix/0.7.9/actix/registry/struct.SystemRegistry.html
 use actix::prelude::*;
 
 #[derive(Message)]

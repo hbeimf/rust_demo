@@ -1,0 +1,7 @@
+[package]
+name = "registry_actor"
+version = "0.1.0"
+authors = ["maomao <5622876@qq.com>"]
+
+[dependencies]
+actix = "0.7"

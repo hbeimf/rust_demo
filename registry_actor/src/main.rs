@@ -15,7 +15,7 @@ struct CastMsg;
 struct CallMsg;
 
 impl Message for CallMsg {
-    type Result = String;
+    type Result = Option<String>;
 }
 
 
@@ -54,22 +54,11 @@ impl Handler<CastMsg> for MyActor1 {
 }
 
 impl Handler<CallMsg> for MyActor1 {
-    type Result = String;
+    type Result = Option<String>;
 
     fn handle(&mut self, _: CallMsg, _ctx: &mut Context<Self>) -> Self::Result {
         println!("CallMsg");
-        match self.name {
-        	Some(ref name) => {
-        		println!("使用：{:?}", name);	
-        		name.to_string()	
-        	},
-        	None => {
-        		println!("初始化");	
-        		self.name = Some("小明".to_owned());
-        		"小明".to_owned()
-        	},
-        }
-
+        self.name.clone()
     }
 }
 

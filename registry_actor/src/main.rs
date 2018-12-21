@@ -1,15 +1,22 @@
 extern crate actix;
+extern crate futures;
+extern crate tokio;
 // https://docs.rs/actix/0.7.9/actix/registry/struct.SystemRegistry.html
 use actix::prelude::*;
 // use actix::*;
 // use actix::ActorContext;
+use futures::Future;
 
 #[derive(Message)]
 struct CastMsg;
 
-#[derive(Message)]
-#[rtype(String)]
+// #[derive(Message)]
+// #[rtype(String)]
 struct CallMsg;
+
+impl Message for CallMsg {
+    type Result = String;
+}
 
 
 #[derive(Default)]
@@ -77,21 +84,17 @@ impl Actor for MyActor2 {
         
         let act1 = System::current().registry().get::<MyActor1>();
         act1.do_send(CastMsg);
-        act1.do_send(CallMsg);
-            // .into_actor(self)
-            // .then(|res, act, ctx| {
-            //     match res {
-            //         Ok(res) => {
-            //         	println!("res:{:?}", res);
-            //         },
-            //         // something is wrong with chat server
-            //         _ => {
-            //         	println!("error");
-            //         },
-            //     }
-            //     fut::ok(())
-            // })
-            // .wait(ctx);
+        let res = act1.send(CallMsg);
+        
+        // handle() returns tokio handle
+        tokio::spawn(
+            res.map(|res| {
+                println!("call result: {:?}", res);
+
+                // stop system and exit
+                // System::current().stop();
+            }).map_err(|_| ()),
+        );
 
     }
 }

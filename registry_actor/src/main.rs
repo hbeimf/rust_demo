@@ -2,9 +2,8 @@ extern crate actix;
 extern crate futures;
 extern crate tokio;
 // https://docs.rs/actix/0.7.9/actix/registry/struct.SystemRegistry.html
+// https://github.com/actix/actix/blob/master/examples/ping.rs
 use actix::prelude::*;
-// use actix::*;
-// use actix::ActorContext;
 use futures::Future;
 
 #[derive(Message)]
@@ -13,7 +12,6 @@ struct CastMsg;
 // #[derive(Message)]
 // #[rtype(String)]
 struct CallMsg;
-
 impl Message for CallMsg {
     type Result = Option<String>;
 }
@@ -72,16 +70,15 @@ impl Actor for MyActor2 {
         act.do_send(CastMsg);
         
         let act1 = System::current().registry().get::<MyActor1>();
+
+        // cast 
         act1.do_send(CastMsg);
-        let res = act1.send(CallMsg);
         
-        // handle() returns tokio handle
+        // call 
+        let res = act1.send(CallMsg);
         tokio::spawn(
             res.map(|res| {
                 println!("call result: {:?}", res);
-
-                // stop system and exit
-                // System::current().stop();
             }).map_err(|_| ()),
         );
 

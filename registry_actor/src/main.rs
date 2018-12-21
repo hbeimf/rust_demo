@@ -1,9 +1,16 @@
 extern crate actix;
 // https://docs.rs/actix/0.7.9/actix/registry/struct.SystemRegistry.html
 use actix::prelude::*;
+// use actix::*;
+// use actix::ActorContext;
 
 #[derive(Message)]
-struct Ping;
+struct CastMsg;
+
+#[derive(Message)]
+#[rtype(String)]
+struct CallMsg;
+
 
 #[derive(Default)]
 struct MyActor1{
@@ -21,11 +28,11 @@ impl SystemService for MyActor1 {
     }
 }
 
-impl Handler<Ping> for MyActor1 {
+impl Handler<CastMsg> for MyActor1 {
     type Result = ();
 
-    fn handle(&mut self, _: Ping, _ctx: &mut Context<Self>) {
-        println!("ping");
+    fn handle(&mut self, _: CastMsg, _ctx: &mut Context<Self>) {
+        println!("CastMsg");
         match self.name {
         	Some(ref name) => {
         		println!("使用：{:?}", name);		
@@ -39,17 +46,52 @@ impl Handler<Ping> for MyActor1 {
     }
 }
 
+impl Handler<CallMsg> for MyActor1 {
+    type Result = String;
+
+    fn handle(&mut self, _: CallMsg, _ctx: &mut Context<Self>) -> Self::Result {
+        println!("CallMsg");
+        match self.name {
+        	Some(ref name) => {
+        		println!("使用：{:?}", name);	
+        		name.to_string()	
+        	},
+        	None => {
+        		println!("初始化");	
+        		self.name = Some("小明".to_owned());
+        		"小明".to_owned()
+        	},
+        }
+
+    }
+}
+
 struct MyActor2;
 
 impl Actor for MyActor2 {
     type Context = Context<Self>;
 
-    fn started(&mut self, _: &mut Context<Self>) {
+    fn started(&mut self, _ctx: &mut Context<Self>) {
         let act = System::current().registry().get::<MyActor1>();
-        act.do_send(Ping);
+        act.do_send(CastMsg);
         
         let act1 = System::current().registry().get::<MyActor1>();
-        act1.do_send(Ping);
+        act1.do_send(CastMsg);
+        act1.do_send(CallMsg);
+            // .into_actor(self)
+            // .then(|res, act, ctx| {
+            //     match res {
+            //         Ok(res) => {
+            //         	println!("res:{:?}", res);
+            //         },
+            //         // something is wrong with chat server
+            //         _ => {
+            //         	println!("error");
+            //         },
+            //     }
+            //     fut::ok(())
+            // })
+            // .wait(ctx);
 
     }
 }

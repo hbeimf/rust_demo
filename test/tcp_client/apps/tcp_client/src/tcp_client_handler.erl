@@ -22,13 +22,14 @@
 	transport,
 	ip,
 	port,
-    	data
+    data,
+    call_pid
     }).
 
 % --------------------------------------------------------------------
 % External API
 % --------------------------------------------------------------------
--export([send/0, send/1]).
+-export([send/0, send/1, call_req/2]).
 
 
 -include_lib("glib/include/msg_proto.hrl").
@@ -39,7 +40,7 @@
 % -include("cmd_gs.hrl").
 
 -define(TIMER_SECONDS, 30000).  % 
-
+-define(TIMEOUT, 5000).
 
 send() -> 
 	Type = 1111, 
@@ -64,6 +65,10 @@ send(Package) ->
 % doit(FromPid) ->
 %     gen_server:cast(?MODULE, {doit, FromPid}).
 
+
+
+call_req(Pid, Package) ->
+	gen_server:call(Pid, {call, Package}, ?TIMEOUT).
 
 
 % start_link(ServerID, ServerType, ServerURI, GwcURI, Max) ->
@@ -99,7 +104,7 @@ init([_Index]) ->
 			% self() ! {timeout, <<"Heartbeat!">>, <<"Heartbeat!">>},
 			% erlang:start_timer(?TIMER_SECONDS, self(), <<"Heartbeat!">>),
 			?LOG({connect}),
-			State = #state{socket = Socket, transport = ranch_tcp, data = <<>>, ip = Ip, port = Port},
+			State = #state{socket = Socket, transport = ranch_tcp, data = <<>>, ip = Ip, port = Port, call_pid=0},
 			{ok,  State};
 		% {error,econnrefused} -> 
 		% 	erlang:start_timer(3000, self(), {reconnect,{Ip,Port}}),
@@ -140,6 +145,12 @@ init([_Index]) ->
 %     end, lists:seq(1, 100)),
 
 %     {reply, [], gs_tcp_state};
+
+handle_call({call, Package}, From, State=#state{
+		socket=Socket, transport=_Transport, data=_LastPackage}) ->
+    ?LOG({call, Package}),
+	ranch_tcp:send(Socket, Package),
+	{noreply, State#state{call_pid = From}};
 handle_call(_Request, _From, State) ->
     Reply = ok,
     {reply, Reply, State}.
@@ -272,7 +283,7 @@ parse_package(Bin, State) ->
             error       
     end.
 
- action(Cmd, DataBin, State) ->
+ action(Cmd, DataBin, State = #state{call_pid = CallFrom}) ->
 
  	#'TestMsg'{name = Name, 'nick_name' = NickName,
  	 phone= Phone} = msg_proto:decode_msg(DataBin,'TestMsg'),
@@ -280,4 +291,31 @@ parse_package(Bin, State) ->
  	?LOG({Cmd, DataBin, State}),
  	
  	?LOG({Name, NickName, Phone}),
+
+ 	case CallFrom =/= 0 of 
+ 		true -> 
+ 			% gen_server:reply(CallFrom, DataBin),
+ 			safe_reply(CallFrom, DataBin),
+ 			ok;
+ 		_ ->
+ 			ok
+ 	end,
+
  	ok.
+
+
+safe_reply(undefined, _Value) ->
+    ok;
+safe_reply(Pid, Value) when is_pid(Pid) ->
+    ?LOG({safe_reply, Pid, Value}),
+    safe_send(Pid, {response, Value});
+safe_reply(From, Value) ->
+    ?LOG({safe_reply, From, Value}),
+    gen_server:reply(From, Value).
+
+safe_send(Pid, Value) ->
+    try erlang:send(Pid, Value)
+    catch
+        Err:Reason ->
+            error_logger:info_msg("eredis: Failed to send message to ~p with reason ~p~n", [Pid, {Err, Reason}])
+    end.

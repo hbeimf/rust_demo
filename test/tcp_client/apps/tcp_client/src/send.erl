@@ -33,6 +33,24 @@
 % 	ok.
 
 
+call() -> 
+	
+	TestMsg = #'TestMsg'{
+                        name = <<"jim green">>,
+                        nick_name = <<"nick_name123456">>,
+                        phone = <<"15912341234">> 
+                    },
+    TestMsgBin = msg_proto:encode_msg(TestMsg),
+
+    Package = glib:package(123456, TestMsgBin),
+
+    ?LOG({send_binary, Package}),
+	{ok, Pid} = get_client(),
+
+	R = tcp_client_handler:call_req(Pid, Package),
+	?LOG({call_reply, R}),
+	ok.
+
 
 test() ->
 	lists:foreach(fun(Index) -> 

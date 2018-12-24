@@ -104,7 +104,7 @@ init([_Index]) ->
 			% self() ! {timeout, <<"Heartbeat!">>, <<"Heartbeat!">>},
 			% erlang:start_timer(?TIMER_SECONDS, self(), <<"Heartbeat!">>),
 			?LOG({connect}),
-			State = #state{socket = Socket, transport = ranch_tcp, data = <<>>, ip = Ip, port = Port, call_pid=0},
+			State = #state{socket = Socket, transport = ranch_tcp, data = <<>>, ip = Ip, port = Port, call_pid=undefined},
 			{ok,  State};
 		% {error,econnrefused} -> 
 		% 	erlang:start_timer(3000, self(), {reconnect,{Ip,Port}}),
@@ -292,14 +292,8 @@ parse_package(Bin, State) ->
  	
  	?LOG({Name, NickName, Phone}),
 
- 	case CallFrom =/= 0 of 
- 		true -> 
- 			% gen_server:reply(CallFrom, DataBin),
- 			safe_reply(CallFrom, DataBin),
- 			ok;
- 		_ ->
- 			ok
- 	end,
+	% gen_server:reply(CallFrom, DataBin),
+	safe_reply(CallFrom, DataBin),
 
  	ok.
 

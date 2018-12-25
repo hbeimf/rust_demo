@@ -6,7 +6,8 @@
   {applications,
    [kernel,
     stdlib,
-    glib
+    glib,
+    tcp_pool
    ]},
   {env,[]},
   {modules, []},

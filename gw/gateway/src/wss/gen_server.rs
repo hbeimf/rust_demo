@@ -9,6 +9,7 @@ use actix::*;
 use actix_web::{ ws, Error, HttpRequest, HttpResponse};
 
 use hub;
+use hub::gen_server::{RoomActor};
 use tcps::gen_server;
 
 // use glib;
@@ -24,7 +25,7 @@ const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
 /// This is our websocket route state, this state is shared with all route
 /// instances via `HttpContext::state()`
 pub struct WsChatSessionState {
-    pub addr: Addr<hub::gen_server::RoomActor>,
+    // pub addr: Addr<hub::gen_server::RoomActor>,
 }
 
 /// Entry point for our route
@@ -101,7 +102,11 @@ impl Actor for WsChatSession {
     fn stopping(&mut self, ctx: &mut Self::Context) -> Running {
         // notify chat server
         // session actor 结束了，通知 server actor
-        ctx.state().addr.do_send(hub::gen_server::Disconnect { id: self.id });
+        // ctx.state().addr.do_send(hub::gen_server::Disconnect { id: self.id });
+
+        let act = System::current().registry().get::<RoomActor>();
+        act.do_send(hub::gen_server::Disconnect { id: self.id });
+
         Running::Stop
     }
 }
@@ -245,9 +250,12 @@ impl WsChatSession {
                 // println!("Websocket Client heartbeat failed, disconnecting!");
 
                 // notify chat server
-                ctx.state()
-                    .addr
-                    .do_send(hub::gen_server::Disconnect { id: act.id });
+                // ctx.state()
+                //     .addr
+                //     .do_send(hub::gen_server::Disconnect { id: act.id });
+
+                let actor_room = System::current().registry().get::<RoomActor>();
+                actor_room.do_send(hub::gen_server::Disconnect { id: act.id });
 
                 // stop actor
                 ctx.stop();

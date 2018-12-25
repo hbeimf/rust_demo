@@ -32,8 +32,8 @@ pub struct Message(pub Vec<u8>);
 pub struct ChatSession {
     /// unique session id
     id: u32,
-    /// this is address of chat server
-    addr: Addr<RoomActor>,
+    // /// this is address of chat server
+    // addr: Addr<RoomActor>,
     // /// Client must send ping at least once per 10 seconds, otherwise we drop
     // /// connection.
     // hb: Instant,
@@ -90,7 +90,11 @@ impl Actor for ChatSession {
 
     fn stopping(&mut self, ctx: &mut Self::Context) -> Running {
         // notify chat server
-        self.addr.do_send(hub::gen_server::Disconnect { id: self.id });
+        // self.addr.do_send(hub::gen_server::Disconnect { id: self.id });
+
+        let act = System::current().registry().get::<RoomActor>();
+        act.do_send(hub::gen_server::Disconnect { id: self.id });
+
         Running::Stop
     }
 }
@@ -162,12 +166,12 @@ impl Handler<Message> for ChatSession {
 /// Helper methods
 impl ChatSession {
     pub fn new(
-        addr: Addr<RoomActor>,
+        // addr: Addr<RoomActor>,
         framed: actix::io::FramedWrite<WriteHalf<TcpStream>, ChatCodec>,
     ) -> ChatSession {
         ChatSession {
             id: 0,
-            addr: addr,
+            // addr: addr,
             // hb: Instant::now(),
             room: "Main".to_owned(),
             framed: framed,
@@ -200,11 +204,11 @@ impl ChatSession {
 /// Define tcp server that will accept incoming tcp connection and create
 /// chat actors.
 pub struct TcpServer {
-    chat: Addr<RoomActor>,
+    // chat: Addr<RoomActor>,
 }
 
 impl TcpServer {
-    pub fn new(s: &str, chat: Addr<RoomActor>) {
+    pub fn new(s: &str) {
         // Create server listener
         // let addr = net::SocketAddr::from_str("127.0.0.1:12345").unwrap();
         let addr = net::SocketAddr::from_str(s).unwrap();
@@ -221,7 +225,9 @@ impl TcpServer {
             ctx.add_message_stream(
                 listener.incoming().map_err(|_| ()).map(|s| TcpConnect(s)),
             );
-            TcpServer { chat: chat }
+            // TcpServer { chat: chat }
+            TcpServer {  }
+
         });
     }
 }
@@ -242,11 +248,13 @@ impl Handler<TcpConnect> for TcpServer {
     fn handle(&mut self, msg: TcpConnect, _: &mut Context<Self>) {
         // For each incoming connection we create `ChatSession` actor
         // with out chat server address.
-        let server = self.chat.clone();
+        // let server = self.chat.clone();
         ChatSession::create(|ctx| {
             let (r, w) = msg.0.split();
             ChatSession::add_stream(FramedRead::new(r, ChatCodec), ctx);
-            ChatSession::new(server, actix::io::FramedWrite::new(w, ChatCodec, ctx))
+            // ChatSession::new(server, actix::io::FramedWrite::new(w, ChatCodec, ctx))
+            ChatSession::new(actix::io::FramedWrite::new(w, ChatCodec, ctx))
+
         });
     }
 }

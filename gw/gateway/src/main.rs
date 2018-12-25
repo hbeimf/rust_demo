@@ -59,13 +59,13 @@ fn main() {
     let sys = actix::System::new("websocket-example");
     // wsc::test();
 
-    // Start chat server actor in separate thread
-    let server = Arbiter::start(|_| hub::gen_server::RoomActor::default());
+    // // Start chat server actor in separate thread
+    // let server = Arbiter::start(|_| hub::gen_server::RoomActor::default());
 
     // Start tcp server in separate thread
-    let srv = server.clone();
+    // let srv = server.clone();
     Arbiter::new("tcp-server").do_send::<msgs::Execute>(msgs::Execute::new(move || {
-        tcps::gen_server::TcpServer::new(tcp_config.as_ref(), srv);
+        tcps::gen_server::TcpServer::new(tcp_config.as_ref());
         Ok(())
     }));
 
@@ -76,7 +76,7 @@ fn main() {
         //     addr: server.clone(),
         // };
         let state = wss::gen_server::WsChatSessionState {
-            addr: server.clone(),
+            // addr: server.clone(),
         };
 
         App::with_state(state)

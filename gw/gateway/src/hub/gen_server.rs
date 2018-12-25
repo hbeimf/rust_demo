@@ -80,7 +80,7 @@ impl Handler<Connect> for RoomActor {
     type Result = u32;
 
     fn handle(&mut self, msg: Connect, _: &mut Context<Self>) -> Self::Result {
-        debug!("Someone joined room");
+        info!("Connect,IN IN IN IN IN IN Someone joined room");
 
         // notify all users in same room
         // self.send_message(&"Main".to_owned(), "Someone joined", 0);
@@ -103,7 +103,7 @@ impl Handler<Disconnect> for RoomActor {
     type Result = ();
 
     fn handle(&mut self, msg: Disconnect, _: &mut Context<Self>) {
-        debug!("Someone disconnected room");
+        info!("Disconnect, OUT  OUT  OUT  OUT  Someone disconnected room");
 
         let mut rooms: Vec<String> = Vec::new();
 

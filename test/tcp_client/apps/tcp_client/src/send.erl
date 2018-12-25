@@ -33,6 +33,20 @@
 % 	ok.
 
 
+call_from_pool() ->
+	TestMsg = #'TestMsg'{
+                        name = <<"jim green">>,
+                        nick_name = <<"nick_name123456">>,
+                        phone = <<"15912341234">> 
+                    },
+    TestMsgBin = msg_proto:encode_msg(TestMsg),
+
+    Package = glib:package(123456, TestMsgBin),
+    Reply = tcpc:call(Package),
+    ?LOG({pool_reply, Reply}),
+    ok.
+
+
 call() -> 
 	
 	TestMsg = #'TestMsg'{

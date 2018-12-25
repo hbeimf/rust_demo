@@ -72,6 +72,29 @@ call_req(Pid, Package) ->
 	gen_server:call(Pid, {call, Package}, ?TIMEOUT).
 
 
+
+send_test_msg() ->
+    TestMsg = #'TestMsg'{
+                        name = <<"jim green">>,
+                        nick_name = <<"nick_name123456">>,
+                        phone = <<"15912341234">> 
+                    },
+    TestMsgBin = msg_proto:encode_msg(TestMsg),
+    Package = glib:package(10001, TestMsgBin),
+    self() ! {send, Package},
+    ok.
+
+
+send_login() ->
+    Uid = glib:uid() rem 100000, 
+    Login = #'Login'{
+                        uid = Uid 
+                    },
+    TestMsgBin = msg_proto:encode_msg(Login),
+    Package = glib:package(10000, TestMsgBin),
+    self() ! {send, Package},
+    ok.
+
 % start_link(ServerID, ServerType, ServerURI, GwcURI, Max) ->
 % 	?LOG({ServerID, ServerType, ServerURI, GwcURI, Max}),
 %     gen_server:start_link({local, ?MODULE}, ?MODULE, [ServerID, ServerType, ServerURI, GwcURI, Max], []).
@@ -105,6 +128,10 @@ init([_Index]) ->
 			% self() ! {timeout, <<"Heartbeat!">>, <<"Heartbeat!">>},
 			% erlang:start_timer(?TIMER_SECONDS, self(), <<"Heartbeat!">>),
 			?LOG({connect}),
+
+			send_login(),
+			send_test_msg(),
+			
 			State = #state{socket = Socket, transport = ranch_tcp, data = <<>>, ip = Ip, port = Port, call_pid=undefined},
 			{ok,  State};
 		% {error,econnrefused} -> 

@@ -9,3 +9,8 @@ message TestMsg{
     string  phone  = 3;
 
 }
+
+message Login{   
+    int32  uid = 1;
+}
+

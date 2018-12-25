@@ -28,8 +28,9 @@
 -export_type([]).
 
 %% message types
+-type 'Login'() :: #'Login'{}.
 -type 'TestMsg'() :: #'TestMsg'{}.
--export_type(['TestMsg'/0]).
+-export_type(['Login'/0, 'TestMsg'/0]).
 
 
 -spec encode_msg(_) -> binary().
@@ -44,10 +45,26 @@ encode_msg(Msg, Opts) ->
     end,
     TrUserData = proplists:get_value(user_data, Opts),
     case Msg of
+      #'Login'{} -> e_msg_Login(Msg, TrUserData);
       #'TestMsg'{} -> e_msg_TestMsg(Msg, TrUserData)
     end.
 
 
+
+e_msg_Login(Msg, TrUserData) ->
+    e_msg_Login(Msg, <<>>, TrUserData).
+
+
+e_msg_Login(#'Login'{uid = F1}, Bin, TrUserData) ->
+    if F1 == undefined -> Bin;
+       true ->
+	   begin
+	     TrF1 = id(F1, TrUserData),
+	     if TrF1 =:= 0 -> Bin;
+		true -> e_type_int32(TrF1, <<Bin/binary, 8>>)
+	     end
+	   end
+    end.
 
 e_msg_TestMsg(Msg, TrUserData) ->
     e_msg_TestMsg(Msg, <<>>, TrUserData).
@@ -89,6 +106,13 @@ e_msg_TestMsg(#'TestMsg'{name = F1, nick_name = F2,
 
 
 
+e_type_int32(Value, Bin)
+    when 0 =< Value, Value =< 127 ->
+    <<Bin/binary, Value>>;
+e_type_int32(Value, Bin) ->
+    <<N:64/unsigned-native>> = <<Value:64/signed-native>>,
+    e_varint(N, Bin).
+
 e_type_string(S, Bin) ->
     Utf8 = unicode:characters_to_binary(S),
     Bin2 = e_varint(byte_size(Utf8), Bin),
@@ -107,9 +131,88 @@ decode_msg(Bin, MsgName) when is_binary(Bin) ->
 decode_msg(Bin, MsgName, Opts) when is_binary(Bin) ->
     TrUserData = proplists:get_value(user_data, Opts),
     case MsgName of
+      'Login' -> d_msg_Login(Bin, TrUserData);
       'TestMsg' -> d_msg_TestMsg(Bin, TrUserData)
     end.
 
+
+
+d_msg_Login(Bin, TrUserData) ->
+    dfp_read_field_def_Login(Bin, 0, 0, id(0, TrUserData),
+			     TrUserData).
+
+dfp_read_field_def_Login(<<8, Rest/binary>>, Z1, Z2, F1,
+			 TrUserData) ->
+    d_field_Login_uid(Rest, Z1, Z2, F1, TrUserData);
+dfp_read_field_def_Login(<<>>, 0, 0, F1, _) ->
+    #'Login'{uid = F1};
+dfp_read_field_def_Login(Other, Z1, Z2, F1,
+			 TrUserData) ->
+    dg_read_field_def_Login(Other, Z1, Z2, F1, TrUserData).
+
+dg_read_field_def_Login(<<1:1, X:7, Rest/binary>>, N,
+			Acc, F1, TrUserData)
+    when N < 32 - 7 ->
+    dg_read_field_def_Login(Rest, N + 7, X bsl N + Acc, F1,
+			    TrUserData);
+dg_read_field_def_Login(<<0:1, X:7, Rest/binary>>, N,
+			Acc, F1, TrUserData) ->
+    Key = X bsl N + Acc,
+    case Key of
+      8 -> d_field_Login_uid(Rest, 0, 0, F1, TrUserData);
+      _ ->
+	  case Key band 7 of
+	    0 -> skip_varint_Login(Rest, 0, 0, F1, TrUserData);
+	    1 -> skip_64_Login(Rest, 0, 0, F1, TrUserData);
+	    2 ->
+		skip_length_delimited_Login(Rest, 0, 0, F1, TrUserData);
+	    5 -> skip_32_Login(Rest, 0, 0, F1, TrUserData)
+	  end
+    end;
+dg_read_field_def_Login(<<>>, 0, 0, F1, _) ->
+    #'Login'{uid = F1}.
+
+d_field_Login_uid(<<1:1, X:7, Rest/binary>>, N, Acc, F1,
+		  TrUserData)
+    when N < 57 ->
+    d_field_Login_uid(Rest, N + 7, X bsl N + Acc, F1,
+		      TrUserData);
+d_field_Login_uid(<<0:1, X:7, Rest/binary>>, N, Acc, _,
+		  TrUserData) ->
+    <<NewFValue:32/signed-native>> = <<(X bsl N +
+					  Acc):32/unsigned-native>>,
+    dfp_read_field_def_Login(Rest, 0, 0, NewFValue,
+			     TrUserData).
+
+
+skip_varint_Login(<<1:1, _:7, Rest/binary>>, Z1, Z2, F1,
+		  TrUserData) ->
+    skip_varint_Login(Rest, Z1, Z2, F1, TrUserData);
+skip_varint_Login(<<0:1, _:7, Rest/binary>>, Z1, Z2, F1,
+		  TrUserData) ->
+    dfp_read_field_def_Login(Rest, Z1, Z2, F1, TrUserData).
+
+
+skip_length_delimited_Login(<<1:1, X:7, Rest/binary>>,
+			    N, Acc, F1, TrUserData)
+    when N < 57 ->
+    skip_length_delimited_Login(Rest, N + 7, X bsl N + Acc,
+				F1, TrUserData);
+skip_length_delimited_Login(<<0:1, X:7, Rest/binary>>,
+			    N, Acc, F1, TrUserData) ->
+    Length = X bsl N + Acc,
+    <<_:Length/binary, Rest2/binary>> = Rest,
+    dfp_read_field_def_Login(Rest2, 0, 0, F1, TrUserData).
+
+
+skip_32_Login(<<_:32, Rest/binary>>, Z1, Z2, F1,
+	      TrUserData) ->
+    dfp_read_field_def_Login(Rest, Z1, Z2, F1, TrUserData).
+
+
+skip_64_Login(<<_:64, Rest/binary>>, Z1, Z2, F1,
+	      TrUserData) ->
+    dfp_read_field_def_Login(Rest, Z1, Z2, F1, TrUserData).
 
 
 d_msg_TestMsg(Bin, TrUserData) ->
@@ -256,8 +359,16 @@ merge_msgs(Prev, New, Opts)
     when element(1, Prev) =:= element(1, New) ->
     TrUserData = proplists:get_value(user_data, Opts),
     case Prev of
+      #'Login'{} -> merge_msg_Login(Prev, New, TrUserData);
       #'TestMsg'{} -> merge_msg_TestMsg(Prev, New, TrUserData)
     end.
+
+merge_msg_Login(#'Login'{uid = PFuid},
+		#'Login'{uid = NFuid}, _) ->
+    #'Login'{uid =
+		 if NFuid =:= undefined -> PFuid;
+		    true -> NFuid
+		 end}.
 
 merge_msg_TestMsg(#'TestMsg'{name = PFname,
 			     nick_name = PFnick_name, phone = PFphone},
@@ -284,11 +395,19 @@ verify_msg(Msg) -> verify_msg(Msg, []).
 verify_msg(Msg, Opts) ->
     TrUserData = proplists:get_value(user_data, Opts),
     case Msg of
+      #'Login'{} -> v_msg_Login(Msg, ['Login'], TrUserData);
       #'TestMsg'{} ->
 	  v_msg_TestMsg(Msg, ['TestMsg'], TrUserData);
       _ -> mk_type_error(not_a_known_message, Msg, [])
     end.
 
+
+-dialyzer({nowarn_function,v_msg_Login/3}).
+v_msg_Login(#'Login'{uid = F1}, Path, _) ->
+    if F1 == undefined -> ok;
+       true -> v_type_int32(F1, [uid | Path])
+    end,
+    ok.
 
 -dialyzer({nowarn_function,v_msg_TestMsg/3}).
 v_msg_TestMsg(#'TestMsg'{name = F1, nick_name = F2,
@@ -304,6 +423,17 @@ v_msg_TestMsg(#'TestMsg'{name = F1, nick_name = F2,
        true -> v_type_string(F3, [phone | Path])
     end,
     ok.
+
+-dialyzer({nowarn_function,v_type_int32/2}).
+v_type_int32(N, _Path)
+    when -2147483648 =< N, N =< 2147483647 ->
+    ok;
+v_type_int32(N, Path) when is_integer(N) ->
+    mk_type_error({value_out_of_range, int32, signed, 32},
+		  N, Path);
+v_type_int32(X, Path) ->
+    mk_type_error({bad_integer, int32, signed, 32}, X,
+		  Path).
 
 -dialyzer({nowarn_function,v_type_string/2}).
 v_type_string(S, Path) when is_list(S); is_binary(S) ->
@@ -340,7 +470,10 @@ id(X, _TrUserData) -> X.
 
 
 get_msg_defs() ->
-    [{{msg, 'TestMsg'},
+    [{{msg, 'Login'},
+      [#field{name = uid, fnum = 1, rnum = 2, type = int32,
+	      occurrence = optional, opts = []}]},
+     {{msg, 'TestMsg'},
       [#field{name = name, fnum = 1, rnum = 2, type = string,
 	      occurrence = optional, opts = []},
        #field{name = nick_name, fnum = 2, rnum = 3,
@@ -349,7 +482,7 @@ get_msg_defs() ->
 	      occurrence = optional, opts = []}]}].
 
 
-get_msg_names() -> ['TestMsg'].
+get_msg_names() -> ['Login', 'TestMsg'].
 
 
 get_enum_names() -> [].
@@ -367,6 +500,9 @@ fetch_enum_def(EnumName) ->
     erlang:error({no_such_enum, EnumName}).
 
 
+find_msg_def('Login') ->
+    [#field{name = uid, fnum = 1, rnum = 2, type = int32,
+	    occurrence = optional, opts = []}];
 find_msg_def('TestMsg') ->
     [#field{name = name, fnum = 1, rnum = 2, type = string,
 	    occurrence = optional, opts = []},

@@ -1,3 +1,10 @@
+extern crate tokio;
+// extern crate futures;
+use futures::Future;
+
+use hub;
+use hub::gen_server::{RoomActor};
+
 use glib;
 use tcps::gen_server::{ChatSession};
 // use actix_web::{ ws};
@@ -45,8 +52,24 @@ pub fn parse_package(package: Vec<u8>, client: &mut ChatSession, ctx: &mut actix
 }
 
 // 业务逻辑部分
-fn action_10000(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
+fn action_10000(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, ctx: &mut actix::Context<ChatSession>) {
+    let login_msg = msg_proto::decode_login(pb);
+    debug!("uid: {:?}", login_msg.get_uid());
+    let uid = login_msg.get_uid();
 
+    // call 
+    let addr_client = ctx.address();
+    let act = System::current().registry().get::<RoomActor>();
+    let connect_msg = hub::gen_server::Connect {
+            uid: uid as u32,
+            addr: addr_client.recipient(),
+        };
+    let res = act.send(connect_msg);
+    tokio::spawn(
+        res.map(|res| {
+            println!("call result: {:?}", res);
+        }).map_err(|_| ()),
+    );     
 
 
 }

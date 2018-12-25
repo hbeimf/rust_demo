@@ -44,10 +44,12 @@ impl Default for RoomActor {
 
 impl RoomActor {
     fn send_message(&self, room: &str, message: &Vec<u8>, skip_id: u32) {
+        debug!("send broadcast!!");
         if let Some(sessions) = self.rooms.get(room) {
             for id in sessions {
                 if *id != skip_id {
                     if let Some(addr) = self.sessions.get(id) {
+                        debug!("send broadcast");
                         let _ = addr.do_send(gen_server::Message(message.to_vec()));
                     }
                 }
@@ -61,6 +63,14 @@ impl Actor for RoomActor {
     /// We are going to use simple Context, we just need ability to communicate
     /// with other actors.
     type Context = Context<Self>;
+}
+
+impl actix::Supervised for RoomActor {}
+
+impl SystemService for RoomActor {
+    fn service_started(&mut self, _ctx: &mut Context<Self>) {
+        println!("Service started");
+    }
 }
 
 /// Handler for Connect message.

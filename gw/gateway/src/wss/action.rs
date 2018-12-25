@@ -1,10 +1,18 @@
+extern crate tokio;
+// extern crate futures;
+use futures::Future;
+
+
+
 use glib;
 use wss::gen_server::{WsChatSession, WsChatSessionState};
 // use wss::action;
 
 use actix_web::{ ws};
 use hub;
-use actix::ActorContext;
+use hub::gen_server::RoomActor;
+
+// use actix::ActorContext;
 use actix::*;
 use pb::msg_proto;
 
@@ -25,25 +33,40 @@ pub fn action_10000(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSe
 
     
     let uid = login_msg.get_uid();
-    // debug!("客户端注册到roomActor: {}", uid);
+    // // debug!("客户端注册到roomActor: {}", uid);
+    // let addr_client = ctx.address();
+    // // handler_call()
+    // ctx.state()
+    //     .addr
+    //     .send(hub::gen_server::Connect {
+    //         uid: uid as u32,
+    //         addr: addr_client.recipient(),
+    //     })
+    //     .into_actor(client)
+    //     .then(|res, act, ctx| {
+    //         match res {
+    //             Ok(res) => act.id = res,
+    //             // something is wrong with chat server
+    //             _ => ctx.stop(),
+    //         }
+    //         fut::ok(())
+    //     })
+    //     .wait(ctx);
+
+    // call 
     let addr_client = ctx.address();
-    // handler_call()
-    ctx.state()
-        .addr
-        .send(hub::gen_server::Connect {
+    let act = System::current().registry().get::<RoomActor>();
+    let connect_msg = hub::gen_server::Connect {
             uid: uid as u32,
             addr: addr_client.recipient(),
-        })
-        .into_actor(client)
-        .then(|res, act, ctx| {
-            match res {
-                Ok(res) => act.id = res,
-                // something is wrong with chat server
-                _ => ctx.stop(),
-            }
-            fut::ok(())
-        })
-        .wait(ctx);
+        };
+    let res = act.send(connect_msg);
+    tokio::spawn(
+        res.map(|res| {
+            println!("call result: {:?}", res);
+        }).map_err(|_| ()),
+    );     
+
 
 
     // // handler_cast()
@@ -166,10 +189,16 @@ pub fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession,
 
     // handler_cast()
     // 给其它在线的客户发个广播
-    ctx.state().addr.do_send(hub::gen_server::Message {
+    // ctx.state().addr.do_send(hub::gen_server::Message {
+    //     id: client.id,
+    //     msg: reply_package,
+    //     room: client.room.clone(),
+    // })
+
+    let act = System::current().registry().get::<RoomActor>();
+    act.do_send(hub::gen_server::Message {
         id: client.id,
         msg: reply_package,
         room: client.room.clone(),
     })
-
 }

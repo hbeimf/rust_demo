@@ -26,7 +26,15 @@ pub fn parse_package(package: Vec<u8>, client: &mut ChatSession, ctx: &mut actix
 
     match unpackage {
         Some(glib::UnPackageResult{len:_len, cmd, pb}) => {
-            action(cmd, pb, client, ctx);
+            // action(cmd, pb, client, ctx);
+            match cmd {
+                10000 => {
+                    action_10000(cmd, pb, client, ctx);
+                }
+                _ => {
+                    action(cmd, pb, client, ctx);
+                }
+            }
         }
         None => {
         	// 如果解包失败，直接关掉连接
@@ -34,6 +42,13 @@ pub fn parse_package(package: Vec<u8>, client: &mut ChatSession, ctx: &mut actix
             ctx.stop();
         }
     }
+}
+
+// 业务逻辑部分
+fn action_10000(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
+
+
+
 }
 
 // 业务逻辑部分

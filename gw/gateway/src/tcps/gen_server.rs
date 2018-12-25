@@ -1,5 +1,9 @@
 //! `ClientSession` is an actor, it manages peer tcp connection and
 //! proxies commands from peer to `RoomActor`.
+// extern crate tokio;
+// // extern crate futures;
+// use futures::Future;
+
 use futures::Stream;
 use std::str::FromStr;
 // use std::time::{Duration, Instant};
@@ -67,6 +71,21 @@ impl Actor for ChatSession {
         //         actix::fut::ok(())
         //     })
         //     .wait(ctx);
+
+        // call 
+        // let addr = ctx.address();
+        // let act = System::current().registry().get::<RoomActor>();
+        // let connect_msg = hub::gen_server::Connect {
+        //         uid: 123456u32,
+        //         addr: addr.recipient(),
+        //     };
+
+        // let res = act.send(connect_msg);
+        // tokio::spawn(
+        //     res.map(|res| {
+        //         println!("call result: {:?}", res);
+        //     }).map_err(|_| ()),
+        // );        
     }
 
     fn stopping(&mut self, ctx: &mut Self::Context) -> Running {

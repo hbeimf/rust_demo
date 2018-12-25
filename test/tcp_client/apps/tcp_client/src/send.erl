@@ -32,7 +32,7 @@
 % 	Pid ! {send, Bin},
 % 	ok.
 
-
+% rpc call
 call_from_pool() ->
 	TestMsg = #'TestMsg'{
                         name = <<"jim green">>,

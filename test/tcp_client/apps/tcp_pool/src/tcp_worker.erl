@@ -301,7 +301,7 @@ code_change(_OldVsn, State, _Extra) ->
 % priv
 
 parse_package(Bin, State) ->
-    ?LOG({bin, Bin}),
+    % ?LOG({bin, Bin}),
     case glib:unpackage(Bin) of
         {ok, waitmore}  -> {ok, waitmore, Bin};
         {ok, {Cmd, DataBin},LefBin} ->
@@ -316,7 +316,7 @@ parse_package(Bin, State) ->
  	#'TestMsg'{name = Name, 'nick_name' = NickName,
  	 phone= Phone} = msg_proto:decode_msg(DataBin,'TestMsg'),
 
- 	?LOG({Cmd, DataBin, State}),
+ 	% ?LOG({Cmd, DataBin, State}),
  	
  	?LOG({Name, NickName, Phone}),
 
@@ -329,10 +329,10 @@ parse_package(Bin, State) ->
 safe_reply(undefined, _Value) ->
     ok;
 safe_reply(Pid, Value) when is_pid(Pid) ->
-    ?LOG({safe_reply, Pid, Value}),
+    % ?LOG({safe_reply, Pid, Value}),
     safe_send(Pid, {response, Value});
 safe_reply(From, Value) ->
-    ?LOG({safe_reply, From, Value}),
+    % ?LOG({safe_reply, From, Value}),
     gen_server:reply(From, Value).
 
 safe_send(Pid, Value) ->

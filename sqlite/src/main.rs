@@ -13,6 +13,9 @@ struct Person {
     data: Option<Vec<u8>>,
 }
 
+// apt-get install sqlite3
+// apt-get install libsqlite3-dev
+
 fn main() {
     let conn = Connection::open_in_memory().unwrap();
 

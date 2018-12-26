@@ -26,3 +26,17 @@ pub fn encode_msg() -> Vec<u8> {
     msg
 }
 
+
+pub fn decode_rpc(pb:Vec<u8>) -> protos::msg::RpcPackage {
+    let rpc_msg : protos::msg::RpcPackage = parse_from_bytes::<protos::msg::RpcPackage>(&pb).unwrap();
+    rpc_msg
+}
+
+pub fn encode_rpc(key: String, payload: Vec<u8>) -> Vec<u8> {
+    let mut rpc_msg = protos::msg::RpcPackage::new();
+    rpc_msg.set_key(key);
+    rpc_msg.set_payload(payload);
+
+    let msg :Vec<u8> = rpc_msg.write_to_bytes().unwrap();
+    msg
+}

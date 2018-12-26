@@ -81,15 +81,16 @@ fn action_10000(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, ctx: &mut actix:
 // 业务逻辑部分
 fn action_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
     //parse pb logic 
-    // let test_msg = msg_proto::decode_msg(pb);
-    // debug!("name: {:?}", test_msg.get_name());
-    // debug!("nick_name:{:?}", test_msg.get_nick_name());
+    let rpc_msg = msg_proto::decode_rpc(pb);
+    debug!("key: {:?}", rpc_msg.get_key());
+    debug!("payload:{:?}", rpc_msg.get_payload());
     // debug!("phone: {:?}", test_msg.get_phone());
 
     // reply 
     let encode:Vec<u8> = msg_proto::encode_msg();
-    let cmd:u32 = 123;
-    let reply_package = glib::package(cmd, encode);
+    let cmd:u32 = 10008;
+    let rpc_reply = msg_proto::encode_rpc(rpc_msg.get_key().to_string(), encode);
+    let reply_package = glib::package(cmd, rpc_reply);
 
     // 直接发给客户端
     // let reply_package1 = reply_package.clone();

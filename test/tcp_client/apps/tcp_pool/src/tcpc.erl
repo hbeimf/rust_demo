@@ -10,8 +10,9 @@
 
 
 call(Package) ->
-	Key = glib:to_str(glib:uid()),	
-	tcp_rpc_call_table:insert(Key, self()),
+	Key = glib:to_binary(glib:to_str(glib:uid())),	
+	?LOG({key, Key}),
+	% tcp_rpc_call_table:insert(Key, self()),
 
 	RpcPackage = #'RpcPackage'{
                         key = Key,
@@ -22,7 +23,7 @@ call(Package) ->
 
 
 	poolboy:transaction(pool_name(), fun(Worker) ->
-        gen_server:call(Worker, {call, RpcPackageBin1}, ?TIMEOUT)
+        gen_server:call(Worker, {call, Key, RpcPackageBin1}, ?TIMEOUT)
     end).
 
 pool_name() ->

@@ -174,9 +174,12 @@ init([_Index]) ->
 
 %     {reply, [], gs_tcp_state};
 
-handle_call({call, Package}, From, State=#state{
+handle_call({call, Key, Package}, From, State=#state{
 		socket=Socket, transport=_Transport, data=_LastPackage}) ->
     ?LOG({call, Package}),
+
+    tcp_rpc_call_table:insert(Key, From),
+
 	ranch_tcp:send(Socket, Package),
 	{noreply, State#state{call_pid = From}};
 handle_call(_Request, _From, State) ->
@@ -311,7 +314,25 @@ parse_package(Bin, State) ->
             error       
     end.
 
- action(Cmd, DataBin, State = #state{call_pid = CallFrom}) ->
+ action(10008, DataBin, State = #state{call_pid = _CallFrom}) ->
+
+ 	#'RpcPackage'{key = Key, 'payload' = Payload} = msg_proto:decode_msg(DataBin,'RpcPackage'),
+
+
+ 	{ok, From} = tcp_rpc_call_table:select(Key),
+ 	?LOG({Key, Payload, From}),
+
+
+
+ 	% ?LOG({Cmd, DataBin, State}),
+ 	
+ 	% ?LOG({Name, NickName, Phone}),
+
+	% gen_server:reply(CallFrom, DataBin),
+	safe_reply(From, Payload),
+
+ 	ok;
+  action(Cmd, DataBin, State) ->
 
  	% #'TestMsg'{name = Name, 'nick_name' = NickName,
  	%  phone= Phone} = msg_proto:decode_msg(DataBin,'TestMsg'),
@@ -321,23 +342,24 @@ parse_package(Bin, State) ->
  	% ?LOG({Name, NickName, Phone}),
 
 	% gen_server:reply(CallFrom, DataBin),
-	safe_reply(CallFrom, DataBin),
+	% safe_reply(CallFrom, DataBin),
+	?LOG({ignore_package, Cmd, DataBin}),
 
  	ok.
 
 
 safe_reply(undefined, _Value) ->
     ok;
-safe_reply(Pid, Value) when is_pid(Pid) ->
-    % ?LOG({safe_reply, Pid, Value}),
-    safe_send(Pid, {response, Value});
+% safe_reply(Pid, Value) when is_pid(Pid) ->
+%     % ?LOG({safe_reply, Pid, Value}),
+%     safe_send(Pid, {response, Value});
 safe_reply(From, Value) ->
     % ?LOG({safe_reply, From, Value}),
     gen_server:reply(From, Value).
 
-safe_send(Pid, Value) ->
-    try erlang:send(Pid, Value)
-    catch
-        Err:Reason ->
-            error_logger:info_msg("eredis: Failed to send message to ~p with reason ~p~n", [Pid, {Err, Reason}])
-    end.
+% safe_send(Pid, Value) ->
+%     try erlang:send(Pid, Value)
+%     catch
+%         Err:Reason ->
+%             error_logger:info_msg("eredis: Failed to send message to ~p with reason ~p~n", [Pid, {Err, Reason}])
+%     end.

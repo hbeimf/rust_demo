@@ -14,6 +14,14 @@
         }).
 -endif.
 
+-ifndef('RPCPACKAGE_PB_H').
+-define('RPCPACKAGE_PB_H', true).
+-record('RpcPackage',
+        {key                    :: binary() | iolist() | undefined, % = 1
+         payload                :: binary() | undefined % = 2
+        }).
+-endif.
+
 -ifndef('TESTMSG_PB_H').
 -define('TESTMSG_PB_H', true).
 -record('TestMsg',

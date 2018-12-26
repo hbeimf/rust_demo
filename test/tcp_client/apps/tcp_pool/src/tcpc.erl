@@ -4,9 +4,11 @@
 
 -define(TIMEOUT, 5000).
 
-call(Package) ->	
+call(Package) ->
+	Key = glib:to_str(glib:uid()),	
+	tcp_rpc_call_table:insert(Key, self()),
 	poolboy:transaction(pool_name(), fun(Worker) ->
-        gen_server:call(Worker, {call, Package}, ?TIMEOUT)
+        gen_server:call(Worker, {call, Key, Package}, ?TIMEOUT)
     end).
 
 pool_name() ->

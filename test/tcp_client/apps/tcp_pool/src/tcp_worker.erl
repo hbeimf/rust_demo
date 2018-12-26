@@ -174,9 +174,9 @@ init([_Index]) ->
 
 %     {reply, [], gs_tcp_state};
 
-handle_call({call, Package}, From, State=#state{
+handle_call({call, Key, Package}, From, State=#state{
 		socket=Socket, transport=_Transport, data=_LastPackage}) ->
-    ?LOG({call, Package}),
+    ?LOG({call, Key, Package}),
 	ranch_tcp:send(Socket, Package),
 	{noreply, State#state{call_pid = From}};
 handle_call(_Request, _From, State) ->

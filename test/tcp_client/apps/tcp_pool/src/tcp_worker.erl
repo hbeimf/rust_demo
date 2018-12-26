@@ -322,7 +322,7 @@ parse_package(Bin, State) ->
  	{ok, From} = tcp_rpc_call_table:select(Key),
  	?LOG({Key, Payload, From}),
 
-
+ 	tcp_rpc_call_table:delete(Key),
 
  	% ?LOG({Cmd, DataBin, State}),
  	

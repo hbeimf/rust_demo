@@ -14,24 +14,6 @@
 -include_lib("glib/include/log.hrl").
 -include_lib("glib/include/cmdid.hrl").
 
-
-
-% test() -> 
-% 	Txt = <<"hello world">>,
-% 	% {ok, Pid} = wsc_cc:start_link(),
-% 	{ok, Pid} = get_client(),
-% 	% Pid ! {binary, <<Bin/binary,Bin/binary,Bin/binary>>},
-% 	Pid ! {text, Txt},
-% 	ok.
-
-% test_bin() -> 
-% 	Bin = create_package(),
-% 	% binary(PackageBinary).
-% 	{ok, Pid} = get_client(),
-% 	% Pid ! {binary, <<Bin/binary,Bin/binary,Bin/binary>>},
-% 	Pid ! {send, Bin},
-% 	ok.
-
 % rpc call
 call_from_pool() ->
 	TestMsg = #'TestMsg'{
@@ -40,18 +22,12 @@ call_from_pool() ->
                         phone = <<"15912341234">> 
                     },
     TestMsgBin = msg_proto:encode_msg(TestMsg),
-
-    % Package = glib:package(123456, TestMsgBin),
-
     Reply = tcpc:call(TestMsgBin),
     ?LOG({pool_reply, Reply}),
-
     #'TestMsg'{name = Name, 'nick_name' = NickName,
  	 phone= Phone} = msg_proto:decode_msg(Reply,'TestMsg'),
-
  	?LOG({Name, NickName, Phone}),
     ok.
-
 
 call() -> 
 	

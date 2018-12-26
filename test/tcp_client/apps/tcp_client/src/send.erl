@@ -42,9 +42,14 @@ call_from_pool() ->
     TestMsgBin = msg_proto:encode_msg(TestMsg),
 
     % Package = glib:package(123456, TestMsgBin),
-    
+
     Reply = tcpc:call(TestMsgBin),
     ?LOG({pool_reply, Reply}),
+
+    #'TestMsg'{name = Name, 'nick_name' = NickName,
+ 	 phone= Phone} = msg_proto:decode_msg(Reply,'TestMsg'),
+
+ 	?LOG({Name, NickName, Phone}),
     ok.
 
 

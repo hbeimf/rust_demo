@@ -174,9 +174,9 @@ init([_Index]) ->
 
 %     {reply, [], gs_tcp_state};
 
-handle_call({call, Key, Package}, From, State=#state{
+handle_call({call, Package}, From, State=#state{
 		socket=Socket, transport=_Transport, data=_LastPackage}) ->
-    ?LOG({call, Key, Package}),
+    ?LOG({call, Package}),
 	ranch_tcp:send(Socket, Package),
 	{noreply, State#state{call_pid = From}};
 handle_call(_Request, _From, State) ->
@@ -313,12 +313,12 @@ parse_package(Bin, State) ->
 
  action(Cmd, DataBin, State = #state{call_pid = CallFrom}) ->
 
- 	#'TestMsg'{name = Name, 'nick_name' = NickName,
- 	 phone= Phone} = msg_proto:decode_msg(DataBin,'TestMsg'),
+ 	% #'TestMsg'{name = Name, 'nick_name' = NickName,
+ 	%  phone= Phone} = msg_proto:decode_msg(DataBin,'TestMsg'),
 
  	% ?LOG({Cmd, DataBin, State}),
  	
- 	?LOG({Name, NickName, Phone}),
+ 	% ?LOG({Name, NickName, Phone}),
 
 	% gen_server:reply(CallFrom, DataBin),
 	safe_reply(CallFrom, DataBin),

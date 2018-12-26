@@ -15,4 +15,9 @@ message Login{
 }
 
 
+message RpcPackage{   
+    string  key = 1;
+    bytes payload = 2;
+}
+
 

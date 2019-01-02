@@ -71,4 +71,24 @@ fn main() {
     for person in person_iter {
         println!("Found person {:?}", person.unwrap());
     }
+
+
+    // where 
+    println!("where id = 2");
+
+    let mut stmt = conn
+        .prepare("SELECT id, name, time_created, data FROM person where id = ?1")
+        .unwrap();
+    let person_iter = stmt
+        .query_map(&[2], |row| Person {
+            id: row.get(0),
+            name: row.get(1),
+            time_created: row.get(2),
+            data: row.get(3),
+        })
+        .unwrap();
+
+    for person in person_iter {
+        println!("Found person {:?}", person.unwrap());
+    }
 }

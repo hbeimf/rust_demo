@@ -80,7 +80,7 @@ fn main() {
         .prepare("SELECT id, name, time_created, data FROM person where id = ?1")
         .unwrap();
     let person_iter = stmt
-        .query_map(&[2], |row| Person {
+        .query_map(&[2], |row| Person { // where
             id: row.get(0),
             name: row.get(1),
             time_created: row.get(2),

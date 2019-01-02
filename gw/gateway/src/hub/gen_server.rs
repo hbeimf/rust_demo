@@ -18,7 +18,7 @@ struct Person {
 }
 
 pub struct RoomActor {
-    sessions: HashMap<u32, Recipient<gen_server::Message>>,
+    sessions: HashMap<String, Recipient<gen_server::Message>>,
     db: rusqlite::Connection,
 }
 
@@ -62,9 +62,9 @@ impl RoomActor {
 
             println!("Found person {:?}", p);
 
-            let uid = p.uid.parse::<i32>().unwrap();
+            // let uid = p.uid.parse::<i32>().unwrap();
 
-            if let Some(addr) = self.sessions.get(&(uid as u32)) {
+            if let Some(addr) = self.sessions.get(&p.uid) {
                 debug!("send broadcast");
                 let _ = addr.do_send(gen_server::Message(message.to_vec()));
             }
@@ -97,7 +97,7 @@ impl Handler<Connect> for RoomActor {
     fn handle(&mut self, msg: Connect, _: &mut Context<Self>) -> Self::Result {
         info!("Connect,IN IN IN IN IN IN Someone joined room");
 
-        self.sessions.insert(msg.uid, msg.addr);
+        self.sessions.insert(msg.uid.to_string(), msg.addr);
 
         // insert sqlite
         let room_id = 1;

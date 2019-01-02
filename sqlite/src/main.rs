@@ -36,6 +36,7 @@ fn main() {
         data: None,
     };
     
+    // insert 
     conn.execute(
         "INSERT INTO person (name, time_created, data)
                   VALUES (?1, ?2, ?3)",
@@ -56,6 +57,15 @@ fn main() {
     .unwrap();
 
 
+    // update 
+    conn.execute(
+        "UPDATE person SET name = 'testUpdateName' where id = ?1",
+        &[2],
+    )
+    .unwrap();
+
+
+    // select 
     let mut stmt = conn
         .prepare("SELECT id, name, time_created, data FROM person")
         .unwrap();
@@ -73,7 +83,7 @@ fn main() {
     }
 
 
-    // where 
+    // select where 
     println!("where id = 2");
 
     let mut stmt = conn

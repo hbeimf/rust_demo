@@ -56,15 +56,6 @@ fn main() {
     )
     .unwrap();
 
-
-    // update 
-    conn.execute(
-        "UPDATE person SET name = 'testUpdateName' where id = ?1",
-        &[2],
-    )
-    .unwrap();
-
-
     // select 
     let mut stmt = conn
         .prepare("SELECT id, name, time_created, data FROM person")
@@ -82,6 +73,15 @@ fn main() {
         println!("Found person {:?}", person.unwrap());
     }
 
+
+    // update where
+    let new_name = "testUpdateName".to_string();
+    let id = 2;
+    conn.execute(
+        "UPDATE person SET name = ?1 where id = ?2",
+        &[&new_name as &ToSql, &id],
+    )
+    .unwrap();
 
     // select where 
     println!("where id = 2");

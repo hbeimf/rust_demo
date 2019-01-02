@@ -33,7 +33,7 @@ pub fn chat_route(req: &HttpRequest<WsChatSessionState>) -> Result<HttpResponse,
     ws::start(
         req,
         WsChatSession {
-            id: 0,
+            uid: 0,
             hb: Instant::now(),
             room: "Main".to_owned(),
             // name: None,
@@ -45,7 +45,7 @@ pub fn chat_route(req: &HttpRequest<WsChatSessionState>) -> Result<HttpResponse,
 
 pub struct WsChatSession {
     /// unique session id
-    pub id: u32,
+    pub uid: u32,
     /// Client must send ping at least once per 10 seconds (CLIENT_TIMEOUT),
     /// otherwise we drop connection.
     pub hb: Instant,
@@ -105,7 +105,7 @@ impl Actor for WsChatSession {
         // ctx.state().addr.do_send(hub::gen_server::Disconnect { id: self.id });
 
         let act = System::current().registry().get::<RoomActor>();
-        act.do_send(hub::gen_server::Disconnect { id: self.id });
+        act.do_send(hub::gen_server::Disconnect { uid: self.uid });
 
         Running::Stop
     }
@@ -255,7 +255,7 @@ impl WsChatSession {
                 //     .do_send(hub::gen_server::Disconnect { id: act.id });
 
                 let actor_room = System::current().registry().get::<RoomActor>();
-                actor_room.do_send(hub::gen_server::Disconnect { id: act.id });
+                actor_room.do_send(hub::gen_server::Disconnect { uid: act.uid });
 
                 // stop actor
                 ctx.stop();

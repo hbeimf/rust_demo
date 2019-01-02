@@ -21,6 +21,10 @@ extern crate easy_logging;
 #[macro_use] extern crate log;
 // https://crates.io/crates/easy-logging
 
+extern crate rusqlite;
+extern crate time;
+
+
 extern crate mysqlc;
 extern crate redisc;
 

@@ -31,7 +31,7 @@ pub struct Message(pub Vec<u8>);
 /// `ChatSession` actor is responsible for tcp peer communications.
 pub struct ChatSession {
     /// unique session id
-    id: u32,
+    pub uid: u32,
     // /// this is address of chat server
     // addr: Addr<RoomActor>,
     // /// Client must send ping at least once per 10 seconds, otherwise we drop
@@ -93,7 +93,7 @@ impl Actor for ChatSession {
         // self.addr.do_send(hub::gen_server::Disconnect { id: self.id });
 
         let act = System::current().registry().get::<RoomActor>();
-        act.do_send(hub::gen_server::Disconnect { id: self.id });
+        act.do_send(hub::gen_server::Disconnect { uid: self.uid });
 
         Running::Stop
     }
@@ -170,7 +170,7 @@ impl ChatSession {
         framed: actix::io::FramedWrite<WriteHalf<TcpStream>, ChatCodec>,
     ) -> ChatSession {
         ChatSession {
-            id: 0,
+            uid: 0,
             // addr: addr,
             // hb: Instant::now(),
             room: "Main".to_owned(),

@@ -35,6 +35,9 @@ protobuf = "2.2.0"
 log = "0.4.6"
 easy-logging = "*"
 
+rusqlite = "0.15.0"
+time = "0.1.41"
+
 mysqlc={path = "../mysqlc"}
 redisc={path = "../redisc"}
 sys_config={path = "../sys_config"}

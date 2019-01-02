@@ -25,7 +25,7 @@ pub struct Connect {
 // handler_cast()
 #[derive(Message)]
 pub struct Disconnect {
-    pub id: u32,
+    pub uid: u32,
 }
 
 /// Send message to specific room

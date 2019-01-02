@@ -33,6 +33,8 @@ pub fn action_10000(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSe
 
     
     let uid = login_msg.get_uid();
+
+    client.uid = uid as u32;
     // // debug!("客户端注册到roomActor: {}", uid);
     // let addr_client = ctx.address();
     // // handler_call()
@@ -197,7 +199,7 @@ pub fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession,
 
     let act = System::current().registry().get::<RoomActor>();
     act.do_send(hub::gen_server::Message {
-        id: client.id,
+        id: client.uid,
         msg: reply_package,
         room: client.room.clone(),
     })

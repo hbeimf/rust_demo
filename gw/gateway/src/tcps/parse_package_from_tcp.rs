@@ -60,6 +60,7 @@ fn action_10000(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, ctx: &mut actix:
     let login_msg = msg_proto::decode_login(pb);
     debug!("uid: {:?}", login_msg.get_uid());
     let uid = login_msg.get_uid();
+    client.uid = uid as u32; // 登录成功后初始化uid
 
     // call 
     let addr_client = ctx.address();

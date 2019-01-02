@@ -44,7 +44,7 @@ impl Default for RoomActor {
 }
 
 impl RoomActor {
-    fn send_message(&self, message: &Vec<u8>, skip_id: u32) {
+    fn broadcast_msg(&self, message: &Vec<u8>, skip_id: u32) {
         // debug!("send broadcast!!");
         // select where 
         let mut stmt = self.db
@@ -132,9 +132,9 @@ impl Handler<Message> for RoomActor {
     type Result = ();
 
     fn handle(&mut self, msg: Message, _: &mut Context<Self>) {
-        // self.send_message(&msg.room, msg.msg.as_str(), msg.id);
+        // self.broadcast_msg(&msg.room, msg.msg.as_str(), msg.id);
         debug!("广播消息 room:{:?}, msg:{:?}, id:{:?}", &msg.room, &msg.msg, msg.id);
-        self.send_message(&msg.msg, msg.id);
+        self.broadcast_msg(&msg.msg, msg.id);
 
     }
 }

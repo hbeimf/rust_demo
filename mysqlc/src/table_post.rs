@@ -9,7 +9,11 @@
 // extern crate diesel;
 
 use diesel::prelude::*;
-use schema::posts;
+use schema::{posts};
+// use schema::*;
+
+use diesel::*;
+
 
 #[derive(Queryable)]
 pub struct Post {

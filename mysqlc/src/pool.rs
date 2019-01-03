@@ -12,7 +12,7 @@ use singleton::{Singleton};
 
 // pub type Pool = r2d2::Pool<ConnectionManager<MysqlConnection>>;
 
-use sys_config;
+// use sys_config;
 
 // // 初始化连接池
 // pub fn init_pool() -> Pool {

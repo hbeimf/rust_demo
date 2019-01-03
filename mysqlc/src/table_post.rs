@@ -57,6 +57,7 @@ pub struct Post {
 
 // select 
 // https://github.com/diesel-rs/diesel/blob/2ce0e4ea0fda474459139042247512f0c8b254cf/diesel_tests/tests/raw_sql.rs
+// https://github.com/driftluo/MyBlog/blob/master/src/models/articles.rs
 pub fn select(connection: &MysqlConnection) {
     // use self::schema::posts::dsl::*;
     // use schema::posts::dsl::{posts, published};

@@ -45,6 +45,11 @@ impl Default for RoomActor {
 
 impl RoomActor {
     fn broadcast_msg(&self, message: &Vec<u8>, skip_id: u32) {
+
+        // 经验证， 这两连接池是支持断线重连的，
+        mysqlc::test::test();
+        redisc::test();
+
         // debug!("send broadcast!!");
         // select where 
         let mut stmt = self.db

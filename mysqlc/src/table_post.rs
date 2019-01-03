@@ -10,16 +10,17 @@
 
 use diesel::prelude::*;
 // use schema::{posts};
-use schema::*;
+// use schema::*;
 
 // use schema::posts::dsl::*;
 // use schema::posts::*;
 
 use diesel::*;
 // use pool;
+// use diesel::sql_types::*;
 
 
-#[derive(Queryable)]
+#[derive(Queryable, Debug, PartialEq)]
 pub struct Post {
     pub id: i32,
     pub title: String,
@@ -27,31 +28,31 @@ pub struct Post {
     pub published: bool,
 }
 
-#[derive(Insertable)]
-#[table_name = "posts"]
-pub struct NewPost<'a> {
-    pub title: &'a str,
-    pub body: &'a str,
-}
+// #[derive(Insertable)]
+// #[table_name = "posts"]
+// pub struct NewPost<'a> {
+//     pub title: &'a str,
+//     pub body: &'a str,
+// }
 
 
 
-// insert 
-pub fn create_post(conn: &MysqlConnection, title: &str, body: &str) -> Post {
-    use schema::posts::dsl::{id, posts};
+// // insert 
+// pub fn create_post(conn: &MysqlConnection, title: &str, body: &str) -> Post {
+//     use schema::posts::dsl::{id, posts};
 
-    let new_post = NewPost {
-        title: title,
-        body: body,
-    };
+//     let new_post = NewPost {
+//         title: title,
+//         body: body,
+//     };
 
-    diesel::insert_into(posts)
-        .values(&new_post)
-        .execute(conn)
-        .expect("Error saving new post");
+//     diesel::insert_into(posts)
+//         .values(&new_post)
+//         .execute(conn)
+//         .expect("Error saving new post");
 
-    posts.order(id.desc()).first(conn).unwrap()
-}
+//     posts.order(id.desc()).first(conn).unwrap()
+// }
 
 
 // select 
@@ -76,11 +77,61 @@ pub fn select(connection: &MysqlConnection) {
     //     break;
     // }
 
-     let rows = sql_query("SELECT id FROM posts ORDER BY id").execute(connection); 
-     println!("{:?}", rows);
-     
-     // let rows = sql_query("SELECT * FROM posts").load(connection); 
+     // let rows = sql_query("SELECT id FROM posts ORDER BY id").execute(connection); 
      // println!("{:?}", rows);
+
+
+    use schema::posts::dsl::*;
+
+    println!("");
+    println!("===================== select title from posts =====================");
+    let select_title = posts.select(title);
+    let titles: Vec<String> = select_title.load(connection).unwrap();
+    println!("{:?}", titles);
+
+    println!("");
+    println!("===================== select id, title, body, published from posts =====================");
+    let rows: Vec<(i32, String, String, bool)> = posts.load(connection).unwrap();
+    println!("{:?}", rows);
+
+    println!("");
+    println!("===================== select id, title, body, published from posts =====================");
+    let rows = posts.load::<Post>(connection).unwrap();
+    println!("{:?}", rows);
+
+
+    println!("");
+    println!("===================== select id, title, body, published from posts where id = 11 =====================");
+    
+    let row : Vec<(i32, String, String, bool)> = posts
+            .filter(id.eq(11))
+            .order(id.asc())
+            .load(connection)
+            .unwrap();
+    println!("{:?}", row);
+
+    println!("");
+    println!("===================== select id, title, body, published from posts where id = 11 =====================");    
+    let row = posts
+            .filter(id.eq(11))
+            .order(id.asc())
+            .load::<Post>(connection)
+            .unwrap();
+    println!("{:?}", row);
+
+    
+
+    // let users  = sql_query("SELECT * FROM posts ORDER BY id").load::<Post>(connection);
+     
+     // let rows1: std::result::Result<std::vec::Vec<(i32, String, String, bool)>, diesel::result::Error> = sql_query("SELECT id, title, body, published FROM posts").load(connection); 
+     // let rows : Vec<(i32, String, String, bool)> = diesel::sql_query("SELECT id, title, body, published FROM posts").load(connection);
+
+     // println!("{:?}", rows);
+    //  let expected_users = vec![
+    //     Post { id: 1, title: "Sean".into(), body: "Sean".into(), published: true },
+    //     Post { id: 2, title: "Sean".into(), body: "Sean".into(), published: true }
+    // ];
+    // assert_eq!(Ok(expected_users), rows);
 
 }
 

@@ -23,7 +23,7 @@ use singleton::{Singleton};
 extern crate sys_config;
 
 struct RedisPool{
-    pool:r2d2_redis::r2d2::Pool<r2d2_redis::RedisConnectionManager>
+    pool: r2d2_redis::r2d2::Pool<r2d2_redis::RedisConnectionManager>
 }
 
 impl Default for RedisPool {

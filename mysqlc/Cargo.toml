@@ -4,9 +4,9 @@ version = "0.1.0"
 authors = ["maomao <5622876@qq.com>"]
 
 [dependencies]
-r2d2 = "0.8.3"
-diesel = { version = "1.3.3", features = ["mysql"] }
-diesel_codegen = { version = "0.16.1", features = ["mysql"] }
+r2d2 = "0.8.2"
+diesel = { version = "~1.0.0", features = ["mysql"] }
+diesel_codegen = { version = "0.16.0", features = ["mysql"] }
 r2d2-diesel = "1.0.0"
 dotenv="0.10"
 

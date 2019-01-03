@@ -1,25 +1,28 @@
-use std::thread;
+// use std::thread;
 
 // use mysqlc;
 use pool;
 use table_post;
 
-pub fn test_bak() {
-	let pool = pool::init_pool();
+// pub fn test_bak() {
+// 	let pool = pool::init_pool();
 
-	for _ in 0..10i32 {
-		let pool = pool.clone();
-		thread::spawn(move || {
-			let connection = pool.get();
-			assert!(connection.is_ok());
-		});
-	}
-}
+// 	for _ in 0..10i32 {
+// 		let pool = pool.clone();
+// 		thread::spawn(move || {
+// 			let connection = pool.get();
+// 			assert!(connection.is_ok());
+// 		});
+// 	}
+// }
 
 pub fn test() {
-	let pool = pool::init_pool();
+	// let pool = pool::init_pool();
+
+	let mysql = pool::MYSQL_INSTANCE.get(); 
+    // let conn = redis.pool.get().unwrap();
 	
-	match pool.get() {
+	match mysql.pool.get() {
 	            Ok(conn) => {
 	            		// insert 
 	            		// table_post::create_post(&conn, "titletest", "body test");

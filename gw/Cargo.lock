@@ -920,6 +920,7 @@ dependencies = [
  "dotenv 0.10.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "r2d2 0.8.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "r2d2-diesel 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "singleton 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "sys_config 0.1.0",
 ]
 

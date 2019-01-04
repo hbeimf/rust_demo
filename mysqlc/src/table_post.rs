@@ -77,7 +77,7 @@ pub fn delete(connection: &MysqlConnection) {
     let query = diesel::sql_query("DELETE FROM posts WHERE id > 20")
     .execute(connection);
 
-    println!("{:?}", query);
+    println!("delete: {:?}", query);
 
 }
 
@@ -87,7 +87,7 @@ pub fn update (connection: &MysqlConnection) {
     .bind::<Text, _>("UPDATE TITLE TEST !!")
     .execute(connection);
 
-    println!("{:?}", query);   
+    println!("update: {:?}", query);   
 }
 
 // select 

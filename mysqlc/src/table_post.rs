@@ -160,8 +160,9 @@ pub fn select(connection: &MysqlConnection) {
     use diesel::types::Integer;
     use diesel::types::Text;
 
-    let rows = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? AND title = ?")
-    .bind::<Integer, _>(11)
+    let query = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? AND title = ?");
+
+    let rows = query.bind::<Integer, _>(11)
     .bind::<Text, _>("titletest")
     .execute(connection);
 

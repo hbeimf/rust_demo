@@ -23,6 +23,12 @@ $ cargo --version
 cargo 1.33.0-nightly (0d1f1bbea 2018-12-19)
 $ 
 
+
+$ rustc -V
+rustc 1.31.1 (b6c32da9b 2018-12-18)
+$ cargo --version
+cargo 1.31.0 (339d9f9c8 2018-11-16)
+
 ```
 
 

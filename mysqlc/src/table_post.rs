@@ -23,11 +23,19 @@ use diesel::*;
 use diesel::mysql::Mysql;
 // use diesel::mysql::Mysql; 
 
-#[derive(Queryable, Debug, PartialEq)]
+use diesel::types::Integer;
+use diesel::types::Text;
+
+#[derive(Queryable, Debug, PartialEq, QueryableByName)]
+#[table_name = "posts"]
 pub struct Post {
+    #[sql_type = "Integer"]
     pub id: i32,
+    #[sql_type = "Text"]
     pub title: String,
+    #[sql_type = "Text"]
     pub body: String,
+    #[sql_type = "Integer"]
     pub published: bool,
 }
 
@@ -157,8 +165,8 @@ pub fn select(connection: &MysqlConnection) {
 
     // https://docs.rs/diesel/1.3.3/diesel/query_builder/struct.SqlQuery.html
 
-    use diesel::types::Integer;
-    use diesel::types::Text;
+    // use diesel::types::Integer;
+    // use diesel::types::Text;
 
     let query = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? AND title = ?");
 

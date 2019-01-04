@@ -23,9 +23,9 @@ use diesel::*;
 use diesel::mysql::Mysql;
 // use diesel::mysql::Mysql; 
 
-use diesel::types::Integer;
-use diesel::types::Text;
-use diesel::types::Bool;
+use diesel::types::{Integer, Text, Bool};
+// use diesel::types::Text;
+// use diesel::types::Bool;
 
 #[derive(Queryable, Debug, PartialEq, QueryableByName)]
 #[table_name = "posts"]
@@ -169,6 +169,7 @@ pub fn select(connection: &MysqlConnection) {
     // use diesel::types::Integer;
     // use diesel::types::Text;
 
+    println!("");
     let query = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? AND title = ?");
 
     let rows = query.bind::<Integer, _>(11)
@@ -179,37 +180,18 @@ pub fn select(connection: &MysqlConnection) {
 
 
 
-    let query = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? AND title = ?");
+    println!("");
+    let query = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? AND title = ?")
+     .bind::<Integer, _>(11)
+    .bind::<Text, _>("titletest");
 
-    let rows: Vec<Post> = query.bind::<Integer, _>(11)
-    .bind::<Text, _>("titletest")
-    .load(connection).unwrap();
-
-    println!("sql_query: {:?}", rows);
-    
-    // println!("");
-    // println!("===================== select id, title, body, published from posts where id = 11 =====================");    
-    // let rows: Vec<i32> = sql_query("SELECT id FROM posts ORDER BY id").load(connection).unwrap(); 
-    //  println!("{:?}", rows);
-
-
-    // let query = sql_query("SELECT id FROM posts ORDER BY id");
     // let debug = debug_query::<Mysql, _>(&query);
     // debug!("query sql:===================== {:?}", debug.to_string());
-    // let rows: Vec<(i32)> = query.load(connection).unwrap();
-
-
-    // let users  = sql_query("SELECT id, title, body, published FROM posts ORDER BY id").load::<Post>(connection);
-     
-     // let rows1: std::result::Result<std::vec::Vec<(i32, String, String, bool)>, diesel::result::Error> = sql_query("SELECT id, title, body, published FROM posts").load(connection); 
-     // let rows : Vec<(i32, String, String, bool)> = diesel::sql_query("SELECT id, title, body, published FROM posts").load(connection);
-
-     // println!("{:?}", rows);
-    //  let expected_users = vec![
-    //     Post { id: 1, title: "Sean".into(), body: "Sean".into(), published: true },
-    //     Post { id: 2, title: "Sean".into(), body: "Sean".into(), published: true }
-    // ];
-    // assert_eq!(Ok(expected_users), rows);
+    
+    let rows: Vec<Post> = query.load(connection).unwrap();
+    println!("sql_query: {:?}", rows);
+    
+    
 
 }
 

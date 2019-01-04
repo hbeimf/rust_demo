@@ -151,6 +151,23 @@ pub fn select(connection: &MysqlConnection) {
 
     let rows = query.load::<Post>(connection).unwrap();
     println!("{:?}", rows);
+
+
+
+
+    // https://docs.rs/diesel/1.3.3/diesel/query_builder/struct.SqlQuery.html
+
+    use diesel::types::Integer;
+    use diesel::types::Text;
+
+    let rows = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? AND title = ?")
+    .bind::<Integer, _>(11)
+    .bind::<Text, _>("titletest")
+    .execute(connection);
+
+    println!("{:?}", rows);
+
+
     
     // println!("");
     // println!("===================== select id, title, body, published from posts where id = 11 =====================");    

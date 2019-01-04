@@ -165,10 +165,6 @@ pub fn select(connection: &MysqlConnection) {
 
 
     // https://docs.rs/diesel/1.3.3/diesel/query_builder/struct.SqlQuery.html
-
-    // use diesel::types::Integer;
-    // use diesel::types::Text;
-
     println!("");
     let query = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? AND title = ?");
 
@@ -194,35 +190,3 @@ pub fn select(connection: &MysqlConnection) {
     
 
 }
-
-
-// query 
-
-// pub fn query() {
-
-//     let mysql = pool::MYSQL_INSTANCE.get(); 
-//     // let conn = redis.pool.get().unwrap();
-    
-//     match mysql.pool.get() {
-//                 Ok(conn) => {
-//                         // insert 
-//                         // table_post::create_post(&conn, "titletest", "body test");
-//                         // table_post::select(&conn);
-//                         let rows = sql_query("SELECT id FROM posts ORDER BY id").load(&conn); 
-//                         // println!("rows:{:?}", rows);
-
-//                 },
-//                 // Err(_) => Outcome::Failure((Status::ServiceUnavailable, ()))
-//                 _ => {
-//                         println!("something else");
-//                 }
-//     }   
-
-//     // let users = sql_query("SELECT * FROM users ORDER BY id")
-//     //     .load(&connection);
-//     // let expected_users = vec![
-//     //     User { id: 1, name: "Sean".into() },
-//     //     User { id: 2, name: "Tess".into() },
-//     // ];
-//     // assert_eq!(Ok(expected_users), users);
-// }

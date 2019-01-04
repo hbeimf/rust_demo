@@ -17,9 +17,14 @@ pub mod pool;
 pub mod schema;
 pub mod table_post;
 
-
+extern crate easy_logging;
+#[macro_use] extern crate log;
 
 fn main() {
-    println!("Hello, world!");
+	 // 初始化日志功能
+    easy_logging::init(module_path!(), log::Level::Debug).unwrap();
+    // easy_logging::init(module_path!(), log::Level::Info).unwrap();
+
+    // debug!("Hello, world!");
     test::test();
 }

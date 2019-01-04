@@ -19,6 +19,8 @@ use diesel::*;
 // use pool;
 // use diesel::sql_types::*;
 
+// #[cfg(test)]
+// use diesel::mysql::Mysql;
 
 #[derive(Queryable, Debug, PartialEq)]
 pub struct Post {
@@ -85,24 +87,27 @@ pub fn select(connection: &MysqlConnection) {
     use schema::posts::dsl::*;
 
     println!("");
-    println!("===================== select title from posts =====================");
+    debug!("===================== select title from posts =====================");
     let select_title = posts.select(title);
     let titles: Vec<String> = select_title.load(connection).unwrap();
     println!("{:?}", titles);
 
+    // let debug = debug_query::<Mysql, _>(&select_title);
+    // debug!("debug: {:?}", debug.to_string());
+
     println!("");
-    println!("===================== select id, title, body, published from posts =====================");
+    debug!("===================== select id, title, body, published from posts =====================");
     let rows: Vec<(i32, String, String, bool)> = posts.load(connection).unwrap();
     println!("{:?}", rows);
 
     println!("");
-    println!("===================== select id, title, body, published from posts =====================");
+    debug!("===================== select id, title, body, published from posts =====================");
     let rows = posts.load::<Post>(connection).unwrap();
     println!("{:?}", rows);
 
 
     println!("");
-    println!("===================== select id, title, body, published from posts where id = 11 =====================");
+    debug!("===================== select id, title, body, published from posts where id = 11 =====================");
     
     let row : Vec<(i32, String, String, bool)> = posts
             .filter(id.eq(11))
@@ -112,17 +117,23 @@ pub fn select(connection: &MysqlConnection) {
     println!("{:?}", row);
 
     println!("");
-    println!("===================== select id, title, body, published from posts where id = 11 =====================");    
+    debug!("===================== select id, title, body, published from posts where id = 11 and title = 'titletest' =====================");    
     let row = posts
             .filter(id.eq(11))
+            .filter(title.eq("titletest"))
             .order(id.asc())
             .load::<Post>(connection)
             .unwrap();
     println!("{:?}", row);
 
     
+    // println!("");
+    // println!("===================== select id, title, body, published from posts where id = 11 =====================");    
+    // let rows: Vec<i32> = sql_query("SELECT id FROM posts ORDER BY id").load(connection).unwrap(); 
+    //  println!("{:?}", rows);
 
-    // let users  = sql_query("SELECT * FROM posts ORDER BY id").load::<Post>(connection);
+
+    // let users  = sql_query("SELECT id, title, body, published FROM posts ORDER BY id").load::<Post>(connection);
      
      // let rows1: std::result::Result<std::vec::Vec<(i32, String, String, bool)>, diesel::result::Error> = sql_query("SELECT id, title, body, published FROM posts").load(connection); 
      // let rows : Vec<(i32, String, String, bool)> = diesel::sql_query("SELECT id, title, body, published FROM posts").load(connection);

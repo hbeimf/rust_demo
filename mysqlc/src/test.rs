@@ -3,6 +3,7 @@
 // use mysqlc;
 use pool;
 use table_post;
+use table_post_insert;
 
 // pub fn test_bak() {
 // 	let pool = pool::init_pool();
@@ -25,7 +26,7 @@ pub fn test() {
 	match mysql.pool.get() {
 	            Ok(conn) => {
 	            		// insert 
-	            		// table_post::create_post(&conn, "titletest", "body test");
+	            		table_post_insert::create_post(&conn, "titletest", "body test");
 	            		table_post::delete(&conn);
 	            		table_post::update(&conn);
 	            		table_post::select(&conn);

@@ -88,13 +88,12 @@ pub fn select(connection: &MysqlConnection) {
     use schema::posts::dsl::*;
 
     println!("");
-    debug!("===================== select title from posts =====================");
-    let select_title = posts.select(title);
-    let titles: Vec<String> = select_title.load(connection).unwrap();
+    let query = posts.select(title);
+    let titles: Vec<String> = query.load(connection).unwrap();
+    
+    let debug = debug_query::<Mysql, _>(&query);
+    debug!("query sql:===================== {:?}", debug.to_string());
     println!("{:?}", titles);
-
-    let debug = debug_query::<Mysql, _>(&select_title);
-    debug!("query sql: {:?}", debug.to_string());
 
     println!("");
     debug!("===================== select id, title, body, published from posts =====================");
@@ -107,34 +106,62 @@ pub fn select(connection: &MysqlConnection) {
     println!("{:?}", rows);
 
 
+    // println!("");
+    // debug!("===================== select id, title, body, published from posts where id = 11 =====================");
+    // let row : Vec<(i32, String, String, bool)> = posts
+    //         .filter(id.eq(11))
+    //         .order(id.asc())
+    //         .load(connection)
+    //         .unwrap();
+    // println!("{:?}", row);
+
+
     println!("");
-    debug!("===================== select id, title, body, published from posts where id = 11 =====================");
-    let row : Vec<(i32, String, String, bool)> = posts
+    let query = posts
             .filter(id.eq(11))
-            .order(id.asc())
-            .load(connection)
-            .unwrap();
-    println!("{:?}", row);
+            .order(id.asc());
 
-    // let debug = debug_query::<Mysql, _>(&select_title);
-    // debug!("query sql: {:?}", debug.to_string());
+    let debug = debug_query::<Mysql, _>(&query);
+    debug!("query sql:===================== {:?}", debug.to_string());
+
+    let rows : Vec<(i32, String, String, bool)> = query.load(connection).unwrap();
+    println!("{:?}", rows);
+
+
+    // println!("");
+    // debug!("===================== select id, title, body, published from posts where id = 11 and title = 'titletest' =====================");    
+    // let row = posts
+    //         .filter(id.eq(11))
+    //         .filter(title.eq("titletest"))
+    //         .order(id.asc())
+    //         .load::<Post>(connection)
+    //         .unwrap();
+    // println!("{:?}", row);
+
 
 
     println!("");
-    debug!("===================== select id, title, body, published from posts where id = 11 and title = 'titletest' =====================");    
-    let row = posts
+    let query = posts
             .filter(id.eq(11))
             .filter(title.eq("titletest"))
-            .order(id.asc())
-            .load::<Post>(connection)
-            .unwrap();
-    println!("{:?}", row);
+            .order(id.desc());
 
+    let debug = debug_query::<Mysql, _>(&query);
+    debug!("query sql:===================== {:?}", debug.to_string());
+
+    let rows = query.load::<Post>(connection).unwrap();
+    println!("{:?}", rows);
     
     // println!("");
     // println!("===================== select id, title, body, published from posts where id = 11 =====================");    
     // let rows: Vec<i32> = sql_query("SELECT id FROM posts ORDER BY id").load(connection).unwrap(); 
     //  println!("{:?}", rows);
+
+
+    // let query = sql_query("SELECT id FROM posts ORDER BY id");
+    // let debug = debug_query::<Mysql, _>(&query);
+    // debug!("query sql:===================== {:?}", debug.to_string());
+    // let rows: Vec<(i32)> = query.load(connection).unwrap();
 
 
     // let users  = sql_query("SELECT id, title, body, published FROM posts ORDER BY id").load::<Post>(connection);

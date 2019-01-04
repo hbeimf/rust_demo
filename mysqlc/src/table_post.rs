@@ -74,7 +74,7 @@ pub struct Post {
 
 pub fn delete(connection: &MysqlConnection) {
     println!("");
-    let query = diesel::sql_query("DELETE FROM posts WHERE id > 20")
+    let query = diesel::sql_query("DELETE FROM posts WHERE id = 20")
     .execute(connection);
 
     println!("delete: {:?}", query);

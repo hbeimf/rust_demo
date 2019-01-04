@@ -25,6 +25,7 @@ use diesel::mysql::Mysql;
 
 use diesel::types::Integer;
 use diesel::types::Text;
+use diesel::types::Bool;
 
 #[derive(Queryable, Debug, PartialEq, QueryableByName)]
 #[table_name = "posts"]
@@ -35,7 +36,7 @@ pub struct Post {
     pub title: String,
     #[sql_type = "Text"]
     pub body: String,
-    #[sql_type = "Integer"]
+    #[sql_type = "Bool"]
     pub published: bool,
 }
 
@@ -177,6 +178,14 @@ pub fn select(connection: &MysqlConnection) {
     println!("{:?}", rows);
 
 
+
+    let query = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? AND title = ?");
+
+    let rows: Vec<Post> = query.bind::<Integer, _>(11)
+    .bind::<Text, _>("titletest")
+    .load(connection).unwrap();
+
+    println!("sql_query: {:?}", rows);
     
     // println!("");
     // println!("===================== select id, title, body, published from posts where id = 11 =====================");    

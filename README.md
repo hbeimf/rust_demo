@@ -17,11 +17,11 @@ rustup run nightly rustc --version
 rustup default nightly
 
 
-$:/erlang/rust_demo/mysqlc$ rustc -V
+$ rustc -V
 rustc 1.33.0-nightly (c0bbc3927 2019-01-03)
-$:/erlang/rust_demo/mysqlc$ cargo --version
+$ cargo --version
 cargo 1.33.0-nightly (0d1f1bbea 2018-12-19)
-$:/erlang/rust_demo/mysqlc$ 
+$ 
 
 ```
 

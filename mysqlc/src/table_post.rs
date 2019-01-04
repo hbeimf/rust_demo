@@ -68,6 +68,23 @@ pub struct Post {
 // }
 
 
+// pub fn insert() {
+
+// }
+
+pub fn delete(connection: &MysqlConnection) {
+    println!("");
+    let query = diesel::sql_query("DELETE FROM posts WHERE id > 20")
+    .execute(connection);
+
+    println!("{:?}", query);
+
+}
+
+// pub fn update () {
+
+// }
+
 // select 
 // https://github.com/diesel-rs/diesel/blob/2ce0e4ea0fda474459139042247512f0c8b254cf/diesel_tests/tests/raw_sql.rs
 // https://github.com/driftluo/MyBlog/blob/master/src/models/articles.rs

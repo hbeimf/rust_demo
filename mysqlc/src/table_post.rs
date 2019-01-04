@@ -11,6 +11,7 @@
 use diesel::prelude::*;
 // use schema::{posts};
 // use schema::*;
+use schema::posts::dsl::*;
 
 // use schema::posts::dsl::*;
 // use schema::posts::*;
@@ -94,7 +95,7 @@ pub fn select(connection: &MysqlConnection) {
      // println!("{:?}", rows);
 
 
-    use schema::posts::dsl::*;
+    
 
     println!("");
     let query = posts.select(title);

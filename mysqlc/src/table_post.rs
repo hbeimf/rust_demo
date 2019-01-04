@@ -81,9 +81,14 @@ pub fn delete(connection: &MysqlConnection) {
 
 }
 
-// pub fn update () {
+pub fn update (connection: &MysqlConnection) {
+    println!("");
+    let query = diesel::sql_query("update posts set title = ? WHERE id = 12")
+    .bind::<Text, _>("UPDATE TITLE TEST !!")
+    .execute(connection);
 
-// }
+    println!("{:?}", query);   
+}
 
 // select 
 // https://github.com/diesel-rs/diesel/blob/2ce0e4ea0fda474459139042247512f0c8b254cf/diesel_tests/tests/raw_sql.rs

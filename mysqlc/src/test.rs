@@ -27,6 +27,7 @@ pub fn test() {
 	            		// insert 
 	            		// table_post::create_post(&conn, "titletest", "body test");
 	            		table_post::delete(&conn);
+	            		table_post::update(&conn);
 	            		table_post::select(&conn);
 
 	            },

@@ -5,6 +5,29 @@ https://crates.io/
 ```
 
 ```
+https://blog.csdn.net/mint_ying/article/details/79362312?utm_source=blogxgwz0
+
+安装
+curl https://sh.rustup.rs -sSf | sh
+
+rustup install nightly
+
+rustup run nightly rustc --version
+
+rustup default nightly
+
+
+$:/erlang/rust_demo/mysqlc$ rustc -V
+rustc 1.33.0-nightly (c0bbc3927 2019-01-03)
+$:/erlang/rust_demo/mysqlc$ cargo --version
+cargo 1.33.0-nightly (0d1f1bbea 2018-12-19)
+$:/erlang/rust_demo/mysqlc$ 
+
+```
+
+
+
+```
 
 在Linux和Mac上安装Rust(稳定的二进制)的一个简单的方法，只需要在shell中运行以下命令：
 $ curl -sSf https://static.rust-lang.org/rustup.sh | sh

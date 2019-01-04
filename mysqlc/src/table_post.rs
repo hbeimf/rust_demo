@@ -20,7 +20,8 @@ use diesel::*;
 // use diesel::sql_types::*;
 
 // #[cfg(test)]
-// use diesel::mysql::Mysql;
+use diesel::mysql::Mysql;
+// use diesel::mysql::Mysql; 
 
 #[derive(Queryable, Debug, PartialEq)]
 pub struct Post {
@@ -92,8 +93,8 @@ pub fn select(connection: &MysqlConnection) {
     let titles: Vec<String> = select_title.load(connection).unwrap();
     println!("{:?}", titles);
 
-    // let debug = debug_query::<Mysql, _>(&select_title);
-    // debug!("debug: {:?}", debug.to_string());
+    let debug = debug_query::<Mysql, _>(&select_title);
+    debug!("query sql: {:?}", debug.to_string());
 
     println!("");
     debug!("===================== select id, title, body, published from posts =====================");
@@ -108,13 +109,16 @@ pub fn select(connection: &MysqlConnection) {
 
     println!("");
     debug!("===================== select id, title, body, published from posts where id = 11 =====================");
-    
     let row : Vec<(i32, String, String, bool)> = posts
             .filter(id.eq(11))
             .order(id.asc())
             .load(connection)
             .unwrap();
     println!("{:?}", row);
+
+    // let debug = debug_query::<Mysql, _>(&select_title);
+    // debug!("query sql: {:?}", debug.to_string());
+
 
     println!("");
     debug!("===================== select id, title, body, published from posts where id = 11 and title = 'titletest' =====================");    

@@ -29,7 +29,7 @@ pub fn test() {
 	            		table_posts::update(&conn);
 
 	            		// table_post_insert::create_post(&conn, "titletest", "body test");
-	            		let insert_instance = table_posts::InsertPost::new("titletest 111".to_string(), "body test 111".to_string());
+	            		let insert_instance = table_posts::Insert::new("titletest 111".to_string(), "body test 111".to_string());
 	            		insert_instance.insert(&conn);
 
 	            		

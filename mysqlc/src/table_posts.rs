@@ -31,41 +31,45 @@ pub struct Post {
 
 #[derive(Insertable, Debug, Clone)]
 #[table_name = "posts"]
-pub struct InsertPost {
+pub struct Insert {
     title: String,
     body: String,
 }
 
-
-
-
 #[derive(Queryable, Debug, PartialEq, QueryableByName)]
 #[table_name = "posts"]
-pub struct LastInsertPost {
+pub struct LastInsert {
     #[sql_type = "Integer"]
     pub id: i32,
 }
 
-impl InsertPost {
+impl Insert {
     pub fn new(title_str: String, body_str: String) -> Self {
-        InsertPost {
+        Insert {
             title: title_str,
             body: body_str,
         }
     }
 
     pub fn insert(&self, conn: &MysqlConnection) -> Post {
-        use schema::posts::dsl::{id, posts};
+        use schema::posts::dsl::*;
 
         diesel::insert_into(posts)
             .values(self)
             .execute(conn)
             .unwrap();
 
-        let last_insert_id: LastInsertPost = sql("SELECT LAST_INSERT_ID()").get_result(conn).unwrap();
-        println!("id: {:?}", last_insert_id);
+        let last_insert: LastInsert = sql("SELECT LAST_INSERT_ID()").get_result(conn).unwrap();
+        println!("id: {:?}", last_insert.id);
 
-        posts.order(id.desc()).first(conn).unwrap()
+        println!("");
+        let query = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? LIMIT 1")
+         .bind::<Integer, _>(last_insert.id);
+        let rows: Vec<Post> = query.load(conn).unwrap();
+
+        debug!("{:?}", rows);
+
+        posts.order(id.desc()).first(conn).unwrap() 
     }
        
 }

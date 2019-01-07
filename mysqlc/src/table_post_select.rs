@@ -24,7 +24,7 @@ use diesel::*;
 use diesel::mysql::Mysql;
 // use diesel::mysql::Mysql; 
 
-use diesel::types::{Integer, Text, Bool};
+use diesel::sql_types::{Integer, Text, Bool};
 // use diesel::types::Text;
 // use diesel::types::Bool;
 

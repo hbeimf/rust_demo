@@ -69,15 +69,13 @@ pub struct InsertPost {
 }
 
 
-use diesel::types::{Integer};
+use diesel::sql_types::{Integer};
 
 // #[derive(Queryable, Debug, PartialEq, QueryableByName, Serialize, Deserialize)]
 
 
-#[derive(Queryable, Debug, PartialEq, QueryableByName)]
-#[table_name = "posts"]
+#[derive(Queryable, Debug, PartialEq)]
 pub struct LastInsertPost {
-    #[sql_type = "Integer"]
     pub id: i32,
 }
 

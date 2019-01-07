@@ -8,9 +8,6 @@ authors = ["maomao <5622876@qq.com>"]
 name = "websocket-tcp-server"
 path = "src/main.rs"
 
-[[bin]]
-name = "websocket-tcp-client"
-path = "src/client.rs"
 
 [dependencies]
 rand = "0.5.5"

@@ -41,6 +41,9 @@ tcp:
 ws:
 	cd ../test/client_test/wsc && rebar3 shell
 
+rel:
+	cargo build --release
+
 # gen:
 # 	cd protos && /home/maomao/.cargo/bin/pb-rs ./msg.proto
 

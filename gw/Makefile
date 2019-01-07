@@ -44,6 +44,9 @@ ws:
 rel:
 	cargo build --release
 
+run1:
+	./target/release/websocket-tcp-server
+
 # gen:
 # 	cd protos && /home/maomao/.cargo/bin/pb-rs ./msg.proto
 

@@ -7,13 +7,9 @@
 // ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='test';
 
 use schema::*;
-// use diesel::*;
-// pub use table_post_select::Post;
 use diesel::expression::sql_literal::sql;
-// use diesel::types::{Integer};
 
 use diesel::prelude::*;
-// use schema::posts::dsl::*;
 use diesel::*;
 use diesel::mysql::Mysql;
 use diesel::types::{Integer, Text, Bool};
@@ -112,7 +108,7 @@ pub fn update (connection: &MysqlConnection) {
 // https://github.com/driftluo/MyBlog/blob/master/src/models/articles.rs
 pub fn select(connection: &MysqlConnection) {
     use schema::posts::dsl::*;
-    
+
     println!("");
     let query = posts.select(title);
     let titles: Vec<String> = query.load(connection).unwrap();

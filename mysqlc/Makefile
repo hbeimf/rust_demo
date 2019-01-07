@@ -29,9 +29,9 @@
 # 	rm -rf ./bin/api.master.test.tar.gz
 # 	rm -rf ./bin/api.master.release.tar.gz
 
-run:
-	cargo run 
 
+run:
+	cargo run --bin mysqlc
 
 # gen:
 # 	cd protos && /home/maomao/.cargo/bin/pb-rs ./msg.proto

@@ -13,22 +13,22 @@ use diesel::*;
 // use diesel::prelude::*;
 // use schema::posts;
 
-// pub use table_post_select::Post
-// use diesel::mysql::Mysql;
-use diesel::types::{Integer, Text, Bool};
+pub use table_post_select::Post;
+// // use diesel::mysql::Mysql;
+// use diesel::types::{Integer, Text, Bool};
 
-#[derive(Queryable, Debug, PartialEq, QueryableByName)]
-#[table_name = "posts"]
-pub struct Post {
-    #[sql_type = "Integer"]
-    pub id: i32,
-    #[sql_type = "Text"]
-    pub title: String,
-    #[sql_type = "Text"]
-    pub body: String,
-    #[sql_type = "Bool"]
-    pub published: bool,
-}
+// #[derive(Queryable, Debug, PartialEq, QueryableByName)]
+// #[table_name = "posts"]
+// pub struct Post {
+//     #[sql_type = "Integer"]
+//     pub id: i32,
+//     #[sql_type = "Text"]
+//     pub title: String,
+//     #[sql_type = "Text"]
+//     pub body: String,
+//     #[sql_type = "Bool"]
+//     pub published: bool,
+// }
 
 
 

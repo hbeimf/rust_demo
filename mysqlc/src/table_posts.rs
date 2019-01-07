@@ -76,20 +76,13 @@ impl Insert {
     }
 }
 
-// pub fn insert() {
-
-// }
-
-
 #[derive(Debug)]
 pub struct Delete {
 }
 
-
 impl Delete {
     pub fn new() -> Self {
-        Delete {
-        }
+        Delete {}
     }
 
     pub fn delete(&self, connection: &MysqlConnection) -> Result<usize, Error> {
@@ -110,18 +103,29 @@ impl Delete {
 
 }
 
-pub fn update (connection: &MysqlConnection) {
-    println!("");
-    let query_debug = diesel::sql_query("UPDATE posts SET title = ? WHERE id = 12")
-    .bind::<Text, _>("UPDATE TITLE TEST !!");
+#[derive(Debug)]
+pub struct Update {
+}
 
-    let debug = debug_query::<Mysql, _>(&query_debug);
-    debug!("update query sql:===================== {:?}", debug.to_string());
+impl Update{
 
-    let result = diesel::sql_query("UPDATE posts SET title = ? WHERE id = 12")
-    .bind::<Text, _>("UPDATE TITLE TEST !!").execute(connection);
+    pub fn new() -> Self {
+        Update {}
+    }
 
-    println!("update: {:?}", result);   
+    pub fn update (&self, connection: &MysqlConnection) {
+        println!("");
+        let query_debug = diesel::sql_query("UPDATE posts SET title = ? WHERE id = 12")
+        .bind::<Text, _>("UPDATE TITLE TEST !!");
+
+        let debug = debug_query::<Mysql, _>(&query_debug);
+        debug!("update query sql:===================== {:?}", debug.to_string());
+
+        let result = diesel::sql_query("UPDATE posts SET title = ? WHERE id = 12")
+        .bind::<Text, _>("UPDATE TITLE TEST !!").execute(connection);
+
+        println!("update: {:?}", result);   
+    }
 }
 
 // select 

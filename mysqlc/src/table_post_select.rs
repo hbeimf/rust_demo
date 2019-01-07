@@ -74,13 +74,13 @@ pub struct Post {
 
 pub fn delete(connection: &MysqlConnection) {
     println!("");
-    let query = diesel::sql_query("DELETE FROM posts WHERE id = 20");
+    let query = diesel::sql_query("DELETE FROM posts WHERE id > 20");
 
     let debug = debug_query::<Mysql, _>(&query);
     debug!("delete query sql:===================== {:?}", debug.to_string());
 
 
-    let query1 = diesel::sql_query("DELETE FROM posts WHERE id = 20");
+    let query1 = diesel::sql_query("DELETE FROM posts WHERE id > 20");
     let result = query1.execute(connection);
 
     println!("delete: {:?}", result);

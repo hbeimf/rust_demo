@@ -25,10 +25,11 @@ pub fn test() {
 	
 	match mysql.pool.get() {
 	            Ok(conn) => {
-	            		// insert 
-	            		table_post_insert::create_post(&conn, "titletest", "body test");
 	            		table_post_select::delete(&conn);
 	            		table_post_select::update(&conn);
+
+	            		table_post_insert::create_post(&conn, "titletest", "body test");
+	            		
 	            		table_post_select::select(&conn);
 
 	            },

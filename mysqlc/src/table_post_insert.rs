@@ -10,7 +10,24 @@
 use diesel::prelude::*;
 use schema::posts;
 
-pub use table_post_select::Post;
+// pub use table_post_select::Post
+// use diesel::mysql::Mysql;
+use diesel::types::{Integer, Text, Bool};
+
+#[derive(Queryable, Debug, PartialEq, QueryableByName)]
+#[table_name = "posts"]
+pub struct Post {
+    #[sql_type = "Integer"]
+    pub id: i32,
+    #[sql_type = "Text"]
+    pub title: String,
+    #[sql_type = "Text"]
+    pub body: String,
+    #[sql_type = "Bool"]
+    pub published: bool,
+}
+
+
 
 
 #[derive(Insertable)]
@@ -37,5 +54,41 @@ pub fn create_post(conn: &MysqlConnection, title: &str, body: &str) -> Post {
         .expect("Error saving new post");
 
     posts.order(id.desc()).first(conn).unwrap()
+}
+
+
+
+#[derive(Insertable, Debug, Clone)]
+#[table_name = "posts"]
+pub struct InsertPost {
+    title: String,
+    body: String,
+}
+
+impl InsertPost {
+    pub fn new(title: String, body: String) -> Self {
+        InsertPost {
+            title,
+            body,
+        }
+    }
+
+    pub fn insert(&self, conn: &MysqlConnection) -> Post {
+        use schema::posts::dsl::{id, posts};
+
+        diesel::insert_into(posts)
+            .values(self)
+            .execute(conn)
+            .unwrap();
+        posts.order(id.desc()).first(conn).unwrap()
+    }
+
+    // fn insert(&self, conn: &MysqlConnection) -> Post {
+    //     diesel::insert_into(posts::table)
+    //         .values(self)
+    //         .get_result::<Post>(conn)
+    //         .unwrap()
+    // }
+       
 }
 

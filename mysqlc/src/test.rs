@@ -29,6 +29,9 @@ pub fn test() {
 	            		table_post_select::update(&conn);
 
 	            		table_post_insert::create_post(&conn, "titletest", "body test");
+	            		let insert_instance = table_post_insert::InsertPost::new("titletest 111".to_string(), "body test 111".to_string());
+	            		insert_instance.insert(&conn);
+
 	            		
 	            		table_post_select::select(&conn);
 

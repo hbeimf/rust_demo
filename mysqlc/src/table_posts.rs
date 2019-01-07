@@ -110,6 +110,7 @@ pub fn update (connection: &MysqlConnection) {
 // select 
 // https://github.com/diesel-rs/diesel/blob/2ce0e4ea0fda474459139042247512f0c8b254cf/diesel_tests/tests/raw_sql.rs
 // https://github.com/driftluo/MyBlog/blob/master/src/models/articles.rs
+// https://github.com/yinyanlv/partner/blob/master/src/models/work_record.rs
 pub fn select(connection: &MysqlConnection) {
     use schema::posts::dsl::*;
 

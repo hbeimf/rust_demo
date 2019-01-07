@@ -6,8 +6,14 @@
 //   PRIMARY KEY (`id`)
 // ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='test';
 
+use schema::*;
+// use diesel::*;
+// pub use table_post_select::Post;
+use diesel::expression::sql_literal::sql;
+// use diesel::types::{Integer};
+
 use diesel::prelude::*;
-use schema::posts::dsl::*;
+// use schema::posts::dsl::*;
 use diesel::*;
 use diesel::mysql::Mysql;
 use diesel::types::{Integer, Text, Bool};
@@ -25,6 +31,48 @@ pub struct Post {
     pub published: bool,
 }
 
+
+
+#[derive(Insertable, Debug, Clone)]
+#[table_name = "posts"]
+pub struct InsertPost {
+    title: String,
+    body: String,
+}
+
+
+
+
+#[derive(Queryable, Debug, PartialEq, QueryableByName)]
+#[table_name = "posts"]
+pub struct LastInsertPost {
+    #[sql_type = "Integer"]
+    pub id: i32,
+}
+
+impl InsertPost {
+    pub fn new(title_str: String, body_str: String) -> Self {
+        InsertPost {
+            title: title_str,
+            body: body_str,
+        }
+    }
+
+    pub fn insert(&self, conn: &MysqlConnection) -> Post {
+        use schema::posts::dsl::{id, posts};
+
+        diesel::insert_into(posts)
+            .values(self)
+            .execute(conn)
+            .unwrap();
+
+        let last_insert_id: LastInsertPost = sql("SELECT LAST_INSERT_ID()").get_result(conn).unwrap();
+        println!("id: {:?}", last_insert_id);
+
+        posts.order(id.desc()).first(conn).unwrap()
+    }
+       
+}
 
 // pub fn insert() {
 
@@ -63,7 +111,8 @@ pub fn update (connection: &MysqlConnection) {
 // https://github.com/diesel-rs/diesel/blob/2ce0e4ea0fda474459139042247512f0c8b254cf/diesel_tests/tests/raw_sql.rs
 // https://github.com/driftluo/MyBlog/blob/master/src/models/articles.rs
 pub fn select(connection: &MysqlConnection) {
-
+    use schema::posts::dsl::*;
+    
     println!("");
     let query = posts.select(title);
     let titles: Vec<String> = query.load(connection).unwrap();

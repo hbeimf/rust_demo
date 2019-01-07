@@ -15,8 +15,8 @@ extern crate singleton;
 pub mod test;
 pub mod pool;
 pub mod schema;
-pub mod table_post_select;
-pub mod table_post_insert;
+pub mod table_posts;
+
 
 
 extern crate easy_logging;

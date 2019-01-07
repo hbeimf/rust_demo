@@ -2,8 +2,8 @@
 
 // use mysqlc;
 use pool;
-use table_post_select;
-use table_post_insert;
+use table_posts;
+// use table_post_insert;
 
 // pub fn test_bak() {
 // 	let pool = pool::init_pool();
@@ -25,15 +25,15 @@ pub fn test() {
 	
 	match mysql.pool.get() {
 	            Ok(conn) => {
-	            		table_post_select::delete(&conn);
-	            		table_post_select::update(&conn);
+	            		table_posts::delete(&conn);
+	            		table_posts::update(&conn);
 
 	            		// table_post_insert::create_post(&conn, "titletest", "body test");
-	            		let insert_instance = table_post_insert::InsertPost::new("titletest 111".to_string(), "body test 111".to_string());
+	            		let insert_instance = table_posts::InsertPost::new("titletest 111".to_string(), "body test 111".to_string());
 	            		insert_instance.insert(&conn);
 
 	            		
-	            		table_post_select::select(&conn);
+	            		table_posts::select(&conn);
 
 	            },
 	            // Err(_) => Outcome::Failure((Status::ServiceUnavailable, ()))

@@ -22,7 +22,7 @@
 // use tokio_tcp;
 
 use actix::*;
-use actix::prelude::*;
+// use actix::prelude::*;
 use futures::Future;
 use std::str::FromStr;
 use std::time::Duration;

@@ -131,104 +131,131 @@ impl Update{
     }
 }
 
-// select 
-// https://github.com/diesel-rs/diesel/blob/2ce0e4ea0fda474459139042247512f0c8b254cf/diesel_tests/tests/raw_sql.rs
-// https://github.com/driftluo/MyBlog/blob/master/src/models/articles.rs
-// https://github.com/yinyanlv/partner/blob/master/src/models/work_record.rs
-pub fn select(connection: &MysqlConnection) {
-    use schema::posts::dsl::*;
 
-    println!("");
-    let query = posts.select(title);
-    let titles: Vec<String> = query.load(connection).unwrap();
-    
-    let debug = debug_query::<Mysql, _>(&query);
-    debug!("query sql:===================== {:?}", debug.to_string());
-    println!("{:?}", titles);
-
-    println!("");
-    debug!("===================== select id, title, body, published from posts =====================");
-    let rows: Vec<(i32, String, String, bool)> = posts.load(connection).unwrap();
-    println!("{:?}", rows);
-
-    println!("");
-    debug!("===================== select id, title, body, published from posts =====================");
-    let rows = posts.load::<Post>(connection).unwrap();
-    println!("{:?}", rows);
+#[derive(Debug)]
+pub struct Select {
+}
 
 
-    // println!("");
-    // debug!("===================== select id, title, body, published from posts where id = 11 =====================");
-    // let row : Vec<(i32, String, String, bool)> = posts
-    //         .filter(id.eq(11))
-    //         .order(id.asc())
-    //         .load(connection)
-    //         .unwrap();
-    // println!("{:?}", row);
+impl Select {
+    // add code here
+    pub fn new() -> Self {
+        Select {
+        }
+    }
 
 
-    println!("");
-    let query = posts
-            .filter(id.eq(11))
-            .order(id.asc());
+    pub fn get_all(&self, connection: &MysqlConnection) {
+        use schema::posts::dsl::*;
 
-    let debug = debug_query::<Mysql, _>(&query);
-    debug!("query sql:===================== {:?}", debug.to_string());
-
-    let rows : Vec<(i32, String, String, bool)> = query.load(connection).unwrap();
-    println!("{:?}", rows);
-
-
-    // println!("");
-    // debug!("===================== select id, title, body, published from posts where id = 11 and title = 'titletest' =====================");    
-    // let row = posts
-    //         .filter(id.eq(11))
-    //         .filter(title.eq("titletest"))
-    //         .order(id.asc())
-    //         .load::<Post>(connection)
-    //         .unwrap();
-    // println!("{:?}", row);
+        println!("");
+        let query = posts.select(title);
+        let titles: Vec<String> = query.load(connection).unwrap();
+        
+        let debug = debug_query::<Mysql, _>(&query);
+        debug!("query sql:===================== {:?}", debug.to_string());
+        println!("{:?}", titles);
 
 
+        println!("");
+        debug!("===================== select id, title, body, published from posts =====================");
+        let rows: Vec<(i32, String, String, bool)> = posts.load(connection).unwrap();
+        println!("{:?}", rows);
 
-    println!("");
-    let query = posts
-            .filter(id.eq(11))
-            .filter(title.eq("titletest"))
-            .order(id.desc());
-
-    let debug = debug_query::<Mysql, _>(&query);
-    debug!("query sql:===================== {:?}", debug.to_string());
-
-    let rows = query.load::<Post>(connection).unwrap();
-    println!("{:?}", rows);
+        println!("");
+        debug!("===================== select id, title, body, published from posts =====================");
+        let rows = posts.load::<Post>(connection).unwrap();
+        println!("{:?}", rows);
 
 
+    }
+
+    pub fn get_by_id(&self, connection: &MysqlConnection) {
+        use schema::posts::dsl::*;
+
+        // println!("");
+        // debug!("===================== select id, title, body, published from posts where id = 11 =====================");
+        // let row : Vec<(i32, String, String, bool)> = posts
+        //         .filter(id.eq(11))
+        //         .order(id.asc())
+        //         .load(connection)
+        //         .unwrap();
+        // println!("{:?}", row);
 
 
-    // https://docs.rs/diesel/1.3.3/diesel/query_builder/struct.SqlQuery.html
-    println!("");
-    let query = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? AND title = ?");
+        println!("");
+        let query = posts
+                .filter(id.eq(11))
+                .order(id.asc());
 
-    let rows = query.bind::<Integer, _>(11)
-    .bind::<Text, _>("titletest")
-    .execute(connection);
+        let debug = debug_query::<Mysql, _>(&query);
+        debug!("query sql:===================== {:?}", debug.to_string());
 
-    println!("{:?}", rows);
+        let rows : Vec<(i32, String, String, bool)> = query.load(connection).unwrap();
+        println!("{:?}", rows);
+
+
+        // println!("");
+        // debug!("===================== select id, title, body, published from posts where id = 11 and title = 'titletest' =====================");    
+        // let row = posts
+        //         .filter(id.eq(11))
+        //         .filter(title.eq("titletest"))
+        //         .order(id.asc())
+        //         .load::<Post>(connection)
+        //         .unwrap();
+        // println!("{:?}", row);
 
 
 
-    println!("");
-    let query = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? AND title = ?")
-     .bind::<Integer, _>(11)
-    .bind::<Text, _>("titletest");
+        println!("");
+        let query = posts
+                .filter(id.eq(11))
+                .filter(title.eq("titletest"))
+                .order(id.desc());
 
-    // let debug = debug_query::<Mysql, _>(&query);
-    // debug!("query sql:===================== {:?}", debug.to_string());
-    
-    let rows: Vec<Post> = query.load(connection).unwrap();
-    println!("sql_query: {:?}", rows);
-    
-    
+        let debug = debug_query::<Mysql, _>(&query);
+        debug!("query sql:===================== {:?}", debug.to_string());
+
+        let rows = query.load::<Post>(connection).unwrap();
+        println!("{:?}", rows);
+
+
+    }
+
+    pub fn get_by_sql(&self, connection: &MysqlConnection) {
+        // https://docs.rs/diesel/1.3.3/diesel/query_builder/struct.SqlQuery.html
+        println!("");
+        let query = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? AND title = ?");
+
+        let rows = query.bind::<Integer, _>(11)
+        .bind::<Text, _>("titletest")
+        .execute(connection);
+
+        println!("{:?}", rows);
+
+
+
+        println!("");
+        let query = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? AND title = ?")
+         .bind::<Integer, _>(11)
+        .bind::<Text, _>("titletest");
+
+        // let debug = debug_query::<Mysql, _>(&query);
+        // debug!("query sql:===================== {:?}", debug.to_string());
+        
+        let rows: Vec<Post> = query.load(connection).unwrap();
+        println!("sql_query: {:?}", rows);
+
+    }
+
+    pub fn select(&self, connection: &MysqlConnection) {
+        // use schema::posts::dsl::*;
+        self.get_all(connection);
+
+        self.get_by_id(connection);
+        
+        
+        self.get_by_sql(connection);
+    }
 
 }

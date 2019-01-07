@@ -35,8 +35,8 @@ pub fn test() {
 	            		let _res = insert_instance.insert(&conn);
 
 
-	            		
-	            		table_posts::select(&conn);
+	            		let select_instance = table_posts::Select::new();
+	            		let _res = select_instance.select(&conn);
 
 	            },
 	            // Err(_) => Outcome::Failure((Status::ServiceUnavailable, ()))

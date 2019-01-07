@@ -74,20 +74,31 @@ pub struct Post {
 
 pub fn delete(connection: &MysqlConnection) {
     println!("");
-    let query = diesel::sql_query("DELETE FROM posts WHERE id = 20")
-    .execute(connection);
+    let query = diesel::sql_query("DELETE FROM posts WHERE id = 20");
 
-    println!("delete: {:?}", query);
+    let debug = debug_query::<Mysql, _>(&query);
+    debug!("delete query sql:===================== {:?}", debug.to_string());
+
+
+    let query1 = diesel::sql_query("DELETE FROM posts WHERE id = 20");
+    let result = query1.execute(connection);
+
+    println!("delete: {:?}", result);
 
 }
 
 pub fn update (connection: &MysqlConnection) {
     println!("");
-    let query = diesel::sql_query("update posts set title = ? WHERE id = 12")
-    .bind::<Text, _>("UPDATE TITLE TEST !!")
-    .execute(connection);
+    let query_debug = diesel::sql_query("UPDATE posts SET title = ? WHERE id = 12")
+    .bind::<Text, _>("UPDATE TITLE TEST !!");
 
-    println!("update: {:?}", query);   
+    let debug = debug_query::<Mysql, _>(&query_debug);
+    debug!("update query sql:===================== {:?}", debug.to_string());
+
+    let result = diesel::sql_query("UPDATE posts SET title = ? WHERE id = 12")
+    .bind::<Text, _>("UPDATE TITLE TEST !!").execute(connection);
+
+    println!("update: {:?}", result);   
 }
 
 // select 

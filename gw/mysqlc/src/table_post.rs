@@ -6,65 +6,178 @@
 //   PRIMARY KEY (`id`)
 // ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='test';
 
-// extern crate diesel;
+use schema::*;
+use diesel::*;
+use diesel::expression::sql_literal::sql;
+use diesel::result::Error;
+use diesel::mysql::Mysql;
+use diesel::types::{Integer, Text, Bool};
 
-use diesel::prelude::*;
-use schema::posts;
-
-#[derive(Queryable)]
+#[derive(Queryable, Debug, PartialEq, QueryableByName)]
+#[table_name = "posts"]
 pub struct Post {
+    #[sql_type = "Integer"]
     pub id: i32,
+    #[sql_type = "Text"]
     pub title: String,
+    #[sql_type = "Text"]
     pub body: String,
+    #[sql_type = "Bool"]
     pub published: bool,
 }
 
-#[derive(Insertable)]
+#[derive(Insertable, Debug, Clone)]
 #[table_name = "posts"]
-pub struct NewPost<'a> {
-    pub title: &'a str,
-    pub body: &'a str,
+pub struct Insert {
+    title: String,
+    body: String,
 }
 
-
-
-// insert 
-pub fn create_post(conn: &MysqlConnection, title: &str, body: &str) -> Post {
-    use schema::posts::dsl::{id, posts};
-
-    let new_post = NewPost {
-        title: title,
-        body: body,
-    };
-
-    diesel::insert_into(posts)
-        .values(&new_post)
-        .execute(conn)
-        .expect("Error saving new post");
-
-    posts.order(id.desc()).first(conn).unwrap()
+#[derive(Queryable, Debug, PartialEq, QueryableByName)]
+#[table_name = "posts"]
+pub struct LastInsert {
+    #[sql_type = "Integer"]
+    pub id: i32,
 }
 
+impl Insert {
+    pub fn new(title_str: String, body_str: String) -> Self {
+        Insert {
+            title: title_str,
+            body: body_str,
+        }
+    }
 
-// select 
-pub fn select(connection: &MysqlConnection) {
-    // use self::schema::posts::dsl::*;
-    use schema::posts::dsl::{posts, published};
+    pub fn insert(&self, conn: &MysqlConnection) -> Result<Vec<Post>, Error> {
+        use schema::posts::dsl::*;
 
-    let results = posts
-        .filter(published.eq(false))
-        // .limit(5)
-        .load::<Post>(connection)
-        .expect("Error loading posts");
+        let res = diesel::insert_into(posts)
+            .values(self)
+            .execute(conn);
 
-    println!("Displaying {} posts", results.len());
-    for post in results {
-        println!("{}", post.id);
-
-        println!("{}", post.title);
-        println!("{}", post.body);
-        println!("-----------\n");
-        break;
+        match res {
+            Ok(_v) => {
+                let last_insert_res: Result<LastInsert, Error> = sql("SELECT LAST_INSERT_ID()").get_result(conn);
+                match last_insert_res {
+                    Ok(last_insert) => {
+                        diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? LIMIT 1")
+                             .bind::<Integer, _>(last_insert.id)
+                             .load(conn)
+                    }
+                    Err(e) => {
+                        Err(e)
+                    }
+                }
+            },
+            Err(e) => {
+                Err(e)
+            }
+        }   
     }
 }
 
+#[derive(Debug)]
+pub struct Delete {
+}
+
+impl Delete {
+    pub fn new() -> Self {
+        Delete {}
+    }
+
+    pub fn delete(&self, connection: &MysqlConnection) -> Result<usize, Error> {
+        self.debug_sql();
+
+        let result = diesel::sql_query("DELETE FROM posts WHERE id > 20").execute(connection);
+        result
+
+    }
+
+    pub fn debug_sql(&self) {
+        let query = diesel::sql_query("DELETE FROM posts WHERE id > 20");
+        let debug = debug_query::<Mysql, _>(&query);
+
+        println!("");
+        println!("delete query sql:===================== {:?}", debug.to_string());
+    }
+
+}
+
+#[derive(Debug)]
+pub struct Update {
+}
+
+impl Update{
+
+    pub fn new() -> Self {
+        Update {}
+    }
+
+    pub fn update (&self, connection: &MysqlConnection) -> Result<usize, Error> {
+        self.debug_sql();
+        
+        diesel::sql_query("UPDATE posts SET title = ? WHERE id = 12")
+            .bind::<Text, _>("UPDATE TITLE TEST !!")
+            .execute(connection) 
+    }
+
+    pub fn debug_sql(&self) {
+        println!("");
+        let query_debug = diesel::sql_query("UPDATE posts SET title = ? WHERE id = 12")
+        .bind::<Text, _>("UPDATE TITLE TEST !!");
+
+        let debug = debug_query::<Mysql, _>(&query_debug);
+        println!("update query sql:===================== {:?}", debug.to_string());
+    }
+}
+
+
+#[derive(Debug)]
+pub struct Select {
+}
+
+
+impl Select {
+    // add code here
+    pub fn new() -> Self {
+        Select {
+        }
+    }
+
+
+    pub fn get_all(&self, connection: &MysqlConnection) -> Result<Vec<Post>, Error> {
+        use schema::posts::dsl::*;
+        posts.load::<Post>(connection)
+    }
+
+    pub fn get_tuple(&self, connection: &MysqlConnection) -> Result<Vec<(i32, String, String, bool)>, Error> {
+        use schema::posts::dsl::*;
+        posts
+            .filter(id.eq(11))
+            .order(id.asc())
+            .load::<(i32, String, String, bool)>(connection)
+    }
+
+    pub fn get_by_sql(&self, connection: &MysqlConnection) -> Result<Vec<Post>, Error> {
+        diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? AND title = ?")
+            .bind::<Integer, _>(11)
+            .bind::<Text, _>("titletest")
+            .load::<Post>(connection)
+        
+        
+    }
+
+    pub fn select(&self, connection: &MysqlConnection) {
+        let res = self.get_all(connection);
+        println!("get_all:\n {:?}", res);
+
+        let tuples = self.get_tuple(connection);
+        println!("get tuples:\n {:?}", tuples);
+        
+        
+        let res1 = self.get_by_sql(connection);
+        println!("get_by_sql:\n {:?}", res1);
+        
+    }
+
+}

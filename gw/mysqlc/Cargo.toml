@@ -13,3 +13,6 @@ dotenv="0.10"
 singleton = "0.2.2"
 
 sys_config={path = "../sys_config"}
+
+log = "0.4.6"
+easy-logging = "*"

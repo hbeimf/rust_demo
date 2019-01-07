@@ -18,3 +18,5 @@ pub mod pool;
 pub mod schema;
 pub mod table_post;
 
+extern crate easy_logging;
+// #[macro_use] extern crate log;

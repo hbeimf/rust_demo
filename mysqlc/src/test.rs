@@ -25,12 +25,12 @@ pub fn test() {
 	
 	match mysql.pool.get() {
 	            Ok(conn) => {
-	            		table_posts::delete(&conn);
+	            		let delete_instance = table_posts::Delete::new();
+	            		let _d_res = delete_instance.delete(&conn);
+
 	            		table_posts::update(&conn);
 
-	            		// table_post_insert::create_post(&conn, "titletest", "body test");
 	            		let insert_instance = table_posts::Insert::new("titletest 111".to_string(), "body test 111".to_string());
-	            		
 	            		let _res = insert_instance.insert(&conn);
 
 

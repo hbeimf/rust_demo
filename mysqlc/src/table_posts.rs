@@ -8,7 +8,6 @@
 
 use schema::*;
 use diesel::*;
-// use diesel::prelude::*;
 use diesel::expression::sql_literal::sql;
 use diesel::result::Error;
 use diesel::mysql::Mysql;
@@ -61,9 +60,9 @@ impl Insert {
                 let last_insert_res: Result<LastInsert, Error> = sql("SELECT LAST_INSERT_ID()").get_result(conn);
                 match last_insert_res {
                     Ok(last_insert) => {
-                        let query = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? LIMIT 1")
-                         .bind::<Integer, _>(last_insert.id);
-                        query.load(conn)
+                        diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? LIMIT 1")
+                             .bind::<Integer, _>(last_insert.id)
+                             .load(conn)
                     }
                     Err(e) => {
                         Err(e)
@@ -81,18 +80,33 @@ impl Insert {
 
 // }
 
-pub fn delete(connection: &MysqlConnection) {
-    println!("");
-    let query = diesel::sql_query("DELETE FROM posts WHERE id > 20");
 
-    let debug = debug_query::<Mysql, _>(&query);
-    debug!("delete query sql:===================== {:?}", debug.to_string());
+#[derive(Debug)]
+pub struct Delete {
+}
 
 
-    let query1 = diesel::sql_query("DELETE FROM posts WHERE id > 20");
-    let result = query1.execute(connection);
+impl Delete {
+    pub fn new() -> Self {
+        Delete {
+        }
+    }
 
-    println!("delete: {:?}", result);
+    pub fn delete(&self, connection: &MysqlConnection) -> Result<usize, Error> {
+        self.debug_sql();
+
+        let result = diesel::sql_query("DELETE FROM posts WHERE id > 20").execute(connection);
+        result
+
+    }
+
+    pub fn debug_sql(&self) {
+        let query = diesel::sql_query("DELETE FROM posts WHERE id > 20");
+        let debug = debug_query::<Mysql, _>(&query);
+
+        println!("");
+        debug!("delete query sql:===================== {:?}", debug.to_string());
+    }
 
 }
 

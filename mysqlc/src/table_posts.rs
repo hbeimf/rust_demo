@@ -51,25 +51,31 @@ impl Insert {
         }
     }
 
-    pub fn insert(&self, conn: &MysqlConnection) -> Post {
+    pub fn insert(&self, conn: &MysqlConnection) -> Result<Post, diesel::result::Error> {
         use schema::posts::dsl::*;
 
-        diesel::insert_into(posts)
+        let res = diesel::insert_into(posts)
             .values(self)
-            .execute(conn)
-            .unwrap();
+            .execute(conn);
 
-        let last_insert: LastInsert = sql("SELECT LAST_INSERT_ID()").get_result(conn).unwrap();
-        println!("id: {:?}", last_insert.id);
+        match res {
+            Ok(_v) => {
+                let last_insert: LastInsert = sql("SELECT LAST_INSERT_ID()").get_result(conn).unwrap();
+                println!("id: {:?}", last_insert.id);
 
-        println!("");
-        let query = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? LIMIT 1")
-         .bind::<Integer, _>(last_insert.id);
-        let rows: Vec<Post> = query.load(conn).unwrap();
+                println!("");
+                let query = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? LIMIT 1")
+                 .bind::<Integer, _>(last_insert.id);
+                let rows: Vec<Post> = query.load(conn).unwrap();
 
-        debug!("{:?}", rows);
+                debug!("{:?}", rows);
 
-        posts.order(id.desc()).first(conn).unwrap() 
+                posts.order(id.desc()).first(conn) 
+            },
+            Err(e) => {
+                Err(e)
+            }
+        }   
     }
        
 }

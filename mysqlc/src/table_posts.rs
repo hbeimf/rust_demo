@@ -113,18 +113,21 @@ impl Update{
         Update {}
     }
 
-    pub fn update (&self, connection: &MysqlConnection) {
+    pub fn update (&self, connection: &MysqlConnection) -> Result<usize, Error> {
+        self.debug_sql();
+        
+        diesel::sql_query("UPDATE posts SET title = ? WHERE id = 12")
+            .bind::<Text, _>("UPDATE TITLE TEST !!")
+            .execute(connection) 
+    }
+
+    pub fn debug_sql(&self) {
         println!("");
         let query_debug = diesel::sql_query("UPDATE posts SET title = ? WHERE id = 12")
         .bind::<Text, _>("UPDATE TITLE TEST !!");
 
         let debug = debug_query::<Mysql, _>(&query_debug);
         debug!("update query sql:===================== {:?}", debug.to_string());
-
-        let result = diesel::sql_query("UPDATE posts SET title = ? WHERE id = 12")
-        .bind::<Text, _>("UPDATE TITLE TEST !!").execute(connection);
-
-        println!("update: {:?}", result);   
     }
 }
 

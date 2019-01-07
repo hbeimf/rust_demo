@@ -1,36 +1,8 @@
-// CREATE TABLE `posts` (
-//   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
-//   `title` varchar(300) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-//   `body` text COLLATE utf8_unicode_ci NOT NULL,
-//   `published` tinyint(1) NOT NULL DEFAULT '0',
-//   PRIMARY KEY (`id`)
-// ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='test';
-
-
 use schema::*;
 use diesel::*;
-
-// use diesel::prelude::*;
-// use schema::posts;
-
 pub use table_post_select::Post;
-// // use diesel::mysql::Mysql;
-// use diesel::types::{Integer, Text, Bool};
-
-// #[derive(Queryable, Debug, PartialEq, QueryableByName)]
-// #[table_name = "posts"]
-// pub struct Post {
-//     #[sql_type = "Integer"]
-//     pub id: i32,
-//     #[sql_type = "Text"]
-//     pub title: String,
-//     #[sql_type = "Text"]
-//     pub body: String,
-//     #[sql_type = "Bool"]
-//     pub published: bool,
-// }
-
 use diesel::expression::sql_literal::sql;
+use diesel::types::{Integer};
 
 
 #[derive(Insertable)]
@@ -69,9 +41,6 @@ pub struct InsertPost {
 }
 
 
-use diesel::types::{Integer};
-
-// #[derive(Queryable, Debug, PartialEq, QueryableByName, Serialize, Deserialize)]
 
 
 #[derive(Queryable, Debug, PartialEq, QueryableByName)]

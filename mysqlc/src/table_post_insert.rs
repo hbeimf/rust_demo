@@ -5,31 +5,31 @@ use diesel::expression::sql_literal::sql;
 use diesel::types::{Integer};
 
 
-#[derive(Insertable)]
-#[table_name = "posts"]
-pub struct NewPost<'a> {
-    pub title: &'a str,
-    pub body: &'a str,
-}
+// #[derive(Insertable)]
+// #[table_name = "posts"]
+// pub struct NewPost<'a> {
+//     pub title: &'a str,
+//     pub body: &'a str,
+// }
 
 
 
-// insert 
-pub fn create_post(conn: &MysqlConnection, title: &str, body: &str) -> Post {
-    use schema::posts::dsl::{id, posts};
+// // insert 
+// pub fn create_post(conn: &MysqlConnection, title: &str, body: &str) -> Post {
+//     use schema::posts::dsl::{id, posts};
 
-    let new_post = NewPost {
-        title: title,
-        body: body,
-    };
+//     let new_post = NewPost {
+//         title: title,
+//         body: body,
+//     };
 
-    diesel::insert_into(posts)
-        .values(&new_post)
-        .execute(conn)
-        .expect("Error saving new post");
+//     diesel::insert_into(posts)
+//         .values(&new_post)
+//         .execute(conn)
+//         .expect("Error saving new post");
 
-    posts.order(id.desc()).first(conn).unwrap()
-}
+//     posts.order(id.desc()).first(conn).unwrap()
+// }
 
 
 

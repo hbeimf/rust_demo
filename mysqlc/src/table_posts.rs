@@ -150,7 +150,7 @@ impl Select {
         posts.load::<Post>(connection)
     }
 
-    pub fn get_typle(&self, connection: &MysqlConnection) -> Result<Vec<(i32, String, String, bool)>, Error> {
+    pub fn get_tuple(&self, connection: &MysqlConnection) -> Result<Vec<(i32, String, String, bool)>, Error> {
         use schema::posts::dsl::*;
         posts
             .filter(id.eq(11))
@@ -171,7 +171,7 @@ impl Select {
         let res = self.get_all(connection);
         info!("get_all:\n {:?}", res);
 
-        let tuples = self.get_typle(connection);
+        let tuples = self.get_tuple(connection);
         debug!("get tuples:\n {:?}", tuples);
         
         

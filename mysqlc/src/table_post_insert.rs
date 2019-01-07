@@ -7,8 +7,11 @@
 // ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='test';
 
 
-use diesel::prelude::*;
-use schema::posts;
+use schema::*;
+use diesel::*;
+
+// use diesel::prelude::*;
+// use schema::posts;
 
 // pub use table_post_select::Post
 // use diesel::mysql::Mysql;

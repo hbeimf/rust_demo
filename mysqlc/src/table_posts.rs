@@ -7,10 +7,10 @@
 // ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='test';
 
 use schema::*;
-use diesel::expression::sql_literal::sql;
-
-use diesel::prelude::*;
 use diesel::*;
+// use diesel::prelude::*;
+use diesel::expression::sql_literal::sql;
+use diesel::result::Error;
 use diesel::mysql::Mysql;
 use diesel::types::{Integer, Text, Bool};
 
@@ -26,8 +26,6 @@ pub struct Post {
     #[sql_type = "Bool"]
     pub published: bool,
 }
-
-
 
 #[derive(Insertable, Debug, Clone)]
 #[table_name = "posts"]
@@ -51,7 +49,7 @@ impl Insert {
         }
     }
 
-    pub fn insert(&self, conn: &MysqlConnection) -> Result<Post, diesel::result::Error> {
+    pub fn insert(&self, conn: &MysqlConnection) -> Result<Vec<Post>, Error> {
         use schema::posts::dsl::*;
 
         let res = diesel::insert_into(posts)
@@ -60,24 +58,23 @@ impl Insert {
 
         match res {
             Ok(_v) => {
-                let last_insert: LastInsert = sql("SELECT LAST_INSERT_ID()").get_result(conn).unwrap();
-                println!("id: {:?}", last_insert.id);
-
-                println!("");
-                let query = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? LIMIT 1")
-                 .bind::<Integer, _>(last_insert.id);
-                let rows: Vec<Post> = query.load(conn).unwrap();
-
-                debug!("{:?}", rows);
-
-                posts.order(id.desc()).first(conn) 
+                let last_insert_res: Result<LastInsert, Error> = sql("SELECT LAST_INSERT_ID()").get_result(conn);
+                match last_insert_res {
+                    Ok(last_insert) => {
+                        let query = diesel::sql_query("SELECT id, title, body, published FROM posts WHERE id = ? LIMIT 1")
+                         .bind::<Integer, _>(last_insert.id);
+                        query.load(conn)
+                    }
+                    Err(e) => {
+                        Err(e)
+                    }
+                }
             },
             Err(e) => {
                 Err(e)
             }
         }   
     }
-       
 }
 
 // pub fn insert() {

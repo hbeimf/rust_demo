@@ -20,7 +20,7 @@ use schema::posts;
 // }
 
 
-pub use table_post::Post;
+pub use table_post_select::Post;
 
 
 #[derive(Insertable)]

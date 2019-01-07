@@ -2,7 +2,7 @@
 
 // use mysqlc;
 use pool;
-use table_post;
+use table_post_select;
 use table_post_insert;
 
 // pub fn test_bak() {
@@ -27,9 +27,9 @@ pub fn test() {
 	            Ok(conn) => {
 	            		// insert 
 	            		table_post_insert::create_post(&conn, "titletest", "body test");
-	            		table_post::delete(&conn);
-	            		table_post::update(&conn);
-	            		table_post::select(&conn);
+	            		table_post_select::delete(&conn);
+	            		table_post_select::update(&conn);
+	            		table_post_select::select(&conn);
 
 	            },
 	            // Err(_) => Outcome::Failure((Status::ServiceUnavailable, ()))

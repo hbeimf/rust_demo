@@ -30,7 +30,7 @@ pub use table_post_select::Post;
 //     pub published: bool,
 // }
 
-
+use diesel::expression::sql_literal::sql;
 
 
 #[derive(Insertable)]
@@ -68,6 +68,19 @@ pub struct InsertPost {
     body: String,
 }
 
+
+use diesel::types::{Integer};
+
+// #[derive(Queryable, Debug, PartialEq, QueryableByName, Serialize, Deserialize)]
+
+
+#[derive(Queryable, Debug, PartialEq, QueryableByName)]
+#[table_name = "posts"]
+pub struct LastInsertPost {
+    #[sql_type = "Integer"]
+    pub id: i32,
+}
+
 impl InsertPost {
     pub fn new(title: String, body: String) -> Self {
         InsertPost {
@@ -83,15 +96,12 @@ impl InsertPost {
             .values(self)
             .execute(conn)
             .unwrap();
+
+        let last_insert_id: LastInsertPost = sql("SELECT LAST_INSERT_ID()").get_result(conn).unwrap();
+        println!("id: {:?}", last_insert_id);
+
         posts.order(id.desc()).first(conn).unwrap()
     }
-
-    // fn insert(&self, conn: &MysqlConnection) -> Post {
-    //     diesel::insert_into(posts::table)
-    //         .values(self)
-    //         .get_result::<Post>(conn)
-    //         .unwrap()
-    // }
        
 }
 

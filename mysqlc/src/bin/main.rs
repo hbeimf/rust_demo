@@ -1,7 +1,7 @@
 extern crate mysqlc;
 use mysqlc::*;
 
-extern crate easy_logging;
+// extern crate easy_logging;
 
 fn main() {
 	 // 初始化日志功能

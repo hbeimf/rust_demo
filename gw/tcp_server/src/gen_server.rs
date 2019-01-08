@@ -43,8 +43,8 @@ impl StreamHandler<ChatRequest, io::Error> for ChatSession {
     fn handle(&mut self, msg: ChatRequest, ctx: &mut Context<Self>) {
         match msg {
             ChatRequest::Message(package) => {
-                println!("Peer message XXXX: {:?}", package);
-                println!("room: {:?}", self.room);
+                debug!("Peer message XXXX: {:?}", package);
+                debug!("room: {:?}", self.room);
                 parse_package_from_tcp::parse_package(package, self, ctx);   
             }
         }

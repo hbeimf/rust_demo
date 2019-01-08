@@ -9,8 +9,8 @@ use wss::gen_server::{WsChatSession, WsChatSessionState};
 // use wss::action;
 
 use actix_web::{ ws};
-use hub;
-use hub::gen_server::RoomActor;
+use table;
+use table::gen_server::RoomActor;
 
 // use actix::ActorContext;
 use actix::*;
@@ -58,7 +58,7 @@ pub fn action_10000(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSe
     // call 
     let addr_client = ctx.address();
     let act = System::current().registry().get::<RoomActor>();
-    let connect_msg = hub::gen_server::Connect {
+    let connect_msg = table::gen_server::Connect {
             uid: uid as u32,
             addr: addr_client.recipient(),
         };
@@ -198,7 +198,7 @@ pub fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession,
     // })
 
     let act = System::current().registry().get::<RoomActor>();
-    act.do_send(hub::gen_server::Message {
+    act.do_send(table::gen_server::Message {
         id: client.uid,
         msg: reply_package,
         room: client.room.clone(),

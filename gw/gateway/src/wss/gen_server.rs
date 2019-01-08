@@ -8,9 +8,9 @@ use actix::*;
 // use actix_web::room::HttpServer;
 use actix_web::{ ws, Error, HttpRequest, HttpResponse};
 
-use hub;
-use hub::gen_server::{RoomActor};
-use tcps::gen_server;
+use table;
+use table::gen_server::{RoomActor};
+// use tcps::gen_server;
 
 // use glib;
 // use wss::parse;
@@ -105,7 +105,7 @@ impl Actor for WsChatSession {
         // ctx.state().addr.do_send(hub::gen_server::Disconnect { id: self.id });
 
         let act = System::current().registry().get::<RoomActor>();
-        act.do_send(hub::gen_server::Disconnect { uid: self.uid });
+        act.do_send(table::gen_server::Disconnect { uid: self.uid });
 
         Running::Stop
     }
@@ -113,14 +113,14 @@ impl Actor for WsChatSession {
 
 /// Handle messages from chat server, we simply send it to peer websocket
 // 发送数据给客户端 ， 
-impl Handler<gen_server::Message> for WsChatSession {
+impl Handler<table::msg::TableMessage> for WsChatSession {
     type Result = ();
 
     // server 处理逻辑后将回复发送到此处
-    fn handle(&mut self, msg: gen_server::Message, ctx: &mut Self::Context) {
+    fn handle(&mut self, msg: table::msg::TableMessage, ctx: &mut Self::Context) {
         debug!("wss actor 收到 session::Message 消息: {:?}", msg);
         // 匹配提取二进制
-        let gen_server::Message(msg_bin) = msg;  
+        let table::msg::TableMessage(msg_bin) = msg;  
         // 回复二进制数据
         ctx.binary(msg_bin);
     }
@@ -255,7 +255,7 @@ impl WsChatSession {
                 //     .do_send(hub::gen_server::Disconnect { id: act.id });
 
                 let actor_room = System::current().registry().get::<RoomActor>();
-                actor_room.do_send(hub::gen_server::Disconnect { uid: act.uid });
+                actor_room.do_send(table::gen_server::Disconnect { uid: act.uid });
 
                 // stop actor
                 ctx.stop();

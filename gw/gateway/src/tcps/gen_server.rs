@@ -18,15 +18,15 @@ use tokio_tcp::{TcpListener, TcpStream};
 use actix::prelude::*;
 
 use tcps::codec::{ChatCodec, ChatRequest, ChatResponse};
-use hub;
-use hub::gen_server::{RoomActor};
+use table;
+use table::gen_server::{RoomActor};
 
 // ===================================
 use tcps::parse_package_from_tcp;
 
-/// Chat server sends this messages to session
-#[derive(Message, Debug)]
-pub struct Message(pub Vec<u8>);
+// /// Chat server sends this messages to session
+// #[derive(Message, Debug)]
+// pub struct Message(pub Vec<u8>);
 
 /// `ChatSession` actor is responsible for tcp peer communications.
 pub struct ChatSession {
@@ -93,7 +93,7 @@ impl Actor for ChatSession {
         // self.addr.do_send(hub::gen_server::Disconnect { id: self.id });
 
         let act = System::current().registry().get::<RoomActor>();
-        act.do_send(hub::gen_server::Disconnect { uid: self.uid });
+        act.do_send(table::gen_server::Disconnect { uid: self.uid });
 
         Running::Stop
     }
@@ -154,10 +154,10 @@ impl StreamHandler<ChatRequest, io::Error> for ChatSession {
 
 /// Handler for Message, chat server sends this message, we just send string to
 /// peer
-impl Handler<Message> for ChatSession {
+impl Handler<table::msg::TableMessage> for ChatSession {
     type Result = ();
 
-    fn handle(&mut self, msg: Message, ctx: &mut Context<Self>) {
+    fn handle(&mut self, msg: table::msg::TableMessage, ctx: &mut Context<Self>) {
         // send message to peer
         self.framed.write(ChatResponse::Message(msg.0));
     }

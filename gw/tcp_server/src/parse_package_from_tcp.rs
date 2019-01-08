@@ -1,30 +1,17 @@
 extern crate tokio;
-// extern crate futures;
 use futures::Future;
-
 use table;
 use table::table_room::{RoomActor};
 
 use glib;
 use crate::gen_server::{ChatSession};
-// use actix_web::{ ws};
-// use server;
 use actix::ActorContext;
 
 use glib::pb::msg_proto;
 
 use glib::codec::{ChatResponse};
 
-// use std::net;
-// use std::str::FromStr;
-
 use actix::prelude::*;
-// use futures::Stream;
-// use tokio_io::codec::FramedRead;
-// use tokio_codec::FramedRead;
-
-// use tokio_io::AsyncRead;
-// use tokio_tcp::{TcpListener, TcpStream};
 
 // 解包
 pub fn parse_package(package: Vec<u8>, client: &mut ChatSession, ctx: &mut actix::Context<ChatSession>)  {
@@ -85,7 +72,6 @@ fn action_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix
     let rpc_msg = msg_proto::decode_rpc(pb);
     println!("key: {:?}", rpc_msg.get_key());
     println!("payload:{:?}", rpc_msg.get_payload());
-    // println!("phone: {:?}", test_msg.get_phone());
 
     // reply 
     let encode:Vec<u8> = msg_proto::encode_msg();
@@ -94,7 +80,6 @@ fn action_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix
     let reply_package = glib::package(cmd, rpc_reply);
 
     // 直接发给客户端
-    // let reply_package1 = reply_package.clone();
     println!("reply_package: {:?}", reply_package);
     client.framed.write(ChatResponse::Message(reply_package));
 

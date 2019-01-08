@@ -23,8 +23,6 @@ actix-web = "0.7"
 
 tokio = "0.1.7"
 
-log = "0.4.6"
-easy-logging = "*"
 
 sys_config={path = "../sys_config"}
 glib={path = "../glib"}

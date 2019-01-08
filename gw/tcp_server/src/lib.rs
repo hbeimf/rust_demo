@@ -15,27 +15,12 @@ extern crate serde_derive;
 // #[macro_use]
 extern crate actix;
 extern crate actix_web;
-
-// extern crate protobuf;
-extern crate easy_logging;
-#[macro_use] extern crate log;
-// https://crates.io/crates/easy-logging
-
-
-
-
 extern crate sys_config;
 extern crate table;
 extern crate glib;
 
-
-
-
-
-// pub mod session;
 pub mod gen_server;
 pub mod parse_package_from_tcp;
-// pub mod codec;
 
 use actix::*;
 

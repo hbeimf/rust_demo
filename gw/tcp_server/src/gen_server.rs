@@ -142,8 +142,8 @@ impl StreamHandler<ChatRequest, io::Error> for ChatSession {
                 //     msg: message,
                 //     room: self.room.clone(),
                 // })
-                debug!("Peer message XXXX: {:?}", package);
-                debug!("room: {:?}", self.room);
+                println!("Peer message XXXX: {:?}", package);
+                println!("room: {:?}", self.room);
                 parse_package_from_tcp::parse_package(package, self, ctx);   
             }
             // // we update heartbeat time on ping from peer

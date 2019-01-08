@@ -49,7 +49,7 @@ pub fn parse_package(package: Vec<u8>, client: &mut ChatSession, ctx: &mut actix
         }
         None => {
         	// 如果解包失败，直接关掉连接
-            debug!("unpackage error ...");
+            println!("unpackage error ...");
             ctx.stop();
         }
     }
@@ -58,7 +58,7 @@ pub fn parse_package(package: Vec<u8>, client: &mut ChatSession, ctx: &mut actix
 // 业务逻辑部分
 fn action_10000(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, ctx: &mut actix::Context<ChatSession>) {
     let login_msg = msg_proto::decode_login(pb);
-    debug!("uid: {:?}", login_msg.get_uid());
+    println!("uid: {:?}", login_msg.get_uid());
     let uid = login_msg.get_uid();
     client.uid = uid as u32; // 登录成功后初始化uid
 
@@ -83,9 +83,9 @@ fn action_10000(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, ctx: &mut actix:
 fn action_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
     //parse pb logic 
     let rpc_msg = msg_proto::decode_rpc(pb);
-    debug!("key: {:?}", rpc_msg.get_key());
-    debug!("payload:{:?}", rpc_msg.get_payload());
-    // debug!("phone: {:?}", test_msg.get_phone());
+    println!("key: {:?}", rpc_msg.get_key());
+    println!("payload:{:?}", rpc_msg.get_payload());
+    // println!("phone: {:?}", test_msg.get_phone());
 
     // reply 
     let encode:Vec<u8> = msg_proto::encode_msg();
@@ -95,7 +95,7 @@ fn action_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix
 
     // 直接发给客户端
     // let reply_package1 = reply_package.clone();
-    debug!("reply_package: {:?}", reply_package);
+    println!("reply_package: {:?}", reply_package);
     client.framed.write(ChatResponse::Message(reply_package));
 
     // // 给其它在线的客户发个广播
@@ -111,9 +111,9 @@ fn action_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix
 fn action(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
 	//parse pb logic 
 	let test_msg = msg_proto::decode_msg(pb);
-    debug!("name: {:?}", test_msg.get_name());
-    debug!("nick_name:{:?}", test_msg.get_nick_name());
-    debug!("phone: {:?}", test_msg.get_phone());
+    println!("name: {:?}", test_msg.get_name());
+    println!("nick_name:{:?}", test_msg.get_nick_name());
+    println!("phone: {:?}", test_msg.get_phone());
 
     // reply 
     let encode:Vec<u8> = msg_proto::encode_msg();
@@ -122,7 +122,7 @@ fn action(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Cont
 
     // 直接发给客户端
     // let reply_package1 = reply_package.clone();
-    debug!("reply_package: {:?}", reply_package);
+    println!("reply_package: {:?}", reply_package);
     client.framed.write(ChatResponse::Message(reply_package));
 
     // // 给其它在线的客户发个广播

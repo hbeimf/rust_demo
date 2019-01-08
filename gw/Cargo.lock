@@ -653,6 +653,8 @@ version = "0.1.0"
 dependencies = [
  "byteorder 1.2.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "bytes 0.4.11 (registry+https://github.com/rust-lang/crates.io-index)",
+ "protobuf 2.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "protobuf-codegen-pure 2.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

@@ -38,5 +38,4 @@ mysqlc={path = "../mysqlc"}
 redisc={path = "../redisc"}
 sys_config={path = "../sys_config"}
 glib={path = "../glib"}
-
-
+table={path = "../table"}

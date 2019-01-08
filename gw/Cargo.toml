@@ -6,5 +6,7 @@ members = [
     "redisc",
     "sys_config",
     "glib",
+    "table",
+
 
 ]

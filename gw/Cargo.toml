@@ -7,6 +7,8 @@ members = [
     "sys_config",
     "glib",
     "table",
+    "tcp_server",
+
 
 
 ]

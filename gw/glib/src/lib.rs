@@ -15,7 +15,6 @@ extern crate serde_derive;
 #[macro_use]
 extern crate actix;
 extern crate actix_web;
-extern crate easy_logging;
 #[macro_use] extern crate log;
 
 use byteorder::{ReadBytesExt, WriteBytesExt, LittleEndian};

@@ -12,3 +12,5 @@ actix-web = "0.7"
 rusqlite = "0.15.0"
 time = "0.1.41"
 
+log = "0.4.6"
+

@@ -16,7 +16,6 @@ extern crate serde_derive;
 extern crate actix;
 extern crate actix_web;
 
-extern crate easy_logging;
 #[macro_use] extern crate log;
 // https://crates.io/crates/easy-logging
 

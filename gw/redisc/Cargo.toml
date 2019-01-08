@@ -8,4 +8,6 @@ r2d2_redis = "0.8.0"
 singleton = "0.2.2"
 tini = "0.2.0"
 
+log = "0.4.6"
+
 sys_config={path = "../sys_config"}

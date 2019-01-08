@@ -6,3 +6,5 @@ authors = ["maomao <5622876@qq.com>"]
 [dependencies]
 singleton = "0.2.2"
 tini = "0.2.0"
+
+log = "0.4.6"

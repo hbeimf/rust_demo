@@ -1,28 +1,28 @@
-#![allow(unused_variables)]
-extern crate byteorder;
-extern crate bytes;
-extern crate env_logger;
-extern crate futures;
-extern crate rand;
-extern crate serde;
-extern crate serde_json;
-extern crate tokio_codec;
-extern crate tokio_io;
-extern crate tokio_tcp;
-// #[macro_use]
-extern crate serde_derive;
+// #![allow(unused_variables)]
+// extern crate byteorder;
+// extern crate bytes;
+// extern crate env_logger;
+// extern crate futures;
+// extern crate rand;
+// extern crate serde;
+// extern crate serde_json;
+// extern crate tokio_codec;
+// extern crate tokio_io;
+// extern crate tokio_tcp;
+// // #[macro_use]
+// extern crate serde_derive;
 
 // #[macro_use]
 extern crate actix;
-extern crate actix_web;
+// extern crate actix_web;
 
 // extern crate protobuf;
 extern crate easy_logging;
 // #[macro_use] extern crate log;
 // https://crates.io/crates/easy-logging
 
-extern crate rusqlite;
-extern crate time;
+// extern crate rusqlite;
+// extern crate time;
 
 
 extern crate mysqlc;
@@ -34,13 +34,13 @@ extern crate redisc;
 // use actix_web::*;
 
 
-extern crate sys_config;
+// extern crate sys_config;
 
 // mod wsc;
 // mod tcpc;
 // mod hub;
-extern crate table;
-extern crate glib;
+// extern crate table;
+// extern crate glib;
 // mod pb;
 // mod protos;
 // mod wss;
@@ -58,43 +58,8 @@ fn main() {
     mysqlc::test::test();
     redisc::test();
 
-
-    // let websocket_config = sys_config::config_websocket();
-    // let _ = env_logger::init();
     let sys = actix::System::new("websocket-example");
-
-
     tcp_server::start_server();
-
-    // // Create Http server with websocket support
-    // HttpServer::new(move || {
-    //     // Websocket sessions state
-    //     // let state = WsChatSessionState {
-    //     //     addr: server.clone(),
-    //     // };
-    //     let state = ws_server::gen_server::WsChatSessionState {
-    //         // addr: server.clone(),
-    //     };
-
-    //     App::with_state(state)
-    //         // // redirect to websocket.html
-    //         // .resource("/", |r| r.method(http::Method::GET).f(|_| {
-    //         //     HttpResponse::Found()
-    //         //         .header("LOCATION", "/static/websocket.html")
-    //         //         .finish()
-    //         // }))
-    //         // websocket
-    //         // .resource("/ws/", |r| r.route().f(chat_route))
-    //         .resource("/ws/", |r| r.route().f(ws_server::gen_server::chat_route))
-    //         // // static resources
-    //         // .handler("/static/", fs::StaticFiles::new("static/").unwrap())
-    // }).bind(websocket_config.clone())
-    //     .unwrap()
-    //     .start();
-
     ws_server::start_server();
-    
-    // debug!(websocket_config.as_ref());
-    // debug!("Started http server: {}", websocket_config.clone());
     let _ = sys.run();
 }

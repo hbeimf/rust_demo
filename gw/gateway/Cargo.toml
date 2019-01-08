@@ -10,34 +10,14 @@ path = "src/main.rs"
 
 
 [dependencies]
-rand = "0.5.5"
-bytes = "0.4"
-byteorder = "1.1"
-futures = "0.1"
-tokio-io = "0.1"
-tokio-tcp = "0.1"
-tokio-codec = "0.1"
-env_logger = "*"
-
-serde = "1.0"
-serde_json = "1.0"
-serde_derive = "1.0"
-
 actix = "0.7"
-actix-web = "0.7"
 
 tokio = "0.1.7"
 
 log = "0.4.6"
 easy-logging = "*"
 
-rusqlite = "0.15.0"
-time = "0.1.41"
-
 mysqlc={path = "../mysqlc"}
 redisc={path = "../redisc"}
-sys_config={path = "../sys_config"}
-glib={path = "../glib"}
-table={path = "../table"}
 tcp_server={path = "../tcp_server"}
 ws_server={path = "../ws_server"}

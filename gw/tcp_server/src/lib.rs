@@ -24,7 +24,12 @@ pub mod parse_package_from_tcp;
 
 use actix::*;
 
+#[macro_use]
+extern crate log;
+
 pub fn start_server() {
+	warn!("start tcp server!");
+
 	let tcp_config = sys_config::config_tcp();
 	
 	Arbiter::new("tcp-server").do_send::<msgs::Execute>(msgs::Execute::new(move || {

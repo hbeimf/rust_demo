@@ -15,7 +15,7 @@ actix = "0.7"
 tokio = "0.1.7"
 
 log = "0.4.6"
-easy-logging = "*"
+flexi_logger = "^0.10.3"
 
 mysqlc={path = "../mysqlc"}
 redisc={path = "../redisc"}

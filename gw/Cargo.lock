@@ -631,8 +631,6 @@ dependencies = [
  "glib 0.1.0",
  "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "mysqlc 0.1.0",
- "protobuf 2.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "protobuf-codegen-pure 2.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand 0.5.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "redisc 0.1.0",
  "rusqlite 0.15.0 (registry+https://github.com/rust-lang/crates.io-index)",

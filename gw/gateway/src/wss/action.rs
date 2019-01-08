@@ -14,7 +14,7 @@ use hub::gen_server::RoomActor;
 
 // use actix::ActorContext;
 use actix::*;
-use pb::msg_proto;
+use glib::pb::msg_proto;
 
 use wsc;
 use tcpc;

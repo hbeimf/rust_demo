@@ -11,7 +11,7 @@ use tcps::gen_server::{ChatSession};
 // use server;
 use actix::ActorContext;
 
-use pb::msg_proto;
+use glib::pb::msg_proto;
 
 use tcps::codec::{ChatResponse};
 

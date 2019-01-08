@@ -16,7 +16,7 @@ extern crate serde_derive;
 extern crate actix;
 extern crate actix_web;
 
-extern crate protobuf;
+// extern crate protobuf;
 extern crate easy_logging;
 #[macro_use] extern crate log;
 // https://crates.io/crates/easy-logging
@@ -40,8 +40,8 @@ mod wsc;
 mod tcpc;
 mod hub;
 extern crate glib;
-mod pb;
-mod protos;
+// mod pb;
+// mod protos;
 mod wss;
 mod tcps;
 

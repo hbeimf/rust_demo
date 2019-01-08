@@ -13,7 +13,7 @@ extern crate ws_server;
 fn main() {
 
     // 初始化日志功能
-    easy_logging::init(module_path!(), log::Level::Debug).unwrap();
+    // easy_logging::init(module_path!(), log::Level::Debug).unwrap();
     // easy_logging::init(module_path!(), log::Level::Info).unwrap();
 
     mysqlc::test::test();

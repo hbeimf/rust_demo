@@ -5,7 +5,7 @@ use futures::Future;
 
 
 use glib;
-use wss::gen_server::{WsChatSession, WsChatSessionState};
+use crate::gen_server::{WsChatSession, WsChatSessionState};
 // use wss::action;
 
 use actix_web::{ ws};
@@ -16,8 +16,8 @@ use table::table_room::RoomActor;
 use actix::*;
 use glib::pb::msg_proto;
 
-use wsc;
-use tcpc;
+use crate::wsc;
+use crate::tcpc;
 
 
 // message Login{   

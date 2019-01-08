@@ -1,5 +1,5 @@
 use glib;
-use wss::action;
+use crate::action;
 use actix::ActorContext;
 
 use std::time::{Instant, Duration};
@@ -15,7 +15,7 @@ use table::table_room::{RoomActor, Disconnect};
 // use glib;
 // use wss::parse;
 use crate::wsc;
-use tcpc;
+use crate::tcpc;
 
 /// How often heartbeat pings are sent
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);

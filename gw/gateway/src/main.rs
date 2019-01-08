@@ -36,16 +36,18 @@ use actix_web::*;
 
 extern crate sys_config;
 
-mod wsc;
-mod tcpc;
+// mod wsc;
+// mod tcpc;
 // mod hub;
 extern crate table;
 extern crate glib;
 // mod pb;
 // mod protos;
-mod wss;
+// mod wss;
 // mod tcps;
 extern crate tcp_server;
+extern crate ws_server;
+
 
 fn main() {
     
@@ -81,7 +83,7 @@ fn main() {
         // let state = WsChatSessionState {
         //     addr: server.clone(),
         // };
-        let state = wss::gen_server::WsChatSessionState {
+        let state = ws_server::gen_server::WsChatSessionState {
             // addr: server.clone(),
         };
 
@@ -94,7 +96,7 @@ fn main() {
             // }))
             // websocket
             // .resource("/ws/", |r| r.route().f(chat_route))
-            .resource("/ws/", |r| r.route().f(wss::gen_server::chat_route))
+            .resource("/ws/", |r| r.route().f(ws_server::gen_server::chat_route))
             // // static resources
             // .handler("/static/", fs::StaticFiles::new("static/").unwrap())
     }).bind(websocket_config.clone())

@@ -13,7 +13,7 @@ use actix::ActorContext;
 
 use glib::pb::msg_proto;
 
-use crate::codec::{ChatResponse};
+use glib::codec::{ChatResponse};
 
 // use std::net;
 // use std::str::FromStr;

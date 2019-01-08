@@ -9,10 +9,10 @@ extern crate serde_json;
 extern crate tokio_codec;
 extern crate tokio_io;
 extern crate tokio_tcp;
-#[macro_use]
+// #[macro_use]
 extern crate serde_derive;
 
-#[macro_use]
+// #[macro_use]
 extern crate actix;
 extern crate actix_web;
 
@@ -35,4 +35,4 @@ extern crate glib;
 // pub mod session;
 pub mod gen_server;
 pub mod parse_package_from_tcp;
-pub mod codec;
+// pub mod codec;

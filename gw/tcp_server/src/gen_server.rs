@@ -17,7 +17,7 @@ use tokio_tcp::{TcpListener, TcpStream};
 
 use actix::prelude::*;
 
-use crate::codec::{ChatCodec, ChatRequest, ChatResponse};
+use glib::codec::{ChatCodec, ChatRequest, ChatResponse};
 use table;
 use table::table_room::{RoomActor};
 

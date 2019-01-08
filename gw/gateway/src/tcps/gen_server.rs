@@ -19,7 +19,7 @@ use actix::prelude::*;
 
 use tcps::codec::{ChatCodec, ChatRequest, ChatResponse};
 use table;
-use table::gen_server::{RoomActor};
+use table::table_room::{RoomActor};
 
 // ===================================
 use tcps::parse_package_from_tcp;
@@ -93,7 +93,7 @@ impl Actor for ChatSession {
         // self.addr.do_send(hub::gen_server::Disconnect { id: self.id });
 
         let act = System::current().registry().get::<RoomActor>();
-        act.do_send(table::gen_server::Disconnect { uid: self.uid });
+        act.do_send(table::table_room::Disconnect { uid: self.uid });
 
         Running::Stop
     }

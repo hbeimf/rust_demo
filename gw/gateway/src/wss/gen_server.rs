@@ -9,7 +9,7 @@ use actix::*;
 use actix_web::{ ws, Error, HttpRequest, HttpResponse};
 
 use table;
-use table::gen_server::{RoomActor};
+use table::table_room::{RoomActor, Disconnect};
 // use tcps::gen_server;
 
 // use glib;
@@ -105,7 +105,7 @@ impl Actor for WsChatSession {
         // ctx.state().addr.do_send(hub::gen_server::Disconnect { id: self.id });
 
         let act = System::current().registry().get::<RoomActor>();
-        act.do_send(table::gen_server::Disconnect { uid: self.uid });
+        act.do_send(Disconnect { uid: self.uid });
 
         Running::Stop
     }
@@ -255,7 +255,7 @@ impl WsChatSession {
                 //     .do_send(hub::gen_server::Disconnect { id: act.id });
 
                 let actor_room = System::current().registry().get::<RoomActor>();
-                actor_room.do_send(table::gen_server::Disconnect { uid: act.uid });
+                actor_room.do_send(table::table_room::Disconnect { uid: act.uid });
 
                 // stop actor
                 ctx.stop();

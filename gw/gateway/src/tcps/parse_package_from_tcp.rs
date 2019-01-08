@@ -3,7 +3,7 @@ extern crate tokio;
 use futures::Future;
 
 use table;
-use table::gen_server::{RoomActor};
+use table::table_room::{RoomActor};
 
 use glib;
 use tcps::gen_server::{ChatSession};
@@ -65,7 +65,7 @@ fn action_10000(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, ctx: &mut actix:
     // call 
     let addr_client = ctx.address();
     let act = System::current().registry().get::<RoomActor>();
-    let connect_msg = table::gen_server::Connect {
+    let connect_msg = table::table_room::Connect {
             uid: uid as u32,
             addr: addr_client.recipient(),
         };

@@ -9,10 +9,10 @@ extern crate serde_json;
 extern crate tokio_codec;
 extern crate tokio_io;
 extern crate tokio_tcp;
-#[macro_use]
+// #[macro_use]
 extern crate serde_derive;
 
-#[macro_use]
+// #[macro_use]
 extern crate actix;
 extern crate actix_web;
 
@@ -44,7 +44,8 @@ extern crate glib;
 // mod pb;
 // mod protos;
 mod wss;
-mod tcps;
+// mod tcps;
+extern crate tcp_server;
 
 fn main() {
     
@@ -70,7 +71,7 @@ fn main() {
     // Start tcp server in separate thread
     // let srv = server.clone();
     Arbiter::new("tcp-server").do_send::<msgs::Execute>(msgs::Execute::new(move || {
-        tcps::gen_server::TcpServer::new(tcp_config.as_ref());
+        tcp_server::gen_server::TcpServer::new(tcp_config.as_ref());
         Ok(())
     }));
 

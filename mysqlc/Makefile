@@ -31,6 +31,10 @@
 
 
 run:
+	cargo build
+	./target/debug/mysqlc -c /etc/config.ini -l debug
+
+run1:
 	cargo run --bin mysqlc
 
 # gen:

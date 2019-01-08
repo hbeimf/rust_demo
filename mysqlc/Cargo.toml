@@ -16,6 +16,8 @@ singleton = "0.2.2"
 log = "0.4.6"
 easy-logging = "*"
 
+structopt = "0.2"
+
 [[bin]]
 name = "mysqlc"
 path = "src/bin/main.rs"

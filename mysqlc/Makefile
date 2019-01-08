@@ -37,6 +37,10 @@ run:
 run1:
 	cargo run --bin mysqlc
 
+
+help:
+	./target/debug/mysqlc -h
+
 # gen:
 # 	cd protos && /home/maomao/.cargo/bin/pb-rs ./msg.proto
 

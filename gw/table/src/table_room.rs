@@ -1,13 +1,6 @@
-//! `RoomActor` is an actor. It maintains list of connection client session.
-//! And manages available rooms. Peers send messages to other peers in same
-//! room through `RoomActor`.
-
 use actix::prelude::*;
 use std::collections::{HashMap};
 
-// use tcps::gen_server;
-
-// pub use hub::msg::{Connect, Disconnect, Message};
 pub use crate::msg::{Connect, Disconnect, Message, TableMessage};
 
 use rusqlite::types::ToSql;
@@ -81,10 +74,7 @@ impl RoomActor {
 
 }
 
-/// Make actor from `RoomActor`
 impl Actor for RoomActor {
-    /// We are going to use simple Context, we just need ability to communicate
-    /// with other actors.
     type Context = Context<Self>;
 }
 
@@ -96,14 +86,10 @@ impl SystemService for RoomActor {
     }
 }
 
-/// Handler for Connect message.
-///
-/// Register new session and assign unique id to this session
 impl Handler<Connect> for RoomActor {
     type Result = u32;
 
     fn handle(&mut self, msg: Connect, _: &mut Context<Self>) -> Self::Result {
-        // info!("Connect,IN IN IN IN IN IN Someone joined room");
 
         self.sessions.insert(msg.uid.to_string(), msg.addr);
 
@@ -120,7 +106,6 @@ impl Handler<Connect> for RoomActor {
     }
 }
 
-/// Handler for Disconnect message.
 impl Handler<Disconnect> for RoomActor {
     type Result = ();
 
@@ -135,15 +120,11 @@ impl Handler<Disconnect> for RoomActor {
     }
 }
 
-/// Handler for Message message.
 impl Handler<Message> for RoomActor {
     type Result = ();
 
     fn handle(&mut self, msg: Message, _: &mut Context<Self>) {
-        // self.broadcast_msg(&msg.room, msg.msg.as_str(), msg.id);
-        // debug!("广播消息 room:{:?}, msg:{:?}, id:{:?}", &msg.room, &msg.msg, msg.id);
         self.broadcast_msg(&msg.msg, msg.id);
-
     }
 }
 

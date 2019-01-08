@@ -1,32 +1,7 @@
-// #[macro_use]
-// extern crate actix;
-// extern crate byteorder;
-// extern crate bytes;
-// extern crate futures;
-// extern crate serde;
-// extern crate serde_json;
-// extern crate tokio_codec;
-// extern crate tokio_io;
-// extern crate tokio_tcp;
-// #[macro_use]
-// extern crate serde_derive;
-
-
-// use byteorder;
-// use bytes;
-// use futures;
-// use serde;
-// use serde_json;
-// use tokio_codec;
-// use tokio_io;
-// use tokio_tcp;
-
 use actix::*;
-// use actix::prelude::*;
 use futures::Future;
 use std::str::FromStr;
 use std::time::Duration;
-// use std::{io, net, process, thread};
 use std::{io, net};
 
 use tokio_codec::FramedRead;
@@ -40,8 +15,6 @@ use glib;
 use crate::gen_server::{WsChatSession};
 
 pub fn start_tcpc(addr_from: actix::Addr<WsChatSession>) {
-    // let sys = actix::System::new("chat-client");
-
     // Connect to server
     let addr = net::SocketAddr::from_str("127.0.0.1:8002").unwrap();
     Arbiter::spawn(
@@ -63,38 +36,20 @@ pub fn start_tcpc(addr_from: actix::Addr<WsChatSession>) {
                     }
                 });
 
-                // start console loop
-                // thread::spawn(move || loop {
-                //     let mut cmd = String::new();
-                //     if io::stdin().read_line(&mut cmd).is_err() {
-                //         println!("error");
-                //         return;
-                //     }
-
-                //     // addr.do_send(ClientCommand(cmd));
-                //     ()
-                // });
-
                 futures::future::ok(())
             })
             .map_err(|e| {
                 debug!("不能建立连接: {}", e);
                 ()
-                // process::exit(1)
             }),
     );
 
-    // println!("Running chat client");
-    // sys.run();
 }
 
 pub struct ChatClient {
     framed: actix::io::FramedWrite<WriteHalf<TcpStream>, codec::ClientChatCodec>,
     client_addr: actix::Addr<WsChatSession>,
 }
-
-// #[derive(Message)]
-// struct ClientCommand(String);
 
 #[derive(Message)]
 pub struct ConnectTcpcAddrMsg{
@@ -105,7 +60,6 @@ pub struct ConnectTcpcAddrMsg{
 pub struct DeconnectTcpcAddrMsg{
     
 }
-
 
 #[derive(Message, Debug)]
 pub struct PackageFromClient(pub Vec<u8>);
@@ -168,40 +122,7 @@ impl ChatClient {
 
 impl actix::io::WriteHandler<io::Error> for ChatClient {}
 
-// /// Handle stdin commands
-// impl Handler<ClientCommand> for ChatClient {
-//     type Result = ();
-
-//     fn handle(&mut self, msg: ClientCommand, _: &mut Context<Self>) {
-//         let m = msg.0.trim();
-//         if m.is_empty() {
-//             return;
-//         }
-
-//         // we check for /sss type of messages
-//         if m.starts_with('/') {
-//             let v: Vec<&str> = m.splitn(2, ' ').collect();
-//             match v[0] {
-//                 "/list" => {
-//                     self.framed.write(codec::ChatRequest::List);
-//                 }
-//                 "/join" => {
-//                     if v.len() == 2 {
-//                         self.framed.write(codec::ChatRequest::Join(v[1].to_owned()));
-//                     } else {
-//                         println!("!!! room name is required");
-//                     }
-//                 }
-//                 _ => println!("!!! unknown command"),
-//             }
-//         } else {
-//             self.framed.write(codec::ChatRequest::Message(m.to_owned()));
-//         }
-//     }
-// }
-
 /// Server communication
-
 impl StreamHandler<codec::ChatResponse, io::Error> for ChatClient {
     fn handle(&mut self, msg: codec::ChatResponse, _: &mut Context<Self>) {
         match msg {
@@ -210,17 +131,6 @@ impl StreamHandler<codec::ChatResponse, io::Error> for ChatClient {
 
                 debug!("tcpc 收到来自dev端的package: {:?}", msg);
             },
-            // codec::ChatResponse::Joined(ref msg) => {
-            //     println!("!!! joined: {}", msg);
-            // }
-            // codec::ChatResponse::Rooms(rooms) => {
-            //     println!("\n!!! Available rooms:");
-            //     for room in rooms {
-            //         println!("{}", room);
-            //     }
-            //     println!("");
-            // }
-            // _ => (),
         }
     }
 }

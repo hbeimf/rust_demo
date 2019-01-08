@@ -1,26 +1,12 @@
-// Option<actix::Addr<ChatClient>>
-
-//! Simple websocket client.
-
 #![allow(unused_variables)]
 extern crate actix;
 extern crate actix_web;
-// extern crate env_logger;
 extern crate futures;
-
-// extern crate gateway;
 use crate::gen_server::{WsChatSession};
-
 use std::time::Duration;
-// use std::{io, thread};
-
 use actix::*;
 use actix_web::ws::{Client, ClientWriter, Message, ProtocolError};
 use futures::Future;
-
-// pub fn test() {
-//    	start_wsc();
-// }
 
 
 // 建立一个wscl连接后必须给addr发送一个消息，通知连接已建立成功
@@ -37,16 +23,6 @@ pub fn start_wsc(addr: actix::Addr<WsChatSession>) {
                     ChatClient::add_stream(reader, ctx);
                     ChatClient{wsc_write:writer, client_addr:addr}
                 });
-
-                // // start console loop
-                // thread::spawn(move || loop {
-                //     let mut cmd = String::new();
-                //     if io::stdin().read_line(&mut cmd).is_err() {
-                //         println!("error");
-                //         return;
-                //     }
-                //     addr.do_send(ClientCommand(cmd));
-                // });
 
                 ()
             }),

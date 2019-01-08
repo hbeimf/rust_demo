@@ -5,7 +5,7 @@ authors = ["maomao <5622876@qq.com>"]
 
 
 [[bin]]
-name = "websocket-tcp-server"
+name = "gw-server"
 path = "src/main.rs"
 
 

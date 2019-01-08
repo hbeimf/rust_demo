@@ -1537,6 +1537,12 @@ dependencies = [
 [[package]]
 name = "table"
 version = "0.1.0"
+dependencies = [
+ "actix 0.7.9 (registry+https://github.com/rust-lang/crates.io-index)",
+ "actix-web 0.7.17 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rusqlite 0.15.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "time 0.1.41 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "termcolor"

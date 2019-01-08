@@ -38,6 +38,7 @@ time = "0.1.41"
 mysqlc={path = "../mysqlc"}
 redisc={path = "../redisc"}
 sys_config={path = "../sys_config"}
+glib={path = "../glib"}
 
 [build-dependencies]
 protobuf-codegen-pure = "2.2.0"

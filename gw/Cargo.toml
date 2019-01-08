@@ -5,4 +5,6 @@ members = [
     "mysqlc",
     "redisc",
     "sys_config",
+    "glib",
+
 ]

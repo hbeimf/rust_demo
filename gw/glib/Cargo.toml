@@ -1,0 +1,9 @@
+[package]
+name = "glib"
+version = "0.1.0"
+authors = ["maomao <5622876@qq.com>"]
+edition = "2018"
+
+[dependencies]
+bytes = "0.4"
+byteorder = "1.1"

@@ -39,7 +39,7 @@ extern crate sys_config;
 mod wsc;
 mod tcpc;
 mod hub;
-mod glib;
+extern crate glib;
 mod pb;
 mod protos;
 mod wss;

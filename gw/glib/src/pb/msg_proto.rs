@@ -1,6 +1,6 @@
 use protobuf::*;
 
-use protos;
+use crate::protos;
 
 
 pub fn decode_login(pb:Vec<u8>) -> protos::msg::Login {

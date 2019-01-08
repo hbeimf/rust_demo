@@ -36,3 +36,14 @@ extern crate glib;
 pub mod gen_server;
 pub mod parse_package_from_tcp;
 // pub mod codec;
+
+use actix::*;
+
+pub fn start_server() {
+	let tcp_config = sys_config::config_tcp();
+	
+	Arbiter::new("tcp-server").do_send::<msgs::Execute>(msgs::Execute::new(move || {
+        crate::gen_server::TcpServer::new(tcp_config.as_ref());
+        Ok(())
+    }));
+}

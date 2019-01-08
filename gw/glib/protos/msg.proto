@@ -1,7 +1,5 @@
 syntax="proto3";
-
 package msg;
-
 
 message TestMsg{   
     string  name = 1;
@@ -14,10 +12,7 @@ message Login{
     int32  uid = 1;
 }
 
-
 message RpcPackage{   
     string  key = 1;
     bytes payload = 2;
 }
-
-

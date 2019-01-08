@@ -1,18 +1,13 @@
 use protobuf::*;
-
 use crate::protos;
-
 
 pub fn decode_login(pb:Vec<u8>) -> protos::msg::Login {
     let login_msg : protos::msg::Login = parse_from_bytes::<protos::msg::Login>(&pb).unwrap();
-    // println!("decode: {:?}", parsed);
     login_msg
 }
 
-
 pub fn decode_msg(pb:Vec<u8>) -> protos::msg::TestMsg {
     let test_msg : protos::msg::TestMsg = parse_from_bytes::<protos::msg::TestMsg>(&pb).unwrap();
-    // println!("decode: {:?}", parsed);
     test_msg
 }
 
@@ -25,7 +20,6 @@ pub fn encode_msg() -> Vec<u8> {
     let msg :Vec<u8> = test_msg.write_to_bytes().unwrap();
     msg
 }
-
 
 pub fn decode_rpc(pb:Vec<u8>) -> protos::msg::RpcPackage {
     let rpc_msg : protos::msg::RpcPackage = parse_from_bytes::<protos::msg::RpcPackage>(&pb).unwrap();

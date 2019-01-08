@@ -1,13 +1,9 @@
-// https://github.com/crlf0710/singleton-rs/blob/master/src/bin/trial.rs
 #[macro_use]
 extern crate singleton;
 use singleton::{Singleton};
 
-// https://github.com/pinecrew/tini/blob/master/examples/read.rs
 extern crate tini;
 use tini::Ini;
-// static INPUT: &'static str = "/erlang/rust_demo/gw/config.ini";
-
 
 struct SysConfig{
     config:tini::Ini
@@ -52,8 +48,6 @@ pub fn test_config() {
 	config_redis();
 
 	let config = &SYS_CONFIG_INSTANCE.get().config;
-
-    // let config = Ini::from_file(INPUT).unwrap();
 
     // if you are sure
     let name1: i32 = config.get("section_one", "name1").unwrap();

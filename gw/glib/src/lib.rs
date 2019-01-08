@@ -15,28 +15,15 @@ extern crate serde_derive;
 #[macro_use]
 extern crate actix;
 extern crate actix_web;
-
-// extern crate protobuf;
 extern crate easy_logging;
 #[macro_use] extern crate log;
-// https://crates.io/crates/easy-logging
-
-
-
-
 
 use byteorder::{ReadBytesExt, WriteBytesExt, LittleEndian};
 use std::io::Cursor;
 
-
 pub mod pb;
 pub mod protos;
 pub mod codec;
-
-
-// https://docs.rs/byteorder/1.2.7/byteorder/
-// https://github.com/BurntSushi/byteorder
-// http://blog.zhukunqian.com/?cat=32
 
 pub fn package(cmd:u32, pb:Vec<u8>) -> Vec<u8> {
     let len:u32 = pb.len() as u32 + 4 + 4;
@@ -46,7 +33,6 @@ pub fn package(cmd:u32, pb:Vec<u8>) -> Vec<u8> {
     package.extend_from_slice(&pb);
     package
 }
-
 
 pub struct UnPackageResult {
     pub len:u32,
@@ -69,7 +55,6 @@ pub fn unpackage(package: Vec<u8>) -> Option<UnPackageResult> {
             None
         } else {
             let pb:Vec<u8> = p1.split_off(8);
-            // println!("len:{} , cmd: {}, pb: {:?}", len, cmd, pb);
             Some(UnPackageResult{len:len, cmd:cmd, pb:pb})
         }       
     }

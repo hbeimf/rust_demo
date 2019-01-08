@@ -19,12 +19,12 @@ fn main() {
         .start_reconfigurable()
         .unwrap_or_else(|e| panic!("Logger initialization failed with {}", e));
 
-    error!("This is an error message");
-    warn!("This is a warning");
-    debug!("This is a debug message - you must not see it!");
+    // error!("This is an error message");
+    // warn!("This is a warning");
+    debug!("start server!");
     
-    info!("This is an info message");
-    trace!("This is a trace message - you must not see it!");
+    // info!("This is an info message");
+    // trace!("This is a trace message - you must not see it!");
 
     mysqlc::test::test();
     redisc::test();

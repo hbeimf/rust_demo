@@ -40,7 +40,7 @@ use glib::codec;
 // use glib;
 // use crate::gen_server::{WsChatSession};
 
-pub fn start_tcpc() {
+pub fn start_tcp_client() {
     // Connect to server
     let addr = net::SocketAddr::from_str("127.0.0.1:8002").unwrap();
     Arbiter::spawn(

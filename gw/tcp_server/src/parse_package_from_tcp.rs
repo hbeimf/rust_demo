@@ -46,7 +46,7 @@ pub fn parse_package(package: Vec<u8>, client: &mut ChatSession, ctx: &mut actix
 
 // 业务逻辑部分
 fn action_10000(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, ctx: &mut actix::Context<ChatSession>) {
-    // tcp_client::start_tcpc();
+    // tcp_client::start_tcp_client();
     
 
     let login_msg = msg_proto::decode_login(pb);
@@ -73,7 +73,7 @@ fn action_10000(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, ctx: &mut actix:
 
 // 业务逻辑部分
 fn action_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
-    tcp_client::start_tcpc();
+    tcp_client::start_tcp_client();
 
     //parse pb logic 
     let rpc_msg = msg_proto::decode_rpc(pb);
@@ -101,7 +101,7 @@ fn action_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix
 
 // 业务逻辑部分
 fn action(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
-    // tcp_client::start_tcpc();
+    // tcp_client::start_tcp_client();
     
 
 	//parse pb logic 

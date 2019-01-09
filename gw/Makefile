@@ -1,9 +1,14 @@
-rr:
-	cargo run --bin gw-server
+compile:
+	cargo build
+	./target/debug/rs-server --config /erlang/rust_demo/gw/config.ini -l debug
+
+run:
+	./target/debug/rs-server --config /erlang/rust_demo/gw/config.ini -l debug
 
 rel:
 	cargo build --release
 
-run:
-	./target/release/gw-server
-
+rrel: run_rel
+	
+run_rel:
+	./target/release/rs-server --config /erlang/rust_demo/gw/config.ini -l debug

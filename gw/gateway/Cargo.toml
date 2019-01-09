@@ -3,19 +3,16 @@ name = "gateway"
 version = "0.1.0"
 authors = ["maomao <5622876@qq.com>"]
 
-
 [[bin]]
-name = "gw-server"
+name = "rs-server"
 path = "src/main.rs"
-
 
 [dependencies]
 actix = "0.7"
-
 tokio = "0.1.7"
-
 log = "0.4.6"
 flexi_logger = "^0.10.3"
+structopt = "0.2"
 
 mysqlc={path = "../mysqlc"}
 redisc={path = "../redisc"}

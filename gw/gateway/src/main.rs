@@ -4,12 +4,33 @@ extern crate redisc;
 extern crate tcp_server;
 extern crate ws_server;
 
+extern crate structopt;
+use std::path::PathBuf;
+use structopt::StructOpt;
+
 extern crate flexi_logger;
 #[macro_use]
 extern crate log;
 use flexi_logger::{Logger, detailed_format};
 
+
+/// gw-server 测试服
+#[derive(StructOpt, Debug)]
+#[structopt(name = "mysqlc")]
+struct Opt {
+    /// 配置文件路径，例如: /etc/gw_server_config.ini
+    #[structopt(short = "c", long = "config", parse(from_os_str))]
+    config: Vec<PathBuf>,
+
+    /// 日志等级，例如: error|warn|info|debug|trace
+    #[structopt(short = "l", long = "level")]
+    level: Vec<String>,
+}
+
 fn main() {
+    let opt = Opt::from_args();
+    println!("{:?}", opt);
+    
 	Logger::with_str("debug")
         .format(detailed_format)
         .log_to_file()

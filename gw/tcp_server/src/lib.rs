@@ -18,6 +18,7 @@ extern crate actix_web;
 extern crate sys_config;
 extern crate table;
 extern crate glib;
+extern crate tcp_client;
 
 pub mod gen_server;
 pub mod parse_package_from_tcp;

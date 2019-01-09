@@ -28,3 +28,4 @@ log = "0.4.6"
 sys_config={path = "../sys_config"}
 glib={path = "../glib"}
 table={path = "../table"}
+tcp_client={path = "../tcp_client"}

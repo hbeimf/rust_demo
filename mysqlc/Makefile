@@ -41,6 +41,9 @@ run1:
 compile:
 	cargo build
 
+rel:
+	cargo build --release
+
 help:
 	./target/debug/mysqlc -h
 

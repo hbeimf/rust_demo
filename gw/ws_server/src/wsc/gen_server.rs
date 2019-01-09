@@ -19,9 +19,9 @@ pub fn start_wsc(addr: actix::Addr<WsChatSession>) {
                 ()
             })
             .map(|(reader, writer)| {
-                let _addr = ChatClient::create(|ctx| {
-                    ChatClient::add_stream(reader, ctx);
-                    ChatClient{wsc_write:writer, client_addr:addr}
+                let _addr = WsClient::create(|ctx| {
+                    WsClient::add_stream(reader, ctx);
+                    WsClient{wsc_write:writer, client_addr:addr}
                 });
 
                 ()
@@ -31,7 +31,7 @@ pub fn start_wsc(addr: actix::Addr<WsChatSession>) {
 
 
 
-pub struct ChatClient{
+pub struct WsClient{
     wsc_write: ClientWriter, 
     client_addr: actix::Addr<WsChatSession>,
 }
@@ -41,7 +41,7 @@ struct ClientCommand(String);
 
 #[derive(Message)]
 pub struct ConnectWscAddrMsg{
-    pub addr: actix::Addr<ChatClient>,
+    pub addr: actix::Addr<WsClient>,
 }
 
 #[derive(Message)]
@@ -51,7 +51,7 @@ pub struct DeconnectWscAddrMsg{}
 #[derive(Message, Debug)]
 pub struct PackageFromClient(pub Vec<u8>);
 
-impl Actor for ChatClient {
+impl Actor for WsClient {
     type Context = Context<Self>;
 
     fn started(&mut self, ctx: &mut Context<Self>) {
@@ -79,7 +79,7 @@ impl Actor for ChatClient {
     }
 }
 
-impl ChatClient {
+impl WsClient {
     fn hb(&self, ctx: &mut Context<Self>) {
         ctx.run_later(Duration::new(1, 0), |act, ctx| {
             act.wsc_write.ping("");
@@ -92,7 +92,7 @@ impl ChatClient {
 }
 
 /// Handle stdin commands
-impl Handler<ClientCommand> for ChatClient {
+impl Handler<ClientCommand> for WsClient {
     type Result = ();
 
     fn handle(&mut self, msg: ClientCommand, ctx: &mut Context<Self>) {
@@ -101,7 +101,7 @@ impl Handler<ClientCommand> for ChatClient {
 }
 
 // 客户端转发过来的包，
-impl Handler<PackageFromClient> for ChatClient {
+impl Handler<PackageFromClient> for WsClient {
     type Result = ();
 
     fn handle(&mut self, package: PackageFromClient, ctx: &mut Context<Self>) {
@@ -115,7 +115,7 @@ impl Handler<PackageFromClient> for ChatClient {
 
 
 /// Handle server websocket messages
-impl StreamHandler<Message, ProtocolError> for ChatClient {
+impl StreamHandler<Message, ProtocolError> for WsClient {
     fn handle(&mut self, msg: Message, ctx: &mut Context<Self>) {
         // 这里接收来自连接对端发来的包
         match msg {

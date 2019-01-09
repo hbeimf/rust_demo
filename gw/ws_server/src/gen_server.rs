@@ -38,9 +38,9 @@ pub struct WsChatSession {
     pub hb: Instant,
     pub room: String,
     // 启动一个与后端连接的 wsc，这里放这个连接actor的 addr
-    pub addr_wsc: Option<actix::Addr<wsc::gen_server::ChatClient>>,
+    pub addr_wsc: Option<actix::Addr<wsc::gen_server::WsClient>>,
     // 启动一个与后端连接的 tcpc，这里放这个连接actor的 addr
-    pub addr_tcpc: Option<actix::Addr<tcpc::ChatClient>>,
+    pub addr_tcpc: Option<actix::Addr<tcpc::TcpClient>>,
        
 }
 

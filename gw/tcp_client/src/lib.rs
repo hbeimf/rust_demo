@@ -75,7 +75,7 @@ pub fn start_tcp_client() {
 
 pub struct TcpClient {
     framed: actix::io::FramedWrite<WriteHalf<TcpStream>, codec::ClientChatCodec>,
-    // client_addr: actix::Addr<WsChatSession>,
+    // p_addr: actix::Addr<WsChatSession>,
 }
 
 #[derive(Message)]
@@ -96,13 +96,13 @@ impl Actor for TcpClient {
 
     fn started(&mut self, ctx: &mut Context<Self>) {
     	debug!("建立了一个tcp连接？？！！");
-    	// 当连接建立的时候，将addr 发送给 client_addr
+    	// 当连接建立的时候，将addr 发送给 p_addr
         // let tcpc_addr = ctx.address();
         // let tcpc_addr_msg = ConnectTcpcAddrMsg{
         //     addr: tcpc_addr,
         // };
 
-        // self.client_addr.do_send(tcpc_addr_msg);
+        // self.p_addr.do_send(tcpc_addr_msg);
 
         // start heartbeats otherwise server will disconnect after 10 seconds
         self.hb(ctx)
@@ -114,7 +114,7 @@ impl Actor for TcpClient {
         // let tcpc_addr_msg = DeconnectTcpcAddrMsg{
         // };
 
-        // self.client_addr.do_send(tcpc_addr_msg);
+        // self.p_addr.do_send(tcpc_addr_msg);
 
         // Stop application on disconnect
         // System::current().stop();

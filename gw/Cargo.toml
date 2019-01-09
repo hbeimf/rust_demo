@@ -1,7 +1,7 @@
 [workspace]
 
 members = [
-    "gateway",
+    "cmd",
     "mysqlc",
     "redisc",
     "sys_config",

@@ -1,5 +1,5 @@
 [package]
-name = "gateway"
+name = "cmd"
 version = "0.1.0"
 authors = ["maomao <5622876@qq.com>"]
 

@@ -38,6 +38,9 @@ run1:
 	cargo run --bin mysqlc
 
 
+compile:
+	cargo build
+
 help:
 	./target/debug/mysqlc -h
 

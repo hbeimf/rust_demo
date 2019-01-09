@@ -9,9 +9,9 @@ extern crate structopt;
 use std::path::PathBuf;
 use structopt::StructOpt;
 
-/// A basic example
+/// mysql 客户端测试
 #[derive(StructOpt, Debug)]
-#[structopt(name = "basic")]
+#[structopt(name = "mysqlc")]
 struct Opt {
     // A flag, true if used in the command line. Note doc comment will
     // be used for the help message of the flag.
@@ -28,7 +28,7 @@ struct Opt {
     // #[structopt(short = "s", long = "speed", default_value = "42")]
     // speed: f64,
 
-    /// 配置文件
+    /// 配置文件路径，例如: /etc/mysqlc_config.ini
     #[structopt(short = "c", long = "config", parse(from_os_str))]
     config: Vec<PathBuf>,
 
@@ -36,7 +36,7 @@ struct Opt {
     // #[structopt(short = "c", long = "nb-cars")]
     // nb_cars: Option<i32>,
 
-    /// admin_level to consider
+    /// 日志等级，例如: error|warn|info|debug|trace
     #[structopt(short = "l", long = "level")]
     level: Vec<String>,
 

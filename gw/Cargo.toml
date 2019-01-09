@@ -9,4 +9,6 @@ members = [
     "table",
     "tcp_server",
     "ws_server",
+    "tcp_client",
+
 ]

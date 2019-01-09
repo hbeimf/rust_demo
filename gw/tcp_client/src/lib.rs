@@ -46,13 +46,13 @@ pub fn start_tcpc() {
     Arbiter::spawn(
         TcpStream::connect(&addr)
             .and_then(|stream| {
-                let addr = ChatClient::create(|ctx| {
+                let addr = TcpClient::create(|ctx| {
                     let (r, w) = stream.split();
-                    ChatClient::add_stream(
+                    TcpClient::add_stream(
                         FramedRead::new(r, codec::ClientChatCodec),
                         ctx,
                     );
-                    ChatClient {
+                    TcpClient {
                         framed: actix::io::FramedWrite::new(
                             w,
                             codec::ClientChatCodec,
@@ -73,14 +73,14 @@ pub fn start_tcpc() {
 
 }
 
-pub struct ChatClient {
+pub struct TcpClient {
     framed: actix::io::FramedWrite<WriteHalf<TcpStream>, codec::ClientChatCodec>,
     // client_addr: actix::Addr<WsChatSession>,
 }
 
 #[derive(Message)]
 pub struct ConnectTcpcAddrMsg{
-    pub addr: actix::Addr<ChatClient>,
+    pub addr: actix::Addr<TcpClient>,
 }
 
 #[derive(Message)]
@@ -91,7 +91,7 @@ pub struct DeconnectTcpcAddrMsg{
 #[derive(Message, Debug)]
 pub struct PackageFromClient(pub Vec<u8>);
 
-impl Actor for ChatClient {
+impl Actor for TcpClient {
     type Context = Context<Self>;
 
     fn started(&mut self, ctx: &mut Context<Self>) {
@@ -122,7 +122,7 @@ impl Actor for ChatClient {
 }
 
 // 客户端转发过来的包，
-impl Handler<PackageFromClient> for ChatClient {
+impl Handler<PackageFromClient> for TcpClient {
     type Result = ();
 
     fn handle(&mut self, package: PackageFromClient, ctx: &mut Context<Self>) {
@@ -132,7 +132,7 @@ impl Handler<PackageFromClient> for ChatClient {
     }
 }
 
-impl ChatClient {
+impl TcpClient {
     fn hb(&self, ctx: &mut Context<Self>) {
         ctx.run_later(Duration::new(1, 0), |act, ctx| {
             // act.framed.write(codec::ChatRequest::Ping);
@@ -147,10 +147,10 @@ impl ChatClient {
     }
 }
 
-impl actix::io::WriteHandler<io::Error> for ChatClient {}
+impl actix::io::WriteHandler<io::Error> for TcpClient {}
 
 /// Server communication
-impl StreamHandler<codec::ChatResponse, io::Error> for ChatClient {
+impl StreamHandler<codec::ChatResponse, io::Error> for TcpClient {
     fn handle(&mut self, msg: codec::ChatResponse, _: &mut Context<Self>) {
         match msg {
             codec::ChatResponse::Message(ref msg) => {

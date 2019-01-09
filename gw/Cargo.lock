@@ -630,7 +630,7 @@ dependencies = [
  "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "mysqlc 0.1.0",
  "redisc 0.1.0",
- "structopt 0.2.14 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sys_config 0.1.0",
  "tcp_server 0.1.0",
  "tokio 0.1.14 (registry+https://github.com/rust-lang/crates.io-index)",
  "ws_server 0.1.0",
@@ -1568,6 +1568,7 @@ version = "0.1.0"
 dependencies = [
  "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "singleton 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "structopt 0.2.14 (registry+https://github.com/rust-lang/crates.io-index)",
  "tini 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 

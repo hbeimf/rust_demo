@@ -12,9 +12,9 @@ actix = "0.7"
 tokio = "0.1.7"
 log = "0.4.6"
 flexi_logger = "^0.10.3"
-structopt = "0.2"
 
 mysqlc={path = "../mysqlc"}
 redisc={path = "../redisc"}
 tcp_server={path = "../tcp_server"}
 ws_server={path = "../ws_server"}
+sys_config={path = "../sys_config"}

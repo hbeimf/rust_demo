@@ -8,3 +8,4 @@ singleton = "0.2.2"
 tini = "0.2.0"
 
 log = "0.4.6"
+structopt = "0.2"

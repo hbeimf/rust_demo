@@ -19,7 +19,9 @@ use crate::tcpc;
 //     int32  uid = 1;
 // }
 // Login 
-pub fn action_10000(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>) {
+pub fn action_10000(cmd:u32, pb:Vec<u8>, package: Vec<u8>
+    , client: &mut WsChatSession
+    , ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>) {
     //parse pb logic 
     let login_msg = msg_proto::decode_login(pb);
     debug!("uid: {:?}", login_msg.get_uid());
@@ -87,7 +89,9 @@ pub fn action_10000(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSe
 }
 
 // 业务逻辑部分
-pub fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>) {
+pub fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>
+    , client: &mut WsChatSession
+    , ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>) {
 
     // reply 
     let encode:Vec<u8> = msg_proto::encode_msg();

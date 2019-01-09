@@ -34,7 +34,7 @@ struct Opt {
 
 fn main() {
     let opt = Opt::from_args();
-    println!("{:?}", opt);
+    // println!("{:?}", opt);
     
     // config
     let mut config: PathBuf = PathBuf::from(r"/erlang/rust_demo/gw/default_config.ini");
@@ -60,7 +60,7 @@ fn main() {
             }
         }
     }
-    println!("log_dir: {:?}", log_dir);
+    // println!("log_dir: {:?}", log_dir);
     // log level
     let mut log_level: String = "debug".to_string();
     if ! opt.level.is_empty() {
@@ -71,13 +71,13 @@ fn main() {
             }
         }
     }
-    println!("log_level: {:?}", log_level);
+    // println!("log_level: {:?}", log_level);
 
 
-	Logger::with_str(log_level)
+	Logger::with_str(log_level.clone())
         .format(detailed_format)
         .log_to_file()
-        .directory(log_dir)
+        .directory(log_dir.clone())
         .rotate_over_size(200000000000)
         .o_timestamp(true)
         .start_reconfigurable()
@@ -85,7 +85,10 @@ fn main() {
 
     // error!("This is an error message");
     // warn!("This is a warning");
-    debug!("start server!");
+    debug!("================================= start server =================================!");
+    debug!("log_dir: {:?}", log_dir);
+    debug!("log_level: {:?}", log_level);
+
     
     // info!("This is an info message");
     // trace!("This is a trace message - you must not see it!");
@@ -93,7 +96,7 @@ fn main() {
     // mysqlc::test::test();
     // redisc::test();
 
-    let sys = actix::System::new("websocket-example");
+    let sys = actix::System::new("rs-server");
     tcp_server::start_server();
     ws_server::start_server();
     let _ = sys.run();

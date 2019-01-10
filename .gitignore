@@ -22,3 +22,4 @@ Mnesia*
 *tikv/*
 *tokio_kcp/*
 dump.rdb
+*tmp*

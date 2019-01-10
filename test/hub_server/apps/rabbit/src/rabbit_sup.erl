@@ -29,14 +29,19 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-    % {ok, { {one_for_all, 0, 1}, []} }.
-     RabbitPub = {rabbit_pub_work, {rabbit_pub_work, start_link, []},
-               permanent, 5000, worker, [rabbit_pub_work]},
+     % RabbitPub = {rabbit_pub_work, {rabbit_pub_work, start_link, []},
+     %           permanent, 5000, worker, [rabbit_pub_work]},
 
-       RabbitSub = {rabbit_sub_work, {rabbit_sub_work, start_link, []},
-               permanent, 5000, worker, [rabbit_sub_work]},
+     %   RabbitSub = {rabbit_sub_work, {rabbit_sub_work, start_link, []},
+     %           permanent, 5000, worker, [rabbit_sub_work]},
+
+       Send = {demo_send, {demo_send, start_link, []},
+               permanent, 5000, worker, [demo_send]},
+
+          % Receive = {demo_receive, {demo_receive, start_link, []},
+          %      permanent, 5000, worker, [demo_receive]},
                
-    Children = [RabbitPub, RabbitSub],
+    Children = [Send],
 
     {ok, { {one_for_all, 10, 10}, Children} }.
 

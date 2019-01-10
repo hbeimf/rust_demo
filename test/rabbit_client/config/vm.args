@@ -1,6 +1,0 @@
--sname rabbit_client
-
--setcookie rabbit_client_cookie
-
-+K true
-+A30

@@ -8,7 +8,11 @@
 % 启动pub/sub 生产者
 emit_log() ->
     {ok, Connection} =
-        amqp_connection:start(#amqp_params_network{host = "localhost"}),
+        amqp_connection:start(#amqp_params_network{
+        	host = "localhost",
+        	username           = <<"admin">>,
+              password           = <<"admin">>
+        }),
     {ok, Channel} = amqp_connection:open_channel(Connection),
 
     amqp_channel:call(Channel, #'exchange.declare'{exchange = <<"theExchange1">>,
@@ -34,7 +38,11 @@ receive_demo() ->
 % 启动pub/sub消费者
 receive_logs() ->
     {ok, Connection} =
-        amqp_connection:start(#amqp_params_network{host = "localhost"}),
+        amqp_connection:start(#amqp_params_network{
+        	host = "localhost",
+        	username           = <<"admin">>,
+              password           = <<"admin">>
+             }),
     {ok, Channel} = amqp_connection:open_channel(Connection),
 
     % 一旦申明了一个交换机，就不能轻易改变交换机的属性重新申明，　如durable由true 改成false，　一旦改变就会报错

@@ -1,0 +1,8 @@
+{"1.1.0",
+[{<<"amqp_client">>,{pkg,<<"amqp_client">>,<<"3.5.6">>},0},
+ {<<"rabbit_common">>,{pkg,<<"rabbit_common">>,<<"3.5.6">>},1}]}.
+[
+{pkg_hash,[
+ {<<"amqp_client">>, <<"ED7E63122F32AF1D503D134E6C1B088A0627E89C6B5C77B92984C841CB0939BE">>},
+ {<<"rabbit_common">>, <<"AD541BE86F08CDB1C04320EB4353AD30F25555569C95CC062AF28CF79B74D085">>}]}
+].

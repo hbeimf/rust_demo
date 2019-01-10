@@ -26,8 +26,10 @@
 % -export([pub/0, pub/1]).
 
 -include_lib("amqp_client/include/amqp_client.hrl").
+-include_lib("glib/include/log.hrl").
 
--define(LOG(X), io:format("~n==========log========{~p,~p}==============~n~p~n", [?MODULE,?LINE,X])).
+
+% -define(LOG(X), io:format("~n==========log========{~p,~p}==============~n~p~n", [?MODULE,?LINE,X])).
 % -define(LOG(X), true).
 
 % pub() -> 

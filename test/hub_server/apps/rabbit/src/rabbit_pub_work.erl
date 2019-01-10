@@ -1,7 +1,7 @@
 % rabbit_send.erl
 %% gen_server代码模板
 
--module(rabbit_send).
+-module(rabbit_pub_work).
 
 -behaviour(gen_server).
 % --------------------------------------------------------------------
@@ -18,6 +18,22 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
 
+-record(state, { 
+	channel
+    }).
+
+-export([pub/0, pub/1]).
+
+-include_lib("amqp_client/include/amqp_client.hrl").
+
+pub() -> 
+	Message = <<"info: Hello World!">>,
+	pub(Message).
+
+pub(Message) -> 
+	gen_server:cast(?MODULE, {pub, Message}).
+
+
 start_link() ->
     gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
@@ -31,7 +47,20 @@ start_link() ->
 %          {stop, Reason}
 % --------------------------------------------------------------------
 init([]) ->
-    {ok, []}.
+	{ok, Connection} =
+	amqp_connection:start(#amqp_params_network{
+		host = "localhost",
+		username           = <<"admin">>,
+	      	password           = <<"admin">>
+	}),
+	{ok, Channel} = amqp_connection:open_channel(Connection),
+
+	amqp_channel:call(Channel, #'exchange.declare'{exchange = <<"theExchange1">>,
+	                                           type = <<"fanout">>,
+	                                           durable = true}),
+
+	State = #state{channel = Channel},
+	{ok,  State}.
 
 % --------------------------------------------------------------------
 % Function: handle_call/3
@@ -54,6 +83,11 @@ handle_call(_Request, _From, State) ->
 %          {noreply, State, Timeout} |
 %          {stop, Reason, State}            (terminate/2 is called)
 % --------------------------------------------------------------------
+handle_cast({pub, Message}, State=#state{channel=Channel}) ->
+	amqp_channel:cast(Channel,
+                      #'basic.publish'{exchange = <<"theExchange1">>},
+                      #amqp_msg{payload = Message}),
+    	{noreply, State};
 handle_cast(_Msg, State) ->
     {noreply, State}.
 

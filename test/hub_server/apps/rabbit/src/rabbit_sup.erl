@@ -20,7 +20,7 @@
 %%====================================================================
 
 start_link() ->
-	% rabbit:receive_demo(),
+	rabbit:receive_demo(),
     supervisor:start_link({local, ?SERVER}, ?MODULE, []).
 
 %%====================================================================
@@ -30,8 +30,8 @@ start_link() ->
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
     % {ok, { {one_for_all, 0, 1}, []} }.
-     RabbitSend = {rabbit_send, {rabbit_send, start_link, []},
-               permanent, 5000, worker, [rabbit_send]},
+     RabbitSend = {rabbit_pub_work, {rabbit_pub_work, start_link, []},
+               permanent, 5000, worker, [rabbit_pub_work]},
                
     Children = [RabbitSend],
 

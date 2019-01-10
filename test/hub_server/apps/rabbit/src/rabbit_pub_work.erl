@@ -25,6 +25,7 @@
 -export([pub/0, pub/1]).
 
 -include_lib("amqp_client/include/amqp_client.hrl").
+-include_lib("glib/include/log.hrl").
 
 pub() -> 
 	Message = <<"info: Hello World!">>,
@@ -84,9 +85,17 @@ handle_call(_Request, _From, State) ->
 %          {stop, Reason, State}            (terminate/2 is called)
 % --------------------------------------------------------------------
 handle_cast({pub, Message}, State=#state{channel=Channel}) ->
-	amqp_channel:cast(Channel,
-                      #'basic.publish'{exchange = <<"theExchange1">>},
-                      #amqp_msg{payload = Message}),
+	case erlang:is_pid(Channel) andalso glib:is_pid_alive(Channel) of 
+		true -> 
+			?LOG({"publish", Message}),
+			amqp_channel:cast(Channel,
+		                      #'basic.publish'{exchange = <<"theExchange1">>},
+		                      #amqp_msg{payload = Message}),
+			ok;
+		_ ->
+			?LOG({"channel died !"}),
+			ok
+	end,
     	{noreply, State};
 handle_cast(_Msg, State) ->
     {noreply, State}.

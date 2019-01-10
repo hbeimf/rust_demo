@@ -75,7 +75,7 @@ init([]) ->
 	                                         queue = Queue}),
 
 	% io:format(" [*] Waiting for logs. To exit press CTRL+C~n"),
-	?LOG("[*] Waiting for logs."),
+	?LOG({"[*] Waiting for logs.", Channel}),
 
 	amqp_channel:subscribe(Channel, #'basic.consume'{queue = Queue,
 	                                                 no_ack = true}, self()),

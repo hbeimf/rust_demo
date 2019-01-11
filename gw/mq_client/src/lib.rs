@@ -2,7 +2,7 @@
 extern crate log;
 extern crate amqp;
 use amqp::{Basic, Session, Channel, Table, protocol};
-use std::default::Default;
+// use std::default::Default;
 use std::thread;
 
 //table types:
@@ -58,11 +58,11 @@ pub fn start_mq_client() {
 	});
 
 	// There is currently no way to stop the consumers, so we infinitely join thread.
-	let mut channel = consumers_thread.join().ok().expect("Can't get channel from consumer thread");
+	let mut _channel = consumers_thread.join().ok().expect("Can't get channel from consumer thread");
 
-	let _res = channel.basic_publish("", queue_name, true, false,
-	    protocol::basic::BasicProperties{ content_type: Some("text".to_string()), ..Default::default()},
-	    (b"Hello from rust!").to_vec());
-	let _rr = channel.close(200, "Bye");
-	session.close(200, "Good Bye");
+	// let _res = channel.basic_publish("", queue_name, true, false,
+	//     protocol::basic::BasicProperties{ content_type: Some("text".to_string()), ..Default::default()},
+	//     (b"Hello from rust!").to_vec());
+	// let _rr = channel.close(200, "Bye");
+	// session.close(200, "Good Bye");
 }

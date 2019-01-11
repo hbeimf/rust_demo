@@ -9,18 +9,24 @@ use std::thread;
 //use table::{FieldTable, Table, Bool, ShortShortInt, ShortShortUint, ShortInt, ShortUint, LongInt, LongUint, LongLongInt, LongLongUint, Float, Double, DecimalValue, LongString, FieldArray, Timestamp};
 
 fn consumer_function(channel: &mut Channel, deliver: protocol::basic::Deliver, headers: protocol::basic::BasicProperties, body: Vec<u8>) {
-    println!("Got a delivery:");
-    println!("Deliver info: {:?}", deliver);
-    println!("Content headers: {:?}", headers);
-    println!("Content body: {:?}", body);
-    let _res = channel.basic_ack(deliver.delivery_tag, false);
+	debug!("Got a delivery:");
+	debug!("Deliver info: {:?}", deliver);
+	debug!("Content headers: {:?}", headers);
+	debug!("Content body: {:?}", body);
+
+	let b = String::from_utf8(body).unwrap();
+	debug!("body: {:?}", b);
+	println!("body: {:?}", b);
+
+
+	let _res = channel.basic_ack(deliver.delivery_tag, false);
 }
 
 
 
 pub fn start_mq_client() {
 
-	debug!("hello world!");
+	debug!("start mq client !");
 
 	let amqp_url = "amqp://admin:admin@127.0.0.1//";
 	let mut session = match Session::open_url(amqp_url) {
@@ -28,23 +34,23 @@ pub fn start_mq_client() {
 	    Err(error) => panic!("Can't create session: {:?}", error)
 	};
 	let mut channel = session.open_channel(1).ok().expect("Can't open channel");
-	println!("Openned channel: {}", channel.id);
+	debug!("Openned channel: {}", channel.id);
 
 	let queue_name = "test_queue";
 	//queue: &str, passive: bool, durable: bool, exclusive: bool, auto_delete: bool, nowait: bool, arguments: Table
 	let queue_declare = channel.queue_declare(queue_name, false, true, false, false, false, Table::new());
-	println!("Queue declare: {:?}", queue_declare);
+	debug!("Queue declare: {:?}", queue_declare);
 	for get_result in channel.basic_get(queue_name, false) {
-	    println!("Headers: {:?}", get_result.headers);
-	    println!("Reply: {:?}", get_result.reply);
-	    println!("Body: {:?}", String::from_utf8_lossy(&get_result.body));
+	    debug!("Headers: {:?}", get_result.headers);
+	    debug!("Reply: {:?}", get_result.reply);
+	    debug!("Body: {:?}", String::from_utf8_lossy(&get_result.body));
 	    get_result.ack();
 	}
 
 	//queue: &str, consumer_tag: &str, no_local: bool, no_ack: bool, exclusive: bool, nowait: bool, arguments: Table
-	println!("Declaring consumer...");
+	debug!("Declaring consumer...");
 	let consumer_name = channel.basic_consume(consumer_function, queue_name, "", false, false, false, false, Table::new());
-	println!("Starting consumer {:?}", consumer_name);
+	debug!("Starting consumer {:?}", consumer_name);
 
 	let consumers_thread = thread::spawn(move || {
 	    channel.start_consuming();

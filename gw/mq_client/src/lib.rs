@@ -59,6 +59,8 @@ pub fn start_mq_client() {
 
 	// There is currently no way to stop the consumers, so we infinitely join thread.
 	let mut _channel = consumers_thread.join().ok().expect("Can't get channel from consumer thread");
+	debug!("如果运行到这里，就代表连接已经断开了 !!");
+	// 如果断开了，就给supervisor 发个消息，让他重启一个消费者进程
 
 	// let _res = channel.basic_publish("", queue_name, true, false,
 	//     protocol::basic::BasicProperties{ content_type: Some("text".to_string()), ..Default::default()},

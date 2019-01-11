@@ -18,3 +18,4 @@ redisc={path = "../redisc"}
 tcp_server={path = "../tcp_server"}
 ws_server={path = "../ws_server"}
 sys_config={path = "../sys_config"}
+mq_client={path = "../mq_client"}

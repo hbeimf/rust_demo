@@ -4,7 +4,7 @@ extern crate redisc;
 extern crate tcp_server;
 extern crate ws_server;
 extern crate sys_config;
-
+extern crate mq_client;
 
 extern crate flexi_logger;
 #[macro_use]
@@ -44,5 +44,7 @@ fn main() {
     let sys = actix::System::new("rs-server");
     tcp_server::start_server();
     ws_server::start_server();
+
+    mq_client::start_mq_client();
     let _ = sys.run();
 }

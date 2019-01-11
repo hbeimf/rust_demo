@@ -355,6 +355,7 @@ dependencies = [
  "actix 0.7.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "flexi_logger 0.10.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "mq_client 0.1.0",
  "mysqlc 0.1.0",
  "redisc 0.1.0",
  "sys_config 0.1.0",

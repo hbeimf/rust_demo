@@ -7,3 +7,4 @@ edition = "2018"
 [dependencies]
 log = "0.4.6"
 amqp = "0.1.2"
+sys_config={path = "../sys_config"}

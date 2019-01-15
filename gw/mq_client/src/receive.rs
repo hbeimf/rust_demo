@@ -6,6 +6,7 @@ use amqp::{Basic, Session, Channel, Table, protocol};
 // use std::default::Default;
 use std::thread;
 
+use sys_config;
 //table types:
 //use table::{FieldTable, Table, Bool, ShortShortInt, ShortShortUint, ShortInt, ShortUint, LongInt, LongUint, LongLongInt, LongLongUint, Float, Double, DecimalValue, LongString, FieldArray, Timestamp};
 
@@ -29,8 +30,9 @@ pub fn start_mq_client() {
 
     debug!("start mq client !");
 
-    let amqp_url = "amqp://admin:admin@127.0.0.1//";
-    let mut session = match Session::open_url(amqp_url) {
+    let rabbit_config = sys_config::config_rabbit();
+
+    let mut session = match Session::open_url(rabbit_config.as_ref()) {
         Ok(session) => session,
         Err(error) => panic!("Can't create session: {:?}", error)
     };

@@ -122,6 +122,12 @@ pub fn config_tcp() -> String {
     mysql_config
 }
 
+pub fn config_rabbit() -> String {
+    let config = &SYS_CONFIG_INSTANCE.get().config;
+    let rabbit_config: String = config.get("rabbit", "config").unwrap();
+    rabbit_config
+}
+
 
 pub fn test_config() {
 	config_redis();

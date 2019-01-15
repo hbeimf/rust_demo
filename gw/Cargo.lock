@@ -1050,6 +1050,7 @@ name = "mq_client"
 version = "0.1.0"
 dependencies = [
  "amqp 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "glib 0.1.0",
  "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "sys_config 0.1.0",
 ]

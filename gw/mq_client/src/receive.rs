@@ -7,6 +7,8 @@ use amqp::{Basic, Session, Channel, Table, protocol};
 use std::thread;
 
 use sys_config;
+
+use glib::pb::msg_proto;
 //table types:
 //use table::{FieldTable, Table, Bool, ShortShortInt, ShortShortUint, ShortInt, ShortUint, LongInt, LongUint, LongLongInt, LongLongUint, Float, Double, DecimalValue, LongString, FieldArray, Timestamp};
 
@@ -20,8 +22,37 @@ fn consumer_function(channel: &mut Channel, deliver: protocol::basic::Deliver, h
 //    debug!("body: {:?}", b);
     println!("body: {:?}", body);
 
+    //parse pb logic
+
+//    let test_msg = msg_proto::decode_msg(body);
+//    println!("name: {:?}", test_msg.get_name());
+//    println!("nick_name:{:?}", test_msg.get_nick_name());
+//    println!("phone: {:?}", test_msg.get_phone());
+
+    parse_package(body);
 
     let _res = channel.basic_ack(deliver.delivery_tag, false);
+}
+
+// 解包
+pub fn parse_package(package: Vec<u8>)  {
+
+    let unpackage = glib::unpackage(package);
+
+    match unpackage {
+        Some(glib::UnPackageResult{len:_len, cmd, pb}) => {
+            println!("cmd:{:?}", cmd);
+            let test_msg = msg_proto::decode_msg(pb);
+            println!("name: {:?}", test_msg.get_name());
+            println!("nick_name:{:?}", test_msg.get_nick_name());
+            println!("phone: {:?}", test_msg.get_phone());
+
+        }
+        None => {
+            // 如果解包失败，直接关掉连接
+            println!("unpackage error ...");
+        }
+    }
 }
 
 

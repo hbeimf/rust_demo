@@ -31,10 +31,6 @@ fn consumer_function(channel: &mut Channel, deliver: protocol::basic::Deliver, h
         },
     }
 
-
-
-
-
     let _res = channel.basic_ack(deliver.delivery_tag, false);
 }
 

@@ -18,18 +18,22 @@ fn consumer_function(channel: &mut Channel, deliver: protocol::basic::Deliver, h
     debug!("Content headers: {:?}", headers);
     debug!("Content body: {:?}", body);
 
-//    let b = String::from_utf8(body).unwrap();
-//    debug!("body: {:?}", b);
     println!("body: {:?}", body);
 
-    //parse pb logic
+    let bb = String::from_utf8(body.clone());
+    match bb {
+        Ok(str_body) => {
+            println!("body: {:?}", str_body);
+        },
+        Err(e) => {
+            println!("err: {:?}", e);
+            parse_package(body);
+        },
+    }
 
-//    let test_msg = msg_proto::decode_msg(body);
-//    println!("name: {:?}", test_msg.get_name());
-//    println!("nick_name:{:?}", test_msg.get_nick_name());
-//    println!("phone: {:?}", test_msg.get_phone());
 
-    parse_package(body);
+
+
 
     let _res = channel.basic_ack(deliver.delivery_tag, false);
 }

@@ -16,9 +16,9 @@ fn consumer_function(channel: &mut Channel, deliver: protocol::basic::Deliver, h
     debug!("Content headers: {:?}", headers);
     debug!("Content body: {:?}", body);
 
-    let b = String::from_utf8(body).unwrap();
-    debug!("body: {:?}", b);
-    println!("body: {:?}", b);
+//    let b = String::from_utf8(body).unwrap();
+//    debug!("body: {:?}", b);
+    println!("body: {:?}", body);
 
 
     let _res = channel.basic_ack(deliver.delivery_tag, false);

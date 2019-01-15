@@ -1,7 +1,7 @@
 -module(glibaes128).
 -compile(export_all).
 % -export([encode/1, decode/1, test/0, test/1, key/0]).
--include_lib("ws_server/include/log.hrl").
+-include("log.hrl").
 
 % application:start(crypto).
 

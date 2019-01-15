@@ -6,7 +6,7 @@
 -export([encode/1,decode/1,
          encode/3,decode/3, test/0]).
 
--include_lib("ws_server/include/log.hrl").
+-include("log.hrl").
 
 test() -> 
 	Str = <<"this is a test!!!">>,

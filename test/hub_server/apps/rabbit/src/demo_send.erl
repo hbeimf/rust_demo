@@ -23,14 +23,25 @@
 	channel
     }).
 
--export([send/0, send/1]).
+-export([send/0, send/1, send1/0]).
 
 -include_lib("amqp_client/include/amqp_client.hrl").
 -include_lib("glib/include/log.hrl").
+-include_lib("glib/include/msg_proto.hrl").
 
 send() -> 
 	Message = <<"info: Hello World!">>,
 	send(Message).
+
+send1() ->
+	TestMsg = #'TestMsg'{
+	            name = <<"jim green">>,
+	            nick_name = <<"nick_name123456">>,
+	            phone = <<"15912341234">> 
+	        },
+	TestMsgBin = msg_proto:encode_msg(TestMsg),
+	Package = glib:package(123456, TestMsgBin),
+	send(Package).
 
 send(Message) -> 
 	gen_server:cast(?MODULE, {send, Message}).
@@ -114,7 +125,7 @@ handle_cast({send, Message}, State=#state{channel=Channel}) ->
 		                      #'basic.publish'{
 		                        exchange = <<"">>,
 		                        routing_key = <<"test_queue">>},
-		                      #amqp_msg{payload = <<"Hello World!">>}),
+		                      #amqp_msg{payload = Message}),
 			ok;
 		_ ->
 			?LOG({"channel died !"}),

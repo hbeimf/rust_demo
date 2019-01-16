@@ -14,6 +14,7 @@ use glib::codec::{ChatResponse};
 use actix::prelude::*;
 
 use tcp_client;
+use crate::cmd;
 
 // 解包
 pub fn parse_package(package: Vec<u8>, client: &mut ChatSession, ctx: &mut actix::Context<ChatSession>)  {
@@ -24,7 +25,7 @@ pub fn parse_package(package: Vec<u8>, client: &mut ChatSession, ctx: &mut actix
         Some(glib::UnPackageResult{len:_len, cmd, pb}) => {
             // action(cmd, pb, client, ctx);
             match cmd {
-                10000 => {
+                cmd::CMD_LOGIN_10000 => {
                     action_10000(cmd, pb, client, ctx);
                 }
                 10008 => {

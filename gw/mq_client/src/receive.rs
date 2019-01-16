@@ -20,8 +20,8 @@ fn consumer_function(channel: &mut Channel, deliver: protocol::basic::Deliver, h
 
     println!("body: {:?}", body);
 
-    let bb = String::from_utf8(body.clone());
-    match bb {
+    let maybe_str = String::from_utf8(body.clone());
+    match maybe_str {
         Ok(str_body) => {
             println!("body: {:?}", str_body);
         },

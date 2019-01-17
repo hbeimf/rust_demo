@@ -14,5 +14,10 @@ pub fn get() {
 	// assert!(res.get_body() == "Hello".as_bytes());
 	// assert!(res.get_headers().len() == 1);
 	// assert!(res.get_header("content-length") == ["5".to_string()]);
-	println!("{:?}", res.get_body());
+	// println!("{:?}", res.get_body());
+	let body = String::from_utf8(res.get_body().to_vec());
+
+	println!("{:?}", body);
+
+
 }

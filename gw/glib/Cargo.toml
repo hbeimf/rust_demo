@@ -27,6 +27,7 @@ tokio = "0.1.7"
 
 log = "0.4.6"
 curl = "~0.2.18"
+encoding = "0.2.33"
 
 [build-dependencies]
 protobuf-codegen-pure = "2.2.0"

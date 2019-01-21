@@ -25,6 +25,7 @@ pub mod protos;
 pub mod codec;
 pub mod http_client;
 extern crate curl;
+extern crate encoding;
 
 pub fn package(cmd:u32, pb:Vec<u8>) -> Vec<u8> {
     let len:u32 = pb.len() as u32 + 4 + 4;

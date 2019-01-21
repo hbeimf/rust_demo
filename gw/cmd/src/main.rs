@@ -5,6 +5,7 @@ extern crate tcp_server;
 extern crate ws_server;
 extern crate sys_config;
 extern crate mq_client;
+extern crate glib;
 
 extern crate flexi_logger;
 #[macro_use]
@@ -40,6 +41,7 @@ fn main() {
 
     mysqlc::test::test();
     redisc::test();
+    glib::http_client::get();
 
     let sys = actix::System::new("rs-server");
     tcp_server::start_server();

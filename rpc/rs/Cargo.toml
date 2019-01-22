@@ -1,0 +1,20 @@
+[package]
+name = "rs"
+version = "0.1.0"
+authors = ["maomao <5622876@qq.com>"]
+
+[[bin]]
+name = "server"
+path = "src/bin/server.rs"
+
+[[bin]]
+name = "client"
+path = "src/bin/client.rs"
+
+
+[dependencies]
+env_logger = "0.5.12"
+log = "0.4.4"
+ordered-float = "0.5.0"
+try_from = "0.2.2"
+thrift = "0.0.4"

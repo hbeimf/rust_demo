@@ -39,9 +39,11 @@ fn main() {
     // info!("This is an info message");
     // trace!("This is a trace message - you must not see it!");
 
-    mysqlc::test::test();
-    redisc::test();
-    glib::http_client::get();
+//    mysqlc::test::test();
+//    redisc::test();
+//    glib::http_client::get();
+
+    dbg!(log_dir);
 
     let sys = actix::System::new("rs-server");
     tcp_server::start_server();

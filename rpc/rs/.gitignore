@@ -21,3 +21,4 @@ Mnesia*
 *target/*
 *tikv/*
 *tokio_kcp/*
+rs.iml

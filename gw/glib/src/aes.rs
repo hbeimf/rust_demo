@@ -11,9 +11,8 @@ pub fn test() {
 
 fn test1() {
     let s = String::from("1234567");
-    let plaintext = s.into_bytes();
 
-    let en = encode(plaintext.clone());
+    let en = encode_str(s.clone());
     let de = decode(en);
 
     let sparkle_heart = String::from_utf8(de).unwrap();
@@ -59,8 +58,13 @@ pub fn decode(en: Vec<u8>) -> Vec<u8> {
     res
 }
 
-pub fn encode(from_str:Vec<u8>) -> Vec<u8> {
-    let mut from_str = from_str;
+pub fn encode_str(from_str:String) -> Vec<u8> {
+    let from_v8 = from_str.into_bytes();
+    encode(from_v8)
+}
+
+pub fn encode(from_v8:Vec<u8>) -> Vec<u8> {
+    let mut from_str = from_v8;
     let n = (16 - from_str.len()) as u8;
     let mut padding = get_padding(n);
 

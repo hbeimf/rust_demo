@@ -4,22 +4,29 @@ use crate::openssl::aes::{AesKey, aes_ige};
 use crate::openssl::symm::Mode;
 
 //https://docs.rs/openssl/0.10.16/openssl/aes/index.html
-pub fn test1() {
+pub fn test() {
+    test1();
+    test2();
+}
+
+fn test1() {
     let plaintext = b"\x12\x34\x56\x78\x90\x12\x34\x56\x12\x34\x56\x78\x90\x12\x34\x56";
     let en = encode(plaintext.to_vec());
     let de = decode(en);
     assert_eq!(plaintext.to_vec(), de);
 }
 
-pub fn test() {
+fn test2() {
 //    let plaintext = b"\x12\x34\x56\x78\x90\x12\x34\x56\x12\x34\x56\x78\x90\x12\x34\x56";
     let plaintext = vec![1,2,3,4,5,6,7,8,9,0,11,12,13,14,15, 16, 1,2,3,4,5,6,7,8,9,0,11,12,13,14,15, 32];
     let en = encode(plaintext.clone());
     let de = decode(en);
 //    assert_eq!(plaintext, de);
 
-    dbg!(plaintext);
-    dbg!(de);
+//    dbg!(plaintext);
+//    dbg!(de);
+    assert_eq!(plaintext, de);
+
 }
 
 

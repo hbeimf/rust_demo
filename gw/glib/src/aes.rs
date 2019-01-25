@@ -8,6 +8,8 @@ pub fn test() {
     test1();
     test2();
     test3();
+    test4();
+
 }
 
 fn test1() {
@@ -33,13 +35,53 @@ fn test2() {
 fn test3() {
     let s = String::from("1234567812345678");
     let plaintext = s.into_bytes();
-//    dbg!(plaintext.clone());
+    dbg!(plaintext.clone().len());
 
     let en = encode(plaintext.clone());
     let de = decode(en);
 
     assert_eq!(plaintext, de);
 
+}
+
+fn test4() {
+    let s = String::from("1234567");
+    let mut plaintext = s.into_bytes();
+
+    let n = (16 - plaintext.len()) as u8;
+    let mut padding = get_padding(n);
+
+    plaintext.append(&mut padding);
+
+    dbg!(plaintext.clone().len());
+
+    let en = encode(plaintext.clone());
+    let de = decode(en);
+
+    assert_eq!(plaintext, de);
+    dbg!(de);
+
+}
+
+
+fn get_padding(n:u8) -> Vec<u8> {
+    if n == 0 {
+//        let mut vec= [16u8].repeat(16);
+        let mut vec = Vec::with_capacity(16);
+        for i in 0..16
+        {
+            vec.push(16);
+        }
+        vec
+    } else {
+//        let mut vec= [N].repeat(N as usize);
+        let mut vec = Vec::with_capacity(n as usize);
+        for i in 0..n
+        {
+            vec.push(n);
+        }
+        vec
+    }
 }
 
 
@@ -56,6 +98,11 @@ pub fn decode(en: Vec<u8>) -> Vec<u8> {
 }
 
 pub fn encode(plaintext:Vec<u8>) -> Vec<u8> {
+//    let
+//    let n = (16 - plaintext.len()) as u8;
+//    let mut padding = get_padding(n);
+//
+//    plaintext.append(&mut padding);
 
     let key = key();
     let mut iv = iv();

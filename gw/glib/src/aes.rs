@@ -7,6 +7,7 @@ use crate::openssl::symm::Mode;
 pub fn test() {
     test1();
     test2();
+    test3();
 }
 
 fn test1() {
@@ -25,6 +26,18 @@ fn test2() {
 
 //    dbg!(plaintext);
 //    dbg!(de);
+    assert_eq!(plaintext, de);
+
+}
+
+fn test3() {
+    let s = String::from("1234567812345678");
+    let plaintext = s.into_bytes();
+//    dbg!(plaintext.clone());
+
+    let en = encode(plaintext.clone());
+    let de = decode(en);
+
     assert_eq!(plaintext, de);
 
 }

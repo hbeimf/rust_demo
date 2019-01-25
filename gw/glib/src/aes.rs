@@ -13,7 +13,7 @@ pub fn test1() {
 
 pub fn test() {
 //    let plaintext = b"\x12\x34\x56\x78\x90\x12\x34\x56\x12\x34\x56\x78\x90\x12\x34\x56";
-    let plaintext = vec![1,2,3,4,5,6,7,8,9,0,11,12,13,14,15, 16];
+    let plaintext = vec![1,2,3,4,5,6,7,8,9,0,11,12,13,14,15, 16, 1,2,3,4,5,6,7,8,9,0,11,12,13,14,15, 32];
     let en = encode(plaintext.clone());
     let de = decode(en);
 //    assert_eq!(plaintext, de);
@@ -29,7 +29,7 @@ pub fn decode(en: Vec<u8>) -> Vec<u8> {
     let mut iv = iv();
 
     let key = AesKey::new_decrypt(&key).unwrap();
-    let mut output = [0u8; 16];
+    let mut output = en.clone();
     aes_ige(&en, &mut output, &key, &mut iv, Mode::Decrypt);
     output.to_vec()
 
@@ -41,7 +41,7 @@ pub fn encode(plaintext:Vec<u8>) -> Vec<u8> {
     let mut iv = iv();
 
     let key = AesKey::new_encrypt(&key).unwrap();
-    let mut output = [0u8; 16];
+    let mut output = plaintext.clone();
     aes_ige(&plaintext, &mut output, &key, &mut iv, Mode::Encrypt);
     output.to_vec()
 }

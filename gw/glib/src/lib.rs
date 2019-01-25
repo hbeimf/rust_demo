@@ -27,6 +27,7 @@ pub mod codec;
 //extern crate curl;
 extern crate encoding;
 extern crate openssl;
+extern crate base64;
 
 pub mod aes;
 

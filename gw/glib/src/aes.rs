@@ -3,6 +3,8 @@
 use crate::openssl::aes::{AesKey, aes_ige};
 use crate::openssl::symm::Mode;
 
+use crate::base64::{encode as encode_b64};
+
 //https://docs.rs/openssl/0.10.16/openssl/aes/index.html
 pub fn test() {
     test1();
@@ -13,6 +15,8 @@ fn test1() {
     let s = String::from("1234567");
 
     let en = encode_str(s.clone());
+    let b64 = encode_b64(&en);
+    dbg!(b64);
     let de = decode(en);
 
     let sparkle_heart = String::from_utf8(de).unwrap();

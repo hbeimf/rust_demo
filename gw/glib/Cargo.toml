@@ -29,5 +29,7 @@ log = "0.4.6"
 encoding = "0.2.33"
 openssl = "0.10.16"
 
+base64 = "0.10.1"
+
 [build-dependencies]
 protobuf-codegen-pure = "2.2.0"

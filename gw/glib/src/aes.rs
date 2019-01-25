@@ -12,7 +12,7 @@ pub fn test() {
 
 
 fn test1() {
-    let s = String::from("1234567");
+    let s = String::from("hello");
 
     let en = encode_str(s.clone());
     let b64 = encode_b64(&en);

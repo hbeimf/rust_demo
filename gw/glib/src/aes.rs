@@ -6,67 +6,24 @@ use crate::openssl::symm::Mode;
 //https://docs.rs/openssl/0.10.16/openssl/aes/index.html
 pub fn test() {
     test1();
-    test2();
-    test3();
-    test4();
-
 }
+
 
 fn test1() {
-    let plaintext = b"\x12\x34\x56\x78\x90\x12\x34\x56\x12\x34\x56\x78\x90\x12\x34\x56";
-    let en = encode(plaintext.to_vec());
-    let de = decode(en);
-    assert_eq!(plaintext.to_vec(), de);
-}
-
-fn test2() {
-//    let plaintext = b"\x12\x34\x56\x78\x90\x12\x34\x56\x12\x34\x56\x78\x90\x12\x34\x56";
-    let plaintext = vec![1,2,3,4,5,6,7,8,9,0,11,12,13,14,15, 16, 1,2,3,4,5,6,7,8,9,0,11,12,13,14,15, 32];
-    let en = encode(plaintext.clone());
-    let de = decode(en);
-//    assert_eq!(plaintext, de);
-
-//    dbg!(plaintext);
-//    dbg!(de);
-    assert_eq!(plaintext, de);
-
-}
-
-fn test3() {
-    let s = String::from("1234567812345678");
-    let plaintext = s.into_bytes();
-    dbg!(plaintext.clone().len());
-
-    let en = encode(plaintext.clone());
-    let de = decode(en);
-
-    assert_eq!(plaintext, de);
-
-}
-
-fn test4() {
     let s = String::from("1234567");
-    let mut plaintext = s.into_bytes();
-
-    let n = (16 - plaintext.len()) as u8;
-    let mut padding = get_padding(n);
-
-    plaintext.append(&mut padding);
-
-    dbg!(plaintext.clone().len());
+    let plaintext = s.into_bytes();
 
     let en = encode(plaintext.clone());
     let de = decode(en);
 
-    assert_eq!(plaintext, de);
-    dbg!(de);
+    let sparkle_heart = String::from_utf8(de).unwrap();
+    dbg!(sparkle_heart);
 
 }
 
 
 fn get_padding(n:u8) -> Vec<u8> {
     if n == 0 {
-//        let mut vec= [16u8].repeat(16);
         let mut vec = Vec::with_capacity(16);
         for i in 0..16
         {
@@ -74,7 +31,6 @@ fn get_padding(n:u8) -> Vec<u8> {
         }
         vec
     } else {
-//        let mut vec= [N].repeat(N as usize);
         let mut vec = Vec::with_capacity(n as usize);
         for i in 0..n
         {
@@ -86,30 +42,36 @@ fn get_padding(n:u8) -> Vec<u8> {
 
 
 pub fn decode(en: Vec<u8>) -> Vec<u8> {
-
     let key = key();
     let mut iv = iv();
 
     let key = AesKey::new_decrypt(&key).unwrap();
     let mut output = en.clone();
     aes_ige(&en, &mut output, &key, &mut iv, Mode::Decrypt);
-    output.to_vec()
+    let output = output.to_vec();
 
+    let len = output.len();
+    let last = output[len - 1] as usize;
+    let split_pos = len - last;
+
+    let (left, _) = output.split_at(split_pos);
+    let res = left.to_vec();
+    res
 }
 
-pub fn encode(plaintext:Vec<u8>) -> Vec<u8> {
-//    let
-//    let n = (16 - plaintext.len()) as u8;
-//    let mut padding = get_padding(n);
-//
-//    plaintext.append(&mut padding);
+pub fn encode(from_str:Vec<u8>) -> Vec<u8> {
+    let mut from_str = from_str;
+    let n = (16 - from_str.len()) as u8;
+    let mut padding = get_padding(n);
+
+    from_str.append(&mut padding);
 
     let key = key();
     let mut iv = iv();
 
     let key = AesKey::new_encrypt(&key).unwrap();
-    let mut output = plaintext.clone();
-    aes_ige(&plaintext, &mut output, &key, &mut iv, Mode::Encrypt);
+    let mut output = from_str.clone();
+    aes_ige(&from_str, &mut output, &key, &mut iv, Mode::Encrypt);
     output.to_vec()
 }
 

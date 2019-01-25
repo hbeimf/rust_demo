@@ -313,3 +313,19 @@ get_ip() ->
 	lists:foldl(fun({Ip, _, _}, Reply) -> 
 		[Ip|Reply]
 	end, [], L).
+
+
+get_mac() ->
+	{ok, Infos} = inet:getifaddrs(),
+	Macs = lists:foldl(fun({Dev, Info}, Res) -> 
+		case lists:keytake(hwaddr, 1, Info) of 
+			{_, {_, Hwaddr}, _ } -> 
+				[{Dev, to_str(Hwaddr)}|Res];	
+			_ -> 
+				Res 
+		end
+	end, [], Infos),
+
+	io:format("mac: ~p~n", [Macs]),
+	ok.
+

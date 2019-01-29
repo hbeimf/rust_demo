@@ -329,3 +329,8 @@ get_mac() ->
 	io:format("mac: ~p~n", [Macs]),
 	ok.
 
+% glib:get_abst("/erlang/gw/gateway/generate/release_gateway_master_127.0.0.1_p9988_v0.3.6/lib/sys_config-0.3.6/ebin/sys_cc.beam").
+get_abst(Filename) ->
+    Chunks = beam_lib:all_chunks(Filename),
+    Abst = proplists:get_value("Abst", element(3, Chunks)),
+    binary_to_term(Abst).

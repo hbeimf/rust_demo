@@ -55,6 +55,7 @@ pub fn decode(en: Vec<u8>) -> Vec<u8> {
 
     let len = output.len();
     let last = output[len - 1] as usize;
+
     let split_pos = len - last;
 
     let (left, _) = output.split_at(split_pos);

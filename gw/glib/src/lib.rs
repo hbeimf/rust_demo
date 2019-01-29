@@ -30,6 +30,7 @@ extern crate openssl;
 extern crate base64;
 
 pub mod aes;
+pub mod http_client;
 
 pub fn package(cmd:u32, pb:Vec<u8>) -> Vec<u8> {
     let len:u32 = pb.len() as u32 + 4 + 4;

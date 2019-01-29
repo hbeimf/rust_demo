@@ -31,5 +31,8 @@ openssl = "0.10.16"
 
 base64 = "0.10.1"
 
+
+reqwest = "0.9.9"
+
 [build-dependencies]
 protobuf-codegen-pure = "2.2.0"

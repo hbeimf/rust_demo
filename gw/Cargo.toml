@@ -2,13 +2,6 @@
 
 members = [
     "cmd",
-    "mysqlc",
-    "redisc",
-    "sys_config",
     "glib",
-    "table",
-    "tcp_server",
-    "ws_server",
-    "tcp_client",
-    "mq_client",
+
 ]

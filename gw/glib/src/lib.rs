@@ -32,6 +32,9 @@ extern crate base64;
 pub mod aes;
 pub mod http_client;
 
+extern crate rpds;
+pub mod list;
+
 pub fn package(cmd:u32, pb:Vec<u8>) -> Vec<u8> {
     let len:u32 = pb.len() as u32 + 4 + 4;
     let mut package = vec![];
@@ -65,4 +68,9 @@ pub fn unpackage(package: Vec<u8>) -> Option<UnPackageResult> {
             Some(UnPackageResult{len:len, cmd:cmd, pb:pb})
         }       
     }
+}
+
+pub fn test() {
+    http_client::test();
+    list::test();
 }

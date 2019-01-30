@@ -2,7 +2,6 @@ use crate::rpds::List;
 
 
 pub fn test() {
-//    use rpds::List;
 
     let list = List::new().push_front("list");
 

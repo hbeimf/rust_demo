@@ -71,6 +71,7 @@ pub fn unpackage(package: Vec<u8>) -> Option<UnPackageResult> {
 }
 
 pub fn test() {
+    aes::test();
     http_client::test();
     list::test();
 }

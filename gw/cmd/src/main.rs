@@ -42,7 +42,7 @@ fn main() {
 //    mysqlc::test::test();
 //    redisc::test();
     glib::test();
-    glib::aes::test();
+//    glib::aes::test();
 
     dbg!(log_dir);
 

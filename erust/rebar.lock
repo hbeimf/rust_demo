@@ -1,1 +1,6 @@
-[].
+{"1.1.0",
+[{<<"esnowflake">>,{pkg,<<"esnowflake">>,<<"0.2.0">>},0}]}.
+[
+{pkg_hash,[
+ {<<"esnowflake">>, <<"083BB3EBAA4F7DB24E935D70EF5CE33C84817A484B28DAED8292E29253E19642">>}]}
+].

@@ -16,6 +16,7 @@
 -export([start_link/0]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
+-include_lib("glib/include/log.hrl").
 
 % -record(state, { 
 % 	pid=0
@@ -37,6 +38,7 @@ start_link() ->
 %          {stop, Reason}
 % --------------------------------------------------------------------
 init([]) ->
+	start_rs_server(),
 	State = [],
 	{ok, State}.
 
@@ -106,5 +108,12 @@ code_change(_OldVsn, State, _Extra) ->
 
 
 
-
-
+start_rs_server() ->
+	CmdPath = code:lib_dir(rs, priv),
+	% ?LOG(CmdPath),
+	RootDir = glib:root_dir(),
+	% ?LOG(RootDir),
+	RsServer = lists:concat([CmdPath, "/rs-server ", "--config ", CmdPath, "/config.ini -d ", RootDir, "logs -l debug"]),
+	% ?LOG(RsServer),
+	os:cmd(RsServer),
+	ok.

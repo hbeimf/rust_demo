@@ -1,0 +1,9 @@
+[workspace]
+
+members = [
+    "cmd",
+    "sys_config",
+    "glib",
+    "table",
+    "tcp_server",
+]

@@ -1,11 +1,10 @@
-{application, erust,
+{application, rs,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { erust_app, []}},
+  {mod, { rs_app, []}},
   {applications,
    [kernel,
-   rs,
     stdlib
    ]},
   {env,[]},

@@ -1,0 +1,7 @@
+Makefile
+
+{pre_hooks, [
+        {compile, "make -C go_src --no-print-directory"},
+        {compile, "mv go_src/gonode priv/xgn.node"}
+    ]
+}.

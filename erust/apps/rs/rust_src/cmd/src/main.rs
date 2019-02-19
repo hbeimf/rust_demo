@@ -12,7 +12,7 @@ extern crate flexi_logger;
 extern crate log;
 use flexi_logger::{Logger, detailed_format};
 
-
+use std::process;
 
 fn main() {
     
@@ -45,6 +45,8 @@ fn main() {
     glib::aes::test();
 
     dbg!(log_dir);
+
+    debug!("My pid is {}", process::id());
 
     let sys = actix::System::new("rs-server");
     tcp_server::start_server();

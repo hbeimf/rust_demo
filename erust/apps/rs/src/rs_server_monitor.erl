@@ -52,15 +52,6 @@ init([]) ->
 %          {stop, Reason, Reply, State}   | (terminate/2 is called)
 %          {stop, Reason, State}            (terminate/2 is called)
 % --------------------------------------------------------------------
-
-% handle_call({doit, FromPid}, _From, State) ->
-%     io:format("doit  !! ============== ~n~n"),
-
-%     lists:foreach(fun(_I) ->
-%         FromPid ! {from_doit, <<"haha">>}
-%     end, lists:seq(1, 100)),
-
-%     {reply, [], State};
 handle_call(_Request, _From, State) ->
     Reply = ok,
     {reply, Reply, State}.
@@ -84,11 +75,6 @@ handle_cast(_Msg, State) ->
 % --------------------------------------------------------------------
 handle_info(_Info, State) ->
     {noreply, State}.
-
-% handle_info(Info, State) ->
-%     % 接收来自go 发过来的异步消息
-%     io:format("~nhandle info BBB!!============== ~n~p~n", [Info]),
-%     {noreply, State}.
 
 % --------------------------------------------------------------------
 % Function: terminate/2

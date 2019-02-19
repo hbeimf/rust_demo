@@ -13,6 +13,7 @@ extern crate log;
 use flexi_logger::{Logger, detailed_format};
 
 use std::process;
+use std::fs;
 
 fn main() {
     
@@ -36,22 +37,31 @@ fn main() {
     debug!("log_dir: {:?}", log_dir);
     debug!("log_level: {:?}", log_level);
     debug!("pid_file: {:?}", pid_file);
-    debug!("My pid is {}", process::id());
+    // dbg!(process::id());
+    write_pid(pid_file, process::id());
 
     // info!("This is an info message");
     // trace!("This is a trace message - you must not see it!");
 
 //    mysqlc::test::test();
 //    redisc::test();
-    glib::http_client::test();
-    glib::aes::test();
+    // glib::http_client::test();
+    // glib::aes::test();
 
     dbg!(log_dir);
-    
+
     let sys = actix::System::new("rs-server");
     tcp_server::start_server();
     // ws_server::start_server();
 
     // mq_client::start_mq_client();
     let _ = sys.run();
+}
+
+
+fn write_pid(pid_file:String, pid: u32) {
+        dbg!(pid_file.clone());
+        dbg!(pid);
+        let _res = fs::write(pid_file, pid.to_string());
+        // dbg!(res);
 }

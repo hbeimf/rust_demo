@@ -84,12 +84,15 @@ impl Default for SysConfig {
         // rs.pid
         let mut pid_file: String = "/erlang/rust_demo/gw/logs/rs.pid".to_string();
         if ! opt.pid_file.is_empty() {
+             // dbg!(opt.pid_file.clone());
             if let Some(dir) = opt.pid_file.get(0) {
-                if Path::new(dir).is_dir() {
+                // dbg!(dir.clone());
+                // if Path::new(dir).is_dir() {
                     pid_file = (*dir).clone();
-                }
+                // }
             }
         }
+        // dbg!(pid_file.clone());
 
         let config = Ini::from_file(&ini_config).unwrap();
         SysConfig{config:config, config_dir: ini_config, log_dir:log_dir, log_level:log_level, pid_file:pid_file}

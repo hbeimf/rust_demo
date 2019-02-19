@@ -4,7 +4,7 @@ compile:
 	cargo build
 
 run:
-	./target/debug/rs-server --config $(RUST_PATH)/config.ini -d $(RUST_PATH)/logs -l debug
+	./target/debug/rs-server --config $(RUST_PATH)/config.ini -d $(RUST_PATH)/logs -l debug -p $(RUST_PATH)/rs.pid 
 
 rel:
 	cargo build --release

@@ -18,6 +18,7 @@ fn main() {
     
     let log_level = sys_config::config_log_level();
     let log_dir = sys_config::config_log_dir();
+    let pid_file = sys_config::config_pid_file();
 
 
 	Logger::with_str(log_level.clone())
@@ -34,8 +35,9 @@ fn main() {
     debug!("================================= start server =================================!");
     debug!("log_dir: {:?}", log_dir);
     debug!("log_level: {:?}", log_level);
+    debug!("pid_file: {:?}", pid_file);
+    debug!("My pid is {}", process::id());
 
-    
     // info!("This is an info message");
     // trace!("This is a trace message - you must not see it!");
 
@@ -45,9 +47,7 @@ fn main() {
     glib::aes::test();
 
     dbg!(log_dir);
-
-    debug!("My pid is {}", process::id());
-
+    
     let sys = actix::System::new("rs-server");
     tcp_server::start_server();
     // ws_server::start_server();

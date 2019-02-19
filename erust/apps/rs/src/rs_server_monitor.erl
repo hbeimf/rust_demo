@@ -113,7 +113,8 @@ start_rs_server() ->
 	% ?LOG(CmdPath),
 	RootDir = glib:root_dir(),
 	% ?LOG(RootDir),
-	RsServer = lists:concat([CmdPath, "/rs-server ", "--config ", CmdPath, "/config.ini -d ", RootDir, "logs -l debug"]),
-	% ?LOG(RsServer),
+	RsServer = lists:concat([CmdPath, "/rs-server ", "--config ", CmdPath, "/config.ini -d ", RootDir, "logs -l debug -p ", CmdPath, "/rs.pid"]),
+	% RsServer = lists:concat([CmdPath, "/rs-server ", "--config ", CmdPath, "/config.ini -d ", RootDir, "logs -l debug"]),
+	?LOG(RsServer),
 	os:cmd(RsServer),
 	ok.

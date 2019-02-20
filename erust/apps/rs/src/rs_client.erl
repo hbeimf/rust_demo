@@ -4,25 +4,25 @@
 % --------------------------------------------------------------------
 % Include files
 % --------------------------------------------------------------------
-
-% --------------------------------------------------------------------
-% External exports
-% --------------------------------------------------------------------
--export([]).
-
-% gen_server callbacks
--export([start_link/1]).
--export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
-
+-include_lib("glib/include/log.hrl").
 
 -record(state, { 
 	socket,
 	transport,
 	ip,
 	port,
-    data,
-    call_pid
-    }).
+	data,
+	call_pid
+}).
+
+-define(TIMER_SECONDS, 30000).  % 
+-define(TIMEOUT, 5000).
+
+% --------------------------------------------------------------------
+% External exports
+% --------------------------------------------------------------------
+-export([start_link/1]).
+-export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
 % --------------------------------------------------------------------
 % External API
@@ -30,47 +30,8 @@
 % -export([send/0, send/1, call_req/2]).
 -export([call_req/2]).
 
-
-
-% -include_lib("glib/include/msg_proto.hrl").
--include_lib("glib/include/log.hrl").
-% -include_lib("glib/include/cmdid.hrl").
-% -include("gs_tcp_state.hrl").
-% -include("gwc_proto.hrl").
-% -include("cmd_gs.hrl").
-
--define(TIMER_SECONDS, 30000).  % 
--define(TIMEOUT, 5000).
-
-% send() -> 
-% 	Type = 1111, 
-% 	Bin = <<"test send!!">>,
-% 	P = tcp_package:package(Type, Bin),
-
-% 	Type1 = 2222, 
-% 	Bin1 = <<"test sendXX!!">>,
-% 	P1 = tcp_package:package(Type1, Bin1),
-
-% 	Type2 = 9999, 
-% 	Bin2 = <<"test sendXX!!">>,
-% 	P2 = tcp_package:package(Type2, Bin2),
-
-% 	PP = <<P/binary, P1/binary, P2/binary>>,
-% 	send(PP).
-
-
-% send(Package) -> 
-% 	gen_server:cast(?MODULE, {send, Package}).
-
-% doit(FromPid) ->
-%     gen_server:cast(?MODULE, {doit, FromPid}).
-
-
-
 call_req(Pid, Package) ->
 	gen_server:call(Pid, {call, Package}, ?TIMEOUT).
-
-
 
 % send_test_msg() ->
 %     TestMsg = #'TestMsg'{
@@ -151,8 +112,6 @@ init([_Index]) ->
 			{stop,Reason}
 	end.
 
-
-
 % --------------------------------------------------------------------
 % Function: handle_call/3
 % Description: Handling call messages
@@ -163,27 +122,14 @@ init([_Index]) ->
 %          {stop, Reason, Reply, gs_tcp_state}   | (terminate/2 is called)
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
-
-% handle_call({doit, FromPid}, _From, gs_tcp_state) ->
-%     io:format("doit  !! ============== ~n~n"),
-
-%     lists:foreach(fun(_I) ->
-%         FromPid ! {from_doit, <<"haha">>}
-%     end, lists:seq(1, 100)),
-
-%     {reply, [], gs_tcp_state};
-
-handle_call({call, Key, Package}, From, State=#state{
-		socket=Socket, transport=_Transport, data=_LastPackage}) ->
-    ?LOG({call, Package}),
-
-    tcp_rpc_call_table:insert(Key, From),
-
+handle_call({call, Key, Package}, From, State=#state{socket=Socket, transport=_Transport, data=_LastPackage}) ->
+	?LOG({call, Package}),
+	ets_rpc_call_table:insert(Key, From),
 	ranch_tcp:send(Socket, Package),
 	{noreply, State#state{call_pid = From}};
 handle_call(_Request, _From, State) ->
-    Reply = ok,
-    {reply, Reply, State}.
+	Reply = ok,
+	{reply, Reply, State}.
 
 % --------------------------------------------------------------------
 % Function: handle_cast/2
@@ -192,22 +138,11 @@ handle_call(_Request, _From, State) ->
 %          {noreply, gs_tcp_state, Timeout} |
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
-handle_cast({send, Package}, State=#state{
-		socket=Socket, transport=_Transport, data=_LastPackage}) ->
-    % io:format("send cast !! ============== ~n~n"),
-    % {ok, GoMBox} = application:get_env(go, go_mailbox),
-    % io:format("message ~p!! ============== ~n~n", [GoMBox]),
-    % gen_server:cast(GoMBox, {Msg, self()}),
-
-    % P1 = tcp_package:package(Type, Bin),
-
-    % P = <<P1/binary, P1/binary>>,
-    % ranch_tcp:send(Socket, P),
-    ranch_tcp:send(Socket, Package),
-
-    {noreply, State};
+handle_cast({send, Package}, State=#state{socket=Socket, transport=_Transport, data=_LastPackage}) ->
+	ranch_tcp:send(Socket, Package),
+	{noreply, State};
 handle_cast(_Msg, State) ->
-    {noreply, State}.
+	{noreply, State}.		
 
 % --------------------------------------------------------------------
 % Function: handle_info/2
@@ -216,29 +151,15 @@ handle_cast(_Msg, State) ->
 %          {noreply, gs_tcp_state, Timeout} |
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
-% handle_info(_Info, gs_tcp_state) ->
-%     {noreply, gs_tcp_state}.
-
-handle_info({tcp, Socket, CurrentPackage}, State=#state{
-		socket=Socket, transport=Transport, data=LastPackage}) -> 
-		% when byte_size(Data) > 1 ->
+handle_info({tcp, Socket, CurrentPackage}, State=#state{socket=Socket, transport=Transport, data=LastPackage}) -> 
 	Transport:setopts(Socket, [{active, once}]),
 	PackageBin = <<LastPackage/binary, CurrentPackage/binary>>,
-
 	case parse_package(PackageBin, State) of
 		{ok, waitmore, Bin} -> 
 			{noreply, State#state{data = Bin}};
 		_ -> 
 			{stop, stop_noreason,State}
 	end;
-% handle_info({timeout,_,{regist}}, State=#gs_tcp_state{socket=Socket}) ->
-% 	% 注册代理 
-% 	Bin = client_package:regist_proxy(),
-% 	ranch_tcp:send(Socket, Bin),
-% 	% 同步客户信息
-% 	sync_client(),
-% 	{noreply, gs_tcp_state};
-
 handle_info({send, Package}, State = #state{socket = Socket}) ->
 	?LOG({send, Package}),
 	ranch_tcp:send(Socket, Package),
@@ -289,7 +210,7 @@ handle_info(Info, State) ->
 % --------------------------------------------------------------------
 terminate(_Reason, _State) ->
 	?LOG(closed),
-    ok.
+	ok.
 
 % --------------------------------------------------------------------
 % Func: code_change/3
@@ -297,7 +218,7 @@ terminate(_Reason, _State) ->
 % Returns: {ok, Newgs_tcp_state}
 % --------------------------------------------------------------------
 code_change(_OldVsn, State, _Extra) ->
-    {ok, State}.
+	{ok, State}.
 
 
 % priv

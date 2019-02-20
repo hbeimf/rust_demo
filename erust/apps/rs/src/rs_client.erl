@@ -5,6 +5,7 @@
 % Include files
 % --------------------------------------------------------------------
 -include_lib("glib/include/log.hrl").
+-include("msg_proto.hrl").
 
 -record(state, { 
 	socket,
@@ -234,24 +235,24 @@ parse_package(Bin, State) ->
             error       
     end.
 
- % action(10008, DataBin, State = #state{call_pid = _CallFrom}) ->
+ action(10008, DataBin, State = #state{call_pid = _CallFrom}) ->
 
- % 	#'RpcPackage'{key = Key, 'payload' = Payload} = msg_proto:decode_msg(DataBin,'RpcPackage'),
+ 	#'RpcPackage'{key = Key, 'payload' = Payload} = msg_proto:decode_msg(DataBin,'RpcPackage'),
 
 
- % 	{ok, From} = tcp_rpc_call_table:select(Key),
- % 	?LOG({Key, Payload, From}),
+ 	{ok, From} = ets_rpc_call_table:select(Key),
+ 	?LOG({Key, Payload, From}),
 
- % 	tcp_rpc_call_table:delete(Key),
+ 	ets_rpc_call_table:delete(Key),
 
- % 	% ?LOG({Cmd, DataBin, State}),
+ 	% ?LOG({Cmd, DataBin, State}),
  	
- % 	% ?LOG({Name, NickName, Phone}),
+ 	% ?LOG({Name, NickName, Phone}),
 
-	% % gen_server:reply(CallFrom, DataBin),
-	% safe_reply(From, Payload),
+	% gen_server:reply(CallFrom, DataBin),
+	safe_reply(From, Payload),
 
- % 	ok;
+ 	ok;
   action(Cmd, DataBin, State) ->
 
  	% #'TestMsg'{name = Name, 'nick_name' = NickName,

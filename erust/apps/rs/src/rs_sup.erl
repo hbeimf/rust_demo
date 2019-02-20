@@ -30,8 +30,22 @@ start_link() ->
 init([]) ->
 	Child = {rs_server_monitor, {rs_server_monitor, start_link, []},
 		permanent, 5000, worker, [rs_server_monitor]},
-	Children = [Child],
-	{ok, { {one_for_all, 10, 10}, Children} }.
+	% Children = [Child],
+	% {ok, { {one_for_all, 10, 10}, Children} }.
+
+         PoolSpecs = {rs_client_pool,{poolboy,start_link,
+                 [[{name,{local,rs_client_pool}},
+                   {worker_module,rs_client},
+                   {size,10},
+                   {max_overflow,20}],
+        			[]]},
+        permanent,5000,worker,
+        [poolboy]},
+
+
+        Children = [Child, PoolSpecs],
+
+        {ok, {{one_for_one, 10, 10}, Children}}.
 
 %%====================================================================
 %% Internal functions

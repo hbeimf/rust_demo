@@ -1,4 +1,3 @@
-% rs.erl
 -module(rs).
 -compile(export_all).
 
@@ -6,8 +5,6 @@
 
 -include("msg_proto.hrl").
 -include_lib("glib/include/log.hrl").
-% -include_lib("glib/include/cmdid.hrl").
-
 
 test() -> 
 	Package = <<"hello world">>,
@@ -15,8 +12,6 @@ test() ->
 	
 call(Package) ->
 	Key = glib:to_binary(glib:to_str(glib:uid())),	
-	?LOG({key, Key}),
-	% tcp_rpc_call_table:insert(Key, self()),
 
 	RpcPackage = #'RpcPackage'{
                         key = Key,

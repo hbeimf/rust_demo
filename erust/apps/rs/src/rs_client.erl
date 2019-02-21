@@ -124,7 +124,7 @@ init([_Index]) ->
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
 handle_call({call, Key, Package}, From, State=#state{socket=Socket, transport=_Transport, data=_LastPackage}) ->
-	?LOG({call, Package}),
+	% ?LOG({call, Package}),
 	ets_rpc_call_table:insert(Key, From),
 	ranch_tcp:send(Socket, Package),
 	{noreply, State#state{call_pid = From}};
@@ -241,7 +241,7 @@ parse_package(Bin, State) ->
 
 
  	{ok, From} = ets_rpc_call_table:select(Key),
- 	?LOG({Key, Payload, From}),
+ 	% ?LOG({Key, Payload, From}),
 
  	ets_rpc_call_table:delete(Key),
 

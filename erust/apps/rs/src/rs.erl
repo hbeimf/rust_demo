@@ -8,7 +8,13 @@
 
 test() -> 
 	Package = <<"hello world">>,
-	call(Package).
+	RpcReply = call(Package),
+	?LOG(RpcReply),
+
+	#'RpcPackage'{key = Key, 'payload' = Payload} = msg_proto:decode_msg(RpcReply,'RpcPackage'),
+	?LOG(Payload),
+
+	ok.
 	
 call(Package) ->
 	Key = glib:to_binary(glib:to_str(glib:uid())),	

@@ -28,7 +28,7 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-	Child = {rs_server_monitor, {rs_server_monitor, start_link, []},
+	RustMonitor = {rs_server_monitor, {rs_server_monitor, start_link, []},
 		permanent, 5000, worker, [rs_server_monitor]},
 
          PoolSpecs = {rs_client_pool,{poolboy,start_link,
@@ -41,7 +41,7 @@ init([]) ->
         [poolboy]},
 
 
-        Children = [Child, PoolSpecs],
+        Children = [RustMonitor, PoolSpecs],
 
         {ok, {{one_for_one, 10, 10}, Children}}.
 

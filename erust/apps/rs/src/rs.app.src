@@ -6,6 +6,7 @@
   {applications,
    [kernel,
    glib,
+   zucchini,
     stdlib
    ]},
   {env,[]},

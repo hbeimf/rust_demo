@@ -54,6 +54,8 @@ start_link(Index) ->
 init([_Index]) ->
 	Ip = "127.0.0.1",
 	Port = 12345,
+	Config = read_config_file(),
+	?LOG(Config),
 	case ranch_tcp:connect(Ip, Port,[],3000) of
 		{ok,Socket} ->
         			ok = ranch_tcp:setopts(Socket, [{active, once}]),
@@ -212,3 +214,30 @@ safe_reply(undefined, _Value) ->
     ok;
 safe_reply(From, Value) ->
     gen_server:reply(From, Value).
+
+
+read_config_file() -> 
+	ConfigFile = root_dir() ++ "config.ini",
+	case file_get_contents(ConfigFile) of
+		{ok, Config} -> 
+			zucchini:parse_string(Config);
+		_ -> 
+			ok
+	end.
+
+root_dir() ->
+	CmdPath = code:lib_dir(rs, priv),
+	Cmd = lists:concat([CmdPath, "/"]),
+	Cmd.
+	
+
+file_get_contents(Dir) ->
+	case file:read_file(Dir) of
+		{ok, Bin} ->
+			% {ok, binary_to_list(Bin)};
+			{ok, Bin};
+		{error, Msg} ->
+			{error, Msg}
+	end.
+
+	

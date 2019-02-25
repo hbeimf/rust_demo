@@ -63,8 +63,8 @@ call_req(Pid, Package) ->
 
 start_link(Index) ->
 	% ?LOG({ServerID, ServerType, ServerURI, GwcURI, Max}),
-	?LOG({start, tcp_client}),
-    gen_server:start_link(?MODULE, [Index], []).
+	% ?LOG({start, tcp_client}),
+	gen_server:start_link(?MODULE, [Index], []).
 
 
 % --------------------------------------------------------------------
@@ -81,33 +81,27 @@ init([_Index]) ->
 	% {Ip, Port} = rconf:read_config(hub_server),
 	Ip = "127.0.0.1",
 	Port = 12345,
-	?LOG({Ip, Port}),
+	% ?LOG({Ip, Port}),
 	case ranch_tcp:connect(Ip, Port,[],3000) of
 		{ok,Socket} ->
         			ok = ranch_tcp:setopts(Socket, [{active, once}]),
 			% erlang:start_timer(1000, self(), {regist}),
 			% self() ! {timeout, <<"Heartbeat!">>, <<"Heartbeat!">>},
 			% erlang:start_timer(?TIMER_SECONDS, self(), <<"Heartbeat!">>),
-			?LOG({connect}),
+			?LOG({connect, Ip, Port}),
 
 			% send_login(),
 			% send_test_msg(),
 			
 			State = #state{socket = Socket, transport = ranch_tcp, data = <<>>, ip = Ip, port = Port, call_pid=undefined},
 			{ok,  State};
-		% {error,econnrefused} -> 
-		% 	erlang:start_timer(3000, self(), {reconnect,{Ip,Port}}),
-		% 	State = #gs_tcp_state{socket = econnrefused, transport = ranch_tcp, data = <<>>,ip = Ip, port = Port,
-		% 		server_id=ServerID, %%  游戏服id
-		% 		server_type=ServerType, %%  游戏服类型
-		% 		server_uri=ServerURI,  %%  客户端连游戏服地址
-		% 		gwc_uri=GwcURI, %% gwc连接游戏服地址
-		% 		max=Max %%   游戏服最多能容纳多少链接 
-		% 	},
-		% 	{ok,State};
 		{error,econnrefused} -> 
-			?LOG(econnrefused),
-			{stop,econnrefused};
+			erlang:start_timer(3000, self(), {reconnect,{Ip,Port}}),
+			State = #state{socket = undefined, transport = ranch_tcp, data = <<>>, ip = Ip, port = Port, call_pid=undefined},
+			{ok,State};
+		% {error,econnrefused} -> 
+		% 	?LOG(econnrefused),
+		% 	{stop,econnrefused};
 		{error,Reason} ->
 			?LOG(error),
 			{stop,Reason}
@@ -165,18 +159,18 @@ handle_info({send, Package}, State = #state{socket = Socket}) ->
 	?LOG({send, Package}),
 	ranch_tcp:send(Socket, Package),
 	{noreply, State};
-% handle_info({timeout,_,{reconnect,{Ip,Port}}}, #gs_tcp_state{transport = Transport} = State) ->
-% 	io:format("reconnect ip:[~p],port:[~p] ~n",[Ip,Port]),
-% 	case Transport:connect(Ip,Port,[],3000) of
-% 		{ok,Socket} ->
-% 	        ok = Transport:setopts(Socket, [{active, once}]),
-% 			erlang:start_timer(1000, self(), {regist}),
-% 			{noreply,State#gs_tcp_state{socket = Socket}};
-% 		{error,Reason} ->
-% 			io:format("==============Res:[~p]~n",[Reason]),
-% 			erlang:start_timer(3000, self(), {reconnect,{Ip,Port}}),
-% 			{noreply, State}
-% 	end;
+handle_info({timeout,_,{reconnect,{Ip,Port}}}, #state{transport = Transport} = State) ->
+	% io:format("reconnect ip:[~p],port:[~p] ~n",[Ip,Port]),
+	case Transport:connect(Ip,Port,[],3000) of
+		{ok,Socket} ->
+	        		ok = Transport:setopts(Socket, [{active, once}]),
+			% erlang:start_timer(1000, self(), {regist}),
+			{noreply,State#state{socket = Socket}};
+		{error,Reason} ->
+			% io:format("==============Res:[~p]~n",[Reason]),
+			erlang:start_timer(3000, self(), {reconnect,{Ip,Port}}),
+			{noreply, State}
+	end;
 handle_info({tcp_closed, _Socket}, #state{ip = _Ip, port = _Port} = State) ->
 	% io:format("~p:~p  tcp closed  !!!!!! ~n~n", [?MODULE, ?LINE]),
 	% {stop, normal, gs_tcp_state};

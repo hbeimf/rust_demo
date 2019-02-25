@@ -29,32 +29,10 @@
 % External API
 % --------------------------------------------------------------------
 % -export([send/0, send/1, call_req/2]).
--export([call_req/2]).
+% -export([call_req/2]).
 
-call_req(Pid, Package) ->
-	gen_server:call(Pid, {call, Package}, ?TIMEOUT).
-
-% send_test_msg() ->
-%     TestMsg = #'TestMsg'{
-%                         name = <<"jim green">>,
-%                         nick_name = <<"nick_name123456">>,
-%                         phone = <<"15912341234">> 
-%                     },
-%     TestMsgBin = msg_proto:encode_msg(TestMsg),
-%     Package = glib:package(10001, TestMsgBin),
-%     self() ! {send, Package},
-%     ok.
-
-
-% send_login() ->
-%     Uid = glib:uid() rem 100000, 
-%     Login = #'Login'{
-%                         uid = Uid 
-%                     },
-%     TestMsgBin = msg_proto:encode_msg(Login),
-%     Package = glib:package(10000, TestMsgBin),
-%     self() ! {send, Package},
-%     ok.
+% call_req(Pid, Package) ->
+% 	gen_server:call(Pid, {call, Package}, ?TIMEOUT).
 
 % start_link(ServerID, ServerType, ServerURI, GwcURI, Max) ->
 % 	?LOG({ServerID, ServerType, ServerURI, GwcURI, Max}),
@@ -62,8 +40,6 @@ call_req(Pid, Package) ->
 
 
 start_link(Index) ->
-	% ?LOG({ServerID, ServerType, ServerURI, GwcURI, Max}),
-	% ?LOG({start, tcp_client}),
 	gen_server:start_link(?MODULE, [Index], []).
 
 
@@ -76,12 +52,8 @@ start_link(Index) ->
 %          {stop, Reason}
 % --------------------------------------------------------------------
 init([_Index]) ->
-
-	% ?LOG({ServerID, ServerType, ServerURI, GwcURI, Max}),
-	% {Ip, Port} = rconf:read_config(hub_server),
 	Ip = "127.0.0.1",
 	Port = 12345,
-	% ?LOG({Ip, Port}),
 	case ranch_tcp:connect(Ip, Port,[],3000) of
 		{ok,Socket} ->
         			ok = ranch_tcp:setopts(Socket, [{active, once}]),
@@ -89,10 +61,6 @@ init([_Index]) ->
 			% self() ! {timeout, <<"Heartbeat!">>, <<"Heartbeat!">>},
 			% erlang:start_timer(?TIMER_SECONDS, self(), <<"Heartbeat!">>),
 			?LOG({connect, Ip, Port}),
-
-			% send_login(),
-			% send_test_msg(),
-			
 			State = #state{socket = Socket, transport = ranch_tcp, data = <<>>, ip = Ip, port = Port, call_pid=undefined},
 			{ok,  State};
 		{error,econnrefused} -> 
@@ -220,7 +188,6 @@ code_change(_OldVsn, State, _Extra) ->
 % priv
 
 parse_package(Bin, State) ->
-    % ?LOG({bin, Bin}),
     case glib:unpackage(Bin) of
         {ok, waitmore}  -> {ok, waitmore, Bin};
         {ok, {Cmd, DataBin},LefBin} ->
@@ -231,51 +198,17 @@ parse_package(Bin, State) ->
     end.
 
  action(10008, DataBin, _State = #state{call_pid = _CallFrom}) ->
-
  	#'RpcPackage'{key = Key, 'payload' = Payload} = msg_proto:decode_msg(DataBin,'RpcPackage'),
-
-
  	{ok, From} = ets_rpc_call_table:select(Key),
- 	% ?LOG({Key, Payload, From}),
-
  	ets_rpc_call_table:delete(Key),
-
- 	% ?LOG({Cmd, DataBin, State}),
- 	
- 	% ?LOG({Name, NickName, Phone}),
-
-	% gen_server:reply(CallFrom, DataBin),
 	safe_reply(From, Payload),
-
  	ok;
   action(Cmd, DataBin, _State) ->
-
- 	% #'TestMsg'{name = Name, 'nick_name' = NickName,
- 	%  phone= Phone} = msg_proto:decode_msg(DataBin,'TestMsg'),
-
- 	% ?LOG({Cmd, DataBin, State}),
- 	
- 	% ?LOG({Name, NickName, Phone}),
-
-	% gen_server:reply(CallFrom, DataBin),
-	% safe_reply(CallFrom, DataBin),
 	?LOG({ignore_package, Cmd, DataBin}),
-
  	ok.
 
 
 safe_reply(undefined, _Value) ->
     ok;
-% safe_reply(Pid, Value) when is_pid(Pid) ->
-%     % ?LOG({safe_reply, Pid, Value}),
-%     safe_send(Pid, {response, Value});
 safe_reply(From, Value) ->
-    % ?LOG({safe_reply, From, Value}),
     gen_server:reply(From, Value).
-
-% safe_send(Pid, Value) ->
-%     try erlang:send(Pid, Value)
-%     catch
-%         Err:Reason ->
-%             error_logger:info_msg("eredis: Failed to send message to ~p with reason ~p~n", [Pid, {Err, Reason}])
-%     end.

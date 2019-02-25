@@ -161,6 +161,7 @@ handle_info({send, Package}, State = #state{socket = Socket}) ->
 	{noreply, State};
 handle_info({timeout,_,{reconnect,{Ip,Port}}}, #state{transport = Transport} = State) ->
 	% io:format("reconnect ip:[~p],port:[~p] ~n",[Ip,Port]),
+	?LOG({reconnect, Ip, Port}),
 	case Transport:connect(Ip,Port,[],3000) of
 		{ok,Socket} ->
 	        		ok = Transport:setopts(Socket, [{active, once}]),

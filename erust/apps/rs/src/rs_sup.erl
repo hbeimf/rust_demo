@@ -15,6 +15,7 @@
 
 -define(SERVER, ?MODULE).
 
+-include_lib("glib/include/log.hrl").
 %%====================================================================
 %% API functions
 %%====================================================================
@@ -28,6 +29,11 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
+  Config = read_config_file(),
+  ?LOG(Config),
+    Ip = "127.0.0.1",
+    Port = 12345,
+
 	RustMonitor = {rs_server_monitor, {rs_server_monitor, start_link, []},
 		permanent, 5000, worker, [rs_server_monitor]},
 
@@ -36,7 +42,7 @@ init([]) ->
                    {worker_module,rs_client},
                    {size,10},
                    {max_overflow,20}],
-        			[]]},
+        			[Ip, Port]]},
         permanent,5000,worker,
         [poolboy]},
 
@@ -48,3 +54,26 @@ init([]) ->
 %%====================================================================
 %% Internal functions
 %%====================================================================
+read_config_file() -> 
+  ConfigFile = root_dir() ++ "config.ini",
+  case file_get_contents(ConfigFile) of
+    {ok, Config} -> 
+      zucchini:parse_string(Config);
+    _ -> 
+      ok
+  end.
+
+root_dir() ->
+  CmdPath = code:lib_dir(rs, priv),
+  Cmd = lists:concat([CmdPath, "/"]),
+  Cmd.
+  
+
+file_get_contents(Dir) ->
+  case file:read_file(Dir) of
+    {ok, Bin} ->
+      % {ok, binary_to_list(Bin)};
+      {ok, Bin};
+    {error, Msg} ->
+      {error, Msg}
+  end.

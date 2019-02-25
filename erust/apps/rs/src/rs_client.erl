@@ -39,8 +39,8 @@
 %     gen_server:start_link({local, ?MODULE}, ?MODULE, [ServerID, ServerType, ServerURI, GwcURI, Max], []).
 
 
-start_link(Index) ->
-	gen_server:start_link(?MODULE, [Index], []).
+start_link(Params) ->
+	gen_server:start_link(?MODULE, [Params], []).
 
 
 % --------------------------------------------------------------------
@@ -51,11 +51,11 @@ start_link(Index) ->
 %          ignore               |
 %          {stop, Reason}
 % --------------------------------------------------------------------
-init([_Index]) ->
-	Ip = "127.0.0.1",
-	Port = 12345,
-	Config = read_config_file(),
-	?LOG(Config),
+init([Params]) ->
+	% ?LOG(Index),
+	% Ip = "127.0.0.1",
+	% Port = 12345,
+	[Ip, Port|_] = Params,
 	case ranch_tcp:connect(Ip, Port,[],3000) of
 		{ok,Socket} ->
         			ok = ranch_tcp:setopts(Socket, [{active, once}]),
@@ -216,28 +216,5 @@ safe_reply(From, Value) ->
     gen_server:reply(From, Value).
 
 
-read_config_file() -> 
-	ConfigFile = root_dir() ++ "config.ini",
-	case file_get_contents(ConfigFile) of
-		{ok, Config} -> 
-			zucchini:parse_string(Config);
-		_ -> 
-			ok
-	end.
 
-root_dir() ->
-	CmdPath = code:lib_dir(rs, priv),
-	Cmd = lists:concat([CmdPath, "/"]),
-	Cmd.
-	
 
-file_get_contents(Dir) ->
-	case file:read_file(Dir) of
-		{ok, Bin} ->
-			% {ok, binary_to_list(Bin)};
-			{ok, Bin};
-		{error, Msg} ->
-			{error, Msg}
-	end.
-
-	

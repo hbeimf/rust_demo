@@ -167,20 +167,20 @@ handle_info({timeout,_,{reconnect,{Ip,Port}}}, #state{transport = Transport} = S
 	        		ok = Transport:setopts(Socket, [{active, once}]),
 			% erlang:start_timer(1000, self(), {regist}),
 			{noreply,State#state{socket = Socket}};
-		{error,Reason} ->
+		{error, _Reason} ->
 			% io:format("==============Res:[~p]~n",[Reason]),
 			erlang:start_timer(3000, self(), {reconnect,{Ip,Port}}),
 			{noreply, State}
 	end;
-handle_info({tcp_closed, _Socket}, #state{ip = _Ip, port = _Port} = State) ->
+handle_info({tcp_closed, _Socket}, #state{ip = Ip, port = Port} = State) ->
 	% io:format("~p:~p  tcp closed  !!!!!! ~n~n", [?MODULE, ?LINE]),
 	% {stop, normal, gs_tcp_state};
-	% erlang:start_timer(3000, self(), {reconnect,{Ip,Port}}),
-	% {noreply, State#gs_tcp_state{socket = undefined ,data = <<>>}};
-	{stop, tcp_closed,State};
-% handle_info({tcp_error, _, _Reason}, #gs_tcp_state{ip = Ip, port = Port} = State) ->
-% 	% erlang:start_timer(3000, self(), {reconnect,{Ip,Port}}),
-% 	{noreply, State#gs_tcp_state{socket = undefined ,data = <<>>}};
+	erlang:start_timer(3000, self(), {reconnect,{Ip,Port}}),
+	{noreply, State#state{socket = undefined ,data = <<>>}};
+	% {stop, tcp_closed,State};
+handle_info({tcp_error, _, _Reason}, #state{ip = Ip, port = Port} = State) ->
+	erlang:start_timer(3000, self(), {reconnect,{Ip,Port}}),
+	{noreply, State#state{socket = undefined ,data = <<>>}};
 % 	% {stop, Reason, gs_tcp_state};
 handle_info(timeout, State) ->
 	% {stop, normal, gs_tcp_state};
@@ -230,7 +230,7 @@ parse_package(Bin, State) ->
             error       
     end.
 
- action(10008, DataBin, State = #state{call_pid = _CallFrom}) ->
+ action(10008, DataBin, _State = #state{call_pid = _CallFrom}) ->
 
  	#'RpcPackage'{key = Key, 'payload' = Payload} = msg_proto:decode_msg(DataBin,'RpcPackage'),
 
@@ -248,7 +248,7 @@ parse_package(Bin, State) ->
 	safe_reply(From, Payload),
 
  	ok;
-  action(Cmd, DataBin, State) ->
+  action(Cmd, DataBin, _State) ->
 
  	% #'TestMsg'{name = Name, 'nick_name' = NickName,
  	%  phone= Phone} = msg_proto:decode_msg(DataBin,'TestMsg'),

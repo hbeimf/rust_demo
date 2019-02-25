@@ -48,7 +48,7 @@ fn main() {
     // glib::http_client::test();
     // glib::aes::test();
 
-    dbg!(log_dir);
+    // dbg!(log_dir);
 
     let sys = actix::System::new("rs-server");
     tcp_server::start_server();
@@ -60,8 +60,8 @@ fn main() {
 
 
 fn write_pid(pid_file:String, pid: u32) {
-        dbg!(pid_file.clone());
-        dbg!(pid);
+        // dbg!(pid_file.clone());
+        // dbg!(pid);
         let _res = fs::write(pid_file, pid.to_string());
         // dbg!(res);
 }

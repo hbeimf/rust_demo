@@ -88,10 +88,16 @@ init([Params]) ->
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
 handle_call({call, Key, Package}, From, State=#state{socket=Socket, transport=_Transport, data=_LastPackage}) ->
-	% ?LOG({call, Package}),
-	ets_rpc_call_table:insert(Key, From),
-	ranch_tcp:send(Socket, Package),
-	{noreply, State#state{call_pid = From}};
+	?LOG({call, Package, Socket, erlang:is_port(Socket)}),
+	case erlang:is_port(Socket) of 
+		true -> 
+			ets_rpc_call_table:insert(Key, From),
+			ranch_tcp:send(Socket, Package),
+			{noreply, State#state{call_pid = From}};
+		_ ->
+			Reply = {error, connect_fail},
+			{reply, Reply, State}
+	end;
 handle_call(_Request, _From, State) ->
 	Reply = ok,
 	{reply, Reply, State}.

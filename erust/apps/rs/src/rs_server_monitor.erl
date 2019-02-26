@@ -15,6 +15,7 @@
 % gen_server callbacks
 -export([start_link/0]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
+-export([stop_rs_server/0]).
 
 -include_lib("glib/include/log.hrl").
 
@@ -90,6 +91,7 @@ handle_info(_Info, State) ->
 % Returns: any (ignored by gen_server)
 % --------------------------------------------------------------------
 terminate(_Reason, _State) ->
+	stop_rs_server(),
 	ok.
 
 % --------------------------------------------------------------------
@@ -100,15 +102,18 @@ terminate(_Reason, _State) ->
 code_change(_OldVsn, State, _Extra) ->
 	{ok, State}.
 
+% rs_server_monitor:stop_rs_server().
+stop_rs_server() ->
+ 	CmdPath = code:lib_dir(rs, priv),
+	PidFile = lists:concat([CmdPath, "/rs.pid"]),
+	Cmd             = lists:flatten(["kill -9 $(cat ", PidFile, ")"]),
+    	os:cmd(Cmd),
+	ok.
+
 start_rs_server() ->
 	CmdPath = code:lib_dir(rs, priv),
-	% ?LOG(CmdPath),
 	RootDir = glib:root_dir(),
-	% ?LOG(RootDir),
 	Cmd = lists:concat([CmdPath, "/rs-server ", "--config ", CmdPath, "/config.ini -d ", RootDir, "logs -l debug -p ", CmdPath, "/rs.pid"]),
-	% RsServer = lists:concat([CmdPath, "/rs-server ", "--config ", CmdPath, "/config.ini -d ", RootDir, "logs -l debug"]),
-	?LOG(Cmd),
-	% os:cmd(RsServer),
+	% ?LOG(Cmd),
 	Port = open_port({spawn, Cmd},[exit_status]),
-	?LOG(Port),
 	Port.

@@ -15,6 +15,11 @@ message Login{
 }
 
 
+message Payload{   
+    string  key = 1;
+    bytes  pack = 2;
+}
+
 message RpcPackage{   
     string  key = 1;
     bytes payload = 2;

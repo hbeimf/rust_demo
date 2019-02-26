@@ -7,14 +7,6 @@
 
 -define(msg_proto_gpb_version, "4.0.2").
 
--ifndef('RPCPACKAGE_PB_H').
--define('RPCPACKAGE_PB_H', true).
--record('RpcPackage',
-        {key = <<>>             :: iodata() | undefined, % = 1
-         payload = <<>>         :: binary() | undefined % = 2
-        }).
--endif.
-
 -ifndef('LOGIN_PB_H').
 -define('LOGIN_PB_H', true).
 -record('Login',
@@ -28,6 +20,22 @@
         {name = <<>>            :: iodata() | undefined, % = 1
          nick_name = <<>>       :: iodata() | undefined, % = 2
          phone = <<>>           :: iodata() | undefined % = 3
+        }).
+-endif.
+
+-ifndef('RPCPACKAGE_PB_H').
+-define('RPCPACKAGE_PB_H', true).
+-record('RpcPackage',
+        {key = <<>>             :: iodata() | undefined, % = 1
+         payload = <<>>         :: binary() | undefined % = 2
+        }).
+-endif.
+
+-ifndef('PAYLOAD_PB_H').
+-define('PAYLOAD_PB_H', true).
+-record('Payload',
+        {key = <<>>             :: iodata() | undefined, % = 1
+         pack = <<>>            :: binary() | undefined % = 2
         }).
 -endif.
 

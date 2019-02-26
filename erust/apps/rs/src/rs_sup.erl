@@ -29,10 +29,14 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-  Config = read_config_file(),
-  ?LOG(Config),
-    Ip = "127.0.0.1",
-    Port = 12345,
+  {ok, Config} = read_config_file(),
+  % ?LOG(Config),
+  [{tcp,[{config,Conf}|_]}|_] = Config,
+  % ?LOG(Conf),
+  [Ip, Port|_] = glib:explode(Conf, ":"),
+  % ?LOG(ConfigList),
+    % Ip = "127.0.0.1",
+    % Port = 12345,
 
 	RustMonitor = {rs_server_monitor, {rs_server_monitor, start_link, []},
 		permanent, 5000, worker, [rs_server_monitor]},
@@ -42,7 +46,7 @@ init([]) ->
                    {worker_module,rs_client},
                    {size,10},
                    {max_overflow,20}],
-        			[Ip, Port]]},
+        			[Ip, glib:to_integer(Port)]]},
         permanent,5000,worker,
         [poolboy]},
 

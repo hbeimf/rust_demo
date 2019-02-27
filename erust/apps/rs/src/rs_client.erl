@@ -110,7 +110,13 @@ handle_call(_Request, _From, State) ->
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
 handle_cast({send, Package}, State=#state{socket=Socket, transport=_Transport, data=_LastPackage}) ->
-	ranch_tcp:send(Socket, Package),
+	case erlang:is_port(Socket) of 
+		true -> 
+			ranch_tcp:send(Socket, Package),
+			ok;
+		_ ->
+			ok
+	end,
 	{noreply, State};
 handle_cast(_Msg, State) ->
 	{noreply, State}.		

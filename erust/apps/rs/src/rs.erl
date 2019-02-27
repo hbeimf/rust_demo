@@ -15,8 +15,14 @@ test_call() ->
 	Package = <<"hello world">>,
 	RpcReply = call(Package),
 	?LOG(RpcReply),
-	#'RpcPackage'{key = Key, 'payload' = Payload} = msg_proto:decode_msg(RpcReply,'RpcPackage'),
-	?LOG(Payload),
+	case RpcReply of 
+		{error,connect_fail} ->
+			ok;
+		_ ->
+			#'RpcPackage'{key = Key, 'payload' = Payload} = msg_proto:decode_msg(RpcReply,'RpcPackage'),
+			?LOG(Payload),
+			ok
+	end,
 	ok.
 
 test_cast() -> 

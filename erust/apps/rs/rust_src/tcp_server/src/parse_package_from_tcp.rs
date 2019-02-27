@@ -29,9 +29,11 @@ pub fn parse_package(package: Vec<u8>, client: &mut ChatSession, ctx: &mut actix
                     action_10000(cmd, pb, client, ctx);
                 }
                 10008 => {
-                    action_10008(cmd, pb, client, ctx);
+                    action_call_10008(cmd, pb, client, ctx);
                 }
-
+                10010 => {
+                    action_cast_10010(cmd, pb, client, ctx);
+                }
                 _ => {
                     action(cmd, pb, client, ctx);
                 }
@@ -74,7 +76,7 @@ fn action_10000(_cmd:u32, pb:Vec<u8>
 }
 
 // 业务逻辑部分
-fn action_10008(_cmd:u32, pb:Vec<u8>
+fn action_call_10008(_cmd:u32, pb:Vec<u8>
     , client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
     // tcp_client::start_tcp_client();
 
@@ -90,6 +92,37 @@ fn action_10008(_cmd:u32, pb:Vec<u8>
     let reply_package = glib::package(cmd, rpc_reply);
 
     // 直接发给客户端
+    println!("reply_package: {:?}", reply_package);
+    client.framed.write(ChatResponse::Message(reply_package));
+
+    // // 给其它在线的客户发个广播
+    // ctx.state().addr.do_send(server::ClientMessageBin {
+    //     id: client.id,
+    //     msg: reply_package,
+    //     room: client.room.clone(),
+    // })
+
+}
+
+// 业务逻辑部分
+fn action_cast_10010(_cmd:u32, pb:Vec<u8>
+          , client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
+    // tcp_client::start_tcp_client();
+
+
+    //parse pb logic
+    let test_msg = msg_proto::decode_msg(pb);
+    println!("name: {:?}", test_msg.get_name());
+    println!("nick_name:{:?}", test_msg.get_nick_name());
+    println!("phone: {:?}", test_msg.get_phone());
+
+    // reply
+    let encode:Vec<u8> = msg_proto::encode_msg();
+    let cmd:u32 = 10010;
+    let reply_package = glib::package(cmd, encode);
+
+    // 直接发给客户端
+    // let reply_package1 = reply_package.clone();
     println!("reply_package: {:?}", reply_package);
     client.framed.write(ChatResponse::Message(reply_package));
 

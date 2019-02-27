@@ -5,7 +5,7 @@
 
 -include("msg_proto.hrl").
 -include("cmd.hrl").
--include_lib("glib/include/log.hrl").
+-include("log.hrl").
 
 test() -> 
 	test_call(),

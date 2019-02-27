@@ -4,7 +4,7 @@
 % --------------------------------------------------------------------
 % Include files
 % --------------------------------------------------------------------
--include_lib("glib/include/log.hrl").
+-include("log.hrl").
 -include("msg_proto.hrl").
 
 -record(state, { 

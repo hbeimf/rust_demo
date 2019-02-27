@@ -5,8 +5,8 @@
   {mod, { rs_app, []}},
   {applications,
    [kernel,
-   glib,
    zucchini,
+   glib,
     stdlib
    ]},
   {env,[]},

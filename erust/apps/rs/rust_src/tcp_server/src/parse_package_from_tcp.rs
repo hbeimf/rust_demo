@@ -90,8 +90,16 @@ fn action_call_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut 
         //     action_10000(cmd, pb, client, ctx);
         // }
         1001i32 => {
-            // aes encode 
-             let encode:Vec<u8> = msg_proto::encode_msg();
+            // aes encode
+            let aes_obj = glib::glib_pb::decode_aes_package(payload.to_vec());
+            let from = aes_obj.get_from();
+            let aes_key = aes_obj.get_key();
+            debug!("aes from: {:?}", from);
+            debug!("aes key: {:?}", aes_key);
+
+
+            // reply
+            let encode:Vec<u8> = msg_proto::encode_msg();
             let cmd:u32 = 10008;
             let rpc_reply = msg_proto::encode_rpc(rpc_msg.get_key().to_string(), rpc_msg.get_cmd(), encode);
             let reply_package = glib::package(cmd, rpc_reply);

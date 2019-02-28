@@ -88,7 +88,7 @@ init([Params]) ->
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
 handle_call({call, Key, Package}, From, State=#state{socket=Socket, transport=_Transport, data=_LastPackage}) ->
-	?LOG({call, Package, Socket, erlang:is_port(Socket)}),
+	% ?LOG({call, Package, Socket, erlang:is_port(Socket)}),
 	case erlang:is_port(Socket) of 
 		true -> 
 			ets_rpc_call_table:insert(Key, From),
@@ -138,7 +138,7 @@ handle_info({tcp, Socket, CurrentPackage}, State=#state{socket=Socket, transport
 			{stop, stop_noreason,State}
 	end;
 handle_info({send, Package}, State = #state{socket = Socket}) ->
-	?LOG({send, Package}),
+	% ?LOG({send, Package}),
 	ranch_tcp:send(Socket, Package),
 	{noreply, State};
 handle_info({timeout,_,{reconnect,{Ip,Port}}}, #state{transport = Transport} = State) ->
@@ -212,7 +212,7 @@ parse_package(Bin, State) ->
     end.
 
  action(10008, DataBin, _State = #state{call_pid = _CallFrom}) ->
- 	#'RpcPackage'{key = Key, 'payload' = Payload} = msg_proto:decode_msg(DataBin,'RpcPackage'),
+ 	#'RpcPackage'{key = Key, cmd=_Cmd, 'payload' = Payload} = msg_proto:decode_msg(DataBin,'RpcPackage'),
  	{ok, From} = ets_rpc_call_table:select(Key),
  	ets_rpc_call_table:delete(Key),
 	safe_reply(From, Payload),

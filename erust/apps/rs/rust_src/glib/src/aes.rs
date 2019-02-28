@@ -13,11 +13,13 @@ pub fn test() {
 
 fn test1() {
     let s = String::from("hello");
+    let key = String::from("201707eggplant99");
 
-    let en = encode_str(s.clone());
+
+    let en = encode(s.clone(), key.clone());
     let b64 = encode_b64(&en);
     dbg!(b64);
-    let de = decode(en);
+    let de = decode(en, key);
 
     let sparkle_heart = String::from_utf8(de).unwrap();
     dbg!(sparkle_heart);
@@ -44,8 +46,8 @@ fn get_padding(n:u8) -> Vec<u8> {
 }
 
 
-pub fn decode(en: Vec<u8>) -> Vec<u8> {
-    let key = key();
+pub fn decode(en: Vec<u8>, key:String) -> Vec<u8> {
+    let key = get_key(key);
     let mut iv = iv();
 
     let key = AesKey::new_decrypt(&key).unwrap();
@@ -63,19 +65,20 @@ pub fn decode(en: Vec<u8>) -> Vec<u8> {
     res
 }
 
-pub fn encode_str(from_str:String) -> Vec<u8> {
+pub fn encode(from_str:String, key:String) -> Vec<u8> {
     let from_v8 = from_str.into_bytes();
-    encode(from_v8)
+    let key = get_key(key);
+    encode_vec(from_v8, key)
 }
 
-pub fn encode(from_v8:Vec<u8>) -> Vec<u8> {
+pub fn encode_vec(from_v8:Vec<u8>, key:Vec<u8>) -> Vec<u8> {
     let mut from_str = from_v8;
     let n = (16 - from_str.len()) as u8;
     let mut padding = get_padding(n);
 
     from_str.append(&mut padding);
 
-    let key = key();
+//    let key = key();
     let mut iv = iv();
 
     let key = AesKey::new_encrypt(&key).unwrap();
@@ -84,8 +87,8 @@ pub fn encode(from_v8:Vec<u8>) -> Vec<u8> {
     output.to_vec()
 }
 
-fn key() -> Vec<u8> {
-    let key = "201707eggplant99".to_string();
+fn get_key(key:String) -> Vec<u8> {
+//    let key = "201707eggplant99".to_string();
     key.into_bytes()
 }
 

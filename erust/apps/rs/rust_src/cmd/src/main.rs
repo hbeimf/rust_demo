@@ -46,7 +46,7 @@ fn main() {
 //    mysqlc::test::test();
 //    redisc::test();
     // glib::http_client::test();
-    // glib::aes::test();
+//     glib::aes::test();
 
     // dbg!(log_dir);
 

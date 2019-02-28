@@ -88,7 +88,7 @@ fn action_call_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut 
     match cmd {
         cmd::CMD_AES_ENCODE_1001 => {
             // aes encode
-            let aes_obj = glib::glib_pb::decode_aes_package(payload.to_vec());
+            let aes_obj = glib::glib_pb::decode_aes_en_package(payload.to_vec());
             let from = aes_obj.get_from();
             let aes_key = aes_obj.get_key();
 //            debug!("aes from: {:?}", from);
@@ -105,6 +105,40 @@ fn action_call_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut 
 
             // 直接发给客户端
             client.framed.write(ChatResponse::Message(reply_package));
+        }
+        cmd::CMD_AES_DECODE_1003 => {
+            // aes decode
+            let aes_obj = glib::glib_pb::decode_aes_de_package(payload.to_vec());
+            let from = aes_obj.get_from();
+            let aes_key = aes_obj.get_key();
+
+            let en = glib::aes::decode(from.to_string(), aes_key.to_string());
+
+            // reply
+            match en {
+                Some(e) => {
+                    // 解码成功时
+                    let rpc_reply = msg_proto::encode_rpc(rpc_msg.get_key().to_string(), rpc_msg.get_cmd(), e.into_bytes());
+                    let reply_package = glib::package(cmd::CMD_RPC_CALL_10008, rpc_reply);
+
+                    // 直接发给客户端
+                    client.framed.write(ChatResponse::Message(reply_package));
+
+                }
+                _ => {
+                    // 解码失败时
+                    let encode:Vec<u8> = msg_proto::encode_msg();
+                    let cmd:u32 = 10008;
+                    let rpc_reply = msg_proto::encode_rpc(rpc_msg.get_key().to_string(), rpc_msg.get_cmd(), encode);
+                    let reply_package = glib::package(cmd, rpc_reply);
+
+                    // 直接发给客户端
+                    client.framed.write(ChatResponse::Message(reply_package));
+                }
+
+            }
+
+
         }
         _ => {
             // other rpc

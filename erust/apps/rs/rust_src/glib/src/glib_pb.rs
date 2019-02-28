@@ -22,8 +22,12 @@ use crate::protos;
 //}
 
 
-pub fn decode_aes_package(pb:Vec<u8>) -> protos::msg::AesEncode {
+pub fn decode_aes_en_package(pb:Vec<u8>) -> protos::msg::AesEncode {
     let aes_decode_obj : protos::msg::AesEncode = parse_from_bytes::<protos::msg::AesEncode>(&pb).unwrap();
     aes_decode_obj
 }
 
+pub fn decode_aes_de_package(pb:Vec<u8>) -> protos::msg::AesDecode {
+    let aes_decode_obj : protos::msg::AesDecode = parse_from_bytes::<protos::msg::AesDecode>(&pb).unwrap();
+    aes_decode_obj
+}

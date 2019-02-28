@@ -7,6 +7,9 @@
 -include("cmd.hrl").
 -include("log.hrl").
 
+test() -> 
+	aes_encode().
+
 
 % message AesEncode{   
 %     string  key = 1;
@@ -23,35 +26,48 @@ aes_encode(Str, Key) ->
                         from = Str
                     },
 	AesEncodeBin = msg_proto:encode_msg(AesEncode),
-
+	Encode = call(AesEncodeBin, ?CMD_CALL_1001),
+	?LOG(Encode),
 	ok. 
 
 
 
 
-test() -> 
-	test_call(),
-	test_cast().
+% test() -> 
+% 	test_call(),
+% 	test_cast().
 
-test_call() -> 
-	Package = <<"hello world">>,
-	RpcReply = call(Package, 100),
-	?LOG(RpcReply),
+% test_call() -> 
+% 	Package = <<"hello world">>,
+% 	RpcReply = call(Package, 100),
+% 	?LOG(RpcReply),
+% 	case RpcReply of 
+% 		{error,connect_fail} ->
+% 			ok;
+% 		_ ->
+% 			#'RpcPackage'{key = Key, cmd= Cmd, 'payload' = Payload} = msg_proto:decode_msg(RpcReply,'RpcPackage'),
+% 			?LOG({Key, Cmd, Payload}),
+% 			ok
+% 	end,
+% 	ok.
+
+% test_cast() -> 
+% 	Package = <<"hello world">>,
+% 	cast(Package).	
+
+call(Package, Cmd) ->
+	RpcReply = call_send(Package, Cmd),
 	case RpcReply of 
 		{error,connect_fail} ->
-			ok;
+			false;
 		_ ->
-			#'RpcPackage'{key = Key, cmd= Cmd, 'payload' = Payload} = msg_proto:decode_msg(RpcReply,'RpcPackage'),
-			?LOG({Key, Cmd, Payload}),
-			ok
-	end,
-	ok.
+			#'RpcPackage'{key = _Key, cmd= _Cmd, 'payload' = Payload} = msg_proto:decode_msg(RpcReply,'RpcPackage'),
+			% ?LOG({Key, Cmd, Payload}),
+			{ok, Payload}
+	end.
 
-test_cast() -> 
-	Package = <<"hello world">>,
-	cast(Package).	
 	
-call(Package, Cmd) ->
+call_send(Package, Cmd) ->
 	Key = glib:to_binary(glib:to_str(glib:uid())),	
 	RpcPackage = #'RpcPackage'{
                         key = Key,

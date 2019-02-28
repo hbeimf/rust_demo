@@ -18,7 +18,7 @@ test() ->
 
 aes_encode() -> 
 	Str = <<"hello world">>,
-	Key = <<"201707eggplant99">>,
+	Key = <<"123456">>,
 	Encode = aes_encode(Str, Key),
 	?LOG(Encode),
 	Decode = aes_decode(Encode, Key),

@@ -7,32 +7,55 @@
 -include("cmd.hrl").
 -include("log.hrl").
 
+
+% message AesEncode{   
+%     string  key = 1;
+%     string  from = 2;
+% }
+
+aes_encode() -> 
+	Str = <<"hello world">>,
+	Key = <<"123456">>,
+	aes_encode(Str, Key).
+aes_encode(Str, Key) ->
+	AesEncode = #'AesEncode'{
+                        key = Key,
+                        from = Str
+                    },
+	AesEncodeBin = msg_proto:encode_msg(AesEncode),
+
+	ok. 
+
+
+
+
 test() -> 
 	test_call(),
 	test_cast().
 
 test_call() -> 
 	Package = <<"hello world">>,
-	RpcReply = call(Package),
+	RpcReply = call(Package, 100),
 	?LOG(RpcReply),
 	case RpcReply of 
 		{error,connect_fail} ->
 			ok;
 		_ ->
-			#'RpcPackage'{key = Key, 'payload' = Payload} = msg_proto:decode_msg(RpcReply,'RpcPackage'),
-			?LOG(Payload),
+			#'RpcPackage'{key = Key, cmd= Cmd, 'payload' = Payload} = msg_proto:decode_msg(RpcReply,'RpcPackage'),
+			?LOG({Key, Cmd, Payload}),
 			ok
 	end,
 	ok.
 
 test_cast() -> 
 	Package = <<"hello world">>,
-	RpcReply = cast(Package).	
+	cast(Package).	
 	
-call(Package) ->
+call(Package, Cmd) ->
 	Key = glib:to_binary(glib:to_str(glib:uid())),	
 	RpcPackage = #'RpcPackage'{
                         key = Key,
+                        cmd = Cmd,
                         payload = Package
                     },
 	RpcPackageBin = msg_proto:encode_msg(RpcPackage),

@@ -14,6 +14,14 @@
         }).
 -endif.
 
+-ifndef('AESENCODE_PB_H').
+-define('AESENCODE_PB_H', true).
+-record('AesEncode',
+        {key = <<>>             :: iodata() | undefined, % = 1
+         from = <<>>            :: iodata() | undefined % = 2
+        }).
+-endif.
+
 -ifndef('TESTMSG_PB_H').
 -define('TESTMSG_PB_H', true).
 -record('TestMsg',
@@ -27,7 +35,8 @@
 -define('RPCPACKAGE_PB_H', true).
 -record('RpcPackage',
         {key = <<>>             :: iodata() | undefined, % = 1
-         payload = <<>>         :: binary() | undefined % = 2
+         cmd = 0                :: integer() | undefined, % = 2, 32 bits
+         payload = <<>>         :: binary() | undefined % = 3
         }).
 -endif.
 

@@ -425,6 +425,211 @@ impl ::protobuf::reflect::ProtobufValue for Login {
 }
 
 #[derive(PartialEq,Clone,Default)]
+pub struct AesEncode {
+    // message fields
+    pub key: ::std::string::String,
+    pub from: ::std::string::String,
+    // special fields
+    pub unknown_fields: ::protobuf::UnknownFields,
+    pub cached_size: ::protobuf::CachedSize,
+}
+
+impl AesEncode {
+    pub fn new() -> AesEncode {
+        ::std::default::Default::default()
+    }
+
+    // string key = 1;
+
+    pub fn clear_key(&mut self) {
+        self.key.clear();
+    }
+
+    // Param is passed by value, moved
+    pub fn set_key(&mut self, v: ::std::string::String) {
+        self.key = v;
+    }
+
+    // Mutable pointer to the field.
+    // If field is not initialized, it is initialized with default value first.
+    pub fn mut_key(&mut self) -> &mut ::std::string::String {
+        &mut self.key
+    }
+
+    // Take field
+    pub fn take_key(&mut self) -> ::std::string::String {
+        ::std::mem::replace(&mut self.key, ::std::string::String::new())
+    }
+
+    pub fn get_key(&self) -> &str {
+        &self.key
+    }
+
+    // string from = 2;
+
+    pub fn clear_from(&mut self) {
+        self.from.clear();
+    }
+
+    // Param is passed by value, moved
+    pub fn set_from(&mut self, v: ::std::string::String) {
+        self.from = v;
+    }
+
+    // Mutable pointer to the field.
+    // If field is not initialized, it is initialized with default value first.
+    pub fn mut_from(&mut self) -> &mut ::std::string::String {
+        &mut self.from
+    }
+
+    // Take field
+    pub fn take_from(&mut self) -> ::std::string::String {
+        ::std::mem::replace(&mut self.from, ::std::string::String::new())
+    }
+
+    pub fn get_from(&self) -> &str {
+        &self.from
+    }
+}
+
+impl ::protobuf::Message for AesEncode {
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
+            match field_number {
+                1 => {
+                    ::protobuf::rt::read_singular_proto3_string_into(wire_type, is, &mut self.key)?;
+                },
+                2 => {
+                    ::protobuf::rt::read_singular_proto3_string_into(wire_type, is, &mut self.from)?;
+                },
+                _ => {
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u32 {
+        let mut my_size = 0;
+        if !self.key.is_empty() {
+            my_size += ::protobuf::rt::string_size(1, &self.key);
+        }
+        if !self.from.is_empty() {
+            my_size += ::protobuf::rt::string_size(2, &self.from);
+        }
+        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
+        self.cached_size.set(my_size);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
+        if !self.key.is_empty() {
+            os.write_string(1, &self.key)?;
+        }
+        if !self.from.is_empty() {
+            os.write_string(2, &self.from)?;
+        }
+        os.write_unknown_fields(self.get_unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn get_cached_size(&self) -> u32 {
+        self.cached_size.get()
+    }
+
+    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
+        &self.unknown_fields
+    }
+
+    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
+        &mut self.unknown_fields
+    }
+
+    fn as_any(&self) -> &::std::any::Any {
+        self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
+    }
+
+    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
+        Self::descriptor_static()
+    }
+
+    fn new() -> AesEncode {
+        AesEncode::new()
+    }
+
+    fn descriptor_static() -> &'static ::protobuf::reflect::MessageDescriptor {
+        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
+        };
+        unsafe {
+            descriptor.get(|| {
+                let mut fields = ::std::vec::Vec::new();
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
+                    "key",
+                    |m: &AesEncode| { &m.key },
+                    |m: &mut AesEncode| { &mut m.key },
+                ));
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
+                    "from",
+                    |m: &AesEncode| { &m.from },
+                    |m: &mut AesEncode| { &mut m.from },
+                ));
+                ::protobuf::reflect::MessageDescriptor::new::<AesEncode>(
+                    "AesEncode",
+                    fields,
+                    file_descriptor_proto()
+                )
+            })
+        }
+    }
+
+    fn default_instance() -> &'static AesEncode {
+        static mut instance: ::protobuf::lazy::Lazy<AesEncode> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const AesEncode,
+        };
+        unsafe {
+            instance.get(AesEncode::new)
+        }
+    }
+}
+
+impl ::protobuf::Clear for AesEncode {
+    fn clear(&mut self) {
+        self.clear_key();
+        self.clear_from();
+        self.unknown_fields.clear();
+    }
+}
+
+impl ::std::fmt::Debug for AesEncode {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for AesEncode {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct Payload {
     // message fields
     pub key: ::std::string::String,
@@ -633,6 +838,7 @@ impl ::protobuf::reflect::ProtobufValue for Payload {
 pub struct RpcPackage {
     // message fields
     pub key: ::std::string::String,
+    pub cmd: i32,
     pub payload: ::std::vec::Vec<u8>,
     // special fields
     pub unknown_fields: ::protobuf::UnknownFields,
@@ -670,7 +876,22 @@ impl RpcPackage {
         &self.key
     }
 
-    // bytes payload = 2;
+    // int32 cmd = 2;
+
+    pub fn clear_cmd(&mut self) {
+        self.cmd = 0;
+    }
+
+    // Param is passed by value, moved
+    pub fn set_cmd(&mut self, v: i32) {
+        self.cmd = v;
+    }
+
+    pub fn get_cmd(&self) -> i32 {
+        self.cmd
+    }
+
+    // bytes payload = 3;
 
     pub fn clear_payload(&mut self) {
         self.payload.clear();
@@ -710,6 +931,13 @@ impl ::protobuf::Message for RpcPackage {
                     ::protobuf::rt::read_singular_proto3_string_into(wire_type, is, &mut self.key)?;
                 },
                 2 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    let tmp = is.read_int32()?;
+                    self.cmd = tmp;
+                },
+                3 => {
                     ::protobuf::rt::read_singular_proto3_bytes_into(wire_type, is, &mut self.payload)?;
                 },
                 _ => {
@@ -727,8 +955,11 @@ impl ::protobuf::Message for RpcPackage {
         if !self.key.is_empty() {
             my_size += ::protobuf::rt::string_size(1, &self.key);
         }
+        if self.cmd != 0 {
+            my_size += ::protobuf::rt::value_size(2, self.cmd, ::protobuf::wire_format::WireTypeVarint);
+        }
         if !self.payload.is_empty() {
-            my_size += ::protobuf::rt::bytes_size(2, &self.payload);
+            my_size += ::protobuf::rt::bytes_size(3, &self.payload);
         }
         my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
         self.cached_size.set(my_size);
@@ -739,8 +970,11 @@ impl ::protobuf::Message for RpcPackage {
         if !self.key.is_empty() {
             os.write_string(1, &self.key)?;
         }
+        if self.cmd != 0 {
+            os.write_int32(2, self.cmd)?;
+        }
         if !self.payload.is_empty() {
-            os.write_bytes(2, &self.payload)?;
+            os.write_bytes(3, &self.payload)?;
         }
         os.write_unknown_fields(self.get_unknown_fields())?;
         ::std::result::Result::Ok(())
@@ -789,6 +1023,11 @@ impl ::protobuf::Message for RpcPackage {
                     |m: &RpcPackage| { &m.key },
                     |m: &mut RpcPackage| { &mut m.key },
                 ));
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
+                    "cmd",
+                    |m: &RpcPackage| { &m.cmd },
+                    |m: &mut RpcPackage| { &mut m.cmd },
+                ));
                 fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeBytes>(
                     "payload",
                     |m: &RpcPackage| { &m.payload },
@@ -817,6 +1056,7 @@ impl ::protobuf::Message for RpcPackage {
 impl ::protobuf::Clear for RpcPackage {
     fn clear(&mut self) {
         self.clear_key();
+        self.clear_cmd();
         self.clear_payload();
         self.unknown_fields.clear();
     }
@@ -838,11 +1078,13 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \n\tmsg.proto\x12\x03msg\"E\n\x07TestMsg\x12\x10\n\x04name\x18\x01\x20\
     \x01(\tB\x02\x18\0\x12\x15\n\tnick_name\x18\x02\x20\x01(\tB\x02\x18\0\
     \x12\x11\n\x05phone\x18\x03\x20\x01(\tB\x02\x18\0\"\x18\n\x05Login\x12\
-    \x0f\n\x03uid\x18\x01\x20\x01(\x05B\x02\x18\0\",\n\x07Payload\x12\x0f\n\
-    \x03key\x18\x01\x20\x01(\tB\x02\x18\0\x12\x10\n\x04pack\x18\x02\x20\x01(\
-    \x0cB\x02\x18\0\"2\n\nRpcPackage\x12\x0f\n\x03key\x18\x01\x20\x01(\tB\
-    \x02\x18\0\x12\x13\n\x07payload\x18\x02\x20\x01(\x0cB\x02\x18\0B\0b\x06p\
-    roto3\
+    \x0f\n\x03uid\x18\x01\x20\x01(\x05B\x02\x18\0\".\n\tAesEncode\x12\x0f\n\
+    \x03key\x18\x01\x20\x01(\tB\x02\x18\0\x12\x10\n\x04from\x18\x02\x20\x01(\
+    \tB\x02\x18\0\",\n\x07Payload\x12\x0f\n\x03key\x18\x01\x20\x01(\tB\x02\
+    \x18\0\x12\x10\n\x04pack\x18\x02\x20\x01(\x0cB\x02\x18\0\"C\n\nRpcPackag\
+    e\x12\x0f\n\x03key\x18\x01\x20\x01(\tB\x02\x18\0\x12\x0f\n\x03cmd\x18\
+    \x02\x20\x01(\x05B\x02\x18\0\x12\x13\n\x07payload\x18\x03\x20\x01(\x0cB\
+    \x02\x18\0B\0b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {

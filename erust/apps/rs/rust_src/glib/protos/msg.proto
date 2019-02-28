@@ -15,14 +15,21 @@ message Login{
 }
 
 
+message AesEncode{   
+    string  key = 1;
+    string  from = 2;
+}
+
+
 message Payload{   
     string  key = 1;
     bytes  pack = 2;
 }
 
 message RpcPackage{   
-    string  key = 1;
-    bytes payload = 2;
+    string  key = 1;  
+    int32 cmd = 2;
+    bytes payload = 3;
 }
 
 

@@ -75,32 +75,24 @@ fn action_10000(_cmd:u32, pb:Vec<u8>
 
 }
 
-// 业务逻辑部分
-fn action_call_10008(_cmd:u32, pb:Vec<u8>
-    , client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
-    // tcp_client::start_tcp_client();
-
-    //parse pb logic 
+// rpc call 业务逻辑部分
+fn action_call_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
     let rpc_msg = msg_proto::decode_rpc(pb);
-    println!("key: {:?}", rpc_msg.get_key());
-    println!("payload:{:?}", rpc_msg.get_payload());
+//    println!("key: {:?}", rpc_msg.get_key());
+//    println!("cmd: {:?}", rpc_msg.get_cmd());
+//    println!("payload:{:?}", rpc_msg.get_payload());
 
     // reply 
     let encode:Vec<u8> = msg_proto::encode_msg();
     let cmd:u32 = 10008;
-    let rpc_reply = msg_proto::encode_rpc(rpc_msg.get_key().to_string(), encode);
+    let rpc_reply = msg_proto::encode_rpc(rpc_msg.get_key().to_string(), rpc_msg.get_cmd(), encode);
     let reply_package = glib::package(cmd, rpc_reply);
 
     // 直接发给客户端
-    println!("reply_package: {:?}", reply_package);
+    // println!("reply_package: {:?}", reply_package);
     client.framed.write(ChatResponse::Message(reply_package));
 
-    // // 给其它在线的客户发个广播
-    // ctx.state().addr.do_send(server::ClientMessageBin {
-    //     id: client.id,
-    //     msg: reply_package,
-    //     room: client.room.clone(),
-    // })
+
 
 }
 

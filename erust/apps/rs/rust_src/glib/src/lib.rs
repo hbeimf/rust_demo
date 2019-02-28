@@ -29,6 +29,7 @@ pub mod glib_pb;
 extern crate encoding;
 extern crate openssl;
 extern crate base64;
+extern crate md5;
 
 pub mod aes;
 pub mod http_client;

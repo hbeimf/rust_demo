@@ -4,6 +4,7 @@ use crate::openssl::aes::{AesKey, aes_ige};
 use crate::openssl::symm::Mode;
 
 use crate::base64::{encode as encode_b64, decode as decode_b64};
+use crate::md5;
 
 //https://docs.rs/openssl/0.10.16/openssl/aes/index.html
 pub fn test() {
@@ -108,7 +109,12 @@ pub fn encode_vec(from_v8:Vec<u8>, key:Vec<u8>) -> Vec<u8> {
 
 fn get_key(key:String) -> Vec<u8> {
 //    let key = "201707eggplant99".to_string();
-    key.into_bytes()
+//    key.into_bytes()
+
+    let digest = md5::compute(key.clone());
+    let mut md5_encode = digest.as_ref().to_owned();
+    md5_encode.truncate(16);
+    md5_encode
 }
 
 fn iv() -> Vec<u8> {

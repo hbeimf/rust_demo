@@ -15,15 +15,11 @@ fn test1() {
     let s = String::from("hello");
     let key = String::from("201707eggplant99");
 
-
     let en = encode(s.clone(), key.clone());
-    let b64 = encode_b64(&en);
-    dbg!(b64);
-    let de = decode(en, key);
+    dbg!(en.clone());
 
-    let sparkle_heart = String::from_utf8(de).unwrap();
-    dbg!(sparkle_heart);
-
+    let de = decode(en, key).unwrap();
+    dbg!(de);
 }
 
 
@@ -55,7 +51,20 @@ fn get_padding(n:u8) -> Vec<u8> {
 }
 
 
-pub fn decode(en: Vec<u8>, key:String) -> Vec<u8> {
+pub fn decode(en: String, key: String) -> Option<String> {
+    match decode_base64(en) {
+        Ok(v) => {
+            let de = decode_vec(v, key);
+            let from = String::from_utf8(de).unwrap();
+            Some(from)
+        }
+        _ => {
+            None
+        }
+    }
+}
+
+pub fn decode_vec(en: Vec<u8>, key:String) -> Vec<u8> {
     let key = get_key(key);
     let mut iv = iv();
 
@@ -74,10 +83,11 @@ pub fn decode(en: Vec<u8>, key:String) -> Vec<u8> {
     res
 }
 
-pub fn encode(from_str:String, key:String) -> Vec<u8> {
+pub fn encode(from_str:String, key:String) -> String {
     let from_v8 = from_str.into_bytes();
     let key = get_key(key);
-    encode_vec(from_v8, key)
+    let en = encode_vec(from_v8, key);
+    encode_b64(&en)
 }
 
 pub fn encode_vec(from_v8:Vec<u8>, key:Vec<u8>) -> Vec<u8> {

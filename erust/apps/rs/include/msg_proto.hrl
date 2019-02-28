@@ -7,19 +7,19 @@
 
 -define(msg_proto_gpb_version, "4.0.2").
 
+-ifndef('LOGIN_PB_H').
+-define('LOGIN_PB_H', true).
+-record('Login',
+        {uid = 0                :: integer() | undefined % = 1, 32 bits
+        }).
+-endif.
+
 -ifndef('RPCPACKAGE_PB_H').
 -define('RPCPACKAGE_PB_H', true).
 -record('RpcPackage',
         {key = <<>>             :: iodata() | undefined, % = 1
          cmd = 0                :: integer() | undefined, % = 2, 32 bits
          payload = <<>>         :: binary() | undefined % = 3
-        }).
--endif.
-
--ifndef('LOGIN_PB_H').
--define('LOGIN_PB_H', true).
--record('Login',
-        {uid = 0                :: integer() | undefined % = 1, 32 bits
         }).
 -endif.
 
@@ -53,6 +53,14 @@
 -record('AesDecode',
         {key = <<>>             :: iodata() | undefined, % = 1
          from = <<>>            :: iodata() | undefined % = 2
+        }).
+-endif.
+
+-ifndef('AESDECODEREPLY_PB_H').
+-define('AESDECODEREPLY_PB_H', true).
+-record('AesDecodeReply',
+        {code = 0               :: integer() | undefined, % = 1, 32 bits
+         reply = <<>>           :: iodata() | undefined % = 2
         }).
 -endif.
 

@@ -30,19 +30,20 @@
 -export_type([]).
 
 %% message types
--type 'RpcPackage'() :: #'RpcPackage'{}.
 -type 'Login'() :: #'Login'{}.
+-type 'RpcPackage'() :: #'RpcPackage'{}.
 -type 'AesEncode'() :: #'AesEncode'{}.
 -type 'TestMsg'() :: #'TestMsg'{}.
 -type 'Payload'() :: #'Payload'{}.
 -type 'AesDecode'() :: #'AesDecode'{}.
--export_type(['RpcPackage'/0, 'Login'/0, 'AesEncode'/0, 'TestMsg'/0, 'Payload'/0, 'AesDecode'/0]).
+-type 'AesDecodeReply'() :: #'AesDecodeReply'{}.
+-export_type(['Login'/0, 'RpcPackage'/0, 'AesEncode'/0, 'TestMsg'/0, 'Payload'/0, 'AesDecode'/0, 'AesDecodeReply'/0]).
 
--spec encode_msg(#'RpcPackage'{} | #'Login'{} | #'AesEncode'{} | #'TestMsg'{} | #'Payload'{} | #'AesDecode'{}) -> binary().
+-spec encode_msg(#'Login'{} | #'RpcPackage'{} | #'AesEncode'{} | #'TestMsg'{} | #'Payload'{} | #'AesDecode'{} | #'AesDecodeReply'{}) -> binary().
 encode_msg(Msg) -> encode_msg(Msg, []).
 
 
--spec encode_msg(#'RpcPackage'{} | #'Login'{} | #'AesEncode'{} | #'TestMsg'{} | #'Payload'{} | #'AesDecode'{}, list()) -> binary().
+-spec encode_msg(#'Login'{} | #'RpcPackage'{} | #'AesEncode'{} | #'TestMsg'{} | #'Payload'{} | #'AesDecode'{} | #'AesDecodeReply'{}, list()) -> binary().
 encode_msg(Msg, Opts) ->
     case proplists:get_bool(verify, Opts) of
       true -> verify_msg(Msg, Opts);
@@ -50,15 +51,32 @@ encode_msg(Msg, Opts) ->
     end,
     TrUserData = proplists:get_value(user_data, Opts),
     case Msg of
-      #'RpcPackage'{} -> e_msg_RpcPackage(Msg, TrUserData);
       #'Login'{} -> e_msg_Login(Msg, TrUserData);
+      #'RpcPackage'{} -> e_msg_RpcPackage(Msg, TrUserData);
       #'AesEncode'{} -> e_msg_AesEncode(Msg, TrUserData);
       #'TestMsg'{} -> e_msg_TestMsg(Msg, TrUserData);
       #'Payload'{} -> e_msg_Payload(Msg, TrUserData);
-      #'AesDecode'{} -> e_msg_AesDecode(Msg, TrUserData)
+      #'AesDecode'{} -> e_msg_AesDecode(Msg, TrUserData);
+      #'AesDecodeReply'{} ->
+	  e_msg_AesDecodeReply(Msg, TrUserData)
     end.
 
 
+
+e_msg_Login(Msg, TrUserData) ->
+    e_msg_Login(Msg, <<>>, TrUserData).
+
+
+e_msg_Login(#'Login'{uid = F1}, Bin, TrUserData) ->
+    if F1 == undefined -> Bin;
+       true ->
+	   begin
+	     TrF1 = id(F1, TrUserData),
+	     if TrF1 =:= 0 -> Bin;
+		true -> e_type_int32(TrF1, <<Bin/binary, 8>>)
+	     end
+	   end
+    end.
 
 e_msg_RpcPackage(Msg, TrUserData) ->
     e_msg_RpcPackage(Msg, <<>>, TrUserData).
@@ -93,21 +111,6 @@ e_msg_RpcPackage(#'RpcPackage'{key = F1, cmd = F2,
 	     case iolist_size(TrF3) of
 	       0 -> B2;
 	       _ -> e_type_bytes(TrF3, <<B2/binary, 26>>)
-	     end
-	   end
-    end.
-
-e_msg_Login(Msg, TrUserData) ->
-    e_msg_Login(Msg, <<>>, TrUserData).
-
-
-e_msg_Login(#'Login'{uid = F1}, Bin, TrUserData) ->
-    if F1 == undefined -> Bin;
-       true ->
-	   begin
-	     TrF1 = id(F1, TrUserData),
-	     if TrF1 =:= 0 -> Bin;
-		true -> e_type_int32(TrF1, <<Bin/binary, 8>>)
 	     end
 	   end
     end.
@@ -231,6 +234,33 @@ e_msg_AesDecode(#'AesDecode'{key = F1, from = F2}, Bin,
 	   end
     end.
 
+e_msg_AesDecodeReply(Msg, TrUserData) ->
+    e_msg_AesDecodeReply(Msg, <<>>, TrUserData).
+
+
+e_msg_AesDecodeReply(#'AesDecodeReply'{code = F1,
+				       reply = F2},
+		     Bin, TrUserData) ->
+    B1 = if F1 == undefined -> Bin;
+	    true ->
+		begin
+		  TrF1 = id(F1, TrUserData),
+		  if TrF1 =:= 0 -> Bin;
+		     true -> e_type_int32(TrF1, <<Bin/binary, 8>>)
+		  end
+		end
+	 end,
+    if F2 == undefined -> B1;
+       true ->
+	   begin
+	     TrF2 = id(F2, TrUserData),
+	     case is_empty_string(TrF2) of
+	       true -> B1;
+	       false -> e_type_string(TrF2, <<B1/binary, 18>>)
+	     end
+	   end
+    end.
+
 e_type_int32(Value, Bin)
     when 0 =< Value, Value =< 127 ->
     <<Bin/binary, Value>>;
@@ -282,14 +312,6 @@ decode_msg(Bin, MsgName) when is_binary(Bin) ->
 decode_msg(Bin, MsgName, Opts) when is_binary(Bin) ->
     TrUserData = proplists:get_value(user_data, Opts),
     case MsgName of
-      'RpcPackage' ->
-	  try d_msg_RpcPackage(Bin, TrUserData) catch
-	    Class:Reason ->
-		StackTrace = erlang:get_stacktrace(),
-		error({gpb_error,
-		       {decoding_failure,
-			{Bin, 'RpcPackage', {Class, Reason, StackTrace}}}})
-	  end;
       'Login' ->
 	  try d_msg_Login(Bin, TrUserData) catch
 	    Class:Reason ->
@@ -297,6 +319,14 @@ decode_msg(Bin, MsgName, Opts) when is_binary(Bin) ->
 		error({gpb_error,
 		       {decoding_failure,
 			{Bin, 'Login', {Class, Reason, StackTrace}}}})
+	  end;
+      'RpcPackage' ->
+	  try d_msg_RpcPackage(Bin, TrUserData) catch
+	    Class:Reason ->
+		StackTrace = erlang:get_stacktrace(),
+		error({gpb_error,
+		       {decoding_failure,
+			{Bin, 'RpcPackage', {Class, Reason, StackTrace}}}})
 	  end;
       'AesEncode' ->
 	  try d_msg_AesEncode(Bin, TrUserData) catch
@@ -329,10 +359,106 @@ decode_msg(Bin, MsgName, Opts) when is_binary(Bin) ->
 		error({gpb_error,
 		       {decoding_failure,
 			{Bin, 'AesDecode', {Class, Reason, StackTrace}}}})
+	  end;
+      'AesDecodeReply' ->
+	  try d_msg_AesDecodeReply(Bin, TrUserData) catch
+	    Class:Reason ->
+		StackTrace = erlang:get_stacktrace(),
+		error({gpb_error,
+		       {decoding_failure,
+			{Bin, 'AesDecodeReply', {Class, Reason, StackTrace}}}})
 	  end
     end.
 
 
+
+d_msg_Login(Bin, TrUserData) ->
+    dfp_read_field_def_Login(Bin, 0, 0, id(0, TrUserData),
+			     TrUserData).
+
+dfp_read_field_def_Login(<<8, Rest/binary>>, Z1, Z2,
+			 F@_1, TrUserData) ->
+    d_field_Login_uid(Rest, Z1, Z2, F@_1, TrUserData);
+dfp_read_field_def_Login(<<>>, 0, 0, F@_1, _) ->
+    #'Login'{uid = F@_1};
+dfp_read_field_def_Login(Other, Z1, Z2, F@_1,
+			 TrUserData) ->
+    dg_read_field_def_Login(Other, Z1, Z2, F@_1,
+			    TrUserData).
+
+dg_read_field_def_Login(<<1:1, X:7, Rest/binary>>, N,
+			Acc, F@_1, TrUserData)
+    when N < 32 - 7 ->
+    dg_read_field_def_Login(Rest, N + 7, X bsl N + Acc,
+			    F@_1, TrUserData);
+dg_read_field_def_Login(<<0:1, X:7, Rest/binary>>, N,
+			Acc, F@_1, TrUserData) ->
+    Key = X bsl N + Acc,
+    case Key of
+      8 -> d_field_Login_uid(Rest, 0, 0, F@_1, TrUserData);
+      _ ->
+	  case Key band 7 of
+	    0 -> skip_varint_Login(Rest, 0, 0, F@_1, TrUserData);
+	    1 -> skip_64_Login(Rest, 0, 0, F@_1, TrUserData);
+	    2 ->
+		skip_length_delimited_Login(Rest, 0, 0, F@_1,
+					    TrUserData);
+	    3 ->
+		skip_group_Login(Rest, Key bsr 3, 0, F@_1, TrUserData);
+	    5 -> skip_32_Login(Rest, 0, 0, F@_1, TrUserData)
+	  end
+    end;
+dg_read_field_def_Login(<<>>, 0, 0, F@_1, _) ->
+    #'Login'{uid = F@_1}.
+
+d_field_Login_uid(<<1:1, X:7, Rest/binary>>, N, Acc,
+		  F@_1, TrUserData)
+    when N < 57 ->
+    d_field_Login_uid(Rest, N + 7, X bsl N + Acc, F@_1,
+		      TrUserData);
+d_field_Login_uid(<<0:1, X:7, Rest/binary>>, N, Acc, _,
+		  TrUserData) ->
+    {NewFValue, RestF} = {begin
+			    <<Res:32/signed-native>> = <<(X bsl N +
+							    Acc):32/unsigned-native>>,
+			    Res
+			  end,
+			  Rest},
+    dfp_read_field_def_Login(RestF, 0, 0, NewFValue,
+			     TrUserData).
+
+skip_varint_Login(<<1:1, _:7, Rest/binary>>, Z1, Z2,
+		  F@_1, TrUserData) ->
+    skip_varint_Login(Rest, Z1, Z2, F@_1, TrUserData);
+skip_varint_Login(<<0:1, _:7, Rest/binary>>, Z1, Z2,
+		  F@_1, TrUserData) ->
+    dfp_read_field_def_Login(Rest, Z1, Z2, F@_1,
+			     TrUserData).
+
+skip_length_delimited_Login(<<1:1, X:7, Rest/binary>>,
+			    N, Acc, F@_1, TrUserData)
+    when N < 57 ->
+    skip_length_delimited_Login(Rest, N + 7, X bsl N + Acc,
+				F@_1, TrUserData);
+skip_length_delimited_Login(<<0:1, X:7, Rest/binary>>,
+			    N, Acc, F@_1, TrUserData) ->
+    Length = X bsl N + Acc,
+    <<_:Length/binary, Rest2/binary>> = Rest,
+    dfp_read_field_def_Login(Rest2, 0, 0, F@_1, TrUserData).
+
+skip_group_Login(Bin, FNum, Z2, F@_1, TrUserData) ->
+    {_, Rest} = read_group(Bin, FNum),
+    dfp_read_field_def_Login(Rest, 0, Z2, F@_1, TrUserData).
+
+skip_32_Login(<<_:32, Rest/binary>>, Z1, Z2, F@_1,
+	      TrUserData) ->
+    dfp_read_field_def_Login(Rest, Z1, Z2, F@_1,
+			     TrUserData).
+
+skip_64_Login(<<_:64, Rest/binary>>, Z1, Z2, F@_1,
+	      TrUserData) ->
+    dfp_read_field_def_Login(Rest, Z1, Z2, F@_1,
+			     TrUserData).
 
 d_msg_RpcPackage(Bin, TrUserData) ->
     dfp_read_field_def_RpcPackage(Bin, 0, 0,
@@ -485,94 +611,6 @@ skip_64_RpcPackage(<<_:64, Rest/binary>>, Z1, Z2, F@_1,
 		   F@_2, F@_3, TrUserData) ->
     dfp_read_field_def_RpcPackage(Rest, Z1, Z2, F@_1, F@_2,
 				  F@_3, TrUserData).
-
-d_msg_Login(Bin, TrUserData) ->
-    dfp_read_field_def_Login(Bin, 0, 0, id(0, TrUserData),
-			     TrUserData).
-
-dfp_read_field_def_Login(<<8, Rest/binary>>, Z1, Z2,
-			 F@_1, TrUserData) ->
-    d_field_Login_uid(Rest, Z1, Z2, F@_1, TrUserData);
-dfp_read_field_def_Login(<<>>, 0, 0, F@_1, _) ->
-    #'Login'{uid = F@_1};
-dfp_read_field_def_Login(Other, Z1, Z2, F@_1,
-			 TrUserData) ->
-    dg_read_field_def_Login(Other, Z1, Z2, F@_1,
-			    TrUserData).
-
-dg_read_field_def_Login(<<1:1, X:7, Rest/binary>>, N,
-			Acc, F@_1, TrUserData)
-    when N < 32 - 7 ->
-    dg_read_field_def_Login(Rest, N + 7, X bsl N + Acc,
-			    F@_1, TrUserData);
-dg_read_field_def_Login(<<0:1, X:7, Rest/binary>>, N,
-			Acc, F@_1, TrUserData) ->
-    Key = X bsl N + Acc,
-    case Key of
-      8 -> d_field_Login_uid(Rest, 0, 0, F@_1, TrUserData);
-      _ ->
-	  case Key band 7 of
-	    0 -> skip_varint_Login(Rest, 0, 0, F@_1, TrUserData);
-	    1 -> skip_64_Login(Rest, 0, 0, F@_1, TrUserData);
-	    2 ->
-		skip_length_delimited_Login(Rest, 0, 0, F@_1,
-					    TrUserData);
-	    3 ->
-		skip_group_Login(Rest, Key bsr 3, 0, F@_1, TrUserData);
-	    5 -> skip_32_Login(Rest, 0, 0, F@_1, TrUserData)
-	  end
-    end;
-dg_read_field_def_Login(<<>>, 0, 0, F@_1, _) ->
-    #'Login'{uid = F@_1}.
-
-d_field_Login_uid(<<1:1, X:7, Rest/binary>>, N, Acc,
-		  F@_1, TrUserData)
-    when N < 57 ->
-    d_field_Login_uid(Rest, N + 7, X bsl N + Acc, F@_1,
-		      TrUserData);
-d_field_Login_uid(<<0:1, X:7, Rest/binary>>, N, Acc, _,
-		  TrUserData) ->
-    {NewFValue, RestF} = {begin
-			    <<Res:32/signed-native>> = <<(X bsl N +
-							    Acc):32/unsigned-native>>,
-			    Res
-			  end,
-			  Rest},
-    dfp_read_field_def_Login(RestF, 0, 0, NewFValue,
-			     TrUserData).
-
-skip_varint_Login(<<1:1, _:7, Rest/binary>>, Z1, Z2,
-		  F@_1, TrUserData) ->
-    skip_varint_Login(Rest, Z1, Z2, F@_1, TrUserData);
-skip_varint_Login(<<0:1, _:7, Rest/binary>>, Z1, Z2,
-		  F@_1, TrUserData) ->
-    dfp_read_field_def_Login(Rest, Z1, Z2, F@_1,
-			     TrUserData).
-
-skip_length_delimited_Login(<<1:1, X:7, Rest/binary>>,
-			    N, Acc, F@_1, TrUserData)
-    when N < 57 ->
-    skip_length_delimited_Login(Rest, N + 7, X bsl N + Acc,
-				F@_1, TrUserData);
-skip_length_delimited_Login(<<0:1, X:7, Rest/binary>>,
-			    N, Acc, F@_1, TrUserData) ->
-    Length = X bsl N + Acc,
-    <<_:Length/binary, Rest2/binary>> = Rest,
-    dfp_read_field_def_Login(Rest2, 0, 0, F@_1, TrUserData).
-
-skip_group_Login(Bin, FNum, Z2, F@_1, TrUserData) ->
-    {_, Rest} = read_group(Bin, FNum),
-    dfp_read_field_def_Login(Rest, 0, Z2, F@_1, TrUserData).
-
-skip_32_Login(<<_:32, Rest/binary>>, Z1, Z2, F@_1,
-	      TrUserData) ->
-    dfp_read_field_def_Login(Rest, Z1, Z2, F@_1,
-			     TrUserData).
-
-skip_64_Login(<<_:64, Rest/binary>>, Z1, Z2, F@_1,
-	      TrUserData) ->
-    dfp_read_field_def_Login(Rest, Z1, Z2, F@_1,
-			     TrUserData).
 
 d_msg_AesEncode(Bin, TrUserData) ->
     dfp_read_field_def_AesEncode(Bin, 0, 0,
@@ -1093,6 +1131,137 @@ skip_64_AesDecode(<<_:64, Rest/binary>>, Z1, Z2, F@_1,
     dfp_read_field_def_AesDecode(Rest, Z1, Z2, F@_1, F@_2,
 				 TrUserData).
 
+d_msg_AesDecodeReply(Bin, TrUserData) ->
+    dfp_read_field_def_AesDecodeReply(Bin, 0, 0,
+				      id(0, TrUserData), id(<<>>, TrUserData),
+				      TrUserData).
+
+dfp_read_field_def_AesDecodeReply(<<8, Rest/binary>>,
+				  Z1, Z2, F@_1, F@_2, TrUserData) ->
+    d_field_AesDecodeReply_code(Rest, Z1, Z2, F@_1, F@_2,
+				TrUserData);
+dfp_read_field_def_AesDecodeReply(<<18, Rest/binary>>,
+				  Z1, Z2, F@_1, F@_2, TrUserData) ->
+    d_field_AesDecodeReply_reply(Rest, Z1, Z2, F@_1, F@_2,
+				 TrUserData);
+dfp_read_field_def_AesDecodeReply(<<>>, 0, 0, F@_1,
+				  F@_2, _) ->
+    #'AesDecodeReply'{code = F@_1, reply = F@_2};
+dfp_read_field_def_AesDecodeReply(Other, Z1, Z2, F@_1,
+				  F@_2, TrUserData) ->
+    dg_read_field_def_AesDecodeReply(Other, Z1, Z2, F@_1,
+				     F@_2, TrUserData).
+
+dg_read_field_def_AesDecodeReply(<<1:1, X:7,
+				   Rest/binary>>,
+				 N, Acc, F@_1, F@_2, TrUserData)
+    when N < 32 - 7 ->
+    dg_read_field_def_AesDecodeReply(Rest, N + 7,
+				     X bsl N + Acc, F@_1, F@_2, TrUserData);
+dg_read_field_def_AesDecodeReply(<<0:1, X:7,
+				   Rest/binary>>,
+				 N, Acc, F@_1, F@_2, TrUserData) ->
+    Key = X bsl N + Acc,
+    case Key of
+      8 ->
+	  d_field_AesDecodeReply_code(Rest, 0, 0, F@_1, F@_2,
+				      TrUserData);
+      18 ->
+	  d_field_AesDecodeReply_reply(Rest, 0, 0, F@_1, F@_2,
+				       TrUserData);
+      _ ->
+	  case Key band 7 of
+	    0 ->
+		skip_varint_AesDecodeReply(Rest, 0, 0, F@_1, F@_2,
+					   TrUserData);
+	    1 ->
+		skip_64_AesDecodeReply(Rest, 0, 0, F@_1, F@_2,
+				       TrUserData);
+	    2 ->
+		skip_length_delimited_AesDecodeReply(Rest, 0, 0, F@_1,
+						     F@_2, TrUserData);
+	    3 ->
+		skip_group_AesDecodeReply(Rest, Key bsr 3, 0, F@_1,
+					  F@_2, TrUserData);
+	    5 ->
+		skip_32_AesDecodeReply(Rest, 0, 0, F@_1, F@_2,
+				       TrUserData)
+	  end
+    end;
+dg_read_field_def_AesDecodeReply(<<>>, 0, 0, F@_1, F@_2,
+				 _) ->
+    #'AesDecodeReply'{code = F@_1, reply = F@_2}.
+
+d_field_AesDecodeReply_code(<<1:1, X:7, Rest/binary>>,
+			    N, Acc, F@_1, F@_2, TrUserData)
+    when N < 57 ->
+    d_field_AesDecodeReply_code(Rest, N + 7, X bsl N + Acc,
+				F@_1, F@_2, TrUserData);
+d_field_AesDecodeReply_code(<<0:1, X:7, Rest/binary>>,
+			    N, Acc, _, F@_2, TrUserData) ->
+    {NewFValue, RestF} = {begin
+			    <<Res:32/signed-native>> = <<(X bsl N +
+							    Acc):32/unsigned-native>>,
+			    Res
+			  end,
+			  Rest},
+    dfp_read_field_def_AesDecodeReply(RestF, 0, 0,
+				      NewFValue, F@_2, TrUserData).
+
+d_field_AesDecodeReply_reply(<<1:1, X:7, Rest/binary>>,
+			     N, Acc, F@_1, F@_2, TrUserData)
+    when N < 57 ->
+    d_field_AesDecodeReply_reply(Rest, N + 7, X bsl N + Acc,
+				 F@_1, F@_2, TrUserData);
+d_field_AesDecodeReply_reply(<<0:1, X:7, Rest/binary>>,
+			     N, Acc, F@_1, _, TrUserData) ->
+    {NewFValue, RestF} = begin
+			   Len = X bsl N + Acc,
+			   <<Bytes:Len/binary, Rest2/binary>> = Rest,
+			   {binary:copy(Bytes), Rest2}
+			 end,
+    dfp_read_field_def_AesDecodeReply(RestF, 0, 0, F@_1,
+				      NewFValue, TrUserData).
+
+skip_varint_AesDecodeReply(<<1:1, _:7, Rest/binary>>,
+			   Z1, Z2, F@_1, F@_2, TrUserData) ->
+    skip_varint_AesDecodeReply(Rest, Z1, Z2, F@_1, F@_2,
+			       TrUserData);
+skip_varint_AesDecodeReply(<<0:1, _:7, Rest/binary>>,
+			   Z1, Z2, F@_1, F@_2, TrUserData) ->
+    dfp_read_field_def_AesDecodeReply(Rest, Z1, Z2, F@_1,
+				      F@_2, TrUserData).
+
+skip_length_delimited_AesDecodeReply(<<1:1, X:7,
+				       Rest/binary>>,
+				     N, Acc, F@_1, F@_2, TrUserData)
+    when N < 57 ->
+    skip_length_delimited_AesDecodeReply(Rest, N + 7,
+					 X bsl N + Acc, F@_1, F@_2, TrUserData);
+skip_length_delimited_AesDecodeReply(<<0:1, X:7,
+				       Rest/binary>>,
+				     N, Acc, F@_1, F@_2, TrUserData) ->
+    Length = X bsl N + Acc,
+    <<_:Length/binary, Rest2/binary>> = Rest,
+    dfp_read_field_def_AesDecodeReply(Rest2, 0, 0, F@_1,
+				      F@_2, TrUserData).
+
+skip_group_AesDecodeReply(Bin, FNum, Z2, F@_1, F@_2,
+			  TrUserData) ->
+    {_, Rest} = read_group(Bin, FNum),
+    dfp_read_field_def_AesDecodeReply(Rest, 0, Z2, F@_1,
+				      F@_2, TrUserData).
+
+skip_32_AesDecodeReply(<<_:32, Rest/binary>>, Z1, Z2,
+		       F@_1, F@_2, TrUserData) ->
+    dfp_read_field_def_AesDecodeReply(Rest, Z1, Z2, F@_1,
+				      F@_2, TrUserData).
+
+skip_64_AesDecodeReply(<<_:64, Rest/binary>>, Z1, Z2,
+		       F@_1, F@_2, TrUserData) ->
+    dfp_read_field_def_AesDecodeReply(Rest, Z1, Z2, F@_1,
+				      F@_2, TrUserData).
+
 read_group(Bin, FieldNum) ->
     {NumBytes, EndTagLen} = read_gr_b(Bin, 0, 0, 0, 0, FieldNum),
     <<Group:NumBytes/binary, _:EndTagLen/binary, Rest/binary>> = Bin,
@@ -1157,9 +1326,9 @@ merge_msgs(Prev, New, Opts)
     when element(1, Prev) =:= element(1, New) ->
     TrUserData = proplists:get_value(user_data, Opts),
     case Prev of
+      #'Login'{} -> merge_msg_Login(Prev, New, TrUserData);
       #'RpcPackage'{} ->
 	  merge_msg_RpcPackage(Prev, New, TrUserData);
-      #'Login'{} -> merge_msg_Login(Prev, New, TrUserData);
       #'AesEncode'{} ->
 	  merge_msg_AesEncode(Prev, New, TrUserData);
       #'TestMsg'{} ->
@@ -1167,8 +1336,17 @@ merge_msgs(Prev, New, Opts)
       #'Payload'{} ->
 	  merge_msg_Payload(Prev, New, TrUserData);
       #'AesDecode'{} ->
-	  merge_msg_AesDecode(Prev, New, TrUserData)
+	  merge_msg_AesDecode(Prev, New, TrUserData);
+      #'AesDecodeReply'{} ->
+	  merge_msg_AesDecodeReply(Prev, New, TrUserData)
     end.
+
+merge_msg_Login(#'Login'{uid = PFuid},
+		#'Login'{uid = NFuid}, _) ->
+    #'Login'{uid =
+		 if NFuid =:= undefined -> PFuid;
+		    true -> NFuid
+		 end}.
 
 merge_msg_RpcPackage(#'RpcPackage'{key = PFkey,
 				   cmd = PFcmd, payload = PFpayload},
@@ -1187,13 +1365,6 @@ merge_msg_RpcPackage(#'RpcPackage'{key = PFkey,
 		      if NFpayload =:= undefined -> PFpayload;
 			 true -> NFpayload
 		      end}.
-
-merge_msg_Login(#'Login'{uid = PFuid},
-		#'Login'{uid = NFuid}, _) ->
-    #'Login'{uid =
-		 if NFuid =:= undefined -> PFuid;
-		    true -> NFuid
-		 end}.
 
 merge_msg_AesEncode(#'AesEncode'{key = PFkey,
 				 from = PFfrom},
@@ -1249,15 +1420,29 @@ merge_msg_AesDecode(#'AesDecode'{key = PFkey,
 			true -> NFfrom
 		     end}.
 
+merge_msg_AesDecodeReply(#'AesDecodeReply'{code =
+					       PFcode,
+					   reply = PFreply},
+			 #'AesDecodeReply'{code = NFcode, reply = NFreply},
+			 _) ->
+    #'AesDecodeReply'{code =
+			  if NFcode =:= undefined -> PFcode;
+			     true -> NFcode
+			  end,
+		      reply =
+			  if NFreply =:= undefined -> PFreply;
+			     true -> NFreply
+			  end}.
+
 
 verify_msg(Msg) -> verify_msg(Msg, []).
 
 verify_msg(Msg, Opts) ->
     TrUserData = proplists:get_value(user_data, Opts),
     case Msg of
+      #'Login'{} -> v_msg_Login(Msg, ['Login'], TrUserData);
       #'RpcPackage'{} ->
 	  v_msg_RpcPackage(Msg, ['RpcPackage'], TrUserData);
-      #'Login'{} -> v_msg_Login(Msg, ['Login'], TrUserData);
       #'AesEncode'{} ->
 	  v_msg_AesEncode(Msg, ['AesEncode'], TrUserData);
       #'TestMsg'{} ->
@@ -1266,9 +1451,19 @@ verify_msg(Msg, Opts) ->
 	  v_msg_Payload(Msg, ['Payload'], TrUserData);
       #'AesDecode'{} ->
 	  v_msg_AesDecode(Msg, ['AesDecode'], TrUserData);
+      #'AesDecodeReply'{} ->
+	  v_msg_AesDecodeReply(Msg, ['AesDecodeReply'],
+			       TrUserData);
       _ -> mk_type_error(not_a_known_message, Msg, [])
     end.
 
+
+-dialyzer({nowarn_function,v_msg_Login/3}).
+v_msg_Login(#'Login'{uid = F1}, Path, _) ->
+    if F1 == undefined -> ok;
+       true -> v_type_int32(F1, [uid | Path])
+    end,
+    ok.
 
 -dialyzer({nowarn_function,v_msg_RpcPackage/3}).
 v_msg_RpcPackage(#'RpcPackage'{key = F1, cmd = F2,
@@ -1282,13 +1477,6 @@ v_msg_RpcPackage(#'RpcPackage'{key = F1, cmd = F2,
     end,
     if F3 == undefined -> ok;
        true -> v_type_bytes(F3, [payload | Path])
-    end,
-    ok.
-
--dialyzer({nowarn_function,v_msg_Login/3}).
-v_msg_Login(#'Login'{uid = F1}, Path, _) ->
-    if F1 == undefined -> ok;
-       true -> v_type_int32(F1, [uid | Path])
     end,
     ok.
 
@@ -1337,6 +1525,18 @@ v_msg_AesDecode(#'AesDecode'{key = F1, from = F2}, Path,
     end,
     if F2 == undefined -> ok;
        true -> v_type_string(F2, [from | Path])
+    end,
+    ok.
+
+-dialyzer({nowarn_function,v_msg_AesDecodeReply/3}).
+v_msg_AesDecodeReply(#'AesDecodeReply'{code = F1,
+				       reply = F2},
+		     Path, _) ->
+    if F1 == undefined -> ok;
+       true -> v_type_int32(F1, [code | Path])
+    end,
+    if F2 == undefined -> ok;
+       true -> v_type_string(F2, [reply | Path])
     end,
     ok.
 
@@ -1389,15 +1589,15 @@ id(X, _TrUserData) -> X.
 
 
 get_msg_defs() ->
-    [{{msg, 'RpcPackage'},
+    [{{msg, 'Login'},
+      [#field{name = uid, fnum = 1, rnum = 2, type = int32,
+	      occurrence = optional, opts = []}]},
+     {{msg, 'RpcPackage'},
       [#field{name = key, fnum = 1, rnum = 2, type = string,
 	      occurrence = optional, opts = []},
        #field{name = cmd, fnum = 2, rnum = 3, type = int32,
 	      occurrence = optional, opts = []},
        #field{name = payload, fnum = 3, rnum = 4, type = bytes,
-	      occurrence = optional, opts = []}]},
-     {{msg, 'Login'},
-      [#field{name = uid, fnum = 1, rnum = 2, type = int32,
 	      occurrence = optional, opts = []}]},
      {{msg, 'AesEncode'},
       [#field{name = key, fnum = 1, rnum = 2, type = string,
@@ -1420,20 +1620,25 @@ get_msg_defs() ->
       [#field{name = key, fnum = 1, rnum = 2, type = string,
 	      occurrence = optional, opts = []},
        #field{name = from, fnum = 2, rnum = 3, type = string,
+	      occurrence = optional, opts = []}]},
+     {{msg, 'AesDecodeReply'},
+      [#field{name = code, fnum = 1, rnum = 2, type = int32,
+	      occurrence = optional, opts = []},
+       #field{name = reply, fnum = 2, rnum = 3, type = string,
 	      occurrence = optional, opts = []}]}].
 
 
 get_msg_names() ->
-    ['RpcPackage', 'Login', 'AesEncode', 'TestMsg',
-     'Payload', 'AesDecode'].
+    ['Login', 'RpcPackage', 'AesEncode', 'TestMsg',
+     'Payload', 'AesDecode', 'AesDecodeReply'].
 
 
 get_group_names() -> [].
 
 
 get_msg_or_group_names() ->
-    ['RpcPackage', 'Login', 'AesEncode', 'TestMsg',
-     'Payload', 'AesDecode'].
+    ['Login', 'RpcPackage', 'AesEncode', 'TestMsg',
+     'Payload', 'AesDecode', 'AesDecodeReply'].
 
 
 get_enum_names() -> [].
@@ -1451,15 +1656,15 @@ fetch_enum_def(EnumName) ->
     erlang:error({no_such_enum, EnumName}).
 
 
+find_msg_def('Login') ->
+    [#field{name = uid, fnum = 1, rnum = 2, type = int32,
+	    occurrence = optional, opts = []}];
 find_msg_def('RpcPackage') ->
     [#field{name = key, fnum = 1, rnum = 2, type = string,
 	    occurrence = optional, opts = []},
      #field{name = cmd, fnum = 2, rnum = 3, type = int32,
 	    occurrence = optional, opts = []},
      #field{name = payload, fnum = 3, rnum = 4, type = bytes,
-	    occurrence = optional, opts = []}];
-find_msg_def('Login') ->
-    [#field{name = uid, fnum = 1, rnum = 2, type = int32,
 	    occurrence = optional, opts = []}];
 find_msg_def('AesEncode') ->
     [#field{name = key, fnum = 1, rnum = 2, type = string,
@@ -1482,6 +1687,11 @@ find_msg_def('AesDecode') ->
     [#field{name = key, fnum = 1, rnum = 2, type = string,
 	    occurrence = optional, opts = []},
      #field{name = from, fnum = 2, rnum = 3, type = string,
+	    occurrence = optional, opts = []}];
+find_msg_def('AesDecodeReply') ->
+    [#field{name = code, fnum = 1, rnum = 2, type = int32,
+	    occurrence = optional, opts = []},
+     #field{name = reply, fnum = 2, rnum = 3, type = string,
 	    occurrence = optional, opts = []}];
 find_msg_def(_) -> error.
 

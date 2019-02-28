@@ -6,5 +6,6 @@
 
 
 -define(CMD_CALL_1001, 1001).  %% call aes encode
+-define(CMD_CALL_1003, 1003). %% call aes decode
 
 -endif.

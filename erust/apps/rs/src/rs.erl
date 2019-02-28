@@ -19,18 +19,27 @@ test() ->
 aes_encode() -> 
 	Str = <<"hello world">>,
 	Key = <<"201707eggplant99">>,
-	aes_encode(Str, Key).
+	Encode = aes_encode(Str, Key),
+	?LOG(Encode),
+	Decode = aes_decode(Encode, Key),
+	?LOG(Decode),
+	ok.
+
 aes_encode(Str, Key) ->
 	AesEncode = #'AesEncode'{
                         key = Key,
                         from = Str
                     },
 	AesEncodeBin = msg_proto:encode_msg(AesEncode),
-	Encode = call(AesEncodeBin, ?CMD_CALL_1001),
-	?LOG(Encode),
-	ok. 
-
-
+	call(AesEncodeBin, ?CMD_CALL_1001).
+	
+aes_decode(Encode, Key) ->
+	AesDecode = #'AesDecode'{
+                        key = Key,
+                        from = Encode
+                    },
+	AesDecodeBin = msg_proto:encode_msg(AesDecode),
+	call(AesDecodeBin, ?CMD_CALL_1003).
 
 
 % test() -> 

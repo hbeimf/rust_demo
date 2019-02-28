@@ -78,9 +78,6 @@ fn action_10000(_cmd:u32, pb:Vec<u8>
 // rpc call 业务逻辑部分
 fn action_call_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
     let rpc_msg = msg_proto::decode_rpc(pb);
-//    debug!("key: {:?}", rpc_msg.get_key());
-//    debug!("cmd: {:?}", rpc_msg.get_cmd());
-//    debug!("payload:{:?}", rpc_msg.get_payload());
 
     let cmd = rpc_msg.get_cmd();
     let payload = rpc_msg.get_payload();
@@ -91,15 +88,8 @@ fn action_call_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut 
             let aes_obj = glib::glib_pb::decode_aes_en_package(payload.to_vec());
             let from = aes_obj.get_from();
             let aes_key = aes_obj.get_key();
-//            debug!("aes from: {:?}", from);
-//            debug!("aes key: {:?}", aes_key);
 
             let en = glib::aes::encode(from.to_string(), aes_key.to_string());
-//            debug!("en: {:?}", en);
-
-            // reply
-//            let encode:Vec<u8> = msg_proto::encode_msg();
-//            let cmd:u32 = 10008;
             let rpc_reply = msg_proto::encode_rpc(rpc_msg.get_key().to_string(), rpc_msg.get_cmd(), en.into_bytes());
             let reply_package = glib::package(cmd::CMD_RPC_CALL_10008, rpc_reply);
 
@@ -136,8 +126,6 @@ fn action_call_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut 
                 }
 
             }
-
-
         }
         _ => {
             // other rpc

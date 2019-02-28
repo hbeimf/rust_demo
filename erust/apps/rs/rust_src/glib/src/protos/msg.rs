@@ -835,6 +835,204 @@ impl ::protobuf::reflect::ProtobufValue for AesDecode {
 }
 
 #[derive(PartialEq,Clone,Default)]
+pub struct AesDecodeReply {
+    // message fields
+    pub code: i32,
+    pub reply: ::std::string::String,
+    // special fields
+    pub unknown_fields: ::protobuf::UnknownFields,
+    pub cached_size: ::protobuf::CachedSize,
+}
+
+impl AesDecodeReply {
+    pub fn new() -> AesDecodeReply {
+        ::std::default::Default::default()
+    }
+
+    // int32 code = 1;
+
+    pub fn clear_code(&mut self) {
+        self.code = 0;
+    }
+
+    // Param is passed by value, moved
+    pub fn set_code(&mut self, v: i32) {
+        self.code = v;
+    }
+
+    pub fn get_code(&self) -> i32 {
+        self.code
+    }
+
+    // string reply = 2;
+
+    pub fn clear_reply(&mut self) {
+        self.reply.clear();
+    }
+
+    // Param is passed by value, moved
+    pub fn set_reply(&mut self, v: ::std::string::String) {
+        self.reply = v;
+    }
+
+    // Mutable pointer to the field.
+    // If field is not initialized, it is initialized with default value first.
+    pub fn mut_reply(&mut self) -> &mut ::std::string::String {
+        &mut self.reply
+    }
+
+    // Take field
+    pub fn take_reply(&mut self) -> ::std::string::String {
+        ::std::mem::replace(&mut self.reply, ::std::string::String::new())
+    }
+
+    pub fn get_reply(&self) -> &str {
+        &self.reply
+    }
+}
+
+impl ::protobuf::Message for AesDecodeReply {
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
+        while !is.eof()? {
+            let (field_number, wire_type) = is.read_tag_unpack()?;
+            match field_number {
+                1 => {
+                    if wire_type != ::protobuf::wire_format::WireTypeVarint {
+                        return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
+                    }
+                    let tmp = is.read_int32()?;
+                    self.code = tmp;
+                },
+                2 => {
+                    ::protobuf::rt::read_singular_proto3_string_into(wire_type, is, &mut self.reply)?;
+                },
+                _ => {
+                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u32 {
+        let mut my_size = 0;
+        if self.code != 0 {
+            my_size += ::protobuf::rt::value_size(1, self.code, ::protobuf::wire_format::WireTypeVarint);
+        }
+        if !self.reply.is_empty() {
+            my_size += ::protobuf::rt::string_size(2, &self.reply);
+        }
+        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
+        self.cached_size.set(my_size);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
+        if self.code != 0 {
+            os.write_int32(1, self.code)?;
+        }
+        if !self.reply.is_empty() {
+            os.write_string(2, &self.reply)?;
+        }
+        os.write_unknown_fields(self.get_unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn get_cached_size(&self) -> u32 {
+        self.cached_size.get()
+    }
+
+    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
+        &self.unknown_fields
+    }
+
+    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
+        &mut self.unknown_fields
+    }
+
+    fn as_any(&self) -> &::std::any::Any {
+        self as &::std::any::Any
+    }
+    fn as_any_mut(&mut self) -> &mut ::std::any::Any {
+        self as &mut ::std::any::Any
+    }
+    fn into_any(self: Box<Self>) -> ::std::boxed::Box<::std::any::Any> {
+        self
+    }
+
+    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
+        Self::descriptor_static()
+    }
+
+    fn new() -> AesDecodeReply {
+        AesDecodeReply::new()
+    }
+
+    fn descriptor_static() -> &'static ::protobuf::reflect::MessageDescriptor {
+        static mut descriptor: ::protobuf::lazy::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const ::protobuf::reflect::MessageDescriptor,
+        };
+        unsafe {
+            descriptor.get(|| {
+                let mut fields = ::std::vec::Vec::new();
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeInt32>(
+                    "code",
+                    |m: &AesDecodeReply| { &m.code },
+                    |m: &mut AesDecodeReply| { &mut m.code },
+                ));
+                fields.push(::protobuf::reflect::accessor::make_simple_field_accessor::<_, ::protobuf::types::ProtobufTypeString>(
+                    "reply",
+                    |m: &AesDecodeReply| { &m.reply },
+                    |m: &mut AesDecodeReply| { &mut m.reply },
+                ));
+                ::protobuf::reflect::MessageDescriptor::new::<AesDecodeReply>(
+                    "AesDecodeReply",
+                    fields,
+                    file_descriptor_proto()
+                )
+            })
+        }
+    }
+
+    fn default_instance() -> &'static AesDecodeReply {
+        static mut instance: ::protobuf::lazy::Lazy<AesDecodeReply> = ::protobuf::lazy::Lazy {
+            lock: ::protobuf::lazy::ONCE_INIT,
+            ptr: 0 as *const AesDecodeReply,
+        };
+        unsafe {
+            instance.get(AesDecodeReply::new)
+        }
+    }
+}
+
+impl ::protobuf::Clear for AesDecodeReply {
+    fn clear(&mut self) {
+        self.clear_code();
+        self.clear_reply();
+        self.unknown_fields.clear();
+    }
+}
+
+impl ::std::fmt::Debug for AesDecodeReply {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for AesDecodeReply {
+    fn as_ref(&self) -> ::protobuf::reflect::ProtobufValueRef {
+        ::protobuf::reflect::ProtobufValueRef::Message(self)
+    }
+}
+
+#[derive(PartialEq,Clone,Default)]
 pub struct Payload {
     // message fields
     pub key: ::std::string::String,
@@ -1286,11 +1484,13 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x0f\n\x03uid\x18\x01\x20\x01(\x05B\x02\x18\0\".\n\tAesEncode\x12\x0f\n\
     \x03key\x18\x01\x20\x01(\tB\x02\x18\0\x12\x10\n\x04from\x18\x02\x20\x01(\
     \tB\x02\x18\0\".\n\tAesDecode\x12\x0f\n\x03key\x18\x01\x20\x01(\tB\x02\
-    \x18\0\x12\x10\n\x04from\x18\x02\x20\x01(\tB\x02\x18\0\",\n\x07Payload\
-    \x12\x0f\n\x03key\x18\x01\x20\x01(\tB\x02\x18\0\x12\x10\n\x04pack\x18\
-    \x02\x20\x01(\x0cB\x02\x18\0\"C\n\nRpcPackage\x12\x0f\n\x03key\x18\x01\
-    \x20\x01(\tB\x02\x18\0\x12\x0f\n\x03cmd\x18\x02\x20\x01(\x05B\x02\x18\0\
-    \x12\x13\n\x07payload\x18\x03\x20\x01(\x0cB\x02\x18\0B\0b\x06proto3\
+    \x18\0\x12\x10\n\x04from\x18\x02\x20\x01(\tB\x02\x18\0\"5\n\x0eAesDecode\
+    Reply\x12\x10\n\x04code\x18\x01\x20\x01(\x05B\x02\x18\0\x12\x11\n\x05rep\
+    ly\x18\x02\x20\x01(\tB\x02\x18\0\",\n\x07Payload\x12\x0f\n\x03key\x18\
+    \x01\x20\x01(\tB\x02\x18\0\x12\x10\n\x04pack\x18\x02\x20\x01(\x0cB\x02\
+    \x18\0\"C\n\nRpcPackage\x12\x0f\n\x03key\x18\x01\x20\x01(\tB\x02\x18\0\
+    \x12\x0f\n\x03cmd\x18\x02\x20\x01(\x05B\x02\x18\0\x12\x13\n\x07payload\
+    \x18\x03\x20\x01(\x0cB\x02\x18\0B\0b\x06proto3\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {

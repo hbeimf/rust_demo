@@ -127,10 +127,9 @@ fn action_call_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut 
                 }
                 _ => {
                     // 解码失败时
-                    let encode:Vec<u8> = msg_proto::encode_msg();
-                    let cmd:u32 = 10008;
-                    let rpc_reply = msg_proto::encode_rpc(rpc_msg.get_key().to_string(), rpc_msg.get_cmd(), encode);
-                    let reply_package = glib::package(cmd, rpc_reply);
+                    let e = String::from("");
+                    let rpc_reply = msg_proto::encode_rpc(rpc_msg.get_key().to_string(), rpc_msg.get_cmd(), e.into_bytes());
+                    let reply_package = glib::package(cmd::CMD_RPC_CALL_10008, rpc_reply);
 
                     // 直接发给客户端
                     client.framed.write(ChatResponse::Message(reply_package));

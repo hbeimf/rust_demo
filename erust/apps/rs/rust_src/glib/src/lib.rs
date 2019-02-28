@@ -23,6 +23,7 @@ use std::io::Cursor;
 pub mod pb;
 pub mod protos;
 pub mod codec;
+pub mod glib_pb;
 //pub mod http_client;
 //extern crate curl;
 extern crate encoding;

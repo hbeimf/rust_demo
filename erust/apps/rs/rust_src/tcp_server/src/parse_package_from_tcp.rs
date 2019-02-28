@@ -78,22 +78,42 @@ fn action_10000(_cmd:u32, pb:Vec<u8>
 // rpc call 业务逻辑部分
 fn action_call_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
     let rpc_msg = msg_proto::decode_rpc(pb);
-//    println!("key: {:?}", rpc_msg.get_key());
-//    println!("cmd: {:?}", rpc_msg.get_cmd());
-//    println!("payload:{:?}", rpc_msg.get_payload());
+   debug!("key: {:?}", rpc_msg.get_key());
+   debug!("cmd: {:?}", rpc_msg.get_cmd());
+   debug!("payload:{:?}", rpc_msg.get_payload());
 
+   let cmd = rpc_msg.get_cmd();
+   let payload = rpc_msg.get_payload();
     // reply 
-    let encode:Vec<u8> = msg_proto::encode_msg();
-    let cmd:u32 = 10008;
-    let rpc_reply = msg_proto::encode_rpc(rpc_msg.get_key().to_string(), rpc_msg.get_cmd(), encode);
-    let reply_package = glib::package(cmd, rpc_reply);
+    match cmd {
+        // cmd::CMD_LOGIN_10000 => {
+        //     action_10000(cmd, pb, client, ctx);
+        // }
+        1001i32 => {
+            // aes encode 
+             let encode:Vec<u8> = msg_proto::encode_msg();
+            let cmd:u32 = 10008;
+            let rpc_reply = msg_proto::encode_rpc(rpc_msg.get_key().to_string(), rpc_msg.get_cmd(), encode);
+            let reply_package = glib::package(cmd, rpc_reply);
 
-    // 直接发给客户端
-    // println!("reply_package: {:?}", reply_package);
-    client.framed.write(ChatResponse::Message(reply_package));
+            // 直接发给客户端
+            client.framed.write(ChatResponse::Message(reply_package));
+        }
+        // 10010 => {
+        // action_cast_10010(cmd, pb, client, ctx);
+        // }
+        _ => {
+            // other rpc
+            let encode:Vec<u8> = msg_proto::encode_msg();
+            let cmd:u32 = 10008;
+            let rpc_reply = msg_proto::encode_rpc(rpc_msg.get_key().to_string(), rpc_msg.get_cmd(), encode);
+            let reply_package = glib::package(cmd, rpc_reply);
 
-
-
+            // 直接发给客户端
+            client.framed.write(ChatResponse::Message(reply_package));
+        }
+    }
+    
 }
 
 // 业务逻辑部分
@@ -109,8 +129,7 @@ fn action_cast_10010(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut 
 }
 
 // 业务逻辑部分
-fn action(_cmd:u32, pb:Vec<u8>
-    , client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
+fn action(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
     // tcp_client::start_tcp_client();
     
 

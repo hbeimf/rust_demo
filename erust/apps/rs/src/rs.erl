@@ -39,9 +39,12 @@ aes_decode(Encode, Key) ->
                         from = Encode
                     },
 	AesDecodeBin = msg_proto:encode_msg(AesDecode),
-	call(AesDecodeBin, ?CMD_CALL_1003).
+	Reply = call(AesDecodeBin, ?CMD_CALL_1003),
 
-
+	#'AesDecodeReply'{code = Code, reply = MaybeDecode} 
+		= msg_proto:decode_msg(Reply,'AesDecodeReply'),
+	{Code, MaybeDecode}.
+ 	
 %% priv	
 call(Package, Cmd) ->
 	Key = glib:to_binary(glib:to_str(glib:uid())),	

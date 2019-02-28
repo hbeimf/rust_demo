@@ -108,7 +108,8 @@ fn action_call_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut 
             match en {
                 Some(e) => {
                     // 解码成功时
-                    let rpc_reply = msg_proto::encode_rpc(rpc_msg.get_key().to_string(), rpc_msg.get_cmd(), e.into_bytes());
+                    let decode_reply = glib::glib_pb::encode_aes_de_reply(1i32, e);
+                    let rpc_reply = msg_proto::encode_rpc(rpc_msg.get_key().to_string(), rpc_msg.get_cmd(), decode_reply);
                     let reply_package = glib::package(cmd::CMD_RPC_CALL_10008, rpc_reply);
 
                     // 直接发给客户端
@@ -117,8 +118,9 @@ fn action_call_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut 
                 }
                 _ => {
                     // 解码失败时
-                    let e = String::from("");
-                    let rpc_reply = msg_proto::encode_rpc(rpc_msg.get_key().to_string(), rpc_msg.get_cmd(), e.into_bytes());
+                    let e = String::from("decode error");
+                    let decode_reply = glib::glib_pb::encode_aes_de_reply(2i32, e);
+                    let rpc_reply = msg_proto::encode_rpc(rpc_msg.get_key().to_string(), rpc_msg.get_cmd(), decode_reply);
                     let reply_package = glib::package(cmd::CMD_RPC_CALL_10008, rpc_reply);
 
                     // 直接发给客户端

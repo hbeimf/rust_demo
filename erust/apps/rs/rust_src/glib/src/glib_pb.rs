@@ -31,3 +31,13 @@ pub fn decode_aes_de_package(pb:Vec<u8>) -> protos::msg::AesDecode {
     let aes_decode_obj : protos::msg::AesDecode = parse_from_bytes::<protos::msg::AesDecode>(&pb).unwrap();
     aes_decode_obj
 }
+
+
+pub fn encode_aes_de_reply(code:i32, reply_str:String) -> Vec<u8> {
+    let mut reply = protos::msg::AesDecodeReply::new();
+    reply.set_code(code);
+    reply.set_reply(reply_str);
+
+    let msg :Vec<u8> = reply.write_to_bytes().unwrap();
+    msg
+}

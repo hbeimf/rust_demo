@@ -97,6 +97,10 @@ fn action_call_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut 
             debug!("aes from: {:?}", from);
             debug!("aes key: {:?}", aes_key);
 
+            let en = glib::aes::encode(from.to_string(), aes_key.to_string());
+//            let encode_b64 = glib::aes::encode_base64(en);
+//            debug!("encode_b64: {:?}", encode_b64);
+            debug!("en: {:?}", en);
 
             // reply
             let encode:Vec<u8> = msg_proto::encode_msg();

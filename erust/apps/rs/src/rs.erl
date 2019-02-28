@@ -57,14 +57,17 @@ aes_encode(Str, Key) ->
 
 call(Package, Cmd) ->
 	RpcReply = call_send(Package, Cmd),
-	case RpcReply of 
-		{error,connect_fail} ->
-			false;
-		_ ->
-			#'RpcPackage'{key = _Key, cmd= _Cmd, 'payload' = Payload} = msg_proto:decode_msg(RpcReply,'RpcPackage'),
-			% ?LOG({Key, Cmd, Payload}),
-			{ok, Payload}
-	end.
+	?LOG(RpcReply),
+	RpcReply.
+	
+	% case RpcReply of 
+	% 	{error,connect_fail} ->
+	% 		false;
+	% 	_ ->
+	% 		#'RpcPackage'{key = _Key, cmd= _Cmd, 'payload' = Payload} = msg_proto:decode_msg(RpcReply,'RpcPackage'),
+	% 		% ?LOG({Key, Cmd, Payload}),
+	% 		{ok, Payload}
+	% end.
 
 	
 call_send(Package, Cmd) ->

@@ -28,7 +28,7 @@ pub fn parse_package(package: Vec<u8>, client: &mut ChatSession, ctx: &mut actix
                 cmd::CMD_LOGIN_10000 => {
                     action_10000(cmd, pb, client, ctx);
                 }
-                10008 => {
+                cmd::CMD_RPC_CALL_10008 => {
                     action_call_10008(cmd, pb, client, ctx);
                 }
                 10010 => {
@@ -89,7 +89,7 @@ fn action_call_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut 
         // cmd::CMD_LOGIN_10000 => {
         //     action_10000(cmd, pb, client, ctx);
         // }
-        1001i32 => {
+        cmd::CMD_AES_ENCODE_1001 => {
             // aes encode
             let aes_obj = glib::glib_pb::decode_aes_package(payload.to_vec());
             let from = aes_obj.get_from();
@@ -98,8 +98,6 @@ fn action_call_10008(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut 
             debug!("aes key: {:?}", aes_key);
 
             let en = glib::aes::encode(from.to_string(), aes_key.to_string());
-//            let encode_b64 = glib::aes::encode_base64(en);
-//            debug!("encode_b64: {:?}", encode_b64);
             debug!("en: {:?}", en);
 
             // reply

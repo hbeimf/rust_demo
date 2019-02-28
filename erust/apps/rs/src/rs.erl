@@ -42,43 +42,7 @@ aes_decode(Encode, Key) ->
 	call(AesDecodeBin, ?CMD_CALL_1003).
 
 
-% test() -> 
-% 	test_call(),
-% 	test_cast().
-
-% test_call() -> 
-% 	Package = <<"hello world">>,
-% 	RpcReply = call(Package, 100),
-% 	?LOG(RpcReply),
-% 	case RpcReply of 
-% 		{error,connect_fail} ->
-% 			ok;
-% 		_ ->
-% 			#'RpcPackage'{key = Key, cmd= Cmd, 'payload' = Payload} = msg_proto:decode_msg(RpcReply,'RpcPackage'),
-% 			?LOG({Key, Cmd, Payload}),
-% 			ok
-% 	end,
-% 	ok.
-
-% test_cast() -> 
-% 	Package = <<"hello world">>,
-% 	cast(Package).	
-
-% call(Package, Cmd) ->
-% 	RpcReply = call_send(Package, Cmd),
-% 	% ?LOG(RpcReply),
-% 	RpcReply.
-	
-% 	% case RpcReply of 
-% 	% 	{error,connect_fail} ->
-% 	% 		false;
-% 	% 	_ ->
-% 	% 		#'RpcPackage'{key = _Key, cmd= _Cmd, 'payload' = Payload} = msg_proto:decode_msg(RpcReply,'RpcPackage'),
-% 	% 		% ?LOG({Key, Cmd, Payload}),
-% 	% 		{ok, Payload}
-% 	% end.
-
-	
+%% priv	
 call(Package, Cmd) ->
 	Key = glib:to_binary(glib:to_str(glib:uid())),	
 	RpcPackage = #'RpcPackage'{

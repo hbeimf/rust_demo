@@ -8,7 +8,7 @@
 -include("log.hrl").
 
 test() -> 
-	aes_encode().
+	aes_test().
 
 
 % message AesEncode{   
@@ -16,7 +16,7 @@ test() ->
 %     string  from = 2;
 % }
 
-aes_encode() -> 
+aes_test() -> 
 	Str = <<"hello world">>,
 	Key = <<"123456">>,
 	Encode = aes_encode(Str, Key),

@@ -56,8 +56,15 @@ pub fn decode(en: String, key: String) -> Option<String> {
     match decode_base64(en) {
         Ok(v) => {
             let de = decode_vec(v, key);
-            let from = String::from_utf8(de).unwrap();
-            Some(from)
+            let from = String::from_utf8(de);
+            match from {
+                Ok(s) => {
+                    Some(s)
+                }
+                _ => {
+                    None
+                }
+            }
         }
         _ => {
             None
@@ -77,11 +84,14 @@ pub fn decode_vec(en: Vec<u8>, key:String) -> Vec<u8> {
     let len = output.len();
     let last = output[len - 1] as usize;
 
-    let split_pos = len - last;
-
-    let (left, _) = output.split_at(split_pos);
-    let res = left.to_vec();
-    res
+    if last < len {
+        let split_pos = len - last;
+        let (left, _) = output.split_at(split_pos);
+        let res = left.to_vec();
+        res
+    } else {
+        output
+    }
 }
 
 pub fn encode(from_str:String, key:String) -> String {

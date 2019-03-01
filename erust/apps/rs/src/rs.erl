@@ -21,6 +21,15 @@ aes_test() ->
 	Key = <<"123456">>,
 	Encode = aes_encode(Str, Key),
 	?LOG(Encode),
+	Decode = aes_decode(Encode, <<"1234567">>),
+	?LOG(Decode),
+	ok.
+
+aes_test1() -> 
+	Str = <<"hello world">>,
+	Key = <<"123456">>,
+	Encode = aes_encode(Str, Key),
+	?LOG(Encode),
 	Decode = aes_decode(Encode, Key),
 	?LOG(Decode),
 	ok.

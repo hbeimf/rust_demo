@@ -8,7 +8,8 @@
 -include("log.hrl").
 
 test() -> 
-	aes_test().
+	aes_test(),
+	aes_test1().
 
 
 % message AesEncode{   

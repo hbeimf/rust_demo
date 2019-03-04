@@ -1,0 +1,5 @@
+
+-record(codes, {
+	name,
+	code
+}).

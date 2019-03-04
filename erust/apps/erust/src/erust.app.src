@@ -4,9 +4,10 @@
   {registered, []},
   {mod, { erust_app, []}},
   {applications,
-   [kernel,
-   rs,
-    stdlib
+   [kernel
+   ,rs
+   ,sync_data
+    ,stdlib
    ]},
   {env,[]},
   {modules, []},

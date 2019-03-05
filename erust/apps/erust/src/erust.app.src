@@ -7,6 +7,7 @@
    [kernel
    ,rs
    ,sync_data
+   ,table
     ,stdlib
    ]},
   {env,[]},

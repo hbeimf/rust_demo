@@ -22,15 +22,15 @@ do(Q) ->
 select() ->
     do(qlc:q([X || X <- mnesia:table(?TABLE)])).
 
-select(Ip) ->
+select(Code) ->
     do(qlc:q([X || X <- mnesia:table(?TABLE),
-                X#?TABLE.name =:= Ip
+                X#?TABLE.code =:= Code
             ])).
 
 % get_client(Client, gateway_id) ->
 %       Client#?TABLE.gateway_id;
-get_client(Client, name) ->
-      Client#?TABLE.name;
+get_client(Client, pid) ->
+      Client#?TABLE.pid;
 get_client(Client, code) ->
       Client#?TABLE.code.
 
@@ -41,12 +41,10 @@ get_client(Client, code) ->
 %% 增加一行
 % add(_UserId, undefined, undefined, undefined) ->
 %     ok;
-add(Ip) ->
+add(Code, Pid) ->
     Row = #?TABLE{
-        % gateway_id = GatewayId, 
-        % gateway_uri = GatewayUri,
-        name = Ip, 
-        code = Ip
+        code = Code, 
+        pid = Pid
     },
 
     F = fun() ->
@@ -76,8 +74,8 @@ update(Ip, Key, Val) ->
 %      Client#?TABLE{userid = UserId};
 % new_client(Client, gateway_id, Val) ->
 %       Client#?TABLE{gateway_id = Val};
-new_client(Client, name, Val) ->
-      Client#?TABLE{name = Val};
+new_client(Client, pid, Val) ->
+      Client#?TABLE{pid = Val};
 new_client(Client, code, Val) ->
       Client#?TABLE{code = Val};
 new_client(Client, _, _) ->

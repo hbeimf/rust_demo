@@ -1,5 +1,5 @@
 
 -record(codes, {
-	name,
-	code
+	code,
+	pid
 }).

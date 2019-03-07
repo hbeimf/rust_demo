@@ -1,15 +1,11 @@
-{application, erust,
+{application, spider,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { erust_app, []}},
+  {mod, { spider_app, []}},
   {applications,
-   [kernel
-   ,rs
-   ,sync_data
-   ,table
-    ,stdlib
-    ,spider
+   [kernel,
+    stdlib
    ]},
   {env,[]},
   {modules, []},

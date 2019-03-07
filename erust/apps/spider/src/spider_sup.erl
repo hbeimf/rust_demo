@@ -28,8 +28,19 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-    {ok, { {one_for_all, 0, 1}, []} }.
+    % {ok, { {one_for_all, 0, 1}, []} }.
+
+    Children = [
+    		child(spider_server)
+    	],
+
+    {ok, { {one_for_one, 10, 10}, Children} }.
 
 %%====================================================================
 %% Internal functions
 %%====================================================================
+
+child(Mod) ->
+	Child = {Mod, {Mod, start_link, []},
+               permanent, 5000, worker, [Mod]},
+               Child.

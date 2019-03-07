@@ -33,6 +33,7 @@ websocket_handle({text, Msg}, Req, State) ->
 	% Clients = select(Uid),
 	% ?LOG(Clients),
 	% broadcast(Clients, Msg),
+	ll:print(),
 	{ok, Req, State};
 	% {reply, {text, << "That's what she said! ", Msg/binary >>}, Req, State};
 websocket_handle(_Data, Req, State) ->

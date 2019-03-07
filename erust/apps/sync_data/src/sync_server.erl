@@ -144,6 +144,7 @@ run(Data, Code) ->
 	case find_exception(List1) of
 		{true, Per} -> 
 			?LOG({Code, true, Per}),
+			table_maybe_codes_list:add(Code, Per),
 			ok;
 		_ -> 
 			ok

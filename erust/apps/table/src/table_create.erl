@@ -15,6 +15,7 @@ init() ->
 		ok -> 
 			    mnesia:start(),
 			    mnesia:create_table(codes, [{attributes,record_info(fields,codes)}]),
+			    mnesia:create_table(maybe_codes, [{attributes,record_info(fields,maybe_codes)}]),
 			    ok;
 	  _ -> 
 	  	mnesia:start()

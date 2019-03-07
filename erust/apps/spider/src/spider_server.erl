@@ -125,11 +125,19 @@ fetch_code([Code|Tail]) ->
 	% ?LOG(Url),
 	Res = glib:http_get(Url),
 	% ?LOG(Res),
-	parse_res(Res),
+	case parse_res(Res) of 
+		false -> 
+			?LOG(Code),
+			ok;
+		Rows ->
+			?LOG(Rows),
+			ok
+	end, 
+
 	fetch_code(Tail).
 
 parse_res({error, _Reason}) ->
-	ok;
+	false;
 parse_res(Body) ->
 	% ?LOG(Body),
 	Body1 = glib:to_str(Body),
@@ -137,22 +145,20 @@ parse_res(Body) ->
 	% ?LOG(Lines),
 	case Lines of 
 		[] -> 
-			ok;
+			false;
 		[_|LineList] -> 
 			Rows = lists:map(fun(Line) -> 
-				?LOG(Line),
+				% ?LOG(Line),
 				Data = glib:explode(Line, ","),
-				?LOG(Data),
+				% ?LOG(Data),
 				[
 					{<<"date">>, lists:nth(1, Data)}
 					,{<<"price">>, lists:nth(4, Data)}
 					,{<<"c_num">>, lists:nth(12, Data)}
 				]
 			end, LineList),
-			?LOG(Rows),
-			ok
-	end,
-	ok. 
+			Rows
+	end.
 
 
 

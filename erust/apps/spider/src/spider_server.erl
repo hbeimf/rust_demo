@@ -27,7 +27,7 @@
 % 	code=0
 % }).
 
--define(TIMER, 2000).
+-define(TIMER, 3000).
 
 run() -> 
     gen_server:cast(?MODULE, run),
@@ -160,11 +160,12 @@ parse_res(Body) ->
 				% ?LOG(Line),
 				Data = glib:explode(Line, ","),
 				% ?LOG(Data),
-				[
-					{<<"date">>, lists:nth(1, Data)}
-					,{<<"price">>, lists:nth(4, Data)}
-					,{<<"c_num">>, lists:nth(12, Data)}
-				]
+				% [
+				% 	{<<"date">>, lists:nth(1, Data)}
+				% 	,{<<"price">>, lists:nth(4, Data)}
+				% 	,{<<"c_num">>, lists:nth(12, Data)}
+				% ]
+				{lists:nth(1, Data), lists:nth(4, Data), lists:nth(12, Data)}
 			end, LineList),
 			Rows
 	end.

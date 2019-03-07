@@ -147,6 +147,7 @@ run(Data, Code) ->
 			table_maybe_codes_list:add(Code, Per),
 			ok;
 		_ -> 
+			table_maybe_codes_list:delete(Code),
 			ok
 	end,
 	ok. 

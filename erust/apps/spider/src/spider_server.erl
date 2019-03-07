@@ -83,6 +83,7 @@ handle_cast(run, State) ->
 	?LOG(run),
 	Codes = code_list(),
 	fetch_code(Codes),
+	% ll:print(),
 	{noreply, State};
 handle_cast(_Msg, State) ->
 	% ?LOG(Msg),
@@ -99,6 +100,7 @@ handle_info(run, State) ->
 	% ?LOG(Info),
 	Codes = code_list(),
 	fetch_code(Codes),
+	% ll:print(),
 	{noreply, State};
 handle_info(_Info, State) ->
 	% ?LOG(Info),

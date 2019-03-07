@@ -26,6 +26,9 @@
 	,data = []
 }).
 
+-include_lib("glib/include/log.hrl").
+-define(TIMER, 300).
+
 %% 启动一条数据
 start_code(Code, Data) -> 
 	case table_code_list:select(Code) of 
@@ -60,6 +63,7 @@ start_link(Code, Data) ->
 %          {stop, Reason}
 % --------------------------------------------------------------------
 init([Code, Data]) ->
+	erlang:send_after(?TIMER, self(), run),
 	% Port = start_rs_server(),
 	State = #state{code = Code, data=Data},
 	% State = [],
@@ -98,7 +102,12 @@ handle_cast(_Msg, State) ->
 %          {noreply, State, Timeout} |
 %          {stop, Reason, State}            (terminate/2 is called)
 % --------------------------------------------------------------------
+handle_info(run, State = #state{code=Code, data= Data}) ->
+	% ?LOG({run, Data}), 
+	run(Data, Code),
+	{noreply, State};
 handle_info({update_date, Data}, State) -> 
+	erlang:send_after(?TIMER, self(), run),
 	{noreply, State#state{data = Data}};	
 handle_info(_Info, State) ->
 	% ?LOG(Info),
@@ -110,7 +119,6 @@ handle_info(_Info, State) ->
 % Returns: any (ignored by gen_server)
 % --------------------------------------------------------------------
 terminate(_Reason, _State) ->
-	% stop_rs_server(),
 	ok.
 
 % --------------------------------------------------------------------
@@ -120,4 +128,41 @@ terminate(_Reason, _State) ->
 % --------------------------------------------------------------------
 code_change(_OldVsn, State, _Extra) ->
 	{ok, State}.
+
+% priv fun =================
+
+run([], _Code) ->
+	ok; 
+run(Data, Code) ->
+	% ?LOG(Data),
+	Data1 = lists:keysort(1, Data),
+	% ?LOG(Data1),
+	Data2 = lists:reverse(Data1),
+	% ?LOG(Data2),
+	{List1, List2} = lists:split(5, Data2),
+	% ?LOG({List1, List2}),
+	case find_exception(List1) of
+		{true, Per} -> 
+			?LOG({Code, true, Per}),
+			ok;
+		_ -> 
+			ok
+	end,
+	ok. 
+
+find_exception(Data) ->
+	[{_, _,First}, _, _, _, {_, _, Last}|_] = lists:keysort(3, Data),
+	
+	First1 = glib:to_integer(First),
+	Last1 = glib:to_integer(Last),
+
+	Per = ( Last1 - First1 ) / First1,
+	% ?LOG({First, Last, Per}),
+	case Per >= 0.5 of 
+		true -> 
+			{true, glib:three(Per)};
+		_ -> 
+			false
+	end. 
+
 

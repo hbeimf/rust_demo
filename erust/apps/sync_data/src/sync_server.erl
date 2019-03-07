@@ -28,13 +28,20 @@
 
 %% 启动一条数据
 start_code(Code, Data) -> 
-	case sync_data_sup:start_child(Code, Data) of 
-		{ok, Pid} -> 
-			table_code_list:add(Code, Pid),
-			true;
-		_ -> 
-			false
-	end. 
+	case table_code_list:select(Code) of 
+		[] -> 
+			case sync_data_sup:start_child(Code, Data) of 
+				{ok, Pid} -> 
+					table_code_list:add(Code, Pid),
+					true;
+				_ -> 
+					false
+			end;
+		[C|_] -> 
+			Pid = table_code_list:get_client(C, pid),
+			Pid ! {update_date, Data},
+			ok
+	end.
 
 % --------------------------------------------------------------------
 % External API
@@ -91,6 +98,8 @@ handle_cast(_Msg, State) ->
 %          {noreply, State, Timeout} |
 %          {stop, Reason, State}            (terminate/2 is called)
 % --------------------------------------------------------------------
+handle_info({update_date, Data}, State) -> 
+	{noreply, State#state{data = Data}};	
 handle_info(_Info, State) ->
 	% ?LOG(Info),
 	{noreply, State}.

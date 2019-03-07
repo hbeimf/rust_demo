@@ -6,12 +6,12 @@
 -export([websocket_handle/3]).
 -export([websocket_info/3]).
 -export([websocket_terminate/3]).
--export([select/0, select/1]).
+% -export([select/0, select/1]).
 
 
--include("table.hrl").
--include_lib("stdlib/include/qlc.hrl").
--define(TABLE, client_list).
+% -include("table.hrl").
+% -include_lib("stdlib/include/qlc.hrl").
+% -define(TABLE, client_list).
 -define(LOG(X), io:format("~n==========log========{~p,~p}==============~n~p~n", [?MODULE,?LINE,X])).
 % -define(LOG(X), true).
 
@@ -28,7 +28,7 @@ websocket_init(_TransportName, Req, _Opts) ->
 	State = [],
 	{ok, Req, State}.
 
-websocket_handle({text, Msg}, Req, State) ->
+websocket_handle({text, _Msg}, Req, State) ->
 	% ?LOG({Uid, Msg}),
 	% Clients = select(Uid),
 	% ?LOG(Clients),
@@ -39,7 +39,7 @@ websocket_handle(_Data, Req, State) ->
 	?LOG("XX"),
 	{ok, Req, State}.
 
-websocket_info({broadcast, Msg}, Req, {_, Uid} = State) ->
+websocket_info({broadcast, Msg}, Req, State) ->
 	?LOG({broadcast, Msg}),
 	{reply, {text, << "That's what she said! ", Msg/binary >>}, Req, State};
 websocket_info({timeout, _Ref, Msg}, Req, State) ->

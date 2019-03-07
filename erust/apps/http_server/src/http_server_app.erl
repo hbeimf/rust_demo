@@ -17,14 +17,14 @@
 start(_StartType, _StartArgs) ->
 	Dispatch = cowboy_router:compile([
 		{'_', [
-			{"/", cowboy_static, {priv_file, websocket_chat_demo, "index.html"}},
+			{"/", cowboy_static, {priv_file, http_server, "index.html"}},
 			{"/websocket", ws_handler, []},
-			{"/static/[...]", cowboy_static, {priv_dir, websocket_chat_demo, "static"}}
+			{"/static/[...]", cowboy_static, {priv_dir, http_server, "static"}}
 		]}
 	]),
 	{ok, _} = cowboy:start_http(http, 100, [{port, 8899}],
 		[{env, [{dispatch, Dispatch}]}]),
-		
+
     http_server_sup:start_link().
 
 %%--------------------------------------------------------------------

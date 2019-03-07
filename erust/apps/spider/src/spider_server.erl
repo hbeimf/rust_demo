@@ -27,6 +27,7 @@
 % 	code=0
 % }).
 
+-define(TIMER, 2000).
 
 run() -> 
     gen_server:cast(?MODULE, run),
@@ -50,6 +51,7 @@ start_link() ->
 %          {stop, Reason}
 % --------------------------------------------------------------------
 init([]) ->
+	erlang:send_after(?TIMER, self(), run),
 	% Port = start_rs_server(),
 	% State = #state{code = Code},
 	State = [],
@@ -93,6 +95,11 @@ handle_cast(_Msg, State) ->
 %          {noreply, State, Timeout} |
 %          {stop, Reason, State}            (terminate/2 is called)
 % --------------------------------------------------------------------
+handle_info(run, State) ->
+	% ?LOG(Info),
+	Codes = code_list(),
+	fetch_code(Codes),
+	{noreply, State};
 handle_info(_Info, State) ->
 	% ?LOG(Info),
 	{noreply, State}.
@@ -127,10 +134,11 @@ fetch_code([Code|Tail]) ->
 	% ?LOG(Res),
 	case parse_res(Res) of 
 		false -> 
-			?LOG(Code),
+			?LOG({fail, Code}),
 			ok;
 		Rows ->
-			?LOG(Rows),
+			% ?LOG(Rows),
+			?LOG({init, Code}),
 			sync_server:start_code(Code, Rows),
 			ok
 	end, 

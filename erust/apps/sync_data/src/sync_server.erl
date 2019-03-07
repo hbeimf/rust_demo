@@ -12,7 +12,7 @@
 % --------------------------------------------------------------------
 % External exports
 % --------------------------------------------------------------------
--export([]).
+-export([start_code/1]).
 
 % gen_server callbacks
 -export([start_link/1]).
@@ -24,6 +24,10 @@
 -record(state, { 
 	code=0
 }).
+
+%% 启动一条数据
+start_code(Code) -> 
+	sync_data_sup:start_child(Code).
 
 % --------------------------------------------------------------------
 % External API
@@ -57,7 +61,7 @@ init([Code]) ->
 %          {stop, Reason, Reply, State}   | (terminate/2 is called)
 %          {stop, Reason, State}            (terminate/2 is called)
 % --------------------------------------------------------------------
-handle_call(Request, _From, State) ->
+handle_call(_Request, _From, State) ->
 	% ?LOG(Request),
 	Reply = ok,
 	{reply, Reply, State}.
@@ -69,7 +73,7 @@ handle_call(Request, _From, State) ->
 %          {noreply, State, Timeout} |
 %          {stop, Reason, State}            (terminate/2 is called)
 % --------------------------------------------------------------------
-handle_cast(Msg, State) ->
+handle_cast(_Msg, State) ->
 	% ?LOG(Msg),
 	{noreply, State}.
 

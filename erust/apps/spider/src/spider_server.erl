@@ -79,6 +79,8 @@ handle_call(_Request, _From, State) ->
 % --------------------------------------------------------------------
 handle_cast(run, State) ->
 	?LOG(run),
+	Codes = code_list(),
+	fetch_code(Codes),
 	{noreply, State};
 handle_cast(_Msg, State) ->
 	% ?LOG(Msg),
@@ -113,6 +115,50 @@ code_change(_OldVsn, State, _Extra) ->
 	{ok, State}.
 
 
+%% priv fun
+
+fetch_code([]) ->
+	ok; 
+fetch_code([Code|Tail]) -> 
+	% ?LOG(Code),
+	Url = lists:concat(["http://quotes.money.163.com/service/chddata.html?code=", glib:to_str(Code), "&start=20190101&end=20190121"]),
+	% ?LOG(Url),
+	Res = glib:http_get(Url),
+	% ?LOG(Res),
+	parse_res(Res),
+	fetch_code(Tail).
+
+parse_res({error, _Reason}) ->
+	ok;
+parse_res(Body) ->
+	% ?LOG(Body),
+	Body1 = glib:to_str(Body),
+	Lines = glib:explode(Body1, "\r\n"),
+	% ?LOG(Lines),
+	case Lines of 
+		[] -> 
+			ok;
+		[_|LineList] -> 
+			Rows = lists:map(fun(Line) -> 
+				?LOG(Line),
+				Data = glib:explode(Line, ","),
+				?LOG(Data),
+				[
+					{<<"date">>, lists:nth(1, Data)}
+					,{<<"price">>, lists:nth(4, Data)}
+					,{<<"c_num">>, lists:nth(12, Data)}
+				]
+			end, LineList),
+			?LOG(Rows),
+			ok
+	end,
+	ok. 
+
+
+
 
 code_list() -> 
-	[].
+	[
+		<<"0900919">>
+	].
+

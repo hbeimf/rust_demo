@@ -14,25 +14,30 @@
 % --------------------------------------------------------------------
 % External exports
 % --------------------------------------------------------------------
--export([]).
+-export([run/0]).
 
 % gen_server callbacks
 -export([start_link/0]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 % -export([stop_rs_server/0]).
 
-% -include("log.hrl").
+-include_lib("glib/include/log.hrl").
 
--record(state, { 
-	code=0
-}).
+% -record(state, { 
+% 	code=0
+% }).
+
+
+run() -> 
+    gen_server:cast(?MODULE, run),
+    ok.
 
 % --------------------------------------------------------------------
 % External API
 % --------------------------------------------------------------------
 start_link() ->
 	gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
-	
+
 % start_link() ->
 %     gen_server:start_link(?MODULE, [], []).
 
@@ -72,6 +77,9 @@ handle_call(_Request, _From, State) ->
 %          {noreply, State, Timeout} |
 %          {stop, Reason, State}            (terminate/2 is called)
 % --------------------------------------------------------------------
+handle_cast(run, State) ->
+	?LOG(run),
+	{noreply, State};
 handle_cast(_Msg, State) ->
 	% ?LOG(Msg),
 	{noreply, State}.
@@ -104,3 +112,7 @@ terminate(_Reason, _State) ->
 code_change(_OldVsn, State, _Extra) ->
 	{ok, State}.
 
+
+
+code_list() -> 
+	[].

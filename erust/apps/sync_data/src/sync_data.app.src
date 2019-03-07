@@ -4,8 +4,9 @@
   {registered, []},
   {mod, { sync_data_app, []}},
   {applications,
-   [kernel,
-    stdlib
+   [kernel
+   ,glib
+    ,stdlib
    ]},
   {env,[]},
   {modules, []},

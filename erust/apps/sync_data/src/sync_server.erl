@@ -27,7 +27,13 @@
 
 %% 启动一条数据
 start_code(Code) -> 
-	sync_data_sup:start_child(Code).
+	case sync_data_sup:start_child(Code) of 
+		{ok, Pid} -> 
+			table_code_list:add(Code, Pid),
+			true;
+		_ -> 
+			false
+	end. 
 
 % --------------------------------------------------------------------
 % External API

@@ -8,7 +8,7 @@
 -behaviour(supervisor).
 
 %% API
--export([start_link/0, start_child/1]).
+-export([start_link/0, start_child/2]).
 
 %% Supervisor callbacks
 -export([init/1]).
@@ -22,8 +22,8 @@
 start_link() ->
     supervisor:start_link({local, ?SERVER}, ?MODULE, []).
 
-start_child(Code) ->
-    supervisor:start_child(?SERVER, [Code]).
+start_child(Code, Data) ->
+    supervisor:start_child(?SERVER, [Code, Data]).
 
 %%====================================================================
 %% Supervisor callbacks

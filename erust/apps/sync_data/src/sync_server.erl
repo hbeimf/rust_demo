@@ -12,10 +12,10 @@
 % --------------------------------------------------------------------
 % External exports
 % --------------------------------------------------------------------
--export([start_code/1]).
+-export([start_code/2]).
 
 % gen_server callbacks
--export([start_link/1]).
+-export([start_link/2]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 % -export([stop_rs_server/0]).
 
@@ -23,11 +23,12 @@
 
 -record(state, { 
 	code=0
+	,data = []
 }).
 
 %% 启动一条数据
-start_code(Code) -> 
-	case sync_data_sup:start_child(Code) of 
+start_code(Code, Data) -> 
+	case sync_data_sup:start_child(Code, Data) of 
 		{ok, Pid} -> 
 			table_code_list:add(Code, Pid),
 			true;
@@ -40,8 +41,8 @@ start_code(Code) ->
 % --------------------------------------------------------------------
 % start_link() ->
 % 	gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
-start_link(Code) ->
-    gen_server:start_link(?MODULE, [Code], []).
+start_link(Code, Data) ->
+    gen_server:start_link(?MODULE, [Code, Data], []).
 
 % --------------------------------------------------------------------
 % Function: init/1
@@ -51,9 +52,9 @@ start_link(Code) ->
 %          ignore               |
 %          {stop, Reason}
 % --------------------------------------------------------------------
-init([Code]) ->
+init([Code, Data]) ->
 	% Port = start_rs_server(),
-	State = #state{code = Code},
+	State = #state{code = Code, data=Data},
 	% State = [],
 	{ok, State}.
 

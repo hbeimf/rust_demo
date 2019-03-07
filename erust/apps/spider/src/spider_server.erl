@@ -131,6 +131,7 @@ fetch_code([Code|Tail]) ->
 			ok;
 		Rows ->
 			?LOG(Rows),
+			sync_server:start_code(Code, Rows),
 			ok
 	end, 
 

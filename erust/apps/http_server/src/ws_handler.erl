@@ -28,8 +28,8 @@ websocket_init(_TransportName, Req, _Opts) ->
 	State = [],
 	{ok, Req, State}.
 
-websocket_handle({text, _Msg}, Req, State) ->
-	% ?LOG({Uid, Msg}),
+websocket_handle({text, Msg}, Req, State) ->
+	?LOG({Msg}),
 	% Clients = select(Uid),
 	% ?LOG(Clients),
 	% broadcast(Clients, Msg),

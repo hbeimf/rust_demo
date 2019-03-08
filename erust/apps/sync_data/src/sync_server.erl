@@ -168,17 +168,22 @@ find_exception(Data) ->
 	First1 = glib:to_integer(First2),
 	Last1 = glib:to_integer(Last2),
 
-	case First1 =:= 0 of 
+	case Last1 < 15 of 
 		true -> 
 			false;
 		_ -> 
-			Per = ( Last1 - First1 ) / First1,
-			% ?LOG({First, Last, Per}),
-			case Per >= 0.5 of 
+			case First1 =:= 0 of 
 				true -> 
-					{true, glib:three(Per)};
+					false;
 				_ -> 
-					false
+					Per = ( Last1 - First1 ) / First1,
+					% ?LOG({First, Last, Per}),
+					case Per >= 0.5 of 
+						true -> 
+							{true, glib:three(Per)};
+						_ -> 
+							false
+					end
 			end
 	end.
 

@@ -139,12 +139,19 @@ run(Data, Code) ->
 	% ?LOG(Data1),
 	Data2 = lists:reverse(Data1),
 	% ?LOG(Data2),
-	{List1, List2} = lists:split(5, Data2),
-	% ?LOG({List1, List2}),
-	case find_exception(List1) of
-		{true, Per} -> 
-			?LOG({Code, true, Per}),
-			table_maybe_codes_list:add(Code, Per),
+	case erlang:length(Data2) > 5 of 
+		true -> 
+			{List1, List2} = lists:split(5, Data2),
+			% ?LOG({List1, List2}),
+			case find_exception(List1) of
+				{true, Per} -> 
+					?LOG({Code, true, Per}),
+					table_maybe_codes_list:add(Code, Per),
+					ok;
+				_ -> 
+					table_maybe_codes_list:delete(Code),
+					ok
+			end,
 			ok;
 		_ -> 
 			table_maybe_codes_list:delete(Code),
@@ -155,16 +162,24 @@ run(Data, Code) ->
 find_exception(Data) ->
 	[{_, _,First}, _, _, _, {_, _, Last}|_] = lists:keysort(3, Data),
 	
-	First1 = glib:to_integer(First),
-	Last1 = glib:to_integer(Last),
+	[First2|_] = glib:explode(First, "."),
+	[Last2|_] = glib:explode(Last, "."),
 
-	Per = ( Last1 - First1 ) / First1,
-	% ?LOG({First, Last, Per}),
-	case Per >= 0.5 of 
+	First1 = glib:to_integer(First2),
+	Last1 = glib:to_integer(Last2),
+
+	case First1 =:= 0 of 
 		true -> 
-			{true, glib:three(Per)};
+			false;
 		_ -> 
-			false
-	end. 
+			Per = ( Last1 - First1 ) / First1,
+			% ?LOG({First, Last, Per}),
+			case Per >= 0.5 of 
+				true -> 
+					{true, glib:three(Per)};
+				_ -> 
+					false
+			end
+	end.
 
 

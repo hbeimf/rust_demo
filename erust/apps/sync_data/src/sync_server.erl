@@ -144,9 +144,9 @@ run(Data, Code) ->
 			{List1, List2} = lists:split(5, Data2),
 			% ?LOG({List1, List2}),
 			case find_exception(List1) of
-				{true, Per} -> 
-					?LOG({Code, true, Per}),
-					table_maybe_codes_list:add(Code, Per),
+				{true, Per, P1, P2} -> 
+					?LOG({Code, true, Per, P1, P2}),
+					table_maybe_codes_list:add(Code, {Per, P1, P2}),
 					ok;
 				_ -> 
 					table_maybe_codes_list:delete(Code),
@@ -160,7 +160,7 @@ run(Data, Code) ->
 	ok. 
 
 find_exception(Data) ->
-	[{_, _,First}, _, _, _, {_, _, Last}|_] = lists:keysort(3, Data),
+	[{_, P1, First}, _, _, _, {_, P2, Last}|_] = lists:keysort(3, Data),
 	
 	[First2|_] = glib:explode(First, "."),
 	[Last2|_] = glib:explode(Last, "."),
@@ -168,7 +168,7 @@ find_exception(Data) ->
 	First1 = glib:to_integer(First2),
 	Last1 = glib:to_integer(Last2),
 
-	case Last1 < 15 of 
+	case list_to_float(P1) < 15 orelse list_to_float(P2) < 15 of 
 		true -> 
 			false;
 		_ -> 
@@ -180,7 +180,7 @@ find_exception(Data) ->
 					% ?LOG({First, Last, Per}),
 					case Per >= 0.5 of 
 						true -> 
-							{true, glib:three(Per)};
+							{true, glib:three(Per), P1, P2};
 						_ -> 
 							false
 					end

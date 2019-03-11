@@ -338,7 +338,10 @@ random() ->
 %%　返回日期
 date_str("y-m-d") ->
 	{{Year, Month, Day}, {_Hour, _Min, _Sec}} = calendar:local_time(),
-	to_str(Year) ++ "-" ++ to_str(Month) ++ "-" ++ to_str(Day).
+	to_str(Year) ++ "-" ++ to_str(month(Month)) ++ "-" ++ to_str(month(Day));
+date_str("ymd") ->
+	{{Year, Month, Day}, {_Hour, _Min, _Sec}} = calendar:local_time(),
+	to_str(Year) ++ to_str(month(Month)) ++ to_str(month(Day)).
 
 date_str() ->
 	{{Year, Month, Day}, {Hour, Min, Sec}} = calendar:local_time(),

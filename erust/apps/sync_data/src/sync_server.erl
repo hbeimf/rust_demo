@@ -145,7 +145,7 @@ run(Data, Code) ->
 			% ?LOG({List1, List2}),
 			case find_exception(List1) of
 				{true, Per, P1, P2} -> 
-					?LOG({Code, true, Per, P1, P2}),
+					% ?LOG({Code, true, Per, P1, P2}),
 					table_maybe_codes_list:add(Code, {Per, P1, P2}),
 					ok;
 				_ -> 

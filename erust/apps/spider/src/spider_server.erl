@@ -131,7 +131,10 @@ fetch_code([]) ->
 fetch_code([CodeInfo|Tail]) -> 
 	{Code, _, _} = CodeInfo,
 	% ?LOG(Code),
-	Url = lists:concat(["http://quotes.money.163.com/service/chddata.html?code=", glib:to_str(Code), "&start=20190101&end=20190308"]),
+	Url = lists:concat(["http://quotes.money.163.com/service/chddata.html?code="
+		, glib:to_str(Code)
+		, "&start=20190101&end="
+		, glib:date_str("ymd")]),
 	% ?LOG(Url),
 	Res = glib:http_get(Url),
 	% ?LOG(Res),
@@ -141,7 +144,7 @@ fetch_code([CodeInfo|Tail]) ->
 			ok;
 		Rows ->
 			% ?LOG(Rows),
-			?LOG({init, Code}),
+			% ?LOG({init, Code}),
 			sync_server:start_code(CodeInfo, Rows),
 			ok
 	end, 

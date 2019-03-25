@@ -1,0 +1,6 @@
+-sname check_eredis_cluster
+
+-setcookie check_eredis_cluster_cookie
+
++K true
++A30

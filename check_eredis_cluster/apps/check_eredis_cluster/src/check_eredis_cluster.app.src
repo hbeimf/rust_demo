@@ -6,7 +6,8 @@
   {applications,
    [kernel,
     stdlib,
-    redisc
+    redisc,
+    eredis_cluster
    ]},
   {env,[]},
   {modules, []},

@@ -1,0 +1,10 @@
+{"1.1.0",
+[{<<"eredis">>,{pkg,<<"eredis">>,<<"1.1.0">>},1},
+ {<<"eredis_cluster">>,{pkg,<<"eredis_cluster">>,<<"0.5.9">>},0},
+ {<<"poolboy">>,{pkg,<<"poolboy">>,<<"1.5.1">>},1}]}.
+[
+{pkg_hash,[
+ {<<"eredis">>, <<"8D8D74496F35216679B97726B75FB1C8715E99DD7F3EF9F9824A2264C3E0AAC0">>},
+ {<<"eredis_cluster">>, <<"B5C916A4BC04ACB8E456ACF98EA0DD2C44F8725D7560C228C9B750D8F674B979">>},
+ {<<"poolboy">>, <<"6B46163901CFD0A1B43D692657ED9D7E599853B3B21B95AE5AE0A777CF9B6CA8">>}]}
+].

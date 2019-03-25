@@ -5,7 +5,8 @@
   {mod, { check_eredis_cluster_app, []}},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
+    redisc
    ]},
   {env,[]},
   {modules, []},

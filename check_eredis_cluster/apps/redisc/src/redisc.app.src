@@ -4,8 +4,9 @@
   {registered, []},
   {mod, { redisc_app, []}},
   {applications,
-   [kernel,
-    stdlib
+   [kernel
+   ,stdlib
+   ,eredis_cluster
    ]},
   {env,[]},
   {modules, []},

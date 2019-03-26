@@ -89,7 +89,8 @@ init([Pools, GlobalOrLocal]) ->
         poolboy:child_spec(Name, PoolArgs, WorkerArgs)
     end, Pools),
 
-    io:format("~n ===============redis spec: ~n~p~n", [PoolSpecs]),
+    % io:format("~n ===============redis spec: ~n~p~n", [PoolSpecs]),
+    ?LOG(PoolSpecs),
 
     {ok, {SupFlags, PoolSpecs}}.
 

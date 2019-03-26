@@ -62,7 +62,7 @@ init([Params]) ->
 			% erlang:start_timer(1000, self(), {regist}),
 			% self() ! {timeout, <<"Heartbeat!">>, <<"Heartbeat!">>},
 			% erlang:start_timer(?TIMER_SECONDS, self(), <<"Heartbeat!">>),
-			?LOG({connect, Ip, Port}),
+			% ?LOG({connect, Ip, Port}),
 			State = #state{socket = Socket, transport = ranch_tcp, data = <<>>, ip = Ip, port = Port, call_pid=undefined},
 			{ok,  State};
 		{error,econnrefused} -> 

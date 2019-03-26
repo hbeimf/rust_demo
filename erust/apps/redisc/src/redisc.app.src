@@ -1,17 +1,20 @@
-{application, erust,
+{application, redisc,
  [{description, "An OTP application"},
-  {vsn, "0.1.0"},
+  {vsn, "0.1.2"},
   {registered, []},
-  {mod, { erust_app, []}},
+  {mod, { redisc_app, []}},
   {applications,
    [kernel,
-   rs,
-   glib,
-   eredis_cluster,
     stdlib,
-    redisc
+    poolboy,
+    eredis
    ]},
-  {env,[]},
+{env, [
+        {global_or_local, local}
+  ]},
+
+
+
   {modules, []},
 
   {maintainers, []},

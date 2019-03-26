@@ -202,7 +202,8 @@ connect_(InitNodes) ->
 
 init(_Args) ->
     ets:new(?MODULE, [protected, set, named_table, {read_concurrency, true}]),
-    InitNodes = application:get_env(eredis_cluster, init_nodes, []),
+    % InitNodes = application:get_env(eredis_cluster, init_nodes, []),
+    InitNodes = sys_config:redis_cluster(),
     ?LOG(InitNodes),
     {ok, connect_(InitNodes)}.
 

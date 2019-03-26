@@ -19,6 +19,7 @@
 % --------------------------------------------------------------------
 % External API
 % --------------------------------------------------------------------
+-export([redis_cluster/0]).
 -export([get_config/1, reload/0, set_config/2, set_aes_key/0]).
 -define(ETS_OPTS,[set, public ,named_table , {keypos,2}, {heir,none}, {write_concurrency,true}, {read_concurrency,false}]).
 
@@ -46,6 +47,14 @@ reload() ->
 			ok
 	end,
 	ok.
+
+redis_cluster() ->
+	{ok, ConfigList} = get_config(redis_cluster),
+	% ?LOG(ConfigList),
+	lists:map(fun({_Key, Config}) -> 
+		[Ip, Port|_] = glib:explode(Config, ":"),
+		{Ip, glib:to_integer(Port)}
+	end, ConfigList).
 
 % sys_config:set_aes_key().
 set_aes_key() ->

@@ -160,6 +160,7 @@ query(_, undefined) ->
     {error, invalid_cluster_command};
 query(Command, PoolKey) ->
     Slot = get_key_slot(PoolKey),
+    ?LOG({slot, Slot}),
     Transaction = fun(Worker) -> qw(Worker, Command) end,
     query(Transaction, Slot, 0).
 

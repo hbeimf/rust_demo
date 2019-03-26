@@ -15,6 +15,7 @@
 -export([code_change/3]).
 
 -record(state, {conn}).
+-include("log.hrl").
 
 start_link(Args) ->
     gen_server:start_link(?MODULE, Args, []).
@@ -22,6 +23,7 @@ start_link(Args) ->
 init(Args) ->
     Hostname = proplists:get_value(host, Args),
     Port = proplists:get_value(port, Args),
+    % ?LOG({Hostname, Port}),
 
     process_flag(trap_exit, true),
     Result = eredis:start_link(Hostname,Port),

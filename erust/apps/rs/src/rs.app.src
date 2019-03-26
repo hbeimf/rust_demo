@@ -4,10 +4,10 @@
   {registered, []},
   {mod, { rs_app, []}},
   {applications,
-   [kernel,
-   zucchini,
-   glib,
-    stdlib
+   [kernel
+    , zucchini
+    , stdlib
+    , esnowflake
    ]},
   {env,[]},
   {modules, []},

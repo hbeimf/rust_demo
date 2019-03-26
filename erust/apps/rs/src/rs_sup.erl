@@ -33,7 +33,7 @@ init([]) ->
       % ?LOG(Config),
       [{tcp,[{config,Conf}|_]}|_] = Config,
       % ?LOG(Conf),
-      [Ip, Port|_] = glib:explode(Conf, ":"),
+      [Ip, Port|_] = explode(Conf, ":"),
 
       RustMonitor = {rs_server_monitor, {rs_server_monitor, start_link, []},
       permanent, 5000, worker, [rs_server_monitor]},
@@ -43,7 +43,7 @@ init([]) ->
                {worker_module,rs_client},
                {size,10},
                {max_overflow,20}],
-      		[Ip, glib:to_integer(Port)]]},
+      		[Ip, to_integer(Port)]]},
       permanent,5000,worker,
       [poolboy]},
 
@@ -78,3 +78,37 @@ file_get_contents(Dir) ->
     {error, Msg} ->
       {error, Msg}
   end.
+
+
+  explode(Str, SubStr) ->
+    case string:len(Str) of
+        Length when Length == 0 ->
+            [];
+        _Length ->
+            explode(Str, SubStr, [])
+    end.
+
+explode(Str, SubStr, List) ->
+    case string:str(Str, SubStr) of
+        Pos when Pos == 0 ->
+            List ++ [Str];
+        Pos when Pos == 1 ->
+            LengthStr = string:len(Str),
+            LengthSubStr = string:len(SubStr),
+            case LengthStr - LengthSubStr of
+                Length when Length =< 0 ->
+                    List;
+                Length ->
+                    LastStr = string:substr(Str, LengthSubStr + 1, Length),
+                    explode(LastStr, SubStr, List)
+            end;
+        Pos ->
+            Head = string:substr(Str, 1, Pos -1),
+            Tail = string:substr(Str, Pos),
+            explode(Tail, SubStr, List ++ [Head])
+    end.
+
+to_integer(X) when is_list(X) -> list_to_integer(X);
+to_integer(X) when is_binary(X) -> binary_to_integer(X);
+to_integer(X) when is_integer(X) -> X;
+to_integer(X) -> X.

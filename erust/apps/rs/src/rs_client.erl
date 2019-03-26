@@ -202,7 +202,7 @@ code_change(_OldVsn, State, _Extra) ->
 % priv
 
 parse_package(Bin, State) ->
-    case glib:unpackage(Bin) of
+    case rs:unpackage(Bin) of
         {ok, waitmore}  -> {ok, waitmore, Bin};
         {ok, {Cmd, DataBin},LefBin} ->
             action(Cmd, DataBin, State),

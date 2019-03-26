@@ -1,6 +1,14 @@
 -module(rs).
 -compile(export_all).
 
+
+-define( UINT, 32/unsigned-little-integer).
+% -define( INT, 32/signed-little-integer).
+-define( USHORT, 16/unsigned-little-integer).
+% -define( SHORT, 16/signed-little-integer).
+% -define( UBYTE, 8/unsigned-little-integer).
+% -define( BYTE, 8/signed-little-integer).
+
 -define(TIMEOUT, 5000).
 
 -include("msg_proto.hrl").
@@ -57,14 +65,14 @@ aes_decode(Encode, Key) ->
  	
 %% priv	
 call(Package, Cmd) ->
-	Key = glib:to_binary(glib:to_str(glib:uid())),	
+	Key = to_binary(to_str(uid())),	
 	RpcPackage = #'RpcPackage'{
                         key = Key,
                         cmd = Cmd,
                         payload = Package
                     },
 	RpcPackageBin = msg_proto:encode_msg(RpcPackage),
-	RpcPackageBin1 = glib:package(?CMD_CALL_10008, RpcPackageBin),
+	RpcPackageBin1 = package(?CMD_CALL_10008, RpcPackageBin),
 	poolboy:transaction(pool_name(), fun(Worker) ->
 		gen_server:call(Worker, {call, Key, RpcPackageBin1}, ?TIMEOUT)
 	end).
@@ -72,13 +80,13 @@ call(Package, Cmd) ->
 
 
 cast(Package) ->
-	Key = glib:to_binary(glib:to_str(glib:uid())),	
+	Key = to_binary(to_str(uid())),	
 	RpcPackage = #'RpcPackage'{
                         key = Key,
                         payload = Package
                     },
 	RpcPackageBin = msg_proto:encode_msg(RpcPackage),
-	RpcPackageBin1 = glib:package(?CMD_CAST_10010, RpcPackageBin),
+	RpcPackageBin1 = package(?CMD_CAST_10010, RpcPackageBin),
 	poolboy:transaction(pool_name(), fun(Worker) ->
 		gen_server:cast(Worker, {send, RpcPackageBin1})
 	end).
@@ -86,3 +94,54 @@ cast(Package) ->
 
 pool_name() ->
 	rs_client_pool.
+
+uid() -> 
+	esnowflake:generate_id().
+
+to_str(X) when is_list(X) -> X;
+to_str(X) when is_atom(X) -> atom_to_list(X);
+to_str(X) when is_binary(X) -> binary_to_list(X);
+to_str(X) when is_integer(X) -> integer_to_list(X);
+to_str(X) when is_float(X) -> float_to_list(X).
+
+to_binary(X) when is_list(X) -> list_to_binary(X);
+to_binary(X) when is_atom(X) -> list_to_binary(atom_to_list(X));
+to_binary(X) when is_binary(X) -> X;
+to_binary(X) when is_integer(X) -> list_to_binary(integer_to_list(X));
+to_binary(X) when is_float(X) -> list_to_binary(float_to_list(X));
+to_binary(X) -> term_to_binary(X).
+
+
+unpackage(PackageBin) when erlang:byte_size(PackageBin) >= 4 ->
+	% io:format("parse package =========~n~n"),
+	case parse_head(PackageBin) of
+		{ok, PackageLen} ->	
+			parse_body(PackageLen, PackageBin);
+		Any -> 
+			Any
+	end;
+unpackage(_) ->
+	{ok, waitmore}. 
+
+parse_head(<<PackageLen:?UINT ,_/binary>> ) ->
+	% io:format("parse head ======: ~p ~n~n", [PackageLen]), 
+	{ok, PackageLen};
+parse_head(_) ->
+	error.
+
+parse_body(PackageLen, _ ) when PackageLen > 9000 ->
+	error; 
+parse_body(PackageLen, PackageBin) ->
+	% io:format("parse body -----------~n~n"),
+	case PackageBin of 
+		<<RightPackage:PackageLen/binary,NextPageckage/binary>> ->
+			<<_Len:?UINT, Cmd:?UINT, DataBin/binary>> = RightPackage,
+			% tcp_controller:action(Cmd, DataBin),
+			% unpackage(NextPageckage);
+			{ok, {Cmd, DataBin}, NextPageckage};
+		_ -> {ok, waitmore}
+	end.
+
+package(Cmd, DataBin) ->
+	Len = byte_size(DataBin)+8,
+	<<Len:?UINT, Cmd:?UINT, DataBin/binary>>.

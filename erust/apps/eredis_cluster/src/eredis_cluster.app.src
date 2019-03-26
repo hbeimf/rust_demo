@@ -1,0 +1,21 @@
+{application, eredis_cluster, [
+    {description, "Eredis Cluster"},
+    {vsn, "0.5.9"},
+    {modules, []},
+    {registered, []},
+    {applications, [
+        kernel,
+        stdlib
+    ]},
+    {mod, {eredis_cluster, []}},
+    {env, [
+
+                  {init_nodes,[
+                      %%{"127.0.0.1",6379},
+                      {"127.0.0.1", 6379}
+                  ]},
+                  {pool_size, 5},
+                  {pool_max_overflow, 0}
+
+    ]}
+]}.

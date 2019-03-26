@@ -18,6 +18,8 @@
 
 %% Type definition.
 -include("eredis_cluster.hrl").
+-include("log.hrl").
+
 -record(state, {
     init_nodes :: [#node{}],
     slots :: tuple(), %% whose elements are integer indexes into slots_maps
@@ -201,6 +203,7 @@ connect_(InitNodes) ->
 init(_Args) ->
     ets:new(?MODULE, [protected, set, named_table, {read_concurrency, true}]),
     InitNodes = application:get_env(eredis_cluster, init_nodes, []),
+    ?LOG(InitNodes),
     {ok, connect_(InitNodes)}.
 
 handle_call({reload_slots_map,Version}, _From, #state{version=Version} = State) ->

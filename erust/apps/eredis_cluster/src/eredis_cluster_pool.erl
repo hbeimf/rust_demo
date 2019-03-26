@@ -11,11 +11,13 @@
 -export([init/1]).
 
 -include("eredis_cluster.hrl").
+-include("log.hrl").
 
 -spec create(Host::string(), Port::integer()) ->
     {ok, PoolName::atom()} | {error, PoolName::atom()}.
 create(Host, Port) ->
 	PoolName = get_name(Host, Port),
+    ?LOG({pool_name, PoolName}),
 
     case whereis(PoolName) of
         undefined ->
@@ -30,6 +32,20 @@ create(Host, Port) ->
                         {max_overflow, MaxOverflow}],
 
             ChildSpec = poolboy:child_spec(PoolName, PoolArgs, WorkerArgs),
+
+            ?LOG({child_spec, ChildSpec}),
+            % {child_spec,
+            %     {'127.0.0.1#6379',
+            %         {poolboy,start_link,
+            %             [[{name,{local,'127.0.0.1#6379'}},
+            %               {worker_module,eredis_cluster_pool_worker},
+            %               {size,10},
+            %               {max_overflow,0}],
+            %              [{host,"127.0.0.1"},{port,6379}]]},
+            %         permanent,5000,worker,
+            %         [poolboy]}
+            % }
+
 
             {Result, _} = supervisor:start_child(?MODULE,ChildSpec),
         	{Result, PoolName};

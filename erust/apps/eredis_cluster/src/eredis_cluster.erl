@@ -21,6 +21,8 @@
 -export([eval/4]).
 
 -include("eredis_cluster.hrl").
+-include("log.hrl").
+
 
 -spec start(StartType::application:start_type(), StartArgs::term()) ->
     {ok, pid()}.
@@ -151,6 +153,7 @@ qk(Command, PoolKey) ->
 
 query(Command) ->
     PoolKey = get_key_from_command(Command),
+    ?LOG({pool_key, PoolKey}),
     query(Command, PoolKey).
 
 query(_, undefined) ->

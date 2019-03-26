@@ -1,4 +1,4 @@
--module(redisc).
+-module(rediscc).
 -compile(export_all).
 
 -define(LOG2(X), io:format("~n==========log2========{~p,~p}==============~n~p~n", [?MODULE,?LINE,X])).

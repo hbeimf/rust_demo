@@ -1,13 +1,14 @@
-{application, erust,
+{application, glib,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { erust_app, []}},
+  {mod, { glib_app, []}},
   {applications,
-   [kernel,
-   rs,
-   glib,
-    stdlib
+   [kernel
+    , stdlib
+    , inets
+    , esnowflake
+    , zucchini
    ]},
   {env,[]},
   {modules, []},

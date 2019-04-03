@@ -8,7 +8,7 @@
 -behaviour(supervisor).
 
 %% API
--export([start_link/0]).
+-export([start_link/0, start_log/1]).
 
 %% Supervisor callbacks
 -export([init/1]).
@@ -21,6 +21,13 @@
 
 start_link() ->
     supervisor:start_link({local, ?SERVER}, ?MODULE, []).
+
+start_log(Root) -> 
+	start_child(log, Root).
+
+start_child(Mod, Root) ->   
+	Child = child(Mod, glib:to_str(Root)),
+	supervisor:start_child(?SERVER, Child).
 
 %%====================================================================
 %% Supervisor callbacks
@@ -45,6 +52,12 @@ child(Mod) ->
 	Child = {Mod, {Mod, start_link, []},
                permanent, 5000, worker, [Mod]},
                Child.
+
+child(Mod, Root) ->
+	Child = {Mod, {Mod, start_link, [Root]},
+               permanent, 5000, worker, [Mod]},
+               Child.
+
 
 child_sup(Mod) ->
               Child = {Mod, {Mod, start_link, []},

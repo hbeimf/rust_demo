@@ -6,7 +6,7 @@
 
 test() ->
 	Dir = "log_test",
-	W = write(Dir, {hello}),
+	W = write(Dir, {hello, world,  <<"log bin">>, [type, category]}),
 	LogPid = log_pid(Dir),
 	R = log:since(LogPid, undefined),
 	?LOG(W),
@@ -35,8 +35,10 @@ log_pid(Dir) ->
 	glib_sup:start_log(Dir).
 
 write(Dir, TermLog) -> 
-	Pid = glib_sup:start_log(Dir),
-	log:write(Pid, term_to_binary(TermLog)).
+	Pid = log_pid(Dir),
+	LogTime = glib:date_str(),
+	Log = {LogTime, TermLog},
+	log:write(Pid, term_to_binary(Log)).
 
 
 

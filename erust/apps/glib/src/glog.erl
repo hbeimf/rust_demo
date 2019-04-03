@@ -23,7 +23,9 @@ test() ->
 foreach_log(Dir) ->
 	LogPid = log_pid(Dir),
 	Acc = log:foldl(LogPid, fun(EachLog, Reply) -> 
-		?LOG(EachLog),
+		{{Start, Next}, {ok, BinLog}} = EachLog,
+		Log = binary_to_term(BinLog),
+		?LOG([{start, Start}, {next, Next}, {log, Log}]),
 		Reply
 	end, []),
 	?LOG(Acc),

@@ -36,7 +36,14 @@ start_log(Root) ->
 	Key = glib:to_binary(Root),
 	case select(Key) of
 		{ok, Pid} -> 
-			Pid;
+			case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of 
+				true -> 
+					Pid;
+				_ -> 
+					{ok, Pid1} = start_child(log, Root),
+					insert(Key, Pid1),
+					Pid1
+			end;
 		_ -> 
 			{ok, Pid} = start_child(log, Root),
 			insert(Key, Pid),

@@ -29,13 +29,24 @@ start_link() ->
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
     % {ok, { {one_for_all, 0, 1}, []} }.
-        SysConfig = {sys_config, {sys_config, start_link, []},
-               permanent, 5000, worker, [sys_config]},
+        % SysConfig = {sys_config, {sys_config, start_link, []},
+        %        permanent, 5000, worker, [sys_config]},
 
-    Children = [SysConfig],
+    Children = [
+    	child(sys_config)
+    ],
 
-    {ok, { {one_for_all, 10, 10}, Children} }.
+    {ok, { {one_for_one, 10, 10}, Children} }.
 
 %%====================================================================
 %% Internal functions
 %%====================================================================
+child(Mod) ->
+	Child = {Mod, {Mod, start_link, []},
+               permanent, 5000, worker, [Mod]},
+               Child.
+
+child_sup(Mod) ->
+              Child = {Mod, {Mod, start_link, []},
+               permanent, 5000, supervisor, [Mod]},
+               Child. 

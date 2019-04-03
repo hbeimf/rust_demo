@@ -15,15 +15,33 @@
 
 -define(SERVER, ?MODULE).
 
+% log pid ets table
+-define(ETS_OPTS,[set, public ,named_table , {keypos,2}, {heir,none}, {write_concurrency,true}, {read_concurrency,false}]).
+
+-define(LOG_DB, log_db).
+-record(log_db, {
+	key,
+	pid
+}).
+
 %%====================================================================
 %% API functions
 %%====================================================================
 
 start_link() ->
-    supervisor:start_link({local, ?SERVER}, ?MODULE, []).
+	init_log_db(),
+	supervisor:start_link({local, ?SERVER}, ?MODULE, []).
 
 start_log(Root) -> 
-	start_child(log, Root).
+	Key = glib:to_binary(Root),
+	case select(Key) of
+		{ok, Pid} -> 
+			Pid;
+		_ -> 
+			{ok, Pid} = start_child(log, Root),
+			insert(Key, Pid),
+			Pid
+	end.
 
 start_child(Mod, Root) ->   
 	Child = child(Mod, glib:to_str(Root)),
@@ -35,10 +53,6 @@ start_child(Mod, Root) ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-    % {ok, { {one_for_all, 0, 1}, []} }.
-        % SysConfig = {sys_config, {sys_config, start_link, []},
-        %        permanent, 5000, worker, [sys_config]},
-
     Children = [
     	child(sys_config)
     ],
@@ -63,3 +77,19 @@ child_sup(Mod) ->
               Child = {Mod, {Mod, start_link, []},
                permanent, 5000, supervisor, [Mod]},
                Child. 
+
+
+init_log_db() ->
+	ets:new(?LOG_DB, ?ETS_OPTS).
+
+insert(Key, Pid) ->
+	ets:insert(?LOG_DB, #log_db{key=Key, pid=Pid}).
+
+select(Key) -> 
+	case ets:match_object(?LOG_DB, #log_db{key = Key,_='_'}) of
+		[{?LOG_DB, Key, Pid}] -> {ok, Pid};
+		[] ->{error,not_exist}
+	end.
+
+delete(Key) ->
+	ets:delete(?LOG_DB, Key).

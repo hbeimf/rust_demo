@@ -4,20 +4,38 @@
 -include_lib("eunit/include/eunit.hrl").
 -include_lib("glib/include/log.hrl").
 
+% write 
+tt() -> 
+	lists:foreach(fun(I) -> 
+		test()
+	end, lists:seq(1,1000)),
+	ok.
+
 test() ->
 	Dir = "log_test",
-	W = write(Dir, {hello, world,  <<"log bin">>, [type, category]}),
-	LogPid = log_pid(Dir),
-	R = log:since(LogPid, undefined),
-	?LOG(W),
-	?LOG(R),
+	lists:foreach(fun(I) -> 
+		W = write(Dir, {hello, world,  <<"log bin">>, [type, category]}),
+		?LOG(W),
+		ok
+	end, lists:seq(1,10000)),
+	ok.
+	
 
-	{ok, {Start, _}} = W,
-	{_, {ok, Bin}} = log:fetch(LogPid, Start),
-	?LOG(binary_to_term(Bin)),
+% // read 
+test1() ->
+	Dir = "log_test",
+	% LogPid = log_pid(Dir),
+	% R = log:since(LogPid, undefined),
+	% ?LOG(W),
+	% ?LOG(R),
+
+	% {ok, {Start, _}} = W,
+	% {_, {ok, Bin}} = log:fetch(LogPid, Start),
+	% ?LOG(binary_to_term(Bin)),
 
 	foreach_log(Dir),
 	ok.
+
 
 
 foreach_log(Dir) ->

@@ -15,9 +15,9 @@ test() ->
 	Dir = "log_test",
 	lists:foreach(fun(I) -> 
 		W = write(Dir, {hello, world,  <<"log bin">>, [type, category]}),
-		?LOG(W),
+		% ?LOG(W),
 		ok
-	end, lists:seq(1,10000)),
+	end, [1]),
 	ok.
 	
 

@@ -3,6 +3,7 @@
   
 % https://cryolite.iteye.com/blog/1451070
 % https://blog.csdn.net/zhangzhizhen1988/article/details/7932523
+% https://blog.csdn.net/yangzm/article/details/72599602
 
 -export([start_link/1, start_link/0]).  
 -export([button/1]).  
@@ -21,6 +22,7 @@ start_link(Code) ->
   
 
 % code_lock:button("123"). 
+%% 发消息给状态机
 -spec(button(Digit::string()) -> ok).  
 button(Digit) ->  
     gen_fsm:send_event(?MODULE, {button, Digit}).  

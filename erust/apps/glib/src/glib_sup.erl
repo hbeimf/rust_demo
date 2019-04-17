@@ -62,6 +62,7 @@ start_child(Mod, Root) ->
 init([]) ->
     Children = [
     	child(sys_config)
+    	, child(code_lock)
     ],
 
     {ok, { {one_for_one, 10, 10}, Children} }.

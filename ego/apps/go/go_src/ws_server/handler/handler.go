@@ -11,6 +11,8 @@ import (
 	"../../aes256"
 	"../../db"
 	"../router/middleware"
+
+	"../../redisc"
 )
 
 var identityKey = "id"
@@ -23,6 +25,9 @@ func RegisterHandler(c *gin.Context) {
 
 // http://127.0.0.1:8880/curd
 func CurdHandler(c *gin.Context) {
+	redisc.RedisClient.RedisSet("foo", "bar")
+	Val, _ := redisc.RedisClient.RedisGet("foo")
+
 	c.JSON(200, gin.H{
 		"code": 200,
 		// "userName": user.(*db.UserDao).UserName,
@@ -30,6 +35,7 @@ func CurdHandler(c *gin.Context) {
 		"msg": "curd 示例",
 		// "uid":      claims["Uid"],
 		// "info":     u3,
+		"val": Val,
 	})
 }
 

@@ -4,8 +4,8 @@
 % --------------------------------------------------------------------
 % Include files
 % --------------------------------------------------------------------
--include_lib("glib/include/log.hrl").
-% -include("msg_proto.hrl").
+-include("log.hrl").
+-include("msg_proto.hrl").
 
 -record(state, { 
 	socket,
@@ -22,7 +22,7 @@
 % --------------------------------------------------------------------
 % External exports
 % --------------------------------------------------------------------
--export([start_link/0]).
+-export([start_link/1]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
 % --------------------------------------------------------------------
@@ -39,8 +39,8 @@
 %     gen_server:start_link({local, ?MODULE}, ?MODULE, [ServerID, ServerType, ServerURI, GwcURI, Max], []).
 
 
-start_link() ->
-	gen_server:start_link(?MODULE, [], []).
+start_link(Params) ->
+	gen_server:start_link(?MODULE, [Params], []).
 
 
 % --------------------------------------------------------------------
@@ -51,11 +51,11 @@ start_link() ->
 %          ignore               |
 %          {stop, Reason}
 % --------------------------------------------------------------------
-init([]) ->
+init([Params]) ->
 	% ?LOG(Index),
-	Ip = "127.0.0.1",
-	Port = 12345,
-	% [Ip, Port|_] = Params,
+	% Ip = "127.0.0.1",
+	% Port = 12345,
+	[Ip, Port|_] = Params,
 	case ranch_tcp:connect(Ip, Port,[],3000) of
 		{ok,Socket} ->
         			ok = ranch_tcp:setopts(Socket, [{active, once}]),
@@ -211,12 +211,12 @@ parse_package(Bin, State) ->
             error       
     end.
 
- % action(10008, DataBin, _State = #state{call_pid = _CallFrom}) ->
- % 	#'RpcPackage'{key = Key, cmd=_Cmd, 'payload' = Payload} = msg_proto:decode_msg(DataBin,'RpcPackage'),
- % 	{ok, From} = ets_rpc_call_table:select(Key),
- % 	ets_rpc_call_table:delete(Key),
-	% safe_reply(From, Payload),
- % 	ok;
+ action(10008, DataBin, _State = #state{call_pid = _CallFrom}) ->
+ 	#'RpcPackage'{key = Key, cmd=_Cmd, 'payload' = Payload} = msg_proto:decode_msg(DataBin,'RpcPackage'),
+ 	{ok, From} = ets_rpc_call_table:select(Key),
+ 	ets_rpc_call_table:delete(Key),
+	safe_reply(From, Payload),
+ 	ok;
   action(Cmd, DataBin, _State) ->
 	?LOG({ignore_package, Cmd, DataBin}),
  	ok.

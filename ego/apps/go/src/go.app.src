@@ -8,6 +8,9 @@
     stdlib
     , glib
     , ranch
+    , zucchini
+    , stdlib
+    , esnowflake
    ]},
   %%{env,[]},
   {env, [

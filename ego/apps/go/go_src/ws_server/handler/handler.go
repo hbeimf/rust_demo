@@ -8,8 +8,8 @@ import (
 	"log"
 	"net/http"
 
-	"../aes256"
-	"../db"
+	"../../aes256"
+	"../../db"
 	"../router/middleware"
 )
 

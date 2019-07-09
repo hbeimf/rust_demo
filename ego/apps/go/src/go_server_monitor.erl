@@ -116,9 +116,26 @@ start_rs_server() ->
 	% RootDir = root_dir(),
 	% Cmd = lists:concat([CmdPath, "/rs-server ", "--config ", CmdPath, "/config.ini -d ", RootDir, "logs -l debug -p ", CmdPath, "/rs.pid"]),
 
-	{ok, GoCmd}         = application:get_env(go, go_cmd),
-	CmdPath             = code:lib_dir(go, priv),
-	Cmd = lists:flatten([CmdPath, "/", GoCmd]),
+	% {ok, GoCmd}         = application:get_env(go, go_cmd),
+	% CmdPath             = code:lib_dir(go, priv),
+	% Cmd = lists:flatten([CmdPath, "/", GoCmd]),
+
+	    {ok, GoCmd}         = application:get_env(go, go_cmd),
+	    {ok, GoEpmdPort}    = application:get_env(go, go_epmd_port),
+	    {ok, GoMBox}        = application:get_env(go, go_mailbox),
+	    {GenName, NodeName} = GoMBox,
+	    {ok, GoLogFile}     = application:get_env(go, go_log_file),
+	    {ok, GoPidFile}     = application:get_env(go, go_pid_file),
+	    CmdPath             = code:lib_dir(go, priv),
+	    Cmd = lists:flatten([
+	                CmdPath, "/", GoCmd,
+	                % " -epmd_port "  , integer_to_list(GoEpmdPort),
+	                " -log "        , CmdPath, "/", GoLogFile,
+	                % " -gen_server " , atom_to_list(GenName),
+	                % " -name "       , atom_to_list(NodeName),
+	                % " -cookie "     , atom_to_list(erlang:get_cookie()),
+	                " -pid_file "   , CmdPath, "/", GoPidFile ]),
+    
 
 	% ?LOG(Cmd),
 	Port = open_port({spawn, Cmd},[exit_status]),

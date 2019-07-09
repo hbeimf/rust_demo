@@ -23,7 +23,7 @@ var (
 var RedisClient *Redis
 
 func init() {
-	flag.Parse()
+	// flag.Parse()
 	RedisClient = newRedisPool(*globalRedisHost, 0)
 }
 

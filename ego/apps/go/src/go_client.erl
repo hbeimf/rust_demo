@@ -112,6 +112,7 @@ handle_call(_Request, _From, State) ->
 handle_cast({send, Package}, State=#state{socket=Socket, transport=_Transport, data=_LastPackage}) ->
 	case erlang:is_port(Socket) of 
 		true -> 
+			?LOG({send, Package}),
 			ranch_tcp:send(Socket, Package),
 			ok;
 		_ ->

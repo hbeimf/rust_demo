@@ -16,7 +16,7 @@
 -include("log.hrl").
 
 test() -> 
-    % aes_test(),
+    aes_test(),
     % aes_test1().
     cast_aes_test1(),
     ok.

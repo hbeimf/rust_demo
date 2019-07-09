@@ -11,7 +11,7 @@ import (
 
 	"github.com/leesper/holmes"
 	"github.com/leesper/tao"
-	"github.com/leesper/tao/examples/echo"
+	// "github.com/leesper/tao/examples/echo"
 
 	"log"
 )
@@ -55,11 +55,12 @@ func Start() {
 
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
-	tao.Register(echo.Message{}.MessageNumber(), echo.DeserializeMessage, echo.ProcessMessage)
+	tao.Register(Message{}.MessageNumber(), DeserializeMessage, ProcessMessage)
 
 	l, err := net.Listen("tcp", ":12345")
 	if err != nil {
-		holmes.Fatalf("listen error %v", err)
+		// holmes.Fatalf("listen error %v", err)
+		log.Printf("Hello claims: %#v\n", err)
 	}
 	echoServer := NewEchoServer()
 

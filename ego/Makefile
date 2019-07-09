@@ -11,3 +11,5 @@ push:
 
 ps:
 	ps aux | grep xgn.node
+
+

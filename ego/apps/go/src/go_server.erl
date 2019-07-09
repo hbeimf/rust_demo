@@ -19,7 +19,7 @@
 
 %% includes
 % -include_lib("eunit/include/eunit.hrl").
-% -include_lib("common/include/log.hrl").
+-include_lib("glib/include/log.hrl").
 
 %% defines
 
@@ -192,7 +192,7 @@ start_go_node() ->
                 " -name "       , atom_to_list(NodeName),
                 " -cookie "     , atom_to_list(erlang:get_cookie()),
                 " -pid_file "   , CmdPath, "/", GoPidFile ]),
-    % ?LOG("Start Go node with command: ~p", [Cmd]),
+    ?LOG({"Start Go node with command: ", [Cmd]}),
     force_kill_process(),
     open_port({spawn, Cmd},[exit_status]).
 

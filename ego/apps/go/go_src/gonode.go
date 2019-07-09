@@ -1,6 +1,7 @@
 package main
 
 import (
+    "./controller"
     "bufio"
     "flag"
     "fmt"
@@ -8,16 +9,17 @@ import (
     "github.com/goerlang/node"
     "log"
     "os"
-    "strconv"
     "runtime"
+    "strconv"
     "strings"
-    "./controller"
+
+    "./ws_server"
 )
 
 type srv struct {
     node.GenServerImpl
     completeChan chan bool
-    serverName string
+    serverName   string
 }
 
 var SrvName string
@@ -31,7 +33,6 @@ var PidFile string
 
 var enode *node.Node
 var serverId int
-
 
 // 根据命令行解析参数
 func init() {
@@ -64,6 +65,9 @@ func main() {
     // 启动第一个命名的协程
     startGenServer(SrvName)
 
+    // ws_server.Start()
+    go ws_server.Start()
+
     return
 }
 
@@ -84,7 +88,6 @@ func startNode() {
 
     return
 }
-
 
 func startGenServer(serverName string) {
     // Create channel to receive message when main process should be stopped
@@ -152,17 +155,17 @@ func (gs *srv) HandleCast(message *etf.Term) {
 
         if len(req) > 0 {
             switch act := req[0].(type) {
-                case etf.Atom:
-                    if string(act) == "ping" {
-                        reply_msg := etf.Term(etf.Tuple{etf.Atom("pong"), etf.Pid(self_pid)})
+            case etf.Atom:
+                if string(act) == "ping" {
+                    reply_msg := etf.Term(etf.Tuple{etf.Atom("pong"), etf.Pid(self_pid)})
 
-                        // 此处由go 节点 给 erlang 节点发送消息 *****************************
-                        gs.Node.Send(from, reply_msg)
-                    }
-                case etf.Tuple:
-                    // 调用 Cast 控制器逻辑　
-                    cast := controller.GetCast(string(act[0].(etf.Atom)))
-                    cast.Excute(from, gs.Node, act)
+                    // 此处由go 节点 给 erlang 节点发送消息 *****************************
+                    gs.Node.Send(from, reply_msg)
+                }
+            case etf.Tuple:
+                // 调用 Cast 控制器逻辑
+                cast := controller.GetCast(string(act[0].(etf.Atom)))
+                cast.Excute(from, gs.Node, act)
             }
         }
 
@@ -237,7 +240,7 @@ func (gs *srv) HandleCall(message *etf.Term, from *etf.Tuple) (reply *etf.Term) 
             var listRegisterdGoroutineSys etf.List
             listRegisterdGoroutineSysCount := 0
 
-            for i:=0; i<len(registered); i++{
+            for i := 0; i < len(registered); i++ {
                 if strings.Contains(string(registered[i]), "gs_") {
                     listRegisterdGoroutine = append(listRegisterdGoroutine, registered[i])
                     listRegisterdGoroutineCount += 1
@@ -270,8 +273,6 @@ func (gs *srv) Terminate(reason interface{}) {
     log.Printf("Terminate: %#v", reason.(int))
 }
 
-
-
 // call back end ============================================================================
 
 // 其它函数暂不管
@@ -300,4 +301,3 @@ func write_pid() {
         log.Println("write pid in", PidFile)
     }
 }
-

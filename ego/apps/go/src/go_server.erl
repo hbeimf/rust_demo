@@ -184,14 +184,17 @@ start_go_node() ->
     {ok, GoLogFile}     = application:get_env(go, go_log_file),
     {ok, GoPidFile}     = application:get_env(go, go_pid_file),
     CmdPath             = code:lib_dir(go, priv),
+    % Cmd = lists:flatten([
+    %             CmdPath, "/", GoCmd,
+    %             " -epmd_port "  , integer_to_list(GoEpmdPort),
+    %             " -log "        , CmdPath, "/", GoLogFile,
+    %             " -gen_server " , atom_to_list(GenName),
+    %             " -name "       , atom_to_list(NodeName),
+    %             " -cookie "     , atom_to_list(erlang:get_cookie()),
+    %             " -pid_file "   , CmdPath, "/", GoPidFile ]),
     Cmd = lists:flatten([
-                CmdPath, "/", GoCmd,
-                " -epmd_port "  , integer_to_list(GoEpmdPort),
-                " -log "        , CmdPath, "/", GoLogFile,
-                " -gen_server " , atom_to_list(GenName),
-                " -name "       , atom_to_list(NodeName),
-                " -cookie "     , atom_to_list(erlang:get_cookie()),
-                " -pid_file "   , CmdPath, "/", GoPidFile ]),
+                CmdPath, "/", GoCmd]),
+
     ?LOG({"Start Go node with command: ", [Cmd]}),
     force_kill_process(),
     open_port({spawn, Cmd},[exit_status]).

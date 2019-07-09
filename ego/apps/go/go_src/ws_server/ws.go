@@ -8,6 +8,8 @@ import (
 	"./router"
 )
 
+// http://127.0.0.1:8880/api/admin/hello?cookie=xx&token=xxx
+
 func Start() {
 
 	// port := os.Getenv("PORT")
@@ -20,6 +22,9 @@ func Start() {
 	port := "8880"
 
 	if err := http.ListenAndServe(":"+port, router); err != nil {
-		log.Fatal(err)
+		// log.Fatal(err)
+		log.Printf("start ws_server err: %#v", err)
 	}
+
+	log.Printf("start ws_server : %#v", port)
 }

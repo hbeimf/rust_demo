@@ -1,5 +1,4 @@
 .rebar3
-_*
 .eunit
 *.o
 *.beam
@@ -15,3 +14,14 @@ logs
 _build
 .idea
 rebar3.crashdump
+xgn.node
+go.log
+go.pid
+
+go_src/src/github.com/araddon/
+go_src/src/github.com/bitly/
+go_src/src/github.com/go-sql-driver/
+go_src/src/github.com/go-xorm/
+go_src/src/github.com/lytics/
+go_src/src/github.com/mattbaird/
+

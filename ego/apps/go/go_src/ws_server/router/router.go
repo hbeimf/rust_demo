@@ -54,6 +54,9 @@ func Init() *gin.Engine {
 		log.Fatal("JWT Error:" + err.Error())
 	}
 
+	// curd demo
+	router.GET("/curd", handler.CurdHandler)
+
 	router.POST("/login", authMiddleware.LoginHandler)
 	router.POST("/register", handler.RegisterHandler)
 

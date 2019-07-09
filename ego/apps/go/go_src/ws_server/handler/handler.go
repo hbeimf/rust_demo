@@ -21,6 +21,18 @@ func RegisterHandler(c *gin.Context) {
 
 }
 
+// http://127.0.0.1:8880/curd
+func CurdHandler(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"code": 200,
+		// "userName": user.(*db.UserDao).UserName,
+		// "userName": user.(*middleware.User).UserName,
+		"msg": "curd 示例",
+		// "uid":      claims["Uid"],
+		// "info":     u3,
+	})
+}
+
 func HelloHandler(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
 	log.Printf("Hello claims: %#v\n", claims)

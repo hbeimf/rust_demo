@@ -14,15 +14,6 @@ import (
 	"github.com/leesper/tao"
 )
 
-// const (
-// 	// MessageTypeBytes is the length of type header.
-// 	MessageTypeBytes = 4
-// 	// // MessageLenBytes is the length of length header.
-// 	// MessageLenBytes = 4
-// 	// // MessageMaxBytes is the maximum bytes allowed for application data.
-// 	// MessageMaxBytes = 1 << 23 // 8M
-// )
-
 // TypeLengthValueCodec defines a special codec.
 // Format: type-length-value |4 bytes|4 bytes|n bytes <= 8M|
 type TypeLengthValueCodec struct{}

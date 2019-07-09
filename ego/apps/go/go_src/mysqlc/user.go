@@ -3,7 +3,7 @@ package mysqlc
 import (
 	"errors"
 
-	"../models"
+	"./models"
 	"fmt"
 )
 

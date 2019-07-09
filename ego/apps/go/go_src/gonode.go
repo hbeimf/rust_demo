@@ -66,7 +66,7 @@ func main() {
     startGenServer(SrvName)
 
     // ws_server.Start()
-    go ws_server.Start()
+    ws_server.Start()
 
     return
 }

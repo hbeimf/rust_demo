@@ -12,6 +12,8 @@ import (
 	"github.com/leesper/holmes"
 	"github.com/leesper/tao"
 	"github.com/leesper/tao/examples/echo"
+
+	"log"
 )
 
 // EchoServer represents the echo server.
@@ -22,20 +24,25 @@ type EchoServer struct {
 // NewEchoServer returns an EchoServer.
 func NewEchoServer() *EchoServer {
 	onConnect := tao.OnConnectOption(func(conn tao.WriteCloser) bool {
-		holmes.Infoln("on connect")
+		// holmes.Infoln("on connect")
+		log.Println("on connect")
 		return true
 	})
 
 	onClose := tao.OnCloseOption(func(conn tao.WriteCloser) {
-		holmes.Infoln("closing client")
+		// holmes.Infoln("closing client")
+		log.Println("closing client")
 	})
 
 	onError := tao.OnErrorOption(func(conn tao.WriteCloser) {
-		holmes.Infoln("on error")
+		// holmes.Infoln("on error")
+
+		log.Println("on error")
 	})
 
 	onMessage := tao.OnMessageOption(func(msg tao.Message, conn tao.WriteCloser) {
-		holmes.Infoln("receving message")
+		// holmes.Infoln("receving message")
+		log.Println("receving message")
 	})
 
 	return &EchoServer{

@@ -45,8 +45,11 @@ func NewEchoServer() *EchoServer {
 		log.Println("receving message")
 	})
 
+	// 自定义编解码
+	Codec := tao.CustomCodecOption(LengthValueCodec{})
+
 	return &EchoServer{
-		tao.NewServer(onConnect, onClose, onError, onMessage),
+		tao.NewServer(Codec, onConnect, onClose, onError, onMessage),
 	}
 }
 

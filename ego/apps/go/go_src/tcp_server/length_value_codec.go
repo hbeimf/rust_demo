@@ -14,12 +14,12 @@ import (
 	"github.com/leesper/tao"
 )
 
-// TypeLengthValueCodec defines a special codec.
+// LengthValueCodec defines a special codec.
 // Format: type-length-value |4 bytes|4 bytes|n bytes <= 8M|
-type TypeLengthValueCodec struct{}
+type LengthValueCodec struct{}
 
 // Decode decodes the bytes data into Message
-func (codec TypeLengthValueCodec) Decode(raw net.Conn) (tao.Message, error) {
+func (codec LengthValueCodec) Decode(raw net.Conn) (tao.Message, error) {
 	byteChan := make(chan []byte)
 	errorChan := make(chan error)
 
@@ -85,7 +85,7 @@ func (codec TypeLengthValueCodec) Decode(raw net.Conn) (tao.Message, error) {
 }
 
 // Encode encodes the message into bytes data.
-func (codec TypeLengthValueCodec) Encode(msg Message) ([]byte, error) {
+func (codec LengthValueCodec) Encode(msg tao.Message) ([]byte, error) {
 	data, err := msg.Serialize()
 	if err != nil {
 		return nil, err

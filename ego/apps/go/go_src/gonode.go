@@ -7,6 +7,7 @@ import (
     "log"
     "os"
 
+    _ "./mysqlc"
     _ "./redisc"
     "./ws_server"
 )

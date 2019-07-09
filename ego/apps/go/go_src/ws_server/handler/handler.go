@@ -9,7 +9,7 @@ import (
 	"net/http"
 
 	"../../aes256"
-	"../../db"
+	"../../mysqlc"
 	"../router/middleware"
 
 	"../../redisc"
@@ -46,7 +46,7 @@ func HelloHandler(c *gin.Context) {
 
 	log.Printf("Hello user: %#v\n", user)
 
-	userDao := db.UserDao{}
+	userDao := mysqlc.UserDao{}
 
 	u3, err3 := userDao.GetUserRole(1)
 	if err3 != nil {

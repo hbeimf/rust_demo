@@ -1,4 +1,4 @@
-package db
+package mysqlc
 
 import (
 	"fmt"
@@ -40,7 +40,7 @@ func init() {
 	// 	log.Fatalf("db error: %#v\n", err.Error())
 	// }
 
-	err = x.RegisterSqlTemplate(xorm.Default("/erlang/rust_demo/ego/apps/go/go_src/db/sql/tpl", ".sql"))
+	err = x.RegisterSqlTemplate(xorm.Default("/erlang/rust_demo/ego/apps/go/go_src/mysqlc/sql/tpl", ".sql"))
 	if err != nil {
 		log.Fatalf("db error: %#v\n", err.Error())
 	}

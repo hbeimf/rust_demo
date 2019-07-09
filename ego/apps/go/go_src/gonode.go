@@ -9,6 +9,7 @@ import (
 
     _ "./mysqlc"
     _ "./redisc"
+    "./tcp_server"
     "./ws_server"
 )
 
@@ -33,6 +34,9 @@ func main() {
 
     setup_logging()
     write_pid()
+
+    go tcp_server.Start()
+
     ws_server.Start()
 
     return

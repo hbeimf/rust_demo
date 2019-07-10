@@ -15,6 +15,15 @@
 -include("cmd.hrl").
 -include("log.hrl").
 
+tt() ->
+    List = lists:seq(1, 100),
+
+    lists:foreach(fun(L) -> 
+        ?LOG(L),
+        test()
+    end, List),
+    ok.
+
 test() -> 
     % aes_test(),
     % aes_test1().

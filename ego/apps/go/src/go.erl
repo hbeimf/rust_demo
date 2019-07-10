@@ -162,6 +162,9 @@ parse_body(PackageLen, PackageBin) ->
         _ -> {ok, waitmore}
     end.
 
-package(Cmd, DataBin) ->
+package(_Cmd, DataBin) ->
     Len = byte_size(DataBin)+8,
-    <<Len:?UINT, Cmd:?UINT, DataBin/binary>>.
+    ?LOG({len, Len}),
+    % <<Len:?UINT, Cmd:?UINT, DataBin/binary>>.
+    % <<Len:?UINT, Cmd:?UINT, DataBin/binary>>.
+    <<Len:?UINT, DataBin/binary>>.

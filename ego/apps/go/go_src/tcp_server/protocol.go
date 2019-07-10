@@ -3,7 +3,7 @@ package tcp_server
 import (
 	"context"
 
-	"github.com/leesper/holmes"
+	// "github.com/leesper/holmes"
 	"github.com/leesper/tao"
 
 	"log"
@@ -44,7 +44,7 @@ func DeserializeMessage(data []byte) (message tao.Message, err error) {
 func ProcessMessage(ctx context.Context, conn tao.WriteCloser) {
 	log.Printf("ProcessMessage: %#v\n", ctx)
 
-	msg := tao.MessageFromContext(ctx).(Message)
-	holmes.Infof("receving message %s\n", msg.Content)
-	conn.Write(msg)
+	// msg := tao.MessageFromContext(ctx).(Message)
+	// holmes.Infof("receving message %s\n", msg.Content)
+	// conn.Write(msg)
 }

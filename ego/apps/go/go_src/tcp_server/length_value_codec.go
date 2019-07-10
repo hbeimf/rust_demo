@@ -85,14 +85,16 @@ func (codec LengthValueCodec) Decode(raw net.Conn) (tao.Message, error) {
 		// log.Printf("decode package lengthBytes yyy: %#v", length)
 		return nil, err
 	}
-	log.Printf("decode package msgLen: %#v", msgLen)
-	log.Printf("decode package msgLen: %#v", msgLen-4)
+	log.Printf("decode package msgLen 88 : %#v", msgLen)
+	log.Printf("decode package msgLen 89 : %#v", msgLen-4)
 
 	if msgLen > tao.MessageMaxBytes {
 		// holmes.Errorf("message(type %d) has bytes(%d) beyond max %d\n", msgType, msgLen, tao.MessageMaxBytes)
 		// log.Printf("decode package lengthBytes zzz: %#v", length)
 		return nil, tao.ErrBadData
 	}
+
+	log.Printf("decode package msgLen 97 : %#v", msgLen-4)
 
 	// log.Printf("decode package lengthBytes msgLen: %#v", msgLen)
 
@@ -101,7 +103,7 @@ func (codec LengthValueCodec) Decode(raw net.Conn) (tao.Message, error) {
 	msgBytes := make([]byte, msgLen-4)
 	_, err = io.ReadFull(raw, msgBytes)
 	if err != nil {
-		// log.Printf("decode package lengthBytes aaa: %#v", length)
+		log.Printf("decode package lengthBytes 106: %#v", msgBytes)
 		return nil, err
 	}
 
@@ -118,7 +120,7 @@ func (codec LengthValueCodec) Decode(raw net.Conn) (tao.Message, error) {
 	// 	// log.Fatal("unmarshaling error: ", err)
 	// 	log.Printf("decode package msgBytes: %#v", msgBytes)
 	// }
-	// log.Printf("decode package msgBytes: %#v", msgBytes)
+	log.Printf("decode package msgBytes 123 : %#v", msgBytes)
 
 	// // log.Fatalf("data mismatch %q != %q", test.GetLabel(), newTest.GetLabel())
 	// log.Printf("decode package Key: %#v", newAesEncode.GetKey())

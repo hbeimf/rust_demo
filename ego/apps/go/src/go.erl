@@ -163,7 +163,7 @@ parse_body(PackageLen, PackageBin) ->
     end.
 
 package(_Cmd, DataBin) ->
-    Len = byte_size(DataBin)+8,
+    Len = byte_size(DataBin)+4,
     ?LOG({len, Len}),
     % <<Len:?UINT, Cmd:?UINT, DataBin/binary>>.
     % <<Len:?UINT, Cmd:?UINT, DataBin/binary>>.

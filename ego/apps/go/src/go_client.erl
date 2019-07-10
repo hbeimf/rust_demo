@@ -129,27 +129,27 @@ handle_cast(_Msg, State) ->
 %          {noreply, gs_tcp_state, Timeout} |
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
-handle_info({tcp, Socket, CurrentPackage}, State=#state{socket=Socket, transport=Transport, data=LastPackage}) -> 
-	Transport:setopts(Socket, [{active, once}]),
-	PackageBin = <<LastPackage/binary, CurrentPackage/binary>>,
-	% case parse_package(PackageBin, State) of
-	% 	{ok, waitmore, Bin} -> 
-	% 		{noreply, State#state{data = Bin}};
-	% 	_ -> 
-	% 		{stop, stop_noreason,State}
-	% end;
-	?LOG({receive_package, PackageBin}),
-	{noreply, State};
-
 % handle_info({tcp, Socket, CurrentPackage}, State=#state{socket=Socket, transport=Transport, data=LastPackage}) -> 
 % 	Transport:setopts(Socket, [{active, once}]),
 % 	PackageBin = <<LastPackage/binary, CurrentPackage/binary>>,
-% 	case parse_package(PackageBin, State) of
-% 		{ok, waitmore, Bin} -> 
-% 			{noreply, State#state{data = Bin}};
-% 		_ -> 
-% 			{stop, stop_noreason,State}
-% 	end;
+% 	% case parse_package(PackageBin, State) of
+% 	% 	{ok, waitmore, Bin} -> 
+% 	% 		{noreply, State#state{data = Bin}};
+% 	% 	_ -> 
+% 	% 		{stop, stop_noreason,State}
+% 	% end;
+% 	?LOG({receive_package, PackageBin}),
+% 	{noreply, State};
+
+handle_info({tcp, Socket, CurrentPackage}, State=#state{socket=Socket, transport=Transport, data=LastPackage}) -> 
+	Transport:setopts(Socket, [{active, once}]),
+	PackageBin = <<LastPackage/binary, CurrentPackage/binary>>,
+	case parse_package(PackageBin, State) of
+		{ok, waitmore, Bin} -> 
+			{noreply, State#state{data = Bin}};
+		_ -> 
+			{stop, stop_noreason,State}
+	end;
 	
 handle_info({send, Package}, State = #state{socket = Socket}) ->
 	% ?LOG({send, Package}),
@@ -216,23 +216,28 @@ code_change(_OldVsn, State, _Extra) ->
 % priv
 
 parse_package(Bin, State) ->
-    case rs:unpackage(Bin) of
+    case go:unpackage(Bin) of
         {ok, waitmore}  -> {ok, waitmore, Bin};
-        {ok, {Cmd, DataBin},LefBin} ->
-            action(Cmd, DataBin, State),
+        {ok, DataBin, LefBin} ->
+            action(DataBin, State),
             parse_package(LefBin, State);
         _ ->
             error       
     end.
 
- action(10008, DataBin, _State = #state{call_pid = _CallFrom}) ->
- 	#'RpcPackage'{key = Key, cmd=_Cmd, 'payload' = Payload} = msg_proto:decode_msg(DataBin,'RpcPackage'),
- 	{ok, From} = ets_rpc_call_table:select(Key),
- 	ets_rpc_call_table:delete(Key),
-	safe_reply(From, Payload),
- 	ok;
-  action(Cmd, DataBin, _State) ->
-	?LOG({ignore_package, Cmd, DataBin}),
+ % action(10008, DataBin, _State = #state{call_pid = _CallFrom}) ->
+ % 	#'RpcPackage'{key = Key, cmd=_Cmd, 'payload' = Payload} = msg_proto:decode_msg(DataBin,'RpcPackage'),
+ % 	{ok, From} = ets_rpc_call_table:select(Key),
+ % 	ets_rpc_call_table:delete(Key),
+	% safe_reply(From, Payload),
+ % 	ok;
+  action(DataBin, _State) ->
+	?LOG({ignore_package, DataBin}),
+	{Key, Cmd, Payload} = go:rpc_decode(DataBin),
+	?LOG({Key, Cmd, Payload}),
+
+	R = go:payload_decode(Payload),
+	?LOG(R),
  	ok.
 
 

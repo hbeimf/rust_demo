@@ -92,7 +92,17 @@ aes_decode(Encode, Key) ->
     #'AesDecodeReply'{code = Code, reply = MaybeDecode} 
         = msg_proto:decode_msg(Reply,'AesDecodeReply'),
     {Code, MaybeDecode}.
-    
+  
+rpc_decode(Package) ->
+    #'RpcPackage'{key = Key, cmd = Cmd, payload = Payload} 
+        = msg_proto:decode_msg(Package,'RpcPackage'),
+        {Key, Cmd, Payload}.
+
+payload_decode(Package) ->
+    #'AesEncode'{key = Key, from = From} 
+        = msg_proto:decode_msg(Package,'AesEncode'),
+        {Key, From}.
+
 %% priv 
 call(Package, Cmd) ->
     Key = to_binary(to_str(uid())), 
@@ -165,10 +175,12 @@ parse_body(PackageLen, PackageBin) ->
     % io:format("parse body -----------~n~n"),
     case PackageBin of 
         <<RightPackage:PackageLen/binary,NextPageckage/binary>> ->
-            <<_Len:?UINT, Cmd:?UINT, DataBin/binary>> = RightPackage,
+            % <<_Len:?UINT, Cmd:?UINT, DataBin/binary>> = RightPackage,
+            <<_Len:?UINT, DataBin/binary>> = RightPackage,
+            
             % tcp_controller:action(Cmd, DataBin),
             % unpackage(NextPageckage);
-            {ok, {Cmd, DataBin}, NextPageckage};
+            {ok, DataBin, NextPageckage};
         _ -> {ok, waitmore}
     end.
 

@@ -46,7 +46,7 @@ func (codec LengthValueCodec) Decode(raw net.Conn) (tao.Message, error) {
 		return nil, tao.ErrBadData
 	}
 
-	log.Printf(" =================XXXXXXXXXXXX decode package msgLen 97 : %#v", msgLen-4)
+	// log.Printf(" =================XXXXXXXXXXXX decode package msgLen 97 : %#v", msgLen-4)
 
 	// read application data
 	// msgBytes := make([]byte, msgLen)
@@ -57,7 +57,7 @@ func (codec LengthValueCodec) Decode(raw net.Conn) (tao.Message, error) {
 		return nil, err
 	}
 
-	log.Printf("decode package msgBytes 123 : %#v", msgBytes)
+	// log.Printf("decode package msgBytes 123 : %#v", msgBytes)
 
 	return unmarshaler(msgBytes)
 }

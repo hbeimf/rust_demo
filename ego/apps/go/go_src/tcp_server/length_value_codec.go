@@ -1,6 +1,8 @@
 package tcp_server
 
 // length_value_codec.go
+// proto doc
+// https://studygolang.com/articles/2540
 
 import (
 	"bytes"
@@ -13,6 +15,8 @@ import (
 	// "github.com/leesper/holmes"
 	"github.com/leesper/tao"
 
+	"../glib"
+	"github.com/golang/protobuf/proto"
 	"log"
 )
 
@@ -107,12 +111,60 @@ func (codec LengthValueCodec) Decode(raw net.Conn) (tao.Message, error) {
 	// 	return nil, tao.ErrUndefined(msgType)
 	// }
 
+	// 进行解码
+	newAesEncode := &glib.AesEncode{}
+	err = proto.Unmarshal(msgBytes, newAesEncode)
+	if err != nil {
+		// log.Fatal("unmarshaling error: ", err)
+		log.Printf("decode package msgBytes: %#v", msgBytes)
+	}
 	log.Printf("decode package msgBytes: %#v", msgBytes)
+
+	// log.Fatalf("data mismatch %q != %q", test.GetLabel(), newTest.GetLabel())
+	log.Printf("decode package Key: %#v", newAesEncode.GetKey())
 	// return unmarshaler(msgBytes)
 	// return nil, nil
 	return unmarshaler(msgBytes)
 	// }
 }
+
+// import (
+//     "log"
+//     // 辅助库
+//     "github.com/golang/protobuf/proto"
+//     // test.pb.go 的路径
+//     "example"
+// )
+
+// func main() {
+//     // 创建一个消息 Test
+//     test := &example.Test{
+//         // 使用辅助函数设置域的值
+//         Label: proto.String("hello"),
+//         Type:  proto.Int32(17),
+//         Optionalgroup: &example.Test_OptionalGroup{
+//             RequiredField: proto.String("good bye"),
+//         },
+//     }
+
+//     // 进行编码
+//     data, err := proto.Marshal(test)
+//     if err != nil {
+//         log.Fatal("marshaling error: ", err)
+//     }
+
+//     // 进行解码
+//     newTest := &example.Test{}
+//     err = proto.Unmarshal(data, newTest)
+//     if err != nil {
+//         log.Fatal("unmarshaling error: ", err)
+//     }
+
+//     // 测试结果
+//     if test.GetLabel() != newTest.GetLabel() {
+//         log.Fatalf("data mismatch %q != %q", test.GetLabel(), newTest.GetLabel())
+//     }
+// }
 
 func unmarshaler(proto []byte) (tao.Message, error) {
 	return PackageMessage{

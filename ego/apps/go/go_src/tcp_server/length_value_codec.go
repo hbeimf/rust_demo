@@ -169,33 +169,33 @@ func (codec LengthValueCodec) Decode(raw net.Conn) (tao.Message, error) {
 // }
 
 func unmarshaler(proto []byte) (tao.Message, error) {
-	return PackageMessage{
+	return Message{
 		proto,
 	}, nil
 }
 
-// HeartBeatMessage for application-level keeping alive.
-type PackageMessage struct {
-	// Timestamp int64
-	proto []byte
-}
+// // HeartBeatMessage for application-level keeping alive.
+// type PackageMessage struct {
+// 	// Timestamp int64
+// 	proto []byte
+// }
 
-// Serialize serializes HeartBeatMessage into bytes.
-func (pb PackageMessage) Serialize() ([]byte, error) {
-	// buf.Reset()
-	// err := binary.Write(buf, binary.LittleEndian, hbm.Timestamp)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// return buf.Bytes(), nil
-	return pb.proto, nil
-}
+// // Serialize serializes HeartBeatMessage into bytes.
+// func (pb PackageMessage) Serialize() ([]byte, error) {
+// 	// buf.Reset()
+// 	// err := binary.Write(buf, binary.LittleEndian, hbm.Timestamp)
+// 	// if err != nil {
+// 	// 	return nil, err
+// 	// }
+// 	// return buf.Bytes(), nil
+// 	return pb.proto, nil
+// }
 
-// MessageNumber returns message number.
-func (pb PackageMessage) MessageNumber() int32 {
-	// return HeartBeat
-	return 1
-}
+// // MessageNumber returns message number.
+// func (pb PackageMessage) MessageNumber() int32 {
+// 	// return HeartBeat
+// 	return 1
+// }
 
 // // Decode decodes the bytes data into Message
 // func (codec LengthValueCodec) Decode(raw net.Conn) (tao.Message, error) {

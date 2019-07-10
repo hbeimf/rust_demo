@@ -15,8 +15,8 @@ import (
 	// "github.com/leesper/holmes"
 	"github.com/leesper/tao"
 
-	"../glib"
-	"github.com/golang/protobuf/proto"
+	// "../glib"
+	// "github.com/golang/protobuf/proto"
 	"log"
 )
 
@@ -111,19 +111,19 @@ func (codec LengthValueCodec) Decode(raw net.Conn) (tao.Message, error) {
 	// 	return nil, tao.ErrUndefined(msgType)
 	// }
 
-	// 进行解码
-	newAesEncode := &glib.AesEncode{}
-	err = proto.Unmarshal(msgBytes, newAesEncode)
-	if err != nil {
-		// log.Fatal("unmarshaling error: ", err)
-		log.Printf("decode package msgBytes: %#v", msgBytes)
-	}
-	log.Printf("decode package msgBytes: %#v", msgBytes)
+	// // 进行解码
+	// newAesEncode := &glib.AesEncode{}
+	// err = proto.Unmarshal(msgBytes, newAesEncode)
+	// if err != nil {
+	// 	// log.Fatal("unmarshaling error: ", err)
+	// 	log.Printf("decode package msgBytes: %#v", msgBytes)
+	// }
+	// log.Printf("decode package msgBytes: %#v", msgBytes)
 
-	// log.Fatalf("data mismatch %q != %q", test.GetLabel(), newTest.GetLabel())
-	log.Printf("decode package Key: %#v", newAesEncode.GetKey())
-	// return unmarshaler(msgBytes)
-	// return nil, nil
+	// // log.Fatalf("data mismatch %q != %q", test.GetLabel(), newTest.GetLabel())
+	// log.Printf("decode package Key: %#v", newAesEncode.GetKey())
+	// // return unmarshaler(msgBytes)
+	// // return nil, nil
 	return unmarshaler(msgBytes)
 	// }
 }

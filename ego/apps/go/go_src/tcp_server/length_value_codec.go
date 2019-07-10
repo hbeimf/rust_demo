@@ -79,7 +79,7 @@ func (codec LengthValueCodec) Encode(msg tao.Message) ([]byte, error) {
 	buf := new(bytes.Buffer)
 	// binary.Write(buf, binary.LittleEndian, msg.MessageNumber())
 
-	binary.Write(buf, binary.LittleEndian, int32(len(data)))
+	binary.Write(buf, binary.LittleEndian, int32(len(data)+4))
 	buf.Write(data)
 	packet := buf.Bytes()
 	return packet, nil

@@ -110,5 +110,5 @@ func ProcessMessage(ctx context.Context, conn tao.WriteCloser) {
 	// return nil, nil
 
 	// holmes.Infof("receving message %s\n", msg.Content)
-	// conn.Write(msg.proto)
+	conn.Write(msg)
 }

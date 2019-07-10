@@ -20,7 +20,7 @@ type Message struct {
 
 // Serialize serializes Message into bytes.
 func (em Message) Serialize() ([]byte, error) {
-	log.Printf("Serialize: %#v\n", em)
+	log.Printf("Serialize YYYYYYYYYYYYYYY++++++++++++++: %#v\n", em)
 
 	// return []byte(em.Content), nil
 	return em.proto, nil
@@ -44,7 +44,7 @@ func (em Message) MessageNumber() int32 {
 
 // DeserializeMessage deserializes bytes into Message.
 func DeserializeMessage(data []byte) (message tao.Message, err error) {
-	log.Printf("DeserializeMessage: %#v\n", data)
+	log.Printf("DeserializeMessage ===============================XXXX : %#v\n", data)
 
 	if data == nil {
 		return nil, tao.ErrNilData
@@ -66,33 +66,45 @@ func ProcessMessage(ctx context.Context, conn tao.WriteCloser) {
 	log.Printf("receving message 62: %#v\n", msg.proto)
 
 	// 进行解码
-	newAesEncode := &glib.AesEncode{}
-	err := proto.Unmarshal(msg.proto, newAesEncode)
+	newRpcPackage := &glib.RpcPackage{}
+	err := proto.Unmarshal(msg.proto, newRpcPackage)
 	if err != nil {
 		// log.Fatal("unmarshaling error: ", err)
 		log.Printf("decode package msgBytes: %#v", msg.proto)
 	}
 
 	// log.Fatalf("data mismatch %q != %q", test.GetLabel(), newTest.GetLabel())
-	log.Printf("decode package Key 73: %#v", newAesEncode.GetKey())
-	log.Printf("decode package From 73: %#v", newAesEncode.GetFrom())
+	log.Printf("decode package Key KKKKKKKKKKKKKKKKKKK: %#v", newRpcPackage.GetKey())
+	log.Printf("decode package payload PPPPPPPPPPPP: %#v", newRpcPackage.GetPayload())
 
-	//
-	// 创建一个消息 Test
-	test := &glib.AesEncode{
-		// 使用辅助函数设置域的值
-		Key:  "123456",
-		From: "hello world",
-		// Type:  proto.Int32(17),
-	}
-
-	// 进行编码
-	data, err := proto.Marshal(test)
+	// 进行解码
+	newAesEncode := &glib.AesEncode{}
+	err = proto.Unmarshal(newRpcPackage.GetPayload(), newAesEncode)
 	if err != nil {
-		// log.Fatal("marshaling error: ", err)
-		log.Printf("encode 93: %#v", err)
+		// log.Fatal("unmarshaling error: ", err)
+		log.Printf("decode package msgBytes: %#v", msg.proto)
 	}
-	log.Printf("encode 93: %#v", data)
+
+	// log.Fatalf("data mismatch %q != %q", test.GetLabel(), newTest.GetLabel())
+	log.Printf("decode package Key KKKKKKKKKKKKKKKKKKK: %#v", newAesEncode.GetKey())
+	log.Printf("decode package payload FFFFFFFFFFFFFF: %#v", newAesEncode.GetFrom())
+
+	// //
+	// // 创建一个消息 Test
+	// test := &glib.AesEncode{
+	// 	// 使用辅助函数设置域的值
+	// 	Key:  "123456",
+	// 	From: "hello world",
+	// 	// Type:  proto.Int32(17),
+	// }
+
+	// // 进行编码
+	// data, err := proto.Marshal(test)
+	// if err != nil {
+	// 	// log.Fatal("marshaling error: ", err)
+	// 	log.Printf("encode 93: %#v", err)
+	// }
+	// log.Printf("encode 93: %#v", data)
 
 	// return unmarshaler(msgBytes)
 	// return nil, nil

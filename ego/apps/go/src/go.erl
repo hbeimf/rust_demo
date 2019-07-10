@@ -61,6 +61,7 @@ cast_aes_encode(Str, Key) ->
                         from = Str
                     },
     AesEncodeBin = msg_proto:encode_msg(AesEncode),
+    ?LOG(AesEncodeBin),
     cast(AesEncodeBin).
 
 aes_encode(Str, Key) ->

@@ -1,0 +1,192 @@
+% leaf.erl
+-module(leaf).
+-compile(export_all).
+
+-define( UINT, 32/unsigned-little-integer).
+% -define( INT, 32/signed-little-integer).
+-define( USHORT, 16/unsigned-little-integer).
+% -define( SHORT, 16/signed-little-integer).
+% -define( UBYTE, 8/unsigned-little-integer).
+% -define( BYTE, 8/signed-little-integer).
+
+-define(TIMEOUT, 5000).
+
+-include_lib("glib/include/msg_proto.hrl").
+-include("cmd.hrl").
+-include("log.hrl").
+
+tt() ->
+    List = lists:seq(1, 100),
+
+    lists:foreach(fun(L) -> 
+        ?LOG(L),
+        test()
+    end, List),
+    ok.
+
+test() -> 
+    % aes_test(),
+    % aes_test1().
+    cast_aes_test1(),
+    ok.
+
+
+% message AesEncode{   
+%     string  key = 1;
+%     string  from = 2;
+% }
+
+aes_test() -> 
+    Str = <<"hello world">>,
+    Key = <<"123456">>,
+    Encode = aes_encode(Str, Key),
+    ?LOG(Encode),
+    Decode = aes_decode(Encode, <<"1234567">>),
+    ?LOG(Decode),
+    ok.
+
+aes_test1() -> 
+    Str = <<"hello world">>,
+    Key = <<"123456">>,
+    Encode = aes_encode(Str, Key),
+    ?LOG(Encode),
+    Decode = aes_decode(Encode, Key),
+    ?LOG(Decode),
+    ok.
+
+
+cast_aes_test1() -> 
+    Str = <<"hello world">>,
+    Key = <<"123456">>,
+    Encode = cast_aes_encode(Str, Key),
+    ?LOG(Encode),
+    % Decode = aes_decode(Encode, <<"1234567">>),
+    % ?LOG(Decode),
+    ok.
+
+cast_aes_encode(Str, Key) ->
+    AesEncode = #'AesEncode'{
+                        key = Key,
+                        from = Str
+                    },
+    AesEncodeBin = msg_proto:encode_msg(AesEncode),
+    ?LOG(AesEncodeBin),
+    cast(AesEncodeBin).
+
+aes_encode(Str, Key) ->
+    AesEncode = #'AesEncode'{
+                        key = Key,
+                        from = Str
+                    },
+    AesEncodeBin = msg_proto:encode_msg(AesEncode),
+    call(AesEncodeBin, ?CMD_CALL_1001).
+    
+aes_decode(Encode, Key) ->
+    AesDecode = #'AesDecode'{
+                        key = Key,
+                        from = Encode
+                    },
+    AesDecodeBin = msg_proto:encode_msg(AesDecode),
+    Reply = call(AesDecodeBin, ?CMD_CALL_1003),
+
+    #'AesDecodeReply'{code = Code, reply = MaybeDecode} 
+        = msg_proto:decode_msg(Reply,'AesDecodeReply'),
+    {Code, MaybeDecode}.
+  
+rpc_decode(Package) ->
+    #'RpcPackage'{key = Key, cmd = Cmd, payload = Payload} 
+        = msg_proto:decode_msg(Package,'RpcPackage'),
+        {Key, Cmd, Payload}.
+
+payload_decode(Package) ->
+    #'AesEncode'{key = Key, from = From} 
+        = msg_proto:decode_msg(Package,'AesEncode'),
+        {Key, From}.
+
+%% priv 
+call(Package, Cmd) ->
+    Key = to_binary(to_str(uid())), 
+    RpcPackage = #'RpcPackage'{
+                        key = Key,
+                        cmd = Cmd,
+                        payload = Package
+                    },
+    RpcPackageBin = msg_proto:encode_msg(RpcPackage),
+    RpcPackageBin1 = package(?CMD_CALL_10008, RpcPackageBin),
+    poolboy:transaction(pool_name(), fun(Worker) ->
+        gen_server:call(Worker, {call, Key, RpcPackageBin1}, ?TIMEOUT)
+    end).
+
+
+
+cast(Package) ->
+    Key = to_binary(to_str(uid())), 
+    RpcPackage = #'RpcPackage'{
+                        key = Key,
+                        payload = Package
+                    },
+    RpcPackageBin = msg_proto:encode_msg(RpcPackage),
+    RpcPackageBin1 = package(?CMD_CAST_10010, RpcPackageBin),
+    poolboy:transaction(pool_name(), fun(Worker) ->
+        gen_server:cast(Worker, {send, RpcPackageBin1})
+    end).
+
+
+pool_name() ->
+    leaf_client_pool.
+
+uid() -> 
+    esnowflake:generate_id().
+
+to_str(X) when is_list(X) -> X;
+to_str(X) when is_atom(X) -> atom_to_list(X);
+to_str(X) when is_binary(X) -> binary_to_list(X);
+to_str(X) when is_integer(X) -> integer_to_list(X);
+to_str(X) when is_float(X) -> float_to_list(X).
+
+to_binary(X) when is_list(X) -> list_to_binary(X);
+to_binary(X) when is_atom(X) -> list_to_binary(atom_to_list(X));
+to_binary(X) when is_binary(X) -> X;
+to_binary(X) when is_integer(X) -> list_to_binary(integer_to_list(X));
+to_binary(X) when is_float(X) -> list_to_binary(float_to_list(X));
+to_binary(X) -> term_to_binary(X).
+
+
+unpackage(PackageBin) when erlang:byte_size(PackageBin) >= 4 ->
+    % io:format("parse package =========~n~n"),
+    case parse_head(PackageBin) of
+        {ok, PackageLen} -> 
+            parse_body(PackageLen, PackageBin);
+        Any -> 
+            Any
+    end;
+unpackage(_) ->
+    {ok, waitmore}. 
+
+parse_head(<<PackageLen:?UINT ,_/binary>> ) ->
+    % io:format("parse head ======: ~p ~n~n", [PackageLen]), 
+    {ok, PackageLen};
+parse_head(_) ->
+    error.
+
+parse_body(PackageLen, _ ) when PackageLen > 9000 ->
+    error; 
+parse_body(PackageLen, PackageBin) ->
+    % io:format("parse body -----------~n~n"),
+    case PackageBin of 
+        <<RightPackage:PackageLen/binary,NextPageckage/binary>> ->
+            % <<_Len:?UINT, Cmd:?UINT, DataBin/binary>> = RightPackage,
+            <<_Len:?UINT, DataBin/binary>> = RightPackage,
+            
+            % tcp_controller:action(Cmd, DataBin),
+            % unpackage(NextPageckage);
+            {ok, DataBin, NextPageckage};
+        _ -> {ok, waitmore}
+    end.
+
+package(_Cmd, DataBin) ->
+    Len = byte_size(DataBin)+4,
+    ?LOG({len, Len}),
+    % <<Len:?UINT, Cmd:?UINT, DataBin/binary>>.
+    % <<Len:?UINT, Cmd:?UINT, DataBin/binary>>.
+    <<Len:?UINT, DataBin/binary>>.

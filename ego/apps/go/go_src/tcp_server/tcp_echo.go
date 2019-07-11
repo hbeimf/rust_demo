@@ -14,6 +14,7 @@ import (
 	// "github.com/leesper/tao/examples/echo"
 
 	"log"
+	"time"
 )
 
 // EchoServer represents the echo server.
@@ -25,7 +26,11 @@ type EchoServer struct {
 func NewEchoServer() *EchoServer {
 	onConnect := tao.OnConnectOption(func(conn tao.WriteCloser) bool {
 		// holmes.Infoln("on connect")
-		log.Println("on connect")
+		log.Println("on connect CCCCCCCCCCCCCCCCCCC ==========")
+		// NetID = conn.NetID()
+		// // log.Println("on connect CCCCCCCCCCCCCCCCCCC ==========")
+		// log.Printf("on connect CCCCCCCCCCCCCCCCCCC ==========: %#v\n", NetID)
+
 		return true
 	})
 
@@ -42,7 +47,7 @@ func NewEchoServer() *EchoServer {
 
 	onMessage := tao.OnMessageOption(func(msg tao.Message, conn tao.WriteCloser) {
 		// holmes.Infoln("receving message")
-		log.Println("receving message")
+		log.Println("receving message XXXXXXXXXRRRRRRRRRRRRRRRRR===========")
 	})
 
 	// 自定义编解码
@@ -75,4 +80,10 @@ func Start() {
 	}()
 
 	echoServer.Start(l)
+
+	// echoServer.Sched(10000, func(t time.Time, conn tao.WriteCloser) {
+	// 	// holmes.Infoln("closing client")
+	// 	log.Println("Sched ================== ")
+
+	// })
 }

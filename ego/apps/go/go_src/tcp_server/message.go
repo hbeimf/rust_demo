@@ -58,12 +58,12 @@ func DeserializeMessage(data []byte) (message tao.Message, err error) {
 
 // ProcessMessage process the logic of echo message.
 func ProcessMessage(ctx context.Context, conn tao.WriteCloser) {
-	log.Printf("ProcessMessage: %#v\n", ctx)
+	// log.Printf("ProcessMessage: %#v\n", ctx)
 
 	msg := tao.MessageFromContext(ctx).(Message)
 
 	log.Printf("receving message 62: %#v\n", msg)
-	log.Printf("receving message 62: %#v\n", msg.proto)
+	// log.Printf("receving message 62: %#v\n", msg.proto)
 
 	// 进行解码
 	newRpcPackage := &glib.RpcPackage{}

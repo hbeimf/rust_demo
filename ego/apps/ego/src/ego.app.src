@@ -6,7 +6,8 @@
   {applications,
    [kernel,
     stdlib
-    , go
+    %%, go
+    , eleaf
    ]},
   {env,[]},
   {modules, []},

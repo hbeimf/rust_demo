@@ -1,7 +1,7 @@
 package login
 
 import (
-	"server/login/internal"
+	"../login/internal"
 )
 
 var (

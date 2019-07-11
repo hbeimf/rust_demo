@@ -1,7 +1,7 @@
 package gate
 
 import (
-	"server/gate/internal"
+	"../gate/internal"
 )
 
 var (

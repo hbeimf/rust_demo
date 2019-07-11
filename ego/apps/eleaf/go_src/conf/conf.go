@@ -13,8 +13,13 @@ var (
 	PendingWriteNum        = 2000
 	MaxMsgLen       uint32 = 4096
 	HTTPTimeout            = 10 * time.Second
-	LenMsgLen              = 2
-	LittleEndian           = false
+
+	// LenMsgLen              = 2
+	// LittleEndian           = false
+
+	// 字节序配置
+	LenMsgLen    = 4
+	LittleEndian = true
 
 	// skeleton conf
 	GoLen              = 10000

@@ -12,6 +12,7 @@ import (
     "./tcp_server"
     "./ws_server"
 
+    "./erpc"
     "./rpc"
 )
 
@@ -40,6 +41,8 @@ func main() {
     go tcp_server.Start()
 
     go rpc.Start()
+
+    go erpc.Start()
 
     ws_server.Start()
 

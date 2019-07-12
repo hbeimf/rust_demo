@@ -6,6 +6,13 @@ all:
 	rm -rf ./gen-go
 
 
+erpc:
+	rm -rf ./gen-go
+	thrift -r --gen go msg.thrift
+	cp -R ./gen-go/* ../go_src/erpc/ -R
+	rm -rf ./gen-go
+
+
 test: Test
 
 Test:

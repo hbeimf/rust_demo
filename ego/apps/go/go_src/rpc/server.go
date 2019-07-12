@@ -1,10 +1,32 @@
 package rpc
 
+// not enough arguments in call to oprot.Flush
+// thrift 版 本切换问题
+// https://segmentfault.com/q/1010000014393259
+
 import (
 	"./hello"
 	"fmt"
 	"git.apache.org/thrift.git/lib/go/thrift"
 )
+
+type HelloHandler struct {
+	// log map[int]*shared.SharedStruct
+}
+
+func NewHelloHandler() *HelloHandler {
+	return &HelloHandler{}
+}
+
+func (p *HelloHandler) HelloVoid() (err error) {
+	fmt.Print("helloVoid()\n")
+	return nil
+}
+
+// func (p *HelloHandler) Add(num1 int32, num2 int32) (retval17 int32, err error) {
+// 	fmt.Print("add(", num1, ",", num2, ")\n")
+// 	return num1 + num2, nil
+// }
 
 func Start() {
 	/**

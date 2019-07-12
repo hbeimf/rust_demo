@@ -20,11 +20,7 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "Usage of ", os.Args[0], " [-h host:port] [-u url] [-f[ramed]] function [arg1 [arg2...]]:")
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
-	fmt.Fprintln(os.Stderr, "  string helloString(string para)")
-	fmt.Fprintln(os.Stderr, "  i32 helloInt(i32 para)")
-	fmt.Fprintln(os.Stderr, "  bool helloBoolean(bool para)")
 	fmt.Fprintln(os.Stderr, "  void helloVoid()")
-	fmt.Fprintln(os.Stderr, "  string helloNull()")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -119,55 +115,12 @@ func main() {
 	}
 
 	switch cmd {
-	case "helloString":
-		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "HelloString requires 1 args")
-			flag.Usage()
-		}
-		argvalue0 := flag.Arg(1)
-		value0 := argvalue0
-		fmt.Print(client.HelloString(value0))
-		fmt.Print("\n")
-		break
-	case "helloInt":
-		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "HelloInt requires 1 args")
-			flag.Usage()
-		}
-		tmp0, err13 := (strconv.Atoi(flag.Arg(1)))
-		if err13 != nil {
-			Usage()
-			return
-		}
-		argvalue0 := int32(tmp0)
-		value0 := argvalue0
-		fmt.Print(client.HelloInt(value0))
-		fmt.Print("\n")
-		break
-	case "helloBoolean":
-		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "HelloBoolean requires 1 args")
-			flag.Usage()
-		}
-		argvalue0 := flag.Arg(1) == "true"
-		value0 := argvalue0
-		fmt.Print(client.HelloBoolean(value0))
-		fmt.Print("\n")
-		break
 	case "helloVoid":
 		if flag.NArg()-1 != 0 {
 			fmt.Fprintln(os.Stderr, "HelloVoid requires 0 args")
 			flag.Usage()
 		}
 		fmt.Print(client.HelloVoid())
-		fmt.Print("\n")
-		break
-	case "helloNull":
-		if flag.NArg()-1 != 0 {
-			fmt.Fprintln(os.Stderr, "HelloNull requires 0 args")
-			flag.Usage()
-		}
-		fmt.Print(client.HelloNull())
 		fmt.Print("\n")
 		break
 	case "":

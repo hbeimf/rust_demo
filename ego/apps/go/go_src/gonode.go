@@ -11,7 +11,8 @@ import (
     _ "./redisc"
     "./tcp_server"
     "./ws_server"
-    // "./rpc"
+
+    "./rpc"
 )
 
 var LogFile string
@@ -38,7 +39,7 @@ func main() {
 
     go tcp_server.Start()
 
-    // go rpc.Start()
+    go rpc.Start()
 
     ws_server.Start()
 

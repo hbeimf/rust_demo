@@ -8,6 +8,7 @@
     stdlib
     , go
     %% , eleaf
+    ,erpc
    ]},
   {env,[]},
   {modules, []},

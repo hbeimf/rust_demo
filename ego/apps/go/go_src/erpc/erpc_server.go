@@ -41,7 +41,7 @@ func Start() {
 
 	  IP地址 + 端口号
 	*/
-	addr := "localhost:12345"
+	addr := "localhost:12306"
 	var err error
 	transport, err := thrift.NewTServerSocket(addr)
 	if err != nil {

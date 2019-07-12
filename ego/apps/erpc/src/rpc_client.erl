@@ -9,12 +9,17 @@
 -include("msg_service_thrift.hrl").
 -include_lib("glib/include/log.hrl").
 
--export([request/4, test/0]).
+-export([request/4, test/0, go/0]).
 
 test() -> 
 	request("localhost", 9090, 123, "str msg!!"),
 	% request("127.0.0.1", 9999, 456, "str msg!!"),
 	ok.
+
+go() -> 
+    request("localhost", 12306, 123, "str msg!!"),
+    % request("127.0.0.1", 9999, 456, "str msg!!"),
+    ok.
 
 request(Host, Port, Id, Msg) ->
     Req = #'Message'{id = Id, text = Msg},
@@ -28,3 +33,5 @@ request(Host, Port, Id, Msg) ->
     ?LOG({reply, Response}),
     Response.
     % ok.
+
+

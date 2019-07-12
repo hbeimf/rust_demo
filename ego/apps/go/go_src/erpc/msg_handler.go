@@ -60,7 +60,10 @@ func (p *MsgHandler) Hello(m *msg.Message) (r *msg.Message, err error) {
 
 func (p *MsgHandler) AddUser(info *msg.UserInfo) (r *msg.ServerReply, err error) {
 	fmt.Print("helloVoid()\n")
-	return msg.NewServerReply(), nil
+	// return msg.NewServerReply(), nil
+	reply := &msg.ServerReply{123, "hello world"}
+
+	return reply, nil
 }
 
 func (p *MsgHandler) UpdateUser(info *msg.UserInfo) (r *msg.ServerReply, err error) {

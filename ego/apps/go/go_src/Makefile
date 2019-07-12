@@ -24,6 +24,11 @@ dep:
 	go get github.com/golang/sys
 
 
+run:
+	go get -d
+	go run ./gonode.go
+
+
 # http://www.fecshop.com/topic/806
 # cd ~/go/src
 # mkdir -p golang.org/x

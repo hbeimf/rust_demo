@@ -48,7 +48,9 @@ init([]) ->
       [poolboy]},
 
 
-      Children = [RustMonitor, PoolSpecs],
+      % Children = [RustMonitor, PoolSpecs],
+      Children = [PoolSpecs],
+
 
       {ok, {{one_for_one, 10, 10}, Children}}.
 

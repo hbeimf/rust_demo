@@ -144,6 +144,7 @@ handle_cast(_Msg, State) ->
 % 	{noreply, State};
 
 handle_info({tcp, Socket, CurrentPackage}, State=#state{socket=Socket, transport=Transport, data=LastPackage}) -> 
+	?LOG(CurrentPackage),
 	Transport:setopts(Socket, [{active, once}]),
 	PackageBin = <<LastPackage/binary, CurrentPackage/binary>>,
 	case parse_package(PackageBin, State) of

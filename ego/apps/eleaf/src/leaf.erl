@@ -12,6 +12,8 @@
 -define(TIMEOUT, 5000).
 
 -include_lib("glib/include/msg_proto.hrl").
+-include_lib("glib/include/hello_proto.hrl").
+
 -include("cmd.hrl").
 -include("log.hrl").
 
@@ -30,6 +32,17 @@ test() ->
     cast_aes_test1(),
     ok.
 
+
+hello() ->
+     Hello = #'Hello'{
+                       name = <<"hello">>
+                    },
+    HelloBin = hello_proto:encode_msg(Hello),
+
+    RpcPackageBin1 = package(?CMD_CAST_10010, HelloBin),
+    poolboy:transaction(pool_name(), fun(Worker) ->
+        gen_server:cast(Worker, {send, RpcPackageBin1})
+    end).
 
 % message AesEncode{   
 %     string  key = 1;
@@ -123,6 +136,7 @@ cast(Package) ->
     Key = to_binary(to_str(uid())), 
     RpcPackage = #'RpcPackage'{
                         key = Key,
+                        cmd = 123,
                         payload = Package
                     },
     RpcPackageBin = msg_proto:encode_msg(RpcPackage),
@@ -185,7 +199,9 @@ parse_body(PackageLen, PackageBin) ->
     end.
 
 package(_Cmd, DataBin) ->
-    Len = byte_size(DataBin)+4,
+    % Len = byte_size(DataBin)+4,
+    Len = byte_size(DataBin),
+
     ?LOG({len, Len}),
     % <<Len:?UINT, Cmd:?UINT, DataBin/binary>>.
     % <<Len:?UINT, Cmd:?UINT, DataBin/binary>>.

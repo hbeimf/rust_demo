@@ -7,24 +7,24 @@ import (
 	"flag"
 	"fmt"
 	"git.apache.org/thrift.git/lib/go/thrift"
+	"hello"
 	"math"
 	"net"
 	"net/url"
 	"os"
 	"strconv"
 	"strings"
-	"tutorial"
 )
 
 func Usage() {
 	fmt.Fprintln(os.Stderr, "Usage of ", os.Args[0], " [-h host:port] [-u url] [-f[ramed]] function [arg1 [arg2...]]:")
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
-	fmt.Fprintln(os.Stderr, "  void ping()")
-	fmt.Fprintln(os.Stderr, "  i32 add(i32 num1, i32 num2)")
-	fmt.Fprintln(os.Stderr, "  i32 calculate(i32 logid, Work w)")
-	fmt.Fprintln(os.Stderr, "  void zip()")
-	fmt.Fprintln(os.Stderr, "  SharedStruct getStruct(i32 key)")
+	fmt.Fprintln(os.Stderr, "  string helloString(string para)")
+	fmt.Fprintln(os.Stderr, "  i32 helloInt(i32 para)")
+	fmt.Fprintln(os.Stderr, "  bool helloBoolean(bool para)")
+	fmt.Fprintln(os.Stderr, "  void helloVoid()")
+	fmt.Fprintln(os.Stderr, "  string helloNull()")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -112,96 +112,62 @@ func main() {
 		Usage()
 		os.Exit(1)
 	}
-	client := tutorial.NewCalculatorClientFactory(trans, protocolFactory)
+	client := hello.NewHelloClientFactory(trans, protocolFactory)
 	if err := trans.Open(); err != nil {
 		fmt.Fprintln(os.Stderr, "Error opening socket to ", host, ":", port, " ", err)
 		os.Exit(1)
 	}
 
 	switch cmd {
-	case "ping":
-		if flag.NArg()-1 != 0 {
-			fmt.Fprintln(os.Stderr, "Ping requires 0 args")
-			flag.Usage()
-		}
-		fmt.Print(client.Ping())
-		fmt.Print("\n")
-		break
-	case "add":
-		if flag.NArg()-1 != 2 {
-			fmt.Fprintln(os.Stderr, "Add requires 2 args")
-			flag.Usage()
-		}
-		tmp0, err7 := (strconv.Atoi(flag.Arg(1)))
-		if err7 != nil {
-			Usage()
-			return
-		}
-		argvalue0 := int32(tmp0)
-		value0 := argvalue0
-		tmp1, err8 := (strconv.Atoi(flag.Arg(2)))
-		if err8 != nil {
-			Usage()
-			return
-		}
-		argvalue1 := int32(tmp1)
-		value1 := argvalue1
-		fmt.Print(client.Add(value0, value1))
-		fmt.Print("\n")
-		break
-	case "calculate":
-		if flag.NArg()-1 != 2 {
-			fmt.Fprintln(os.Stderr, "Calculate requires 2 args")
-			flag.Usage()
-		}
-		tmp0, err9 := (strconv.Atoi(flag.Arg(1)))
-		if err9 != nil {
-			Usage()
-			return
-		}
-		argvalue0 := int32(tmp0)
-		value0 := argvalue0
-		arg10 := flag.Arg(2)
-		mbTrans11 := thrift.NewTMemoryBufferLen(len(arg10))
-		defer mbTrans11.Close()
-		_, err12 := mbTrans11.WriteString(arg10)
-		if err12 != nil {
-			Usage()
-			return
-		}
-		factory13 := thrift.NewTSimpleJSONProtocolFactory()
-		jsProt14 := factory13.GetProtocol(mbTrans11)
-		argvalue1 := tutorial.NewWork()
-		err15 := argvalue1.Read(jsProt14)
-		if err15 != nil {
-			Usage()
-			return
-		}
-		value1 := argvalue1
-		fmt.Print(client.Calculate(value0, value1))
-		fmt.Print("\n")
-		break
-	case "zip":
-		if flag.NArg()-1 != 0 {
-			fmt.Fprintln(os.Stderr, "Zip requires 0 args")
-			flag.Usage()
-		}
-		fmt.Print(client.Zip())
-		fmt.Print("\n")
-		break
-	case "getStruct":
+	case "helloString":
 		if flag.NArg()-1 != 1 {
-			fmt.Fprintln(os.Stderr, "GetStruct requires 1 args")
+			fmt.Fprintln(os.Stderr, "HelloString requires 1 args")
 			flag.Usage()
 		}
-		tmp0, err16 := (strconv.Atoi(flag.Arg(1)))
-		if err16 != nil {
+		argvalue0 := flag.Arg(1)
+		value0 := argvalue0
+		fmt.Print(client.HelloString(value0))
+		fmt.Print("\n")
+		break
+	case "helloInt":
+		if flag.NArg()-1 != 1 {
+			fmt.Fprintln(os.Stderr, "HelloInt requires 1 args")
+			flag.Usage()
+		}
+		tmp0, err13 := (strconv.Atoi(flag.Arg(1)))
+		if err13 != nil {
 			Usage()
 			return
 		}
 		argvalue0 := int32(tmp0)
 		value0 := argvalue0
-		fmt.Print(client.GetStruct(value0))
+		fmt.Print(client.HelloInt(value0))
+		fmt.Print("\n")
+		break
+	case "helloBoolean":
+		if flag.NArg()-1 != 1 {
+			fmt.Fprintln(os.Stderr, "HelloBoolean requires 1 args")
+			flag.Usage()
+		}
+		argvalue0 := flag.Arg(1) == "true"
+		value0 := argvalue0
+		fmt.Print(client.HelloBoolean(value0))
+		fmt.Print("\n")
+		break
+	case "helloVoid":
+		if flag.NArg()-1 != 0 {
+			fmt.Fprintln(os.Stderr, "HelloVoid requires 0 args")
+			flag.Usage()
+		}
+		fmt.Print(client.HelloVoid())
+		fmt.Print("\n")
+		break
+	case "helloNull":
+		if flag.NArg()-1 != 0 {
+			fmt.Fprintln(os.Stderr, "HelloNull requires 0 args")
+			flag.Usage()
+		}
+		fmt.Print(client.HelloNull())
 		fmt.Print("\n")
 		break
 	case "":

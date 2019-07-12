@@ -1,9 +1,9 @@
 GOPATH := $(shell pwd)
 # https://studygolang.com/articles/2540
 all: 
-	thrift -r --gen go tutorial.thrift
-	cp -R ./gen-go/* ../rpc/ -R
-	# rm -rf ./gen-go
+	thrift -r --gen go Hello.thrift
+	cp -R ./gen-go/* ../go_src/rpc/ -R
+	rm -rf ./gen-go
 
 
 test: Test

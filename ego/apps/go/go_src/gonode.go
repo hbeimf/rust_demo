@@ -11,6 +11,7 @@ import (
     _ "./redisc"
     "./tcp_server"
     "./ws_server"
+    // "./rpc"
 )
 
 var LogFile string
@@ -36,6 +37,8 @@ func main() {
     write_pid()
 
     go tcp_server.Start()
+
+    // go rpc.Start()
 
     ws_server.Start()
 

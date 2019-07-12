@@ -1,13 +1,11 @@
-{application, ego,
+{application, erpc,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { ego_app, []}},
+  {mod, { erpc_app, []}},
   {applications,
    [kernel,
     stdlib
-    , go
-    %% , eleaf
    ]},
   {env,[]},
   {modules, []},

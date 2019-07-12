@@ -8,6 +8,7 @@ import (
 	"./msg"
 	"fmt"
 	// "git.apache.org/thrift.git/lib/go/thrift"
+	"log"
 )
 
 type MsgHandler struct {
@@ -59,7 +60,12 @@ func (p *MsgHandler) Hello(m *msg.Message) (r *msg.Message, err error) {
 }
 
 func (p *MsgHandler) AddUser(info *msg.UserInfo) (r *msg.ServerReply, err error) {
-	fmt.Print("helloVoid()\n")
+	// fmt.Print("helloVoid()\n")
+	uid := info.GetUID()
+	name := info.GetName()
+	log.Printf("uid: %#v\n", uid)
+	log.Printf("name: %#v\n", name)
+
 	// return msg.NewServerReply(), nil
 	reply := &msg.ServerReply{123, "hello world"}
 

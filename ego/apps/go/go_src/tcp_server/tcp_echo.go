@@ -79,7 +79,7 @@ func Start() {
 		echoServer.Stop()
 	}()
 
-	echoServer.Start(l)
+	go echoServer.Start(l)
 
 	// echoServer.Sched(10000, func(t time.Time, conn tao.WriteCloser) {
 	// 	// holmes.Infoln("closing client")

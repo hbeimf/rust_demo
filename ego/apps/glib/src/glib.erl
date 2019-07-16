@@ -413,3 +413,30 @@ gold_to_binary(Num)->
 	Num1= to_str(Num),
 	[Gold|_] = explode(Num1, "."),
 	to_integer(Gold).
+
+
+
+
+% 写系统日志到文件中
+write_req(Report, Api) -> 
+	% IsDebug = sys_config:is_debug(),
+	write_req(Report, Api, true).
+
+write_req(Report, Api, true) ->
+	make_dir(root_dir() ++ "log"),
+	Dir = root_dir() ++ "log/cache_"++ random() ++".txt",
+	{ok, S} = file:open(Dir, write),
+	io:format(S, "~p~n", [Report]),
+	file:close(S),
+	{ok, Str} = file_get_contents(Dir),
+	req_log(Str, Api),
+	file:delete(Dir),
+	ok;
+write_req(_Report, _Api, _) -> 
+	ok.
+
+req_log(Str, Api) ->
+	Dir = root_dir() ++ "log/" ++ date_str("y-m-d") ++ "-"++ to_str(Api) ++"-log.txt",
+	Log = " \n =====================" ++ date_str() ++ "============================ \n " ++ Str,	
+	%% 同时写入文件
+	append(Dir, Log).

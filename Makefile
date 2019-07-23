@@ -63,3 +63,7 @@ dev:
 # 	./rebar3 relup
 # 	./rebar3 tar
 
+push:
+	git add .
+	git commit -m 'x'
+	git push

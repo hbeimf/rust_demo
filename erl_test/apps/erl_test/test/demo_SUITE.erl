@@ -23,3 +23,6 @@ test_fail(_) ->
 test3(_) ->
 	io:format("test... ~n"),
 	ok.
+
+eunit(_) ->
+	ok = eunit:test({application, erl_test}).

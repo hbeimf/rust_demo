@@ -16,7 +16,7 @@ test_fail(_) ->
 	% io:format("hello test~n"),
 	Reply = demo:hello(),
 	% io:format("reply: ~p~n", [Reply]),
-	?assert(okk == Reply),
+	?assert(ok == Reply),
 	% io:format("test... ~n"),
 	false.
 

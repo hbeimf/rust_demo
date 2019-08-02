@@ -5,7 +5,7 @@
          content_types_provided/2,
          to_text/2]).
 
--include_lib("webmachine/include/webmachine.hrl").
+% -include_lib("webmachine/include/webmachine.hrl").
 
 init([]) ->
      {ok, riak_id:next_id()}.

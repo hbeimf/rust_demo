@@ -1,0 +1,6 @@
+-sname riak_learn
+
+-setcookie riak_learn_cookie
+
++K true
++A30

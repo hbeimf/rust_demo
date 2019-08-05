@@ -5,7 +5,10 @@
   {mod, { rc_example_app, []}},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
+    lager,
+    cuttlefish,
+    riak_core
    ]},
   {env,[]},
   {modules, []},

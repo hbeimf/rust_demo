@@ -5,10 +5,8 @@
   {mod, { riak_learn_app, []}},
   {applications,
    [kernel,
-    stdlib,
-    lager,
-    cuttlefish,
-    riak_core
+    stdlib
+    , rc_example
    ]},
   {env,[]},
   {modules, []},

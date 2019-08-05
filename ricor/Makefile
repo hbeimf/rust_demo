@@ -13,6 +13,7 @@ release:
 	mkdir -p $(RELPATH)/../ricor_config
 	[ -f $(RELPATH)/../ricor_config/ricor.conf ] || cp $(RELPATH)/etc/ricor.conf  $(RELPATH)/../ricor_config/ricor.conf
 	[ -f $(RELPATH)/../ricor_config/advanced.config ] || cp $(RELPATH)/etc/advanced.config  $(RELPATH)/../ricor_config/advanced.config
+	$(REBAR) tar
 
 console:
 	cd $(RELPATH) && ./bin/ricor console

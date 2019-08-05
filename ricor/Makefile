@@ -115,3 +115,8 @@ pushall:
 	git add . -A
 	git commit -m 'x'
 	git push
+
+run:
+	rebar3 shell --name ricor@127.0.0.1 --setcookie ricor
+
+	 

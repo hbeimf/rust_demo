@@ -8,6 +8,7 @@
               ping/0
              ]).
 
+-include_lib("glib/include/log.hrl").
 %% Public API
 
 %% @doc Pings a random vnode to make sure communication is functional
@@ -16,6 +17,8 @@ ping() ->
     % and the full key has a bucket, we use a contant in the bucket position
     % and a timestamp as key so we hit different vnodes on each call
     DocIdx = riak_core_util:chash_key({<<"ping">>, term_to_binary(os:timestamp())}),
+
+    ?LOG(DocIdx),
     % ask for 1 vnode index to send this request to, change N to get more
     % vnodes, for example for replication
     N = 1,

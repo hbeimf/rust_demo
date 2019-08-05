@@ -20,4 +20,4 @@ release:
 
 
 console:
-	rebar3 release && _build/default/rel/riak_learn/bin/riak_learn
+	rebar3 release && _build/default/rel/riak_learn/bin/riak_learn console

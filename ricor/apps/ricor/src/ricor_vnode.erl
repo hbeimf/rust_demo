@@ -24,6 +24,8 @@
 
 -record(state, {partition}).
 
+-include_lib("glib/include/log.hrl").
+
 %% API
 start_vnode(I) ->
     riak_core_vnode_master:get_vnode_pid(I, ?MODULE).
@@ -33,6 +35,7 @@ init([Partition]) ->
 
 %% Sample command: respond to a ping
 handle_command(ping, _Sender, State) ->
+    ?LOG({ping, State}),
     {reply, {pong, State#state.partition}, State};
 handle_command(Message, _Sender, State) ->
     lager:warning("unhandled_command ~p", [Message]),

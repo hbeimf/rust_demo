@@ -10,6 +10,7 @@
                   sasl,
                   riak_core,
                   setup
+                  , glib
                  ]},
   {mod, { ricor_app, []}},
   {env, []}

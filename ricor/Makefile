@@ -106,3 +106,12 @@ stop:
 attach:
 	$(BASEDIR)/$(RELPATH)/bin/$(APPNAME) attach
 
+push:
+	git add .
+	git commit -m 'x'
+	git push
+
+pushall:
+	git add . -A
+	git commit -m 'x'
+	git push

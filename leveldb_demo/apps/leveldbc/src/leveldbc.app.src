@@ -1,12 +1,11 @@
-{application, leveldb_demo,
+{application, leveldbc,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { leveldb_demo_app, []}},
+  {mod, { leveldbc_app, []}},
   {applications,
    [kernel,
     stdlib
-    , leveldbc
    ]},
   {env,[]},
   {modules, []},

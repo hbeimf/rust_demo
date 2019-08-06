@@ -1,6 +1,0 @@
--name riak_learn@127.0.0.1
-
--setcookie riak_learn_cookie
-
-+K true
-+A30

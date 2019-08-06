@@ -52,6 +52,8 @@
 -type chashbin() :: term().
 -type docidx() :: chash:index().
 
+-include("log.hrl").
+
 %% @doc Return preflist of all active primary nodes (with no
 %%      substituion of fallbacks).  Used to simulate a
 %%      preflist with N=ring_size.
@@ -139,11 +141,13 @@ get_apl_ann_chbin(DocIdx, N, CHBin, UpNodes) ->
 -spec get_primary_apl(binary(), n_val(), atom()) -> preflist_ann().
 get_primary_apl(DocIdx, N, Service) ->
     {ok, CHBin} = riak_core_ring_manager:get_chash_bin(),
+    % ?LOG({cHBin, CHBin}),
     get_primary_apl_chbin(DocIdx, N, CHBin, riak_core_node_watcher:nodes(Service)).
 
 %% @doc Same as get_apl, but returns only the primaries.
 -spec get_primary_apl_chbin(binary(), n_val(), chashbin(), [node()]) -> preflist_ann().
 get_primary_apl_chbin(DocIdx, N, CHBin, UpNodes) ->
+    % ?LOG({DocIdx, N, CHBin, UpNodes}),
     UpNodes1 = UpNodes,
     Itr = chashbin:iterator(DocIdx, CHBin),
     {Primaries, _} = chashbin:itr_pop(N, Itr),

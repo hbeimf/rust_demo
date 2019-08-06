@@ -24,6 +24,8 @@
 
 -module(riak_core_vnode_master).
 -include("riak_core_vnode.hrl").
+-include("log.hrl").
+
 -behaviour(gen_server).
 -export([start_link/1, start_link/2, start_link/3, get_vnode_pid/2,
          start_vnode/2,
@@ -146,7 +148,9 @@ sync_command({Index,Node}, Msg, VMaster, Timeout) ->
 %% Will not return until the vnode has returned, but the vnode_master will
 %% continue to handle requests.
 sync_spawn_command({Index,Node}, Msg, VMaster) ->
+    ?LOG({{Index,Node}, Msg, VMaster}),
     Request = make_request(Msg, {server, undefined, undefined}, Index),
+    ?LOG({{VMaster, Node}, {spawn, Request}}),
     case gen_server:call({VMaster, Node}, {spawn, Request}, infinity) of
         {vnode_error, {Error, _Args}} -> error(Error);
         {vnode_error, Error} -> error(Error);
@@ -257,6 +261,7 @@ handle_call({spawn,
             From, State=#state{vnode_mod=Mod}) ->
     Proxy = riak_core_vnode_proxy:reg_name(Mod, Idx),
     Sender = {server, undefined, From},
+    ?LOG("请求", {handle_call, Proxy, Sender}),
     spawn_link(
       fun() -> gen_fsm_compat:send_all_state_event(Proxy, Req?VNODE_REQ{sender=Sender}) end),
     {noreply, State};

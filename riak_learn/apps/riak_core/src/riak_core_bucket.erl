@@ -52,6 +52,7 @@
 
 -define(METADATA_PREFIX, {core, buckets}).
 
+-include("log.hrl").
 %% @doc Add a list of defaults to global list of defaults for new
 %%      buckets.  If any item is in Items is already set in the
 %%      current defaults list, the new setting is omitted, and the old
@@ -59,6 +60,7 @@
 %%      behavior, to allow settings from app.config to override any
 %%      hard-coded values.
 append_bucket_defaults(Items) when is_list(Items) ->
+    ?LOG(Items),
     riak_core_bucket_props:append_defaults(Items).
 
 %% @doc Set the given BucketProps in Bucket or {BucketType, Bucket}. If BucketType does not

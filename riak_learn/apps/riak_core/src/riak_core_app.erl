@@ -27,11 +27,14 @@
 %% Application callbacks
 -export([start/2, stop/1]).
 
+-include("log.hrl").
+
 %% ===================================================================
 %% Application callbacks
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
+    ?LOG("riak_core start ==========="),
     %% Don't add our system_monitor event handler here.  Instead, let
     %% riak_core_sysmon_minder start it, because that process can act
     %% on any handler crash notification, whereas we cannot.
@@ -56,9 +59,18 @@ maybe_delay_start() ->
             ok
     end.
 
+
 validate_ring_state_directory_exists() ->
     riak_core_util:start_app_deps(riak_core),
     RingStateDir = app_helper:get_env(riak_core, ring_state_dir),
+
+    ?LOG("当前路径", {os:cmd("pwd")}),
+    ?LOG("确认路径是否存在", RingStateDir),
+    ?LOG({dir, filename:join(RingStateDir, "dummy")}),
+
+    %     filelib:ensure_dir/1
+    % 确定文件或目录的所有父目录都已经存在
+
     case filelib:ensure_dir(filename:join(RingStateDir, "dummy")) of
         ok ->
             ok;

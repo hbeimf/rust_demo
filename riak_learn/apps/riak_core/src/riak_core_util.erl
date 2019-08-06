@@ -81,6 +81,8 @@
          preflist_siblings/1
         ]).
 
+-include("log.hrl").
+
 -include("riak_core_vnode.hrl").
 
 -ifdef(TEST).
@@ -269,6 +271,7 @@ mkclientid(RemoteNode) ->
 %% @doc Create a binary used for determining replica placement.
 chash_key({Bucket,_Key}=BKey) ->
     BucketProps = riak_core_bucket:get_bucket(Bucket),
+    ?LOG("桶", {Bucket, BucketProps}),
     chash_key(BKey, BucketProps).
 
 %% @spec chash_key(BKey :: riak_object:bkey(), [{atom(), any()}]) ->
@@ -276,6 +279,12 @@ chash_key({Bucket,_Key}=BKey) ->
 %% @doc Create a binary used for determining replica placement.
 chash_key({Bucket,Key}, BucketProps) ->
     {_, {M, F}} = lists:keyfind(chash_keyfun, 1, BucketProps),
+    ?LOG("桶", {Bucket, Key, M, F}),
+%     ==========log begin========{riak_core_util,282}==============
+% 桶: {<<"ping">>,
+%     <<131,104,3,98,0,0,6,29,98,0,1,24,250,98,0,12,19,106>>,
+%     riak_core_util,chash_std_keyfun}
+
     M:F({Bucket,Key}).
 
 %% @spec chash_std_keyfun(BKey :: riak_object:bkey()) -> chash:index()
@@ -316,6 +325,11 @@ node_hostname() ->
 %% @doc Start depedent applications of App.
 start_app_deps(App) ->
     {ok, DepApps} = application:get_key(App, applications),
+    ?LOG("启动依赖app", DepApps),
+%     ==========log begin========{riak_core_util,321}==============
+% {depApps,[kernel,stdlib,gen_fsm_compat,crypto,eleveldb,pbkdf2,clique,folsom,
+%           sasl,riak_sysmon,os_mon,basho_stats,poolboy,lager,exometer_core]}
+
     _ = [ensure_started(A) || A <- DepApps],
     ok.
 

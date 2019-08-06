@@ -25,6 +25,7 @@
 -behaviour(supervisor).
 
 -include("riak_core_bg_manager.hrl").
+-include("log.hrl").
 
 %% API
 -export([start_link/0]).
@@ -83,9 +84,99 @@ init([]) ->
                   [EnsembleSup || ensembles_enabled()]
                  ]),
 
+    ?LOG("启动督程", Children),
     {ok, {{one_for_one, 10, 10}, Children}}.
+
+% ==========log begin========{riak_core_sup,87}==============
+% 启动督程: [{riak_core_bg_manager,
+%            {riak_core_bg_manager,start_link,[]},
+%            permanent,5000,worker,
+%            [riak_core_bg_manager]},
+%        {riak_core_sysmon_minder,
+%            {riak_core_sysmon_minder,start_link,[]},
+%            permanent,5000,worker,
+%            [riak_core_sysmon_minder]},
+%        {riak_core_vnode_sup,
+%            {riak_core_vnode_sup,start_link,[]},
+%            permanent,305000,supervisor,
+%            [riak_core_vnode_sup]},
+%        {riak_core_eventhandler_sup,
+%            {riak_core_eventhandler_sup,start_link,[]},
+%            permanent,5000,supervisor,
+%            [riak_core_eventhandler_sup]},
+%        {riak_core_dist_mon,
+%            {riak_core_dist_mon,start_link,[]},
+%            permanent,5000,worker,
+%            [riak_core_dist_mon]},
+%        {riak_core_handoff_sup,
+%            {riak_core_handoff_sup,start_link,[]},
+%            permanent,5000,supervisor,
+%            [riak_core_handoff_sup]},
+%        {riak_core_ring_events,
+%            {riak_core_ring_events,start_link,[]},
+%            permanent,5000,worker,
+%            [riak_core_ring_events]},
+%        {riak_core_ring_manager,
+%            {riak_core_ring_manager,start_link,[]},
+%            permanent,5000,worker,
+%            [riak_core_ring_manager]},
+%        {riak_core_metadata_evt_sup,
+%            {riak_core_metadata_evt_sup,start_link,[]},
+%            permanent,5000,supervisor,
+%            [riak_core_metadata_evt_sup]},
+%        {riak_core_metadata_manager,
+%            {riak_core_metadata_manager,start_link,[]},
+%            permanent,5000,worker,
+%            [riak_core_metadata_manager]},
+%        {riak_core_metadata_hashtree,
+%            {riak_core_metadata_hashtree,start_link,[]},
+%            permanent,5000,worker,
+%            [riak_core_metadata_hashtree]},
+%        {riak_core_broadcast,
+%            {riak_core_broadcast,start_link,[]},
+%            permanent,5000,worker,
+%            [riak_core_broadcast]},
+%        {riak_core_vnode_proxy_sup,
+%            {riak_core_vnode_proxy_sup,start_link,[]},
+%            permanent,5000,supervisor,
+%            [riak_core_vnode_proxy_sup]},
+%        {riak_core_node_watcher_events,
+%            {riak_core_node_watcher_events,start_link,[]},
+%            permanent,5000,worker,
+%            [riak_core_node_watcher_events]},
+%        {riak_core_node_watcher,
+%            {riak_core_node_watcher,start_link,[]},
+%            permanent,5000,worker,
+%            [riak_core_node_watcher]},
+%        {riak_core_vnode_manager,
+%            {riak_core_vnode_manager,start_link,[]},
+%            permanent,5000,worker,
+%            [riak_core_vnode_manager]},
+%        {riak_core_capability,
+%            {riak_core_capability,start_link,[]},
+%            permanent,5000,worker,
+%            [riak_core_capability]},
+%        {riak_core_gossip,
+%            {riak_core_gossip,start_link,[]},
+%            permanent,5000,worker,
+%            [riak_core_gossip]},
+%        {riak_core_claimant,
+%            {riak_core_claimant,start_link,[]},
+%            permanent,5000,worker,
+%            [riak_core_claimant]},
+%        {riak_core_table_owner,
+%            {riak_core_table_owner,start_link,[]},
+%            permanent,5000,worker,
+%            [riak_core_table_owner]},
+%        {riak_core_stat_sup,
+%            {riak_core_stat_sup,start_link,[]},
+%            permanent,5000,supervisor,
+%            [riak_core_stat_sup]}]
+
 
 ensembles_enabled() ->
     Exists = (code:which(riak_ensemble_sup) =/= non_existing),
     Enabled = app_helper:get_env(riak_core, enable_consensus, false),
     Exists and Enabled.
+
+

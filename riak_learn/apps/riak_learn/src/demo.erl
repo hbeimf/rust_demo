@@ -9,4 +9,5 @@ ping() ->
     PrefList = riak_core_apl:get_primary_apl(DocIdx, N, riak_learn),
     [{IndexNode, Type}] = PrefList,
     ?LOG({DocIdx, IndexNode, Type}),
+    ?LOG(IndexNode),
     riak_core_vnode_master:sync_spawn_command(IndexNode, ping, riak_learn_vnode_master).

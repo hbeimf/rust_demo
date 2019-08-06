@@ -100,6 +100,9 @@
 %% ``local_compare/2'' and ``do_remote/1'' for examples (-ifdef(TEST) only).
 
 -module(hashtree).
+
+-include("log.hrl").
+
 -export([new/0,
          new/2,
          new/3,
@@ -726,6 +729,7 @@ new_segment_store(Opts, State) ->
 
     ok = filelib:ensure_dir(DataDir),
     {ok, Ref} = eleveldb:open(DataDir, Options),
+    ?LOG("打开 leveldb", {DataDir, Options}),
     State#state{ref=Ref, path=DataDir}.
 
 -spec share_segment_store(hashtree(), hashtree()) -> hashtree().

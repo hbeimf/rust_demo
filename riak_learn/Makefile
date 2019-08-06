@@ -12,8 +12,9 @@ push:
 ps:
 	ps aux | grep xgn.node
 
-release:
+rel:
 	rebar3 release 
+	rebar3 tar
 
 
 # && _build/default/rel/rc_example/bin/rc_example

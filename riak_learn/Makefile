@@ -111,3 +111,5 @@ push:
 	git add .
 	git commit -m 'x'
 	git push
+
+run: release console

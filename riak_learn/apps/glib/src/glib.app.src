@@ -1,12 +1,14 @@
-{application, riak_learn,
+{application, glib,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { riak_learn_app, []}},
+  {mod, { glib_app, []}},
   {applications,
-   [kernel,
-    stdlib
-    , ricor
+   [kernel
+    , stdlib
+    , inets
+    , esnowflake
+    , zucchini
    ]},
   {env,[]},
   {modules, []},

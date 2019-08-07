@@ -103,6 +103,7 @@
 
 
 -module(hashtree_tree).
+-include("log.hrl").
 
 -export([new/2,
          destroy/1,
@@ -181,6 +182,7 @@
 -type new_opts()           :: [new_opt()].
 -spec new(term(), new_opts()) -> tree().
 new(TreeId, Opts) ->
+    ?LOG({TreeId, Opts}),
     NumLevels = proplists:get_value(num_levels, Opts, ?NUM_LEVELS),
     DataRoot  = data_root(Opts),
     Tree = #hashtree_tree{id = TreeId,

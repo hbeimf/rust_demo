@@ -40,6 +40,7 @@
          terminate/2, code_change/3]).
 
 -include("riak_core_metadata.hrl").
+-include("log.hrl").
 
 -define(SERVER, ?MODULE).
 
@@ -75,6 +76,7 @@ start_link() ->
 %% in the directory `DataRoot'.
 -spec start_link(file:filename()) -> {ok, pid()} | ignore | {error, term()}.
 start_link(DataRoot) ->
+    ?LOG("DataRoot", DataRoot),
     gen_server:start_link({local, ?SERVER}, ?MODULE, [DataRoot], []).
 
 %% @doc Same as insert(PKey, Hash, false).

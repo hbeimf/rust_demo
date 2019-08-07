@@ -1,0 +1,6 @@
+-sname tikv
+
+-setcookie tikv_cookie
+
++K true
++A30

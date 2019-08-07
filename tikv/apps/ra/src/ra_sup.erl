@@ -2,6 +2,7 @@
 -module(ra_sup).
 -behaviour(supervisor).
 
+-include("log.hrl").
 -export([start_link/0]).
 -export([init/1]).
 
@@ -36,4 +37,6 @@ init([]) ->
              RaLogFileMetrics,
              RaFileHandle,
              RaSystemSup],
+
+            ?LOG(Procs),
     {ok, {SupFlags, Procs}}.

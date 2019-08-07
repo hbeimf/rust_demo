@@ -9,6 +9,10 @@ run2:
 run3:
 	rebar3 shell --name tikv3@127.0.0.1 --setcookie tikv 
 
+
+pd:
+	rebar3 shell --name tikv@127.0.0.1 --setcookie tikv1 
+
 # stop:
 # 	ps -efww|grep xgn.node|grep -v grep|cut -c 9-15|xargs kill -9
 

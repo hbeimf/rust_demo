@@ -6,7 +6,7 @@
 
 -export([
 	 init/1,
-	 init/0,
+	 % init/0,
 	 apply/3,
 
 	 put/2,
@@ -22,7 +22,7 @@
 	 state_enter/2
 	]).
 
--export([start/0, test/0]).
+-export([start/0, test/0, test1/0]).
 
 -record(?MODULE, {value :: term(),
 		  watchers = #{} :: #{pid() => ok}}).
@@ -39,10 +39,10 @@
 init(_) ->
     #?MODULE{}.
 
-init() ->
-	?LOG("init"),
-    application:ensure_all_started(ra),
-    init(init).
+% init() ->
+% 	?LOG("init"),
+%     application:ensure_all_started(ra),
+%     init(init).
 
 apply(_Meta, {put, Value},
       #?MODULE{value = Value} = State) ->
@@ -156,9 +156,19 @@ start() ->
 	ok.
 
 test() ->
-	start(),
+	% start(),
+	refcell:members(),
+	R1 = refcell:put({refcell, 'tikv1@127.0.0.1'}, "MyValue"),
+	R2 = refcell:get({refcell, 'tikv1@127.0.0.1'}),
+	?LOG({R1, R2}),
+	ok.
+
+test1() ->
+	% start(),
 	refcell:members(),
 	R1 = refcell:put({refcell, 'tikv1@127.0.0.1'}, "MyValue"),
 	R2 = refcell:get({refcell, 'tikv2@127.0.0.1'}),
 	?LOG({R1, R2}),
 	ok.
+
+

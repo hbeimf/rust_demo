@@ -1,6 +1,6 @@
 %% @hidden
 -module(ra_server_sup_sup).
-
+-include("log.hrl").
 -behaviour(supervisor).
 
 
@@ -25,12 +25,16 @@
     supervisor:startchild_ret() | {error, not_new}.
 start_server(#{id := NodeId,
                uid := UId} = Config) ->
+
+    ?LOG("启动server_sup_sup", {Config, node(), nodes()}),
     %% check that the node isn't already registered
     Node = ra_lib:ra_server_id_node(NodeId),
     case rpc:call(Node, ?MODULE, prepare_start_rpc, [UId]) of
         ok ->
+            ?LOG("节点rpc:call success", {?MODULE, Node, Config}),
             supervisor:start_child({?MODULE, Node}, [Config]);
         Err ->
+            ?LOG("节点rpc:call fail", {Node, Err}),
             Err
     end.
 
@@ -46,6 +50,7 @@ restart_server({RaName, Node}) ->
     end.
 
 prepare_start_rpc(UId) ->
+    ?LOG("rpc调用", UId),
     case ra_directory:name_of(UId) of
         undefined ->
             ok;

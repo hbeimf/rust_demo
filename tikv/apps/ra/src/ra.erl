@@ -3,6 +3,7 @@
 -module(ra).
 
 -include("ra.hrl").
+-include("log.hrl").
 
 -export([
          start/0,
@@ -213,6 +214,7 @@ start_or_restart_cluster(ClusterName, Machine,
     {ok, [ra_server_id()], [ra_server_id()]} |
     {error, cluster_not_formed}.
 start_cluster(ClusterName, Machine, ServerIds) ->
+    ?LOG({ClusterName, Machine, ServerIds}),
     start_cluster(ClusterName, Machine, ServerIds, ?START_TIMEOUT).
 
 %% @doc Starts a new distributed ra cluster.
@@ -247,6 +249,8 @@ start_cluster(ClusterName, Machine, ServerIds, Timeout) ->
                      initial_members => ServerIds,
                      machine => Machine}
                end || Id <- ServerIds],
+
+            ?LOG("启动ra", {Configs, Timeout}),
     start_cluster(Configs, Timeout).
 
 %% @doc Starts a new distributed ra cluster.
@@ -273,17 +277,25 @@ start_cluster(ServerConfigs) ->
     {error, cluster_not_formed}.
 start_cluster([#{cluster_name := ClusterName} | _] =
                ServerConfigs, Timeout) ->
+    
+    ?LOG("启动集群", {ServerConfigs, Timeout, node(), nodes()}),
     {Started, NotStarted} =
         ra_lib:partition_parallel(
             fun (C) ->
                 case start_server(C) of
-                    ok  -> true;
+                    ok  -> 
+                        ?LOG("true", {C, node(), nodes()}),
+                        true;
                     Err ->
                         ?ERR("ra: failed to start a server ~w, error: ~p~n",
                               [C, Err]),
+                        ?LOG("false", C),
                         false
                 end
             end, ServerConfigs),
+        %% 节点分类， 已启动节点 || 未启动节点
+        ?LOG("节点分类， 已启动节点 || 未启动节点", {started, Started, not_strarted, NotStarted, node, node(), nodes, nodes()}),
+
     case Started of
         [] ->
             ?ERR("ra: failed to form a new cluster ~w.~n "
@@ -293,7 +305,8 @@ start_cluster([#{cluster_name := ClusterName} | _] =
         _ ->
             StartedIds = [I || #{id := I} <- Started],
             NotStartedIds = [I || #{id := I} <- NotStarted],
-            %% try triggering elections until one succeeds
+            %% try triggering elections until one succeeds  
+            %% 试着触发选举直到成功
             _ = lists:any(fun (N) -> ok == trigger_election(N) end,
                           sort_by_local(StartedIds, [])),
             %% TODO: handle case where no election was successfully triggered
@@ -335,9 +348,11 @@ start_server(ClusterName, ServerId, Machine, ServerIds) ->
 -spec start_server(ra_server:ra_server_config()) -> ok | {error, term()}.
 start_server(Conf) ->
     %% validate UID is safe
+    ?LOG("启动server", Conf),
     case ra_lib:validate_base64uri(maps:get(uid, Conf)) of
         true ->
             % don't match on return value in case it is already running
+             ?LOG("启动server", Conf),
             case catch ra_server_sup_sup:start_server(Conf) of
                 {ok, _} -> ok;
                 {ok, _, _} -> ok;

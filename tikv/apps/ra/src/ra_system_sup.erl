@@ -1,6 +1,6 @@
 %% @hidden
 -module(ra_system_sup).
-
+-include("log.hrl").
 -behaviour(supervisor).
 
 %% API functions
@@ -28,6 +28,7 @@ init([]) ->
     RaServerSupSup = #{id => ra_server_sup_sup,
                        type => supervisor,
                        start => {ra_server_sup_sup, start_link, []}},
+            ?LOG([Ets, RaLogSup, RaServerSupSup]),
     {ok, {SupFlags, [Ets, RaLogSup, RaServerSupSup]}}.
 
 

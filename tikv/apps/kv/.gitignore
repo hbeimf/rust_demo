@@ -15,7 +15,3 @@ logs
 _build
 .idea
 rebar3.crashdump
-tikv@127.0.0.1
-tikv1@127.0.0.1
-tikv2@127.0.0.1
-tikv3@127.0.0.1

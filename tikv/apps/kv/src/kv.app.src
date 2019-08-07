@@ -1,12 +1,12 @@
-{application, tikv,
+{application, kv,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { tikv_app, []}},
+  {mod, { kv_app, []}},
   {applications,
    [kernel,
     stdlib
-    , kv
+    , ra
    ]},
   {env,[]},
   {modules, []},

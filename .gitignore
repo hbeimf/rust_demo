@@ -19,7 +19,6 @@ Mnesia*
 *pid
 .DS_Store
 */target/*
-*tikv/*
 *tokio_kcp/*
 dump.rdb
 *tmp*

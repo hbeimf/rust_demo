@@ -22,6 +22,8 @@
 	 state_enter/2
 	]).
 
+-export([start/0, test/0]).
+
 -record(?MODULE, {value :: term(),
 		  watchers = #{} :: #{pid() => ok}}).
 
@@ -124,10 +126,8 @@ start(Name) ->
     start(Name, [node()]).
 
 
-start() -> 
-	ErlangNodes = ['tikv1@127.0.0.1', 'tikv2@127.0.0.1', 'tikv3@127.0.0.1'].
-	refcell:start("My Test CLuster", ErlangNodes),
-	ok.
+
+
 
 start(Name, Nodes) ->
     Servers = [{refcell, N} || N <- Nodes],
@@ -148,3 +148,17 @@ members(Node) ->
 -include_lib("eunit/include/eunit.hrl").
 
 -endif.
+
+
+start() -> 
+	ErlangNodes = ['tikv1@127.0.0.1', 'tikv2@127.0.0.1', 'tikv3@127.0.0.1'],
+	refcell:start("My Test CLuster", ErlangNodes),
+	ok.
+
+test() ->
+	start(),
+	refcell:members(),
+	R1 = refcell:put({refcell, 'tikv1@127.0.0.1'}, "MyValue"),
+	R2 = refcell:get({refcell, 'tikv2@127.0.0.1'}),
+	?LOG({R1, R2}),
+	ok.

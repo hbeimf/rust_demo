@@ -1,15 +1,14 @@
-{application, mysqlc,
+{application, mysqlc_comm,
  [{description, "An OTP application"},
-  {vsn, "0.3.1"},
+  {vsn, "0.1.0"},
   {registered, []},
-  {mod, { mysqlc_app, []}},
+  {mod, { mysqlc_comm_app, []}},
   {applications,
    [kernel,
-    stdlib,
-    glib
+    stdlib
+    , glib
    ]},
-  {env,[
-  ]},
+  {env,[]},
   {modules, []},
 
   {maintainers, []},

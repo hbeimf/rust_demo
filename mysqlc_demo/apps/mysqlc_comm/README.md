@@ -1,4 +1,4 @@
-mysqlc
+mysqlc_comm
 =====
 
 An OTP application

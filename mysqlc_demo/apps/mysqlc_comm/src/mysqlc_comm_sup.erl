@@ -1,9 +1,9 @@
 %%%-------------------------------------------------------------------
-%% @doc mysqlc top level supervisor.
+%% @doc mysqlc_comm top level supervisor.
 %% @end
 %%%-------------------------------------------------------------------
 
--module(mysqlc_sup).
+-module(mysqlc_comm_sup).
 -include_lib("glib/include/log.hrl").
 -behaviour(supervisor).
 
@@ -96,8 +96,8 @@ start_new_pool(#{channel_id := ChannelId} = PoolConfig) ->
     Result = supervisor:terminate_child(?SERVER, SupId),
     ?LOG({Result}),
 
-    MysqlcConnSup =  {SupId, {mysqlc_conn_sup, start_link, [PoolConfig]},
-               temporary, 5000, supervisor, [mysqlc_conn_sup]},
+    MysqlcConnSup =  {SupId, {mysqlc_comm_conn_sup, start_link, [PoolConfig]},
+               temporary, 5000, supervisor, [mysqlc_comm_conn_sup]},
     supervisor:start_child(?SERVER, MysqlcConnSup).
 
 
@@ -129,8 +129,8 @@ init([]) ->
  %    	Children = [Monitor],
 
 
-    Mysqlc_pool_name = {mysqlc_pool_name, {mysqlc_pool_name, start_link, []},
-               permanent, 5000, worker, [mysqlc_pool_name]},
+    Mysqlc_pool_name = {mysqlc_comm_pool_name, {mysqlc_comm_pool_name, start_link, []},
+               permanent, 5000, worker, [mysqlc_comm_pool_name]},
               
       Children = [Mysqlc_pool_name],
 

@@ -1,9 +1,10 @@
+% mysqlc_comm_conn_sup.erl
 %%%-------------------------------------------------------------------
 %% @doc mysqlc top level supervisor.
 %% @end
 %%%-------------------------------------------------------------------
 
--module(mysqlc_conn_sup).
+-module(mysqlc_comm_conn_sup).
 
 -behaviour(supervisor).
 
@@ -79,7 +80,7 @@ get_pools(#{channel_id := ChannelId,
             database := Database
 	} = PoolConfig) ->
 
-	PoolName = mysqlc_pool_name:pool_name(ChannelId),
+	PoolName = mysqlc_comm_pool_name:pool_name(ChannelId),
 
 	[{PoolName,[{host, Host},
 	     {port, to_integer(Port)},

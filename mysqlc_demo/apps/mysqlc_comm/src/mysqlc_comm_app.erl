@@ -1,9 +1,9 @@
 %%%-------------------------------------------------------------------
-%% @doc mysqlc public API
+%% @doc mysqlc_comm public API
 %% @end
 %%%-------------------------------------------------------------------
 
--module(mysqlc_app).
+-module(mysqlc_comm_app).
 
 -behaviour(application).
 
@@ -15,7 +15,7 @@
 %%====================================================================
 
 start(_StartType, _StartArgs) ->
-    mysqlc_sup:start_link().
+    mysqlc_comm_sup:start_link().
 
 %%--------------------------------------------------------------------
 stop(_State) ->

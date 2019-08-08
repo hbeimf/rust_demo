@@ -13,3 +13,5 @@ ps:
 	ps aux | grep xgn.node
 
 
+test:
+	rebar3 ct

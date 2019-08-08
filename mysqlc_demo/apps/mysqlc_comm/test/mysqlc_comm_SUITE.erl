@@ -11,6 +11,7 @@ all() ->
 
 test1(_) ->
 	io:format("test... ~n"),
+            % glib:write_req({?MODULE, ?LINE, test}, "mysqlc_comm_test"),
 	ok.
 
 

@@ -9,7 +9,7 @@
 
 %% API
 -export([start_link/0, start_child/0]).
-
+-export([start_new_pool/1]).
 %% Supervisor callbacks
 -export([init/1]).
 
@@ -24,10 +24,21 @@ start_link() ->
 
 % mysqlc_sup:start_child().
 start_child() -> 
-	MysqlcConnSup =  {mysqlc_conn_sup, {mysqlc_conn_sup, start_link, []},
+	MysqlcConnSup =  {mysqlc_conn_sup, {mysqlc_conn_sup, start_link, [0]},
                temporary, 5000, supervisor, [mysqlc_conn_sup]},
 	   
 	supervisor:start_child(?SERVER, MysqlcConnSup).
+
+
+% mysqlc_sup:start_new_pool(1).
+start_new_pool(ChannelId) ->
+    MysqlcConnSup =  {mysqlc_conn_sup1, {mysqlc_conn_sup, start_link, [ChannelId]},
+               temporary, 5000, supervisor, [mysqlc_conn_sup]},
+       
+    supervisor:start_child(?SERVER, MysqlcConnSup).
+
+
+
 
 %%====================================================================
 %% Supervisor callbacks

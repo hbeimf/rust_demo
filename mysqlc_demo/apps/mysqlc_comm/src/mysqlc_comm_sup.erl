@@ -24,35 +24,9 @@
 start_link() ->
     supervisor:start_link({local, ?SERVER}, ?MODULE, []).
 
-% % mysqlc_sup:start_child().
-% start_child() -> 
-% 	MysqlcConnSup =  {mysqlc_conn_sup, {mysqlc_conn_sup, start_link, [0]},
-%                temporary, 5000, supervisor, [mysqlc_conn_sup]},
-	   
-% 	supervisor:start_child(?SERVER, MysqlcConnSup).
-
-% % mysqlc_sup:start_new_pool_test().
-% start_new_pool_test() ->
-%     ChannelIds = lists:seq(1, 5),
-%     lists:foreach(fun(ChannelId) -> 
-%         start_new_pool(ChannelId)
-%     end, ChannelIds).
-
-
 children() -> 
     Children = supervisor:which_children(?SERVER),
     Children.
-
-
-
-% test() -> 
-%     ok.
-
-% host = "127.0.0.1"
-% port = 3306 
-% user = "root"
-% password = "123456"
-% database = "xdb"
 
 test() ->
     PoolConfigList = [
@@ -107,36 +81,11 @@ start_new_pool(#{channel_id := ChannelId} = PoolConfig) ->
 %% Supervisor callbacks
 %%====================================================================
 
-%% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
-% init([]) ->
-%     {ok, { {one_for_all, 0, 1}, []} }.
-
 init([]) ->
-    % PoolOptions  = [{size, 10}, {max_overflow, 20}],
-    % Pools  = rconf:read_config(mysql),
-
-    % ChildSpecs = lists:foldl(fun({Pool, MySqlOptions}, Reply) -> 
-    % 		[mysql_poolboy:child_spec(Pool, PoolOptions, MySqlOptions)|Reply]
-    % end, [], Pools),
-
-    % {ok, {{one_for_one, 10, 10}, ChildSpecs}}. 
-
-
-
-	% Monitor = {mysqlc_monitor, {mysqlc_monitor, start_link, []},
- %               permanent, 5000, worker, [mysqlc_monitor]},
-              
- %    	Children = [Monitor],
-
-
     Mysqlc_pool_name = {mysqlc_comm_pool_name, {mysqlc_comm_pool_name, start_link, []},
                permanent, 5000, worker, [mysqlc_comm_pool_name]},
               
       Children = [Mysqlc_pool_name],
-
-
-        % Children = [],
-
     {ok, { {one_for_all, 10, 10}, Children} }.
 
 

@@ -71,17 +71,6 @@ start_link() ->
 % --------------------------------------------------------------------
 init([]) ->
 	ets:new(?SYS_CONFIG, ?ETS_OPTS),
-
- %    	case read_config_file() of
-	% 	{ok, ConfigList} -> 
-	% 		lists:foreach(fun({Key, Val}) -> 
-	% 			ets:insert(?SYS_CONFIG, #sys_config{key=Key, val=Val})
-	% 		end, ConfigList),
-	% 		ok;
-	% 	_ -> 
-	% 		ok
-	% end,
-
     	{ok, []}.
 
 % --------------------------------------------------------------------
@@ -140,38 +129,4 @@ code_change(_OldVsn, State, _Extra) ->
 
 
 % private functions
-
-% read_config_file() -> 
-% 	ConfigFile = root_dir() ++ "config.ini",
-% 	case file_get_contents(ConfigFile) of
-% 		{ok, Config} -> 
-% 			zucchini:parse_string(Config);
-% 		_ -> 
-% 			ok
-% 	end.
-
-% root_dir() ->
-% 	replace(os:cmd("pwd"), "\n", "/"). 
-
-% file_get_contents(Dir) ->
-% 	case file:read_file(Dir) of
-% 		{ok, Bin} ->
-% 			% {ok, binary_to_list(Bin)};
-% 			{ok, Bin};
-% 		{error, Msg} ->
-% 			{error, Msg}
-% 	end.
-
-% replace(Str, SubStr, NewStr) ->
-% 	case string:str(Str, SubStr) of
-% 		Pos when Pos == 0 ->
-% 			Str;
-% 		Pos when Pos == 1 ->
-% 			Tail = string:substr(Str, string:len(SubStr) + 1),
-% 			string:concat(NewStr, replace(Tail, SubStr, NewStr));
-% 		Pos ->
-% 			Head = string:substr(Str, 1, Pos - 1),
-% 			Tail = string:substr(Str, Pos + string:len(SubStr)),
-% 			string:concat(string:concat(Head, NewStr), replace(Tail, SubStr, NewStr))
-% 	end.
 

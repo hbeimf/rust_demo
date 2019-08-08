@@ -14,26 +14,9 @@
 %% Supervisor callbacks
 -export([init/1]).
 
-% -export([start_new_pool/1]).
 -define(SERVER, ?MODULE).
 
 -include_lib("glib/include/log.hrl").
-
-% % mysqlc_conn_sup:start_new_pool(1).
-% start_new_pool(ChannelId) ->
-%     % MysqlcConnSup =  {mysqlc_conn_sup, {mysqlc_conn_sup, start_link, [ChannelId]},
-%     %            temporary, 5000, supervisor, [mysqlc_conn_sup]},
-
-%     PoolOptions  = [{size, 10}, {max_overflow, 20}],
-%     Pools = get_pools(ChannelId),
-
-%     ChildSpecs = lists:foldl(fun({Pool, MySqlOptions}, Reply) -> 
-%     		[mysql_poolboy:child_spec(Pool, PoolOptions, MySqlOptions)|Reply]
-%     end, [], Pools),   
-
-%      ?LOG(ChildSpecs),
-%     supervisor:start_child(?SERVER, ChildSpecs).
-
 %%====================================================================
 %% API functions
 %%====================================================================

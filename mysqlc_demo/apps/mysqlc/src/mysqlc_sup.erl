@@ -11,7 +11,7 @@
 -export([start_link/0]).
 -export([start_new_pool/1]).
 -export([ test/0]).
--export([all_pool/0]).
+-export([children/0]).
 %% Supervisor callbacks
 -export([init/1]).
 
@@ -39,7 +39,7 @@ start_link() ->
 %     end, ChannelIds).
 
 
-all_pool() -> 
+children() -> 
     Children = supervisor:which_children(?SERVER),
     Children.
 

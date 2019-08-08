@@ -39,10 +39,10 @@ start_pool(#{pool_id := PoolId} = PoolConfig) ->
     supervisor:start_child(?SERVER, MysqlcConnSup).
 
 
-close_pool(#{pool_id := PoolId} = PoolConfig) ->
+close_pool(#{pool_id := PoolId} = _PoolConfig) ->
     SupId = sup_id(PoolId),
     Result = supervisor:terminate_child(?SERVER, SupId),
-    ?LOG({Result}),
+    % ?LOG({Result}),
     Result.  
 
 

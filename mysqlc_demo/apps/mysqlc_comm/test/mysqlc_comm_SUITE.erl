@@ -7,7 +7,7 @@
 -include_lib("eunit/include/eunit.hrl").
 
 all() ->
-	[test, test1].
+	[test1].
 
 test1(_) ->
 	io:format("test... ~n"),
@@ -42,7 +42,7 @@ test() ->
 
 	application:start(stdlib),
 	application:start(kernel),
-	
+
 	application:start(mysqlc_comm),
 
     PoolConfigList = [

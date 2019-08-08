@@ -29,7 +29,7 @@ insert_id(PoolId, Sql) ->
 		case Ret of
 			{error, Msg}->
 				glib:write_req({?MODULE, ?LINE, pool(PoolId), Sql, Msg}, "sqlQueryPoolError"),
-				{error, Msg};
+				error;
 			_->
 				glib:write_req({?MODULE, ?LINE, pool(PoolId), Sql}, "sqlQueryPoolOk"),
 				ok
@@ -50,10 +50,8 @@ update_sql(TableName, List, Where) ->
 	lists:concat(["UPDATE `", TableName, "`", " SET ", Set, " WHERE ", Where]).
 
 pool(PoolId) -> 
-	mysqlc_pool_name:pool_name(PoolId).
+	mysqlc_comm_pool_name:pool_name(PoolId).
 
-% pool_log() -> 
-% 	pool_log.
 
 status(PoolId) ->
 	try
@@ -62,13 +60,13 @@ status(PoolId) ->
 		% ?LOG({R, R1}),
 		status1([R])
 	catch
-		K:Error_msg->
+		_K:_Error_msg->
 			false
 	end.
 
 status1([]) ->
 	true;
-status1([{error, _}|Other]) ->
+status1([{error, _}|_Other]) ->
 	false;
 status1([{ok, _, _}|Other]) ->
 	status1(Other).
@@ -100,7 +98,7 @@ query_pool(Pool, Sql, ParamsList) ->
 			% ?LOG(Msg),
 			% glib:write_log([?MODULE, ?LINE, <<"sql error">>, Sql, Msg]);
 			glib:write_req({?MODULE, ?LINE, Pool, Sql, ParamsList, Msg}, "sqlQueryPoolError"),
-			{error, Msg};
+			error;
 		_->
 			% ?LOG(query_pool),
 			glib:write_req({?MODULE, ?LINE, Pool, Sql, ParamsList}, "sqlQueryPoolOk"),
@@ -127,7 +125,7 @@ parse_res({ok, KeyList, DataList}, date)->
 	{ok, RowList}.
 
 insert_sql(TableName, [List|_] = Rows) ->
-	{FieldList, DataList} = lists:unzip(List),
+	{FieldList, _DataList} = lists:unzip(List),
 
 	FilterFieldList = lists:map(fun(Key) ->
 	    glib:to_str(Key)
@@ -142,7 +140,7 @@ insert_sql(TableName, [List|_] = Rows) ->
 	lists:concat(["INSERT INTO `", TableName, "` (`", FieldStr, "`) VALUES ", ValStr]).
 
 replace_insert_sql(TableName, [List|_] = Rows) ->
-	{FieldList, DataList} = lists:unzip(List),
+	{FieldList, _DataList} = lists:unzip(List),
 
 	FilterFieldList = lists:map(fun(Key) ->
 	    glib:to_str(Key)
@@ -246,7 +244,7 @@ test() ->
             port=>3306, 
             user=>"root", 
             password=>"123456", 
-            database=>"xdb"
+            database=>"sys"
             % pool_size=> 5
         }
 
@@ -254,3 +252,7 @@ test() ->
     lists:foreach(fun(PoolConfig) -> 
         start_pool(PoolConfig)
     end, PoolConfigList).
+
+
+ test2() ->
+ 	test(3).

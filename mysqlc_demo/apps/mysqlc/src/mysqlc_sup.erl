@@ -121,7 +121,14 @@ init([]) ->
               
  %    	Children = [Monitor],
 
-        Children = [],
+
+    Mysqlc_pool_name = {mysqlc_pool_name, {mysqlc_pool_name, start_link, []},
+               permanent, 5000, worker, [mysqlc_pool_name]},
+              
+      Children = [Mysqlc_pool_name],
+
+
+        % Children = [],
 
     {ok, { {one_for_all, 10, 10}, Children} }.
 

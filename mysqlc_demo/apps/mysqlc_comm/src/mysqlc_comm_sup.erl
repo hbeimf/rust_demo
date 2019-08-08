@@ -10,7 +10,7 @@
 %% API
 -export([start_link/0]).
 -export([start_pool/1, close_pool/1]).
--export([ test/0]).
+% -export([ test/0]).
 -export([children/0]).
 %% Supervisor callbacks
 -export([init/1]).
@@ -27,41 +27,6 @@ start_link() ->
 children() -> 
     Children = supervisor:which_children(?SERVER),
     Children.
-
-test() ->
-    PoolConfigList = [
-        #{
-            pool_id=>1,
-            host=> "127.0.0.1", 
-            port=>3306, 
-            user=>"root", 
-            password=>"123456", 
-            database=>"xdb",
-            pool_size => 2
-        }
-        , #{
-            pool_id=>2,
-            host=> "127.0.0.1", 
-            port=>3306, 
-            user=>"root", 
-            password=>"123456", 
-            database=>"xdb",
-            pool_size=> 5
-        }
-        , #{
-            pool_id=>3,
-            host=> "127.0.0.1", 
-            port=>3306, 
-            user=>"root", 
-            password=>"123456", 
-            database=>"xdb"
-            % pool_size=> 5
-        }
-
-    ],
-    lists:foreach(fun(PoolConfig) -> 
-        start_pool(PoolConfig)
-    end, PoolConfigList).
 
 % mysqlc_sup:start_new_pool(1).
 start_pool(#{pool_id := PoolId} = PoolConfig) ->

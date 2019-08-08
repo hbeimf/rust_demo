@@ -11,7 +11,7 @@
 -export([start_link/0]).
 -export([start_pool/1, close_pool/1]).
 % -export([ test/0]).
--export([children/0]).
+-export([children/0, sup_id/1]).
 %% Supervisor callbacks
 -export([init/1]).
 

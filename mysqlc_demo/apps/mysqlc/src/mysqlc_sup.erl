@@ -8,9 +8,10 @@
 -behaviour(supervisor).
 
 %% API
--export([start_link/0, start_child/0]).
+-export([start_link/0]).
 -export([start_new_pool/1]).
--export([start_new_pool_test/0, test/0]).
+-export([ test/0]).
+-export([all_pool/0]).
 %% Supervisor callbacks
 -export([init/1]).
 
@@ -23,19 +24,25 @@
 start_link() ->
     supervisor:start_link({local, ?SERVER}, ?MODULE, []).
 
-% mysqlc_sup:start_child().
-start_child() -> 
-	MysqlcConnSup =  {mysqlc_conn_sup, {mysqlc_conn_sup, start_link, [0]},
-               temporary, 5000, supervisor, [mysqlc_conn_sup]},
+% % mysqlc_sup:start_child().
+% start_child() -> 
+% 	MysqlcConnSup =  {mysqlc_conn_sup, {mysqlc_conn_sup, start_link, [0]},
+%                temporary, 5000, supervisor, [mysqlc_conn_sup]},
 	   
-	supervisor:start_child(?SERVER, MysqlcConnSup).
+% 	supervisor:start_child(?SERVER, MysqlcConnSup).
 
-% mysqlc_sup:start_new_pool_test().
-start_new_pool_test() ->
-    ChannelIds = lists:seq(1, 5),
-    lists:foreach(fun(ChannelId) -> 
-        start_new_pool(ChannelId)
-    end, ChannelIds).
+% % mysqlc_sup:start_new_pool_test().
+% start_new_pool_test() ->
+%     ChannelIds = lists:seq(1, 5),
+%     lists:foreach(fun(ChannelId) -> 
+%         start_new_pool(ChannelId)
+%     end, ChannelIds).
+
+
+all_pool() -> 
+    Children = supervisor:which_children(?SERVER),
+    Children.
+
 
 
 % test() -> 

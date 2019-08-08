@@ -4,7 +4,7 @@
 %%%-------------------------------------------------------------------
 
 -module(mysqlc_sup).
-
+-include_lib("glib/include/log.hrl").
 -behaviour(supervisor).
 
 %% API
@@ -85,6 +85,10 @@ test() ->
 % mysqlc_sup:start_new_pool(1).
 start_new_pool(#{channel_id := ChannelId} = PoolConfig) ->
     SupId = lists:concat(["mysqlc_conn_sup_", ChannelId]),
+    %% 也许这个连接池已经存在，先尝试关掉，
+    Result = supervisor:terminate_child(?SERVER, SupId),
+    ?LOG({Result}),
+
     MysqlcConnSup =  {SupId, {mysqlc_conn_sup, start_link, [PoolConfig]},
                temporary, 5000, supervisor, [mysqlc_conn_sup]},
     supervisor:start_child(?SERVER, MysqlcConnSup).

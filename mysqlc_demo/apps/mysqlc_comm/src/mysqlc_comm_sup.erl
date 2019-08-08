@@ -31,7 +31,7 @@ children() ->
 test() ->
     PoolConfigList = [
         #{
-            channel_id=>1,
+            pool_id=>1,
             host=> "127.0.0.1", 
             port=>3306, 
             user=>"root", 
@@ -40,7 +40,7 @@ test() ->
             pool_size => 2
         }
         , #{
-            channel_id=>2,
+            pool_id=>2,
             host=> "127.0.0.1", 
             port=>3306, 
             user=>"root", 
@@ -49,7 +49,7 @@ test() ->
             pool_size=> 5
         }
         , #{
-            channel_id=>3,
+            pool_id=>3,
             host=> "127.0.0.1", 
             port=>3306, 
             user=>"root", 
@@ -64,8 +64,8 @@ test() ->
     end, PoolConfigList).
 
 % mysqlc_sup:start_new_pool(1).
-start_new_pool(#{channel_id := ChannelId} = PoolConfig) ->
-    SupId = lists:concat(["mysqlc_conn_sup_", ChannelId]),
+start_new_pool(#{pool_id := PoolId} = PoolConfig) ->
+    SupId = lists:concat(["mysqlc_conn_sup_", PoolId]),
     %% 也许这个连接池已经存在，先尝试关掉，
     Result = supervisor:terminate_child(?SERVER, SupId),
     ?LOG({Result}),

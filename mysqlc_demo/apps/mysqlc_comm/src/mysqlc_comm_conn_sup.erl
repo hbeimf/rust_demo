@@ -55,7 +55,7 @@ init([PoolConfig|_]) ->
 %%====================================================================
 %% Internal functions
 %%====================================================================
-get_pools(#{channel_id := ChannelId,
+get_pools(#{pool_id := PoolId,
 	host := Host, 
             port := Port, 
             user := User, 
@@ -63,7 +63,7 @@ get_pools(#{channel_id := ChannelId,
             database := Database
 	} = PoolConfig) ->
 
-	PoolName = mysqlc_comm_pool_name:pool_name(ChannelId),
+	PoolName = mysqlc_comm_pool_name:pool_name(PoolId),
 
 	[{PoolName,[{host, Host},
 	     {port, to_integer(Port)},

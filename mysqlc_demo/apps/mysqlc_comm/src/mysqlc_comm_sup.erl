@@ -9,7 +9,7 @@
 
 %% API
 -export([start_link/0]).
--export([start_new_pool/1]).
+-export([start_pool/1, close_pool/1]).
 -export([ test/0]).
 -export([children/0]).
 %% Supervisor callbacks
@@ -60,22 +60,29 @@ test() ->
 
     ],
     lists:foreach(fun(PoolConfig) -> 
-        start_new_pool(PoolConfig)
+        start_pool(PoolConfig)
     end, PoolConfigList).
 
 % mysqlc_sup:start_new_pool(1).
-start_new_pool(#{pool_id := PoolId} = PoolConfig) ->
-    SupId = lists:concat(["mysqlc_conn_sup_", PoolId]),
-    %% 也许这个连接池已经存在，先尝试关掉，
-    Result = supervisor:terminate_child(?SERVER, SupId),
-    ?LOG({Result}),
+start_pool(#{pool_id := PoolId} = PoolConfig) ->
+    SupId = sup_id(PoolId),
+    % %% 也许这个连接池已经存在，先尝试关掉，
+    close_pool(PoolConfig),
 
     MysqlcConnSup =  {SupId, {mysqlc_comm_conn_sup, start_link, [PoolConfig]},
                temporary, 5000, supervisor, [mysqlc_comm_conn_sup]},
     supervisor:start_child(?SERVER, MysqlcConnSup).
 
 
+close_pool(#{pool_id := PoolId} = PoolConfig) ->
+    SupId = sup_id(PoolId),
+    Result = supervisor:terminate_child(?SERVER, SupId),
+    ?LOG({Result}),
+    Result.  
 
+
+sup_id(PoolId) ->
+        lists:concat(["mysqlc_conn_sup_", PoolId]).
 
 %%====================================================================
 %% Supervisor callbacks

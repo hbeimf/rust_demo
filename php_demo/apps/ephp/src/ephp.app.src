@@ -1,0 +1,10 @@
+{application,ephp,
+             [{description,"Erlang PHP Interpreter"},
+              {vsn,"0.2.6"},
+              {registered,[]},
+              {applications,[kernel,stdlib,ezic,zucchini,unistring]},
+              {env,[]},
+              {licenses,["LGPL 2.1"]},
+              {links,[{"Github","https://github.com/bragful/ephp"}]},
+              {exclude_files,[]},
+              {include_files,[]}]}.

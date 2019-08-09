@@ -1,13 +1,12 @@
-{application, php,
+{application, glib,
  [{description, "An OTP application"},
-  {vsn, "0.1.0"},
+  {vsn, "0.2.5"},
   {registered, []},
-  {mod, { php_app, []}},
+  {mod, { glib_app, []}},
   {applications,
    [kernel,
-    stdlib
-    , ephp
-    , glib
+    stdlib,
+    esnowflake
    ]},
   {env,[]},
   {modules, []},

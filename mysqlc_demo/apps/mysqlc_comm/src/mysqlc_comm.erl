@@ -217,6 +217,12 @@ start_pool(PoolConfig) ->
 
 stop_pool(PoolConfig) ->
 	mysqlc_comm_sup:stop_pool(PoolConfig).
+
+start_pools(PoolConfigList) ->
+	lists:foreach(fun(PoolConfig) -> 
+        		start_pool(PoolConfig)
+    	end, PoolConfigList).	
+
 	
 test() ->
     PoolConfigList = [

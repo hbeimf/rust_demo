@@ -227,30 +227,30 @@ start_pools(PoolConfigList) ->
 test() ->
     PoolConfigList = [
         #{
-            pool_id=>1,
+            pool_id=>5,
             host=> "127.0.0.1", 
             port=>3306, 
             user=>"root", 
             password=>"123456", 
-            database=>"xdb",
+            database=>"xdb5",
             pool_size => 2
         }
         , #{
-            pool_id=>2,
+            pool_id=>6,
             host=> "127.0.0.1", 
             port=>3306, 
             user=>"root", 
             password=>"123456", 
-            database=>"xdb",
+            database=>"xdb6",
             pool_size=> 5
         }
         , #{
-            pool_id=>3,
+            pool_id=>7,
             host=> "127.0.0.1", 
             port=>3306, 
             user=>"root", 
             password=>"123456", 
-            database=>"sys"
+            database=>"xdb7"
             % pool_size=> 5
         }
 

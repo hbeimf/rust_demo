@@ -1,0 +1,6 @@
+-sname php_demo
+
+-setcookie php_demo_cookie
+
++K true
++A30

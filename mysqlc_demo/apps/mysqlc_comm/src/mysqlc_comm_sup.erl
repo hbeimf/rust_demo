@@ -30,6 +30,8 @@ children() ->
 
 % mysqlc_sup:start_new_pool(1).
 start_pool(#{pool_id := PoolId} = PoolConfig) ->
+    mysqlc_comm_init_db:init_db(PoolConfig),
+
     SupId = sup_id(PoolId),
     % %% 也许这个连接池已经存在，先尝试关掉，
     close_pool(PoolConfig),

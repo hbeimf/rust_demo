@@ -1,12 +1,12 @@
-{application, mysqlc_demo,
+{application, mysqlc,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { mysqlc_demo_app, []}},
+  {mod, { mysqlc_app, []}},
   {applications,
    [kernel,
     stdlib
-    , mysqlc
+    , mysqlc_comm
    ]},
   {env,[]},
   {modules, []},

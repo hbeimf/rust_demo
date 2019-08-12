@@ -79,3 +79,22 @@ query_sql() ->
     % io:format("reply: ~p ~n", [Response]),
     ?LOG({reply, Response}),
     Response.
+
+
+selectCiSessions() ->
+    Host = "localhost", 
+    Port = 9090, 
+    % 123, "str msg!!"
+    PoolId = 1,
+    Sql = <<"show tables">>,
+
+    SelectCiSessionsReq = #'SelectCiSessionsReq'{pool_id = PoolId, page = 1, page_size = 10},
+    {ok, Client} = thrift_client_util:new(Host, Port, msg_service_thrift, []),
+
+    %% "hello" function per our service definition in thrift/example.thrift:
+    {ClientAgain, Response} = thrift_client:call(Client, 'SelectCiSessions', [SelectCiSessionsReq]),
+    thrift_client:close(ClientAgain),
+
+    % io:format("reply: ~p ~n", [Response]),
+    ?LOG({reply, Response}),
+    Response.

@@ -23,6 +23,15 @@ function_info('querySql', reply_type) ->
 function_info('querySql', exceptions) ->
   {struct, []}
 ;
+% SelectCiSessions(This, Q)
+function_info('SelectCiSessions', params_type) ->
+  {struct, [{1, {struct, {'msg_types', 'SelectCiSessionsReq'}}}]}
+;
+function_info('SelectCiSessions', reply_type) ->
+  {struct, {'msg_types', 'SelectCiSessionsReply'}};
+function_info('SelectCiSessions', exceptions) ->
+  {struct, []}
+;
 % hello(This, M)
 function_info('hello', params_type) ->
   {struct, [{1, {struct, {'msg_types', 'Message'}}}]}

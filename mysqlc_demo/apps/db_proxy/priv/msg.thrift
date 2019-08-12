@@ -35,10 +35,20 @@ struct SelectCiSessionsReq {
   3:  i64 page_size // 每页条数
 }
 
+struct SelectCiSessionsReply {
+  1:  i64 code,
+  2:  string msg
+  3:  list<map<string, string>> rows
+}
+
+
 
 service MsgService {
  // api
   QueryReply querySql(1: QueryReq q)
+
+// 分页查询表 ci_sessions  
+  SelectCiSessionsReply SelectCiSessions(1: SelectCiSessionsReq q)
 
 // test ==============
   Message hello(1: Message m)

@@ -39,4 +39,11 @@
                                 'page_size' :: integer()}).
 -type 'SelectCiSessionsReq'() :: #'SelectCiSessionsReq'{}.
 
+%% struct 'SelectCiSessionsReply'
+
+-record('SelectCiSessionsReply', {'code' :: integer(),
+                                  'msg' :: string() | binary(),
+                                  'rows' :: list()}).
+-type 'SelectCiSessionsReply'() :: #'SelectCiSessionsReply'{}.
+
 -endif.

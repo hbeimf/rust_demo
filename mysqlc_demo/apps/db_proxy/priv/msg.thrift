@@ -38,8 +38,14 @@ struct SelectCiSessionsReq {
 struct SelectCiSessionsReply {
   1:  i64 code,
   2:  string msg
-  3:  list<map<string, string>> rows
+  3:  list<RowCiSessions> rows
 }
+
+struct RowCiSessions {
+  1:  i64 id,
+  2:  string name
+}
+
 
 
 

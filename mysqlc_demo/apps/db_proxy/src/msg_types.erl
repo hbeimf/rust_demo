@@ -45,7 +45,12 @@ struct_info('SelectCiSessionsReq') ->
 struct_info('SelectCiSessionsReply') ->
   {struct, [{1, i64},
           {2, string},
-          {3, {list, {map, string, string}}}]}
+          {3, {list, {struct, {'msg_types', 'RowCiSessions'}}}}]}
+;
+
+struct_info('RowCiSessions') ->
+  {struct, [{1, i64},
+          {2, string}]}
 ;
 
 struct_info(_) -> erlang:error(function_clause).
@@ -85,7 +90,12 @@ struct_info_ext('SelectCiSessionsReq') ->
 struct_info_ext('SelectCiSessionsReply') ->
   {struct, [{1, undefined, i64, 'code', undefined},
           {2, undefined, string, 'msg', undefined},
-          {3, undefined, {list, {map, string, string}}, 'rows', []}]}
+          {3, undefined, {list, {struct, {'msg_types', 'RowCiSessions'}}}, 'rows', []}]}
+;
+
+struct_info_ext('RowCiSessions') ->
+  {struct, [{1, undefined, i64, 'id', undefined},
+          {2, undefined, string, 'name', undefined}]}
 ;
 
 struct_info_ext(_) -> erlang:error(function_clause).

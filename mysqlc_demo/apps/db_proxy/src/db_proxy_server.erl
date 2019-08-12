@@ -58,8 +58,10 @@ handle_function('SelectCiSessions',  {SelectCiSessionsReq}) ->
     #'SelectCiSessionsReq'{pool_id = PoolId, page = Page, page_size = PageSize} = SelectCiSessionsReq,
 
     Rows = [
-    	dict:from_list([{<<"id">>, <<"1">>}, {<<"name">>, <<"test name">>}])
-    	, dict:from_list([{<<"id">>, <<"2">>}, {<<"name">>, <<"test name 2">>}])
+    	% dict:from_list([{<<"id">>, <<"1">>}, {<<"name">>, <<"test name">>}])
+    	% , dict:from_list([{<<"id">>, <<"2">>}, {<<"name">>, <<"test name 2">>}])
+    	#'RowCiSessions'{id = 1, name = <<"test1">>}
+    	, #'RowCiSessions'{id = 2, name = <<"test2">>}
     ],
     {reply, #'SelectCiSessionsReply'{code = 1, msg = <<"query ok!">>, rows = Rows}};
 

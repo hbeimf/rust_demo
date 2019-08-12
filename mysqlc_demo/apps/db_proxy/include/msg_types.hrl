@@ -46,4 +46,10 @@
                                   'rows' :: list()}).
 -type 'SelectCiSessionsReply'() :: #'SelectCiSessionsReply'{}.
 
+%% struct 'RowCiSessions'
+
+-record('RowCiSessions', {'id' :: integer(),
+                          'name' :: string() | binary()}).
+-type 'RowCiSessions'() :: #'RowCiSessions'{}.
+
 -endif.

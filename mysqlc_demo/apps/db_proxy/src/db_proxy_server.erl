@@ -33,9 +33,22 @@ handle_error(_P1, _P2) ->
     % io:format("error : ~p ~n ", [{P1, P2}]),
     ok.
 
-handle_function('querySql', QueryReq) ->
-    ?LOG({hello, QueryReq}),
-    {reply, #'Message'{id = 1, text = <<"query reply!">>}};
+
+% struct QueryReply {
+%   1:  i64 code,
+%   2:  string msg
+%   3:  string result
+% }
+
+handle_function('querySql',  {QueryReq}) ->
+
+    ?LOG(QueryReq),
+    #'QueryReq'{pool_id = PoolId, sql = Sql} = QueryReq,
+    R = mysqlc_comm:select(PoolId, Sql),
+    ?LOG(R),
+    {reply, #'QueryReply'{code = 1, msg = <<"query ok!">>, result = <<"res">>}};
+
+
 
 handle_function(hello, TheMessageRecord) ->
     %% unpack these or not, whatever.  Point is it's a record:

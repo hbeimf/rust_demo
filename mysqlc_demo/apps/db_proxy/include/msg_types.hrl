@@ -25,4 +25,11 @@
                      'sql' :: string() | binary()}).
 -type 'QueryReq'() :: #'QueryReq'{}.
 
+%% struct 'QueryReply'
+
+-record('QueryReply', {'code' :: integer(),
+                       'msg' :: string() | binary(),
+                       'result' :: string() | binary()}).
+-type 'QueryReply'() :: #'QueryReply'{}.
+
 -endif.

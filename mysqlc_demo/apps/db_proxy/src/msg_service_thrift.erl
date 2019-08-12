@@ -14,6 +14,15 @@
 
 struct_info(_) -> erlang:error(function_clause).
 %%% interface
+% querySql(This, Q)
+function_info('querySql', params_type) ->
+  {struct, [{1, {struct, {'msg_types', 'QueryReq'}}}]}
+;
+function_info('querySql', reply_type) ->
+  {struct, {'msg_types', 'QueryReply'}};
+function_info('querySql', exceptions) ->
+  {struct, []}
+;
 % hello(This, M)
 function_info('hello', params_type) ->
   {struct, [{1, {struct, {'msg_types', 'Message'}}}]}
@@ -21,15 +30,6 @@ function_info('hello', params_type) ->
 function_info('hello', reply_type) ->
   {struct, {'msg_types', 'Message'}};
 function_info('hello', exceptions) ->
-  {struct, []}
-;
-% querySql(This, Q)
-function_info('querySql', params_type) ->
-  {struct, [{1, {struct, {'msg_types', 'QueryReq'}}}]}
-;
-function_info('querySql', reply_type) ->
-  {struct, {'msg_types', 'Message'}};
-function_info('querySql', exceptions) ->
   {struct, []}
 ;
 % AddUser(This, Info)

@@ -81,6 +81,14 @@ query_sql() ->
     Response.
 
 
+
+ss() -> 
+    % List = lists:seq(1, 1000),
+    % lists:foreach(fun(_) -> 
+    %     selectCiSessions()
+    % end, List).
+    selectCiSessions().
+
 selectCiSessions() ->
     Host = "localhost", 
     Port = 9090, 
@@ -91,10 +99,17 @@ selectCiSessions() ->
     SelectCiSessionsReq = #'SelectCiSessionsReq'{pool_id = PoolId, page = 1, page_size = 10},
     {ok, Client} = thrift_client_util:new(Host, Port, msg_service_thrift, []),
 
-    %% "hello" function per our service definition in thrift/example.thrift:
-    {ClientAgain, Response} = thrift_client:call(Client, 'SelectCiSessions', [SelectCiSessionsReq]),
-    thrift_client:close(ClientAgain),
+    % %% "hello" function per our service definition in thrift/example.thrift:
+    % {ClientAgain, Response} = thrift_client:call(Client, 'SelectCiSessions', [SelectCiSessionsReq]),
+    % % io:format("reply: ~p ~n", [Response]),
+    % ?LOG({reply, Response}),
 
-    % io:format("reply: ~p ~n", [Response]),
-    ?LOG({reply, Response}),
-    Response.
+    List = lists:seq(1, 1000),
+    lists:foreach(fun(_) -> 
+         {ClientAgain, Response} = thrift_client:call(Client, 'SelectCiSessions', [SelectCiSessionsReq]),
+         ?LOG({reply, Response}),
+         ok
+    end, List),
+
+    thrift_client:close(Client),
+    ok.

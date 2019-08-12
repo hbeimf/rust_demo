@@ -1,13 +1,12 @@
-{application, mysqlc_demo,
+{application, db_proxy,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { mysqlc_demo_app, []}},
+  {mod, { db_proxy_app, []}},
   {applications,
    [kernel,
     stdlib
     , mysqlc
-    , db_proxy
    ]},
   {env,[]},
   {modules, []},

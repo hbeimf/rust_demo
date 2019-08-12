@@ -83,11 +83,11 @@ query_sql() ->
 
 
 ss() -> 
-    % List = lists:seq(1, 1000),
-    % lists:foreach(fun(_) -> 
-    %     selectCiSessions()
-    % end, List).
-    selectCiSessions().
+    List = lists:seq(1, 1000),
+    lists:foreach(fun(_) -> 
+        selectCiSessions()
+    end, List).
+    % selectCiSessions().
 
 selectCiSessions() ->
     Host = "localhost", 

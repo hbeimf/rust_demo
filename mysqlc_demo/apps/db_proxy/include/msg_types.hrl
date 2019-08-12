@@ -32,4 +32,11 @@
                        'result' :: string() | binary()}).
 -type 'QueryReply'() :: #'QueryReply'{}.
 
+%% struct 'SelectCiSessionsReq'
+
+-record('SelectCiSessionsReq', {'pool_id' :: integer(),
+                                'page' :: integer(),
+                                'page_size' :: integer()}).
+-type 'SelectCiSessionsReq'() :: #'SelectCiSessionsReq'{}.
+
 -endif.

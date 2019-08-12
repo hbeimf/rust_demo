@@ -16,6 +16,7 @@ struct ServerReply {
   2:  string text
 }
 
+// query
 struct QueryReq {
   1:  i64 pool_id,
   2:  string sql
@@ -25,6 +26,13 @@ struct QueryReply {
   1:  i64 code,
   2:  string msg
   3:  string result
+}
+
+// 分页查询表 ci_sessions  
+struct SelectCiSessionsReq {
+  1:  i64 pool_id, // 连接编号
+  2:  i64 page  // 第几页
+  3:  i64 page_size // 每页条数
 }
 
 

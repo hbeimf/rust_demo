@@ -36,6 +36,12 @@ struct_info('QueryReply') ->
           {3, string}]}
 ;
 
+struct_info('SelectCiSessionsReq') ->
+  {struct, [{1, i64},
+          {2, i64},
+          {3, i64}]}
+;
+
 struct_info(_) -> erlang:error(function_clause).
 
 struct_info_ext('Message') ->
@@ -62,6 +68,12 @@ struct_info_ext('QueryReply') ->
   {struct, [{1, undefined, i64, 'code', undefined},
           {2, undefined, string, 'msg', undefined},
           {3, undefined, string, 'result', undefined}]}
+;
+
+struct_info_ext('SelectCiSessionsReq') ->
+  {struct, [{1, undefined, i64, 'pool_id', undefined},
+          {2, undefined, i64, 'page', undefined},
+          {3, undefined, i64, 'page_size', undefined}]}
 ;
 
 struct_info_ext(_) -> erlang:error(function_clause).

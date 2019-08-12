@@ -62,3 +62,20 @@ request(Host, Port, Id, Msg) ->
     % ok.
 
 
+query_sql() ->
+    Host = "localhost", 
+    Port = 9090, 
+    % 123, "str msg!!"
+    PoolId = 1,
+    Sql = <<"show tables">>,
+
+    QueryReq = #'QueryReq'{pool_id = PoolId, sql = Sql},
+    {ok, Client} = thrift_client_util:new(Host, Port, msg_service_thrift, []),
+
+    %% "hello" function per our service definition in thrift/example.thrift:
+    {ClientAgain, Response} = thrift_client:call(Client, 'querySql', [QueryReq]),
+    thrift_client:close(ClientAgain),
+
+    % io:format("reply: ~p ~n", [Response]),
+    ?LOG({reply, Response}),
+    Response.

@@ -19,4 +19,10 @@
                         'text' :: string() | binary()}).
 -type 'ServerReply'() :: #'ServerReply'{}.
 
+%% struct 'QueryReq'
+
+-record('QueryReq', {'pool_id' :: integer(),
+                     'sql' :: string() | binary()}).
+-type 'QueryReq'() :: #'QueryReq'{}.
+
 -endif.

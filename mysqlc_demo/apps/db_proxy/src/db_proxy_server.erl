@@ -33,6 +33,10 @@ handle_error(_P1, _P2) ->
     % io:format("error : ~p ~n ", [{P1, P2}]),
     ok.
 
+handle_function('querySql', QueryReq) ->
+    ?LOG({hello, QueryReq}),
+    {reply, #'Message'{id = 1, text = <<"query reply!">>}};
+
 handle_function(hello, TheMessageRecord) ->
     %% unpack these or not, whatever.  Point is it's a record:
     % _Id = TheMessageRecord#message.id,

@@ -16,8 +16,14 @@ struct ServerReply {
   2:  string text
 }
 
+struct QueryReq {
+  1:  i64 pool_id,
+  2:  string sql
+}
+
 service MsgService {
   Message hello(1: Message m)
+  Message querySql(1: QueryReq q)
   ServerReply AddUser(1: UserInfo info)
   ServerReply UpdateUser(1: UserInfo info)
 

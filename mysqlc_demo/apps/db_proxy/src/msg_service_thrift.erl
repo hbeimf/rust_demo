@@ -23,6 +23,15 @@ function_info('hello', reply_type) ->
 function_info('hello', exceptions) ->
   {struct, []}
 ;
+% querySql(This, Q)
+function_info('querySql', params_type) ->
+  {struct, [{1, {struct, {'msg_types', 'QueryReq'}}}]}
+;
+function_info('querySql', reply_type) ->
+  {struct, {'msg_types', 'Message'}};
+function_info('querySql', exceptions) ->
+  {struct, []}
+;
 % AddUser(This, Info)
 function_info('AddUser', params_type) ->
   {struct, [{1, {struct, {'msg_types', 'UserInfo'}}}]}

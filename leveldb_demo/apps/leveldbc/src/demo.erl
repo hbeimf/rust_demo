@@ -6,9 +6,10 @@
 test() ->
 	Ref = open(),
 	Key = <<"test_key">>,
-	eleveldb:put(Ref, Key, <<"test_val">>, []),
-	R = eleveldb:get(Ref, Key, []),
-	?LOG({r, R}),
+	Val = term_to_binary({test_key, <<"test_val">>}),
+	eleveldb:put(Ref, Key, Val, []),
+	{ok, R} = eleveldb:get(Ref, Key, []),
+	?LOG({r, binary_to_term(R)}),
 	eleveldb:close(Ref).
 	
 open() ->

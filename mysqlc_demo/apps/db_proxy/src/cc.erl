@@ -148,7 +148,7 @@ select() ->
     {ok, Client} = thrift_client_util:new(Host, Port, msg_service_thrift, []),
 
     %% "hello" function per our service definition in thrift/example.thrift:
-    {ClientAgain, Response} = thrift_client:call(Client, 'Select', [SelectReq]),
+    {ClientAgain, Response} = thrift_client:call(Client, 'select', [SelectReq]),
     ?LOG({reply, Response}),
 
     thrift_client:close(ClientAgain),

@@ -36,9 +36,9 @@ struct SelectReply {
 
 service MsgService {
   // select
-  SelectReply select(1: SelectReq q)
+  SelectReply Select(1: SelectReq q)
 
  // api
-  QueryReply querySql(1: QueryReq q)
+  QueryReply QuerySql(1: QueryReq q)
 
 }

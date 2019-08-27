@@ -81,7 +81,7 @@ query_sql() ->
     {ok, Client} = thrift_client_util:new(Host, Port, msg_service_thrift, []),
 
     %% "hello" function per our service definition in thrift/example.thrift:
-    {ClientAgain, Response} = thrift_client:call(Client, 'querySql', [QueryReq]),
+    {ClientAgain, Response} = thrift_client:call(Client, 'QuerySql', [QueryReq]),
     thrift_client:close(ClientAgain),
 
     % io:format("reply: ~p ~n", [Response]),
@@ -148,7 +148,7 @@ select() ->
     {ok, Client} = thrift_client_util:new(Host, Port, msg_service_thrift, []),
 
     %% "hello" function per our service definition in thrift/example.thrift:
-    {ClientAgain, Response} = thrift_client:call(Client, 'select', [SelectReq]),
+    {ClientAgain, Response} = thrift_client:call(Client, 'Select', [SelectReq]),
     ?LOG({reply, Response}),
 
     thrift_client:close(ClientAgain),

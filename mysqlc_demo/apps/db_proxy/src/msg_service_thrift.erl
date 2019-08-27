@@ -14,22 +14,22 @@
 
 struct_info(_) -> erlang:error(function_clause).
 %%% interface
-% select(This, Q)
-function_info('select', params_type) ->
+% Select(This, Q)
+function_info('Select', params_type) ->
   {struct, [{1, {struct, {'msg_types', 'SelectReq'}}}]}
 ;
-function_info('select', reply_type) ->
+function_info('Select', reply_type) ->
   {struct, {'msg_types', 'SelectReply'}};
-function_info('select', exceptions) ->
+function_info('Select', exceptions) ->
   {struct, []}
 ;
-% querySql(This, Q)
-function_info('querySql', params_type) ->
+% QuerySql(This, Q)
+function_info('QuerySql', params_type) ->
   {struct, [{1, {struct, {'msg_types', 'QueryReq'}}}]}
 ;
-function_info('querySql', reply_type) ->
+function_info('QuerySql', reply_type) ->
   {struct, {'msg_types', 'QueryReply'}};
-function_info('querySql', exceptions) ->
+function_info('QuerySql', exceptions) ->
   {struct, []}
 ;
 function_info(_Func, _Info) -> erlang:error(function_clause).

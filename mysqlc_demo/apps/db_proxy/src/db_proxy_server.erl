@@ -47,7 +47,7 @@ handle_error(_P1, _P2) ->
 %   3:  string result,  // 查询结果， json
 % }
 % // select end =================================
-handle_function('select',  {SelectReq}) ->
+handle_function('Select',  {SelectReq}) ->
 
     ?LOG(SelectReq),
     #'SelectReq'{pool_id = PoolId, sql = Sql} = SelectReq,
@@ -70,7 +70,7 @@ handle_function('select',  {SelectReq}) ->
 %   3:  string result
 % }
 
-handle_function('querySql',  {QueryReq}) ->
+handle_function('QuerySql',  {QueryReq}) ->
 
     ?LOG(QueryReq),
     #'QueryReq'{pool_id = PoolId, sql = Sql} = QueryReq,

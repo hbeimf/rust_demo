@@ -15,7 +15,7 @@
 %%====================================================================
 
 start(_StartType, _StartArgs) ->
-	init_pool(),
+	mysqlc_pool:init_pool(),
     mysqlc_sup:start_link().
 
 %%--------------------------------------------------------------------
@@ -25,14 +25,3 @@ stop(_State) ->
 %%====================================================================
 %% Internal functions
 %%====================================================================
-init_pool() ->
-	% ?LOG("init pool"),
-	Root = glib:root_dir(),
-	PoolConfigDir = lists:concat([Root, "db_pool.config"]),
-	?LOG({"init pool", Root, PoolConfigDir}),
-	{ok, [PoolConfigList|_]} = file:consult(PoolConfigDir),
-	% ?LOG(PoolConfigList),
-	
-	mysqlc_comm:start_pools(PoolConfigList),
-	
-	ok.

@@ -41,7 +41,7 @@ $sql = "INSERT INTO `test` (`tx`) VALUES ('2')";
 $r = $client->QuerySql($pool_id, $sql);
 print_r($r);
 
-$select = "select * from test limit 3";
+$select = "select * from test order by id desc limit 3";
 $r = $client->Select($pool_id, $select);
 print_r($r);
 

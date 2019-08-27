@@ -45,4 +45,10 @@ $select = "select * from test limit 3";
 $r = $client->Select($pool_id, $select);
 print_r($r);
 
+echo "code: " . $r->code . "\n";
+echo "msg: " . $r->msg . "\n";
+echo "result: " . $r->result . "\n";
+
+print_r(json_decode($r->result, true));
+
 ?>

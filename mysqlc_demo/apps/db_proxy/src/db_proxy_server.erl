@@ -33,6 +33,20 @@ handle_error(_P1, _P2) ->
     % io:format("error : ~p ~n ", [{P1, P2}]),
     ok.
 
+
+% // select  start ================================
+% struct SelectReq {
+%   1:  i64 pool_id, // 连接编号
+%   2:  string sql
+% }
+
+% // select 响应
+% struct SelectReply {
+%   1:  i64 code,  // 返回码， 1：成功， 其它失败
+%   2:  string msg,  // 返回描述
+%   3:  string result,  // 查询结果， json
+% }
+% // select end =================================
 handle_function('Select',  {SelectReq}) ->
 
     ?LOG(SelectReq),

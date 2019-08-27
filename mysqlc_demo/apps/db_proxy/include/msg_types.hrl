@@ -52,4 +52,17 @@
                           'name' :: string() | binary()}).
 -type 'RowCiSessions'() :: #'RowCiSessions'{}.
 
+%% struct 'SelectReq'
+
+-record('SelectReq', {'pool_id' :: integer(),
+                      'sql' :: string() | binary()}).
+-type 'SelectReq'() :: #'SelectReq'{}.
+
+%% struct 'SelectReply'
+
+-record('SelectReply', {'code' :: integer(),
+                        'msg' :: string() | binary(),
+                        'result' :: string() | binary()}).
+-type 'SelectReply'() :: #'SelectReply'{}.
+
 -endif.

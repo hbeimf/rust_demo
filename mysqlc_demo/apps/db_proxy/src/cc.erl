@@ -113,3 +113,35 @@ selectCiSessions() ->
 
     thrift_client:close(Client),
     ok.
+
+
+
+% // select  start ================================
+% struct SelectReq {
+%   1:  i64 pool_id, // 连接编号
+%   2:  string sql
+% }
+
+% // select 响应
+% struct SelectReply {
+%   1:  i64 code,  // 返回码， 1：成功， 其它失败
+%   2:  string msg,  // 返回描述
+%   3:  string result,  // 查询结果， json
+% }
+% // select end =================================
+select() -> 
+    Host = "localhost", 
+    Port = 9090, 
+    % 123, "str msg!!"
+    PoolId = 3,
+    Sql = <<"select * from test limit 3">>,
+
+    SelectReq = #'SelectReq'{pool_id = PoolId, sql = Sql},
+    {ok, Client} = thrift_client_util:new(Host, Port, msg_service_thrift, []),
+
+    %% "hello" function per our service definition in thrift/example.thrift:
+    {ClientAgain, Response} = thrift_client:call(Client, 'Select', [SelectReq]),
+    ?LOG({reply, Response}),
+
+    thrift_client:close(ClientAgain),
+    ok.

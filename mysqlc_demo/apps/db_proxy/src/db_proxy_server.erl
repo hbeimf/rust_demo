@@ -33,6 +33,22 @@ handle_error(_P1, _P2) ->
     % io:format("error : ~p ~n ", [{P1, P2}]),
     ok.
 
+handle_function('Select',  {SelectReq}) ->
+
+    ?LOG(SelectReq),
+    #'SelectReq'{pool_id = PoolId, sql = Sql} = SelectReq,
+    ?LOG({PoolId, Sql}),
+
+    {ok, Rows} = mysqlc_comm:select(PoolId, Sql),
+    ?LOG(Rows),
+
+    % Rows = [
+    %     [{<<"id">> ,1}, {<<"name">>, <<"test1">>}]
+    %     , [{<<"id">> ,2}, {<<"name">>, <<"test2">>}]
+    % ],
+
+    Result = jsx:encode(Rows),
+    {reply, #'SelectReply'{code = 1, msg = <<"query ok!">>, result = Result}};
 
 
 

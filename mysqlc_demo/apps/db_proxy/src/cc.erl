@@ -62,12 +62,20 @@
 %     % ok.
 
 
+
+test() ->
+    lists:foreach(fun(I) -> 
+        query_sql()
+    end, lists:seq(1,3)),
+
+    select().
+
 query_sql() ->
     Host = "localhost", 
     Port = 9090, 
     % 123, "str msg!!"
     PoolId = 1,
-    Sql = <<"show tables">>,
+    Sql = <<"INSERT INTO `test` (`tx`) VALUES ('2')">>,
 
     QueryReq = #'QueryReq'{pool_id = PoolId, sql = Sql},
     {ok, Client} = thrift_client_util:new(Host, Port, msg_service_thrift, []),
@@ -133,7 +141,7 @@ select() ->
     Host = "localhost", 
     Port = 9090, 
     % 123, "str msg!!"
-    PoolId = 3,
+    PoolId = 1,
     Sql = <<"select * from test limit 3">>,
 
     SelectReq = #'SelectReq'{pool_id = PoolId, sql = Sql},

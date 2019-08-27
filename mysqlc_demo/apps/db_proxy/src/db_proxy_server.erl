@@ -64,38 +64,6 @@ handle_function('Select',  {SelectReq}) ->
     Result = jsx:encode(Rows),
     {reply, #'SelectReply'{code = 1, msg = <<"query ok!">>, result = Result}};
 
-
-
-% // 分页查询表 ci_sessions  
-% struct SelectCiSessionsReq {
-%   1:  i64 pool_id, // 连接编号
-%   2:  i64 page  // 第几页
-%   3:  i64 page_size // 每页条数
-% }
-
-% struct SelectCiSessionsReply {
-%   1:  i64 code,
-%   2:  string msg
-%   3:  list<map<string, string>> rows
-% }
-
-% // 分页查询表 ci_sessions  
-%   SelectCiSessionsReply SelectCiSessions(1: SelectCiSessionsReq q)
-
-handle_function('SelectCiSessions',  {SelectCiSessionsReq}) ->
-
-    ?LOG(SelectCiSessionsReq),
-    #'SelectCiSessionsReq'{pool_id = PoolId, page = Page, page_size = PageSize} = SelectCiSessionsReq,
-
-    Rows = [
-    	% dict:from_list([{<<"id">>, <<"1">>}, {<<"name">>, <<"test name">>}])
-    	% , dict:from_list([{<<"id">>, <<"2">>}, {<<"name">>, <<"test name 2">>}])
-    	#'RowCiSessions'{id = 1, name = <<"test1">>}
-    	, #'RowCiSessions'{id = 2, name = <<"test2">>}
-    ],
-    {reply, #'SelectCiSessionsReply'{code = 1, msg = <<"query ok!">>, rows = Rows}};
-
-
 % struct QueryReply {
 %   1:  i64 code,
 %   2:  string msg
@@ -110,24 +78,6 @@ handle_function('querySql',  {QueryReq}) ->
     ?LOG(R),
     {reply, #'QueryReply'{code = 1, msg = <<"query ok!">>, result = <<"res">>}};
 
-
-
-handle_function(hello, TheMessageRecord) ->
-    %% unpack these or not, whatever.  Point is it's a record:
-    % _Id = TheMessageRecord#message.id,
-    % _Msg = TheMessageRecord#message.text,
-    % io:format("answer: ~p ~n ", [TheMessageRecord]),
-    ?LOG({hello, TheMessageRecord}),
-    {reply, #'Message'{id = 1, text = <<"Thanks!">>}};
-
-handle_function('AddUser', TheMessageRecord) ->
-    % io:format("answer: ~p ~n ", [TheMessageRecord]),
-    ?LOG({'AddUser', TheMessageRecord}),
-    {reply, #'ServerReply'{code = 200, text = <<"add user !">>}};
-
-handle_function('UpdateUser', TheMessageRecord) ->
-    ?LOG({'UpdateUser', TheMessageRecord}),
-    {reply, #'ServerReply'{code = 200, text = <<"update user!">>}};
 
 handle_function(_Function, _Args) ->
     {reply, #'Message'{id = 404, text = <<"not found!">>}}.

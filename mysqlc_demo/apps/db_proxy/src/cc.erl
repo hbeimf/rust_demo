@@ -12,15 +12,15 @@
 % -export([request/4, test/0, go/0]).
 -compile(export_all).
 
-test() -> 
-	request("localhost", 9090, 123, "str msg!!"),
-	% request("127.0.0.1", 9999, 456, "str msg!!"),
-	ok.
+% test() -> 
+% 	request("localhost", 9090, 123, "str msg!!"),
+% 	% request("127.0.0.1", 9999, 456, "str msg!!"),
+% 	ok.
 
-hello() -> 
-    request("localhost", 12306, 123, "str msg!!"),
-    % request("127.0.0.1", 9999, 456, "str msg!!"),
-    ok.
+% hello() -> 
+%     request("localhost", 12306, 123, "str msg!!"),
+%     % request("127.0.0.1", 9999, 456, "str msg!!"),
+%     ok.
 
 % service MsgService {
 %   Message hello(1: Message m)
@@ -29,37 +29,37 @@ hello() ->
 
 % }
 
-add_user() ->
-    Host = "localhost", 
-    Port = 12306, 
-    % 123, "str msg!!"
-    Uid = 1234567,
-    Name = <<"jim">>,
+% add_user() ->
+%     Host = "localhost", 
+%     Port = 12306, 
+%     % 123, "str msg!!"
+%     Uid = 1234567,
+%     Name = <<"jim">>,
 
-    UserInfoReq = #'UserInfo'{uid = Uid, name = Name},
-    {ok, Client} = thrift_client_util:new(Host, Port, msg_service_thrift, []),
+%     UserInfoReq = #'UserInfo'{uid = Uid, name = Name},
+%     {ok, Client} = thrift_client_util:new(Host, Port, msg_service_thrift, []),
 
-    %% "hello" function per our service definition in thrift/example.thrift:
-    {ClientAgain, Response} = thrift_client:call(Client, 'AddUser', [UserInfoReq]),
-    thrift_client:close(ClientAgain),
+%     %% "hello" function per our service definition in thrift/example.thrift:
+%     {ClientAgain, Response} = thrift_client:call(Client, 'AddUser', [UserInfoReq]),
+%     thrift_client:close(ClientAgain),
 
-    % io:format("reply: ~p ~n", [Response]),
-    ?LOG({reply, Response}),
-    Response.
+%     % io:format("reply: ~p ~n", [Response]),
+%     ?LOG({reply, Response}),
+%     Response.
 
 
-request(Host, Port, Id, Msg) ->
-    Req = #'Message'{id = Id, text = Msg},
-    {ok, Client} = thrift_client_util:new(Host, Port, msg_service_thrift, []),
+% request(Host, Port, Id, Msg) ->
+%     Req = #'Message'{id = Id, text = Msg},
+%     {ok, Client} = thrift_client_util:new(Host, Port, msg_service_thrift, []),
 
-    %% "hello" function per our service definition in thrift/example.thrift:
-    {ClientAgain, Response} = thrift_client:call(Client, hello, [Req]),
-    thrift_client:close(ClientAgain),
+%     %% "hello" function per our service definition in thrift/example.thrift:
+%     {ClientAgain, Response} = thrift_client:call(Client, hello, [Req]),
+%     thrift_client:close(ClientAgain),
 
-    % io:format("reply: ~p ~n", [Response]),
-    ?LOG({reply, Response}),
-    Response.
-    % ok.
+%     % io:format("reply: ~p ~n", [Response]),
+%     ?LOG({reply, Response}),
+%     Response.
+%     % ok.
 
 
 query_sql() ->
@@ -82,37 +82,37 @@ query_sql() ->
 
 
 
-ss() -> 
-    List = lists:seq(1, 1000),
-    lists:foreach(fun(_) -> 
-        selectCiSessions()
-    end, List).
-    % selectCiSessions().
+% ss() -> 
+%     List = lists:seq(1, 1000),
+%     lists:foreach(fun(_) -> 
+%         selectCiSessions()
+%     end, List).
+%     % selectCiSessions().
 
-selectCiSessions() ->
-    Host = "localhost", 
-    Port = 9090, 
-    % 123, "str msg!!"
-    PoolId = 1,
-    Sql = <<"show tables">>,
+% selectCiSessions() ->
+%     Host = "localhost", 
+%     Port = 9090, 
+%     % 123, "str msg!!"
+%     PoolId = 1,
+%     Sql = <<"show tables">>,
 
-    SelectCiSessionsReq = #'SelectCiSessionsReq'{pool_id = PoolId, page = 1, page_size = 10},
-    {ok, Client} = thrift_client_util:new(Host, Port, msg_service_thrift, []),
+%     SelectCiSessionsReq = #'SelectCiSessionsReq'{pool_id = PoolId, page = 1, page_size = 10},
+%     {ok, Client} = thrift_client_util:new(Host, Port, msg_service_thrift, []),
 
-    % %% "hello" function per our service definition in thrift/example.thrift:
-    % {ClientAgain, Response} = thrift_client:call(Client, 'SelectCiSessions', [SelectCiSessionsReq]),
-    % % io:format("reply: ~p ~n", [Response]),
-    % ?LOG({reply, Response}),
+%     % %% "hello" function per our service definition in thrift/example.thrift:
+%     % {ClientAgain, Response} = thrift_client:call(Client, 'SelectCiSessions', [SelectCiSessionsReq]),
+%     % % io:format("reply: ~p ~n", [Response]),
+%     % ?LOG({reply, Response}),
 
-    List = lists:seq(1, 1000),
-    lists:foreach(fun(_) -> 
-         {ClientAgain, Response} = thrift_client:call(Client, 'SelectCiSessions', [SelectCiSessionsReq]),
-         ?LOG({reply, Response}),
-         ok
-    end, List),
+%     List = lists:seq(1, 1000),
+%     lists:foreach(fun(_) -> 
+%          {ClientAgain, Response} = thrift_client:call(Client, 'SelectCiSessions', [SelectCiSessionsReq]),
+%          ?LOG({reply, Response}),
+%          ok
+%     end, List),
 
-    thrift_client:close(Client),
-    ok.
+%     thrift_client:close(Client),
+%     ok.
 
 
 

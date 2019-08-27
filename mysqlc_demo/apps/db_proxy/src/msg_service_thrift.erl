@@ -32,41 +32,5 @@ function_info('querySql', reply_type) ->
 function_info('querySql', exceptions) ->
   {struct, []}
 ;
-% SelectCiSessions(This, Q)
-function_info('SelectCiSessions', params_type) ->
-  {struct, [{1, {struct, {'msg_types', 'SelectCiSessionsReq'}}}]}
-;
-function_info('SelectCiSessions', reply_type) ->
-  {struct, {'msg_types', 'SelectCiSessionsReply'}};
-function_info('SelectCiSessions', exceptions) ->
-  {struct, []}
-;
-% hello(This, M)
-function_info('hello', params_type) ->
-  {struct, [{1, {struct, {'msg_types', 'Message'}}}]}
-;
-function_info('hello', reply_type) ->
-  {struct, {'msg_types', 'Message'}};
-function_info('hello', exceptions) ->
-  {struct, []}
-;
-% AddUser(This, Info)
-function_info('AddUser', params_type) ->
-  {struct, [{1, {struct, {'msg_types', 'UserInfo'}}}]}
-;
-function_info('AddUser', reply_type) ->
-  {struct, {'msg_types', 'ServerReply'}};
-function_info('AddUser', exceptions) ->
-  {struct, []}
-;
-% UpdateUser(This, Info)
-function_info('UpdateUser', params_type) ->
-  {struct, [{1, {struct, {'msg_types', 'UserInfo'}}}]}
-;
-function_info('UpdateUser', reply_type) ->
-  {struct, {'msg_types', 'ServerReply'}};
-function_info('UpdateUser', exceptions) ->
-  {struct, []}
-;
 function_info(_Func, _Info) -> erlang:error(function_clause).
 

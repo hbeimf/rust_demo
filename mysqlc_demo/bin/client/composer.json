@@ -1,0 +1,19 @@
+{
+    "name": "client",
+    "description": "client test",
+    "license": "mit",
+    "authors": [
+        {
+            "name": "maomao",
+            "email": "5622876@qq.com"
+        }
+    ],
+    "require": {
+            "leric/php-thrift": "0.9.*" 
+    },
+    "autoload": {
+        "psr-4": {
+          "msg\\": "msg"
+        }
+      }
+}

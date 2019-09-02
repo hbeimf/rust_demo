@@ -94,8 +94,20 @@ handle_function('CetDatabaseConfig',  {DatabaseConfigReq}) ->
     #'DatabaseConfigReq'{pool_id = PoolId} = DatabaseConfigReq,
     % R = mysqlc_comm:select(PoolId, Sql),
     % ?LOG(R),
+    case mysqlc_pool:pool_config(PoolId) of 
+        [] -> 
+            {reply, #'DatabaseConfigReply'{code = 0, host = <<"">>, port = 0, user= <<"">>, password = <<"">>, database = <<"">>}};
+        [Config|_] ->
+            #{
+                pool_id := PoolId1,
+                host := Host, 
+                port := Port, 
+                user := User, 
+                password := Password,
+                database := Database
+            } = Config,
+            {reply, #'DatabaseConfigReply'{code = 1, host = Host, port = Port, user= User, password = Password, database = Database}}
+    end; 
 
-    {reply, #'DatabaseConfigReply'{code = 1, host = <<"127.0.0.1">>, port = 3306, user= <<"root">>, password = <<"123456">>, database = <<"xdb1">>}};
-    
 handle_function(_Function, _Args) ->
     {reply, #'Message'{id = 404, text = <<"not found!">>}}.

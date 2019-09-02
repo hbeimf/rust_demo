@@ -41,7 +41,7 @@ class ThriftClient {
 }
 
 $client = new ThriftClient();
-$pool_id = 1;
+$pool_id = 2;
 $sql = "INSERT INTO `test` (`tx`) VALUES ('2')";
 $r = $client->QuerySql($pool_id, $sql);
 print_r($r);

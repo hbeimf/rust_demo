@@ -4,6 +4,7 @@
 
 -export([start/0, handle_function/2, say/1, stop/1, handle_error/2]).
 
+% -compile([{parse_transform, lager_transform}]).
 
 debug(Info)->
     io:format("Debug info:~s~n",[Info]).
@@ -49,6 +50,8 @@ handle_error(_P1, _P2) ->
 % // select end =================================
 handle_function('Select',  {SelectReq}) ->
     lager:info("hallo world", []),
+    lager:error("hallo world", []),
+
     
     ?LOG(SelectReq),
     #'SelectReq'{pool_id = PoolId, sql = Sql} = SelectReq,

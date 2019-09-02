@@ -553,4 +553,269 @@ class SelectReply {
 
 }
 
+class DatabaseConfigReq {
+  static $_TSPEC;
+
+  /**
+   * @var int
+   */
+  public $pool_id = null;
+
+  public function __construct($vals=null) {
+    if (!isset(self::$_TSPEC)) {
+      self::$_TSPEC = array(
+        1 => array(
+          'var' => 'pool_id',
+          'type' => TType::I64,
+          ),
+        );
+    }
+    if (is_array($vals)) {
+      if (isset($vals['pool_id'])) {
+        $this->pool_id = $vals['pool_id'];
+      }
+    }
+  }
+
+  public function getName() {
+    return 'DatabaseConfigReq';
+  }
+
+  public function read($input)
+  {
+    $xfer = 0;
+    $fname = null;
+    $ftype = 0;
+    $fid = 0;
+    $xfer += $input->readStructBegin($fname);
+    while (true)
+    {
+      $xfer += $input->readFieldBegin($fname, $ftype, $fid);
+      if ($ftype == TType::STOP) {
+        break;
+      }
+      switch ($fid)
+      {
+        case 1:
+          if ($ftype == TType::I64) {
+            $xfer += $input->readI64($this->pool_id);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        default:
+          $xfer += $input->skip($ftype);
+          break;
+      }
+      $xfer += $input->readFieldEnd();
+    }
+    $xfer += $input->readStructEnd();
+    return $xfer;
+  }
+
+  public function write($output) {
+    $xfer = 0;
+    $xfer += $output->writeStructBegin('DatabaseConfigReq');
+    if ($this->pool_id !== null) {
+      $xfer += $output->writeFieldBegin('pool_id', TType::I64, 1);
+      $xfer += $output->writeI64($this->pool_id);
+      $xfer += $output->writeFieldEnd();
+    }
+    $xfer += $output->writeFieldStop();
+    $xfer += $output->writeStructEnd();
+    return $xfer;
+  }
+
+}
+
+class DatabaseConfigReply {
+  static $_TSPEC;
+
+  /**
+   * @var int
+   */
+  public $code = null;
+  /**
+   * @var string
+   */
+  public $host = null;
+  /**
+   * @var int
+   */
+  public $port = null;
+  /**
+   * @var string
+   */
+  public $user = null;
+  /**
+   * @var string
+   */
+  public $password = null;
+  /**
+   * @var string
+   */
+  public $database = null;
+
+  public function __construct($vals=null) {
+    if (!isset(self::$_TSPEC)) {
+      self::$_TSPEC = array(
+        1 => array(
+          'var' => 'code',
+          'type' => TType::I64,
+          ),
+        2 => array(
+          'var' => 'host',
+          'type' => TType::STRING,
+          ),
+        3 => array(
+          'var' => 'port',
+          'type' => TType::I64,
+          ),
+        4 => array(
+          'var' => 'user',
+          'type' => TType::STRING,
+          ),
+        5 => array(
+          'var' => 'password',
+          'type' => TType::STRING,
+          ),
+        6 => array(
+          'var' => 'database',
+          'type' => TType::STRING,
+          ),
+        );
+    }
+    if (is_array($vals)) {
+      if (isset($vals['code'])) {
+        $this->code = $vals['code'];
+      }
+      if (isset($vals['host'])) {
+        $this->host = $vals['host'];
+      }
+      if (isset($vals['port'])) {
+        $this->port = $vals['port'];
+      }
+      if (isset($vals['user'])) {
+        $this->user = $vals['user'];
+      }
+      if (isset($vals['password'])) {
+        $this->password = $vals['password'];
+      }
+      if (isset($vals['database'])) {
+        $this->database = $vals['database'];
+      }
+    }
+  }
+
+  public function getName() {
+    return 'DatabaseConfigReply';
+  }
+
+  public function read($input)
+  {
+    $xfer = 0;
+    $fname = null;
+    $ftype = 0;
+    $fid = 0;
+    $xfer += $input->readStructBegin($fname);
+    while (true)
+    {
+      $xfer += $input->readFieldBegin($fname, $ftype, $fid);
+      if ($ftype == TType::STOP) {
+        break;
+      }
+      switch ($fid)
+      {
+        case 1:
+          if ($ftype == TType::I64) {
+            $xfer += $input->readI64($this->code);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        case 2:
+          if ($ftype == TType::STRING) {
+            $xfer += $input->readString($this->host);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        case 3:
+          if ($ftype == TType::I64) {
+            $xfer += $input->readI64($this->port);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        case 4:
+          if ($ftype == TType::STRING) {
+            $xfer += $input->readString($this->user);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        case 5:
+          if ($ftype == TType::STRING) {
+            $xfer += $input->readString($this->password);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        case 6:
+          if ($ftype == TType::STRING) {
+            $xfer += $input->readString($this->database);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        default:
+          $xfer += $input->skip($ftype);
+          break;
+      }
+      $xfer += $input->readFieldEnd();
+    }
+    $xfer += $input->readStructEnd();
+    return $xfer;
+  }
+
+  public function write($output) {
+    $xfer = 0;
+    $xfer += $output->writeStructBegin('DatabaseConfigReply');
+    if ($this->code !== null) {
+      $xfer += $output->writeFieldBegin('code', TType::I64, 1);
+      $xfer += $output->writeI64($this->code);
+      $xfer += $output->writeFieldEnd();
+    }
+    if ($this->host !== null) {
+      $xfer += $output->writeFieldBegin('host', TType::STRING, 2);
+      $xfer += $output->writeString($this->host);
+      $xfer += $output->writeFieldEnd();
+    }
+    if ($this->port !== null) {
+      $xfer += $output->writeFieldBegin('port', TType::I64, 3);
+      $xfer += $output->writeI64($this->port);
+      $xfer += $output->writeFieldEnd();
+    }
+    if ($this->user !== null) {
+      $xfer += $output->writeFieldBegin('user', TType::STRING, 4);
+      $xfer += $output->writeString($this->user);
+      $xfer += $output->writeFieldEnd();
+    }
+    if ($this->password !== null) {
+      $xfer += $output->writeFieldBegin('password', TType::STRING, 5);
+      $xfer += $output->writeString($this->password);
+      $xfer += $output->writeFieldEnd();
+    }
+    if ($this->database !== null) {
+      $xfer += $output->writeFieldBegin('database', TType::STRING, 6);
+      $xfer += $output->writeString($this->database);
+      $xfer += $output->writeFieldEnd();
+    }
+    $xfer += $output->writeFieldStop();
+    $xfer += $output->writeStructEnd();
+    return $xfer;
+  }
+
+}
+
 

@@ -9,6 +9,11 @@ require_once dirname(__FILE__) . '/msg/MsgService.php';
 require_once dirname(__FILE__) . '/msg/Types.php';
 
 class ThriftClient {
+	function CetDatabaseConfig($pool_id) {
+		$msg = new \msg\DatabaseConfigReq(['pool_id' => $pool_id]);
+		return $this->client->CetDatabaseConfig($msg);
+	}
+
 	function Select($pool_id, $sql) {
 		$msg = new \msg\SelectReq(['pool_id' => $pool_id, 'sql' => $sql]);
 		return $this->client->Select($msg);
@@ -50,5 +55,8 @@ echo "msg: " . $r->msg . "\n";
 echo "result: " . $r->result . "\n";
 
 print_r(json_decode($r->result, true));
+
+$config = $client->CetDatabaseConfig($pool_id);
+print_r($config);
 
 ?>

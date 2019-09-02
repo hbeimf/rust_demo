@@ -33,4 +33,19 @@
                         'result' :: string() | binary()}).
 -type 'SelectReply'() :: #'SelectReply'{}.
 
+%% struct 'DatabaseConfigReq'
+
+-record('DatabaseConfigReq', {'pool_id' :: integer()}).
+-type 'DatabaseConfigReq'() :: #'DatabaseConfigReq'{}.
+
+%% struct 'DatabaseConfigReply'
+
+-record('DatabaseConfigReply', {'code' :: integer(),
+                                'host' :: string() | binary(),
+                                'port' :: integer(),
+                                'user' :: string() | binary(),
+                                'password' :: string() | binary(),
+                                'database' :: string() | binary()}).
+-type 'DatabaseConfigReply'() :: #'DatabaseConfigReply'{}.
+
 -endif.

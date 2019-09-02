@@ -18,6 +18,11 @@ use Thrift\Exception\TApplicationException;
 
 interface MsgServiceIf {
   /**
+   * @param \msg\DatabaseConfigReq $q
+   * @return \msg\DatabaseConfigReply
+   */
+  public function CetDatabaseConfig(\msg\DatabaseConfigReq $q);
+  /**
    * @param \msg\SelectReq $q
    * @return \msg\SelectReply
    */
@@ -38,6 +43,57 @@ class MsgServiceClient implements \msg\MsgServiceIf {
   public function __construct($input, $output=null) {
     $this->input_ = $input;
     $this->output_ = $output ? $output : $input;
+  }
+
+  public function CetDatabaseConfig(\msg\DatabaseConfigReq $q)
+  {
+    $this->send_CetDatabaseConfig($q);
+    return $this->recv_CetDatabaseConfig();
+  }
+
+  public function send_CetDatabaseConfig(\msg\DatabaseConfigReq $q)
+  {
+    $args = new \msg\MsgService_CetDatabaseConfig_args();
+    $args->q = $q;
+    $bin_accel = ($this->output_ instanceof TBinaryProtocolAccelerated) && function_exists('thrift_protocol_write_binary');
+    if ($bin_accel)
+    {
+      thrift_protocol_write_binary($this->output_, 'CetDatabaseConfig', TMessageType::CALL, $args, $this->seqid_, $this->output_->isStrictWrite());
+    }
+    else
+    {
+      $this->output_->writeMessageBegin('CetDatabaseConfig', TMessageType::CALL, $this->seqid_);
+      $args->write($this->output_);
+      $this->output_->writeMessageEnd();
+      $this->output_->getTransport()->flush();
+    }
+  }
+
+  public function recv_CetDatabaseConfig()
+  {
+    $bin_accel = ($this->input_ instanceof TBinaryProtocolAccelerated) && function_exists('thrift_protocol_read_binary');
+    if ($bin_accel) $result = thrift_protocol_read_binary($this->input_, '\msg\MsgService_CetDatabaseConfig_result', $this->input_->isStrictRead());
+    else
+    {
+      $rseqid = 0;
+      $fname = null;
+      $mtype = 0;
+
+      $this->input_->readMessageBegin($fname, $mtype, $rseqid);
+      if ($mtype == TMessageType::EXCEPTION) {
+        $x = new TApplicationException();
+        $x->read($this->input_);
+        $this->input_->readMessageEnd();
+        throw $x;
+      }
+      $result = new \msg\MsgService_CetDatabaseConfig_result();
+      $result->read($this->input_);
+      $this->input_->readMessageEnd();
+    }
+    if ($result->success !== null) {
+      return $result->success;
+    }
+    throw new \Exception("CetDatabaseConfig failed: unknown result");
   }
 
   public function Select(\msg\SelectReq $q)
@@ -145,6 +201,166 @@ class MsgServiceClient implements \msg\MsgServiceIf {
 }
 
 // HELPER FUNCTIONS AND STRUCTURES
+
+class MsgService_CetDatabaseConfig_args {
+  static $_TSPEC;
+
+  /**
+   * @var \msg\DatabaseConfigReq
+   */
+  public $q = null;
+
+  public function __construct($vals=null) {
+    if (!isset(self::$_TSPEC)) {
+      self::$_TSPEC = array(
+        1 => array(
+          'var' => 'q',
+          'type' => TType::STRUCT,
+          'class' => '\msg\DatabaseConfigReq',
+          ),
+        );
+    }
+    if (is_array($vals)) {
+      if (isset($vals['q'])) {
+        $this->q = $vals['q'];
+      }
+    }
+  }
+
+  public function getName() {
+    return 'MsgService_CetDatabaseConfig_args';
+  }
+
+  public function read($input)
+  {
+    $xfer = 0;
+    $fname = null;
+    $ftype = 0;
+    $fid = 0;
+    $xfer += $input->readStructBegin($fname);
+    while (true)
+    {
+      $xfer += $input->readFieldBegin($fname, $ftype, $fid);
+      if ($ftype == TType::STOP) {
+        break;
+      }
+      switch ($fid)
+      {
+        case 1:
+          if ($ftype == TType::STRUCT) {
+            $this->q = new \msg\DatabaseConfigReq();
+            $xfer += $this->q->read($input);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        default:
+          $xfer += $input->skip($ftype);
+          break;
+      }
+      $xfer += $input->readFieldEnd();
+    }
+    $xfer += $input->readStructEnd();
+    return $xfer;
+  }
+
+  public function write($output) {
+    $xfer = 0;
+    $xfer += $output->writeStructBegin('MsgService_CetDatabaseConfig_args');
+    if ($this->q !== null) {
+      if (!is_object($this->q)) {
+        throw new TProtocolException('Bad type in structure.', TProtocolException::INVALID_DATA);
+      }
+      $xfer += $output->writeFieldBegin('q', TType::STRUCT, 1);
+      $xfer += $this->q->write($output);
+      $xfer += $output->writeFieldEnd();
+    }
+    $xfer += $output->writeFieldStop();
+    $xfer += $output->writeStructEnd();
+    return $xfer;
+  }
+
+}
+
+class MsgService_CetDatabaseConfig_result {
+  static $_TSPEC;
+
+  /**
+   * @var \msg\DatabaseConfigReply
+   */
+  public $success = null;
+
+  public function __construct($vals=null) {
+    if (!isset(self::$_TSPEC)) {
+      self::$_TSPEC = array(
+        0 => array(
+          'var' => 'success',
+          'type' => TType::STRUCT,
+          'class' => '\msg\DatabaseConfigReply',
+          ),
+        );
+    }
+    if (is_array($vals)) {
+      if (isset($vals['success'])) {
+        $this->success = $vals['success'];
+      }
+    }
+  }
+
+  public function getName() {
+    return 'MsgService_CetDatabaseConfig_result';
+  }
+
+  public function read($input)
+  {
+    $xfer = 0;
+    $fname = null;
+    $ftype = 0;
+    $fid = 0;
+    $xfer += $input->readStructBegin($fname);
+    while (true)
+    {
+      $xfer += $input->readFieldBegin($fname, $ftype, $fid);
+      if ($ftype == TType::STOP) {
+        break;
+      }
+      switch ($fid)
+      {
+        case 0:
+          if ($ftype == TType::STRUCT) {
+            $this->success = new \msg\DatabaseConfigReply();
+            $xfer += $this->success->read($input);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        default:
+          $xfer += $input->skip($ftype);
+          break;
+      }
+      $xfer += $input->readFieldEnd();
+    }
+    $xfer += $input->readStructEnd();
+    return $xfer;
+  }
+
+  public function write($output) {
+    $xfer = 0;
+    $xfer += $output->writeStructBegin('MsgService_CetDatabaseConfig_result');
+    if ($this->success !== null) {
+      if (!is_object($this->success)) {
+        throw new TProtocolException('Bad type in structure.', TProtocolException::INVALID_DATA);
+      }
+      $xfer += $output->writeFieldBegin('success', TType::STRUCT, 0);
+      $xfer += $this->success->write($output);
+      $xfer += $output->writeFieldEnd();
+    }
+    $xfer += $output->writeFieldStop();
+    $xfer += $output->writeStructEnd();
+    return $xfer;
+  }
+
+}
 
 class MsgService_Select_args {
   static $_TSPEC;

@@ -14,6 +14,15 @@
 
 struct_info(_) -> erlang:error(function_clause).
 %%% interface
+% CetDatabaseConfig(This, Q)
+function_info('CetDatabaseConfig', params_type) ->
+  {struct, [{1, {struct, {'msg_types', 'DatabaseConfigReq'}}}]}
+;
+function_info('CetDatabaseConfig', reply_type) ->
+  {struct, {'msg_types', 'DatabaseConfigReply'}};
+function_info('CetDatabaseConfig', exceptions) ->
+  {struct, []}
+;
 % Select(This, Q)
 function_info('Select', params_type) ->
   {struct, [{1, {struct, {'msg_types', 'SelectReq'}}}]}

@@ -37,6 +37,19 @@ struct_info('SelectReply') ->
           {3, string}]}
 ;
 
+struct_info('DatabaseConfigReq') ->
+  {struct, [{1, i64}]}
+;
+
+struct_info('DatabaseConfigReply') ->
+  {struct, [{1, i64},
+          {2, string},
+          {3, i64},
+          {4, string},
+          {5, string},
+          {6, string}]}
+;
+
 struct_info(_) -> erlang:error(function_clause).
 
 struct_info_ext('Message') ->
@@ -64,6 +77,19 @@ struct_info_ext('SelectReply') ->
   {struct, [{1, undefined, i64, 'code', undefined},
           {2, undefined, string, 'msg', undefined},
           {3, undefined, string, 'result', undefined}]}
+;
+
+struct_info_ext('DatabaseConfigReq') ->
+  {struct, [{1, undefined, i64, 'pool_id', undefined}]}
+;
+
+struct_info_ext('DatabaseConfigReply') ->
+  {struct, [{1, undefined, i64, 'code', undefined},
+          {2, undefined, string, 'host', undefined},
+          {3, undefined, i64, 'port', undefined},
+          {4, undefined, string, 'user', undefined},
+          {5, undefined, string, 'password', undefined},
+          {6, undefined, string, 'database', undefined}]}
 ;
 
 struct_info_ext(_) -> erlang:error(function_clause).

@@ -79,5 +79,23 @@ handle_function('QuerySql',  {QueryReq}) ->
     {reply, #'QueryReply'{code = 1, msg = <<"query ok!">>, result = <<"res">>}};
 
 
+
+% struct DatabaseConfigReply {
+%   1:  i64 code,  // 返回码， 1：成功， 其它失败
+%   2:  string host,  // 所在主机
+%   3:  i64 port,  // 端口
+%   4:  string user,  // 连接账号
+%   5:  string password,  // 连接口令
+%   6:  string database  // 数据库
+% }
+handle_function('CetDatabaseConfig',  {DatabaseConfigReq}) ->
+
+    ?LOG(DatabaseConfigReq),
+    #'DatabaseConfigReq'{pool_id = PoolId} = DatabaseConfigReq,
+    % R = mysqlc_comm:select(PoolId, Sql),
+    % ?LOG(R),
+
+    {reply, #'DatabaseConfigReply'{code = 1, host = <<"127.0.0.1">>, port = 3306, user= <<"root">>, password = <<"123456">>, database = <<"xdb1">>}};
+    
 handle_function(_Function, _Args) ->
     {reply, #'Message'{id = 404, text = <<"not found!">>}}.

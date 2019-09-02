@@ -48,7 +48,8 @@ handle_error(_P1, _P2) ->
 % }
 % // select end =================================
 handle_function('Select',  {SelectReq}) ->
-
+    lager:info("hallo world", []),
+    
     ?LOG(SelectReq),
     #'SelectReq'{pool_id = PoolId, sql = Sql} = SelectReq,
     ?LOG({PoolId, Sql}),

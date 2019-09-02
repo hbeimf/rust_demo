@@ -1,9 +1,12 @@
 {"1.1.0",
 [{<<"esnowflake">>,{pkg,<<"esnowflake">>,<<"0.2.0">>},0},
+ {<<"goldrush">>,{pkg,<<"goldrush">>,<<"0.1.7">>},1},
  {<<"jsx">>,
   {git,"git://github.com/talentdeficit/jsx.git",
        {ref,"45ffea21a6863c58fb7da1f937e868916ff68b27"}},
   1},
+ {<<"lager">>,{pkg,<<"lager">>,<<"3.0.2">>},0},
+ {<<"lager2json">>,{pkg,<<"lager2json">>,<<"1.0.2">>},0},
  {<<"mysql">>,
   {git,"https://github.com/mysql-otp/mysql-otp.git",
        {ref,"9a98eff7a127a5012c45e4b8bd845b0befccf0a9"}},
@@ -16,6 +19,7 @@
   {git,"https://github.com/devinus/poolboy.git",
        {ref,"29be47db8c2be38b18c908e43a80ebb7b9b6116b"}},
   1},
+ {<<"rfc3339">>,{pkg,<<"rfc3339">>,<<"0.2.2">>},1},
  {<<"thrift">>,
   {git,"https://github.com/j14159/thrift",
        {ref,"1e04570a702b782df600c31537105f46ce0813f2"}},
@@ -26,5 +30,9 @@
   0}]}.
 [
 {pkg_hash,[
- {<<"esnowflake">>, <<"083BB3EBAA4F7DB24E935D70EF5CE33C84817A484B28DAED8292E29253E19642">>}]}
+ {<<"esnowflake">>, <<"083BB3EBAA4F7DB24E935D70EF5CE33C84817A484B28DAED8292E29253E19642">>},
+ {<<"goldrush">>, <<"349A351D17C71C2FDAA18A6C2697562ABE136FEC945F147B381F0CF313160228">>},
+ {<<"lager">>, <<"25DC81BC3659B62F5AB9BD073E97DDD894FC4C242019FCCEF96F3889D7366C97">>},
+ {<<"lager2json">>, <<"FA9805A13CD40F482284558684A9DD489929CD37EC8AA126EE6FBBB35ED61F96">>},
+ {<<"rfc3339">>, <<"1552DF616ACA368D982E9F085A0E933B6688A3F4938A671798978EC2C0C58730">>}]}
 ].

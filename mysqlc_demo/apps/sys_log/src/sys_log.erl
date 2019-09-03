@@ -15,10 +15,10 @@
 test() -> 
 	lists:foreach(fun(I) -> 
 		?LOG(I),
-		json(I)
+		test_json(I)
 	end, lists:seq(1, 10000)).
 
-json(Index) ->
+test_json(Index) ->
 	Data = [
 	        {<<"user_name">>, unicode:characters_to_binary("小强")}
 	        , {<<"password">>, <<"a123456">>}
@@ -27,21 +27,24 @@ json(Index) ->
 	    ],
 	Json = jsx:encode(Data),
 	LogFile = "test_json_log",
-	json(LogFile, Json).
+	write_line(LogFile, Json).
+
+log_json(LogFile, Json) ->
+	write_line(LogFile, Json).
 	
-json(LogFile, Json) ->
+write_line(LogFile, Json) ->
 	{ok, Pid} = sys_log_sup:start_child(LogFile),
 	sys_log_worker:log(Pid, Json).
 
 	
-log_json() ->
-	Data = [
-	        {<<"user_name">>, unicode:characters_to_binary("小强")}
-	        , {<<"password">>, <<"a123456">>}
-	    ],
-	Json = jsx:encode(Data),
+% log_json() ->
+% 	Data = [
+% 	        {<<"user_name">>, unicode:characters_to_binary("小强")}
+% 	        , {<<"password">>, <<"a123456">>}
+% 	    ],
+% 	Json = jsx:encode(Data),
 
-	log_json(Json, "test_json_info").
+% 	log_json(Json, "test_json_info").
 
 log_json(Json, LogFile) ->
 	LogDir = glib:root_dir() ++ "log/" ++ glib:date_str("y-m-d") ++ "-"++ glib:to_str(LogFile) ++"-log.txt",

@@ -78,11 +78,11 @@ handle_call(Request, _From, State) ->
 %          {stop, Reason, State}            (terminate/2 is called)
 % --------------------------------------------------------------------
 handle_cast({write, Log}, [LogFile|_] = State) ->
-	?LOG({LogFile, Log}),
+	% ?LOG({LogFile, Log}),
 	sys_log:log_json(Log, LogFile),
 	{noreply, State};
 handle_cast(Msg, State) ->
-	?LOG(Msg),
+	% ?LOG(Msg),
 	{noreply, State}.
 
 % --------------------------------------------------------------------

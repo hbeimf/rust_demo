@@ -15,7 +15,7 @@ _build/default/rel/*
 .idea
 rebar3.crashdump
 Mnesia*
-*log
+*.log
 *pid
 .DS_Store
 */target/*

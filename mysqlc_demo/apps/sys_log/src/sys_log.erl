@@ -4,22 +4,20 @@
 -compile(export_all).
 
 
+json() ->
+	Data = [
+	        {<<"user_name">>, unicode:characters_to_binary("小强")}
+	        , {<<"password">>, <<"a123456">>}
+	    ],
+	Json = jsx:encode(Data),
+	LogFile = "test_json_log",
+	json(LogFile, Json).
+	
+json(LogFile, Json) ->
+	{ok, Pid} = sys_log_sup:start_child(LogFile),
+	sys_log_worker:log(Pid, Json).
 
-% % 写系统日志到文件中
-% % write_req(Report, Api) ->
-% info(Report, Api) ->
-% 	make_dir(root_dir() ++ "log"),
-% 	Dir = root_dir() ++ "log/cache_"++ random() ++".txt",
-% 	{ok, S} = file:open(Dir, write),
-% 	io:format(S, "~p~n", [Report]),
-% 	file:close(S),
-% 	{ok, Str} = file_get_contents(Dir),
-% 	req_log(Str, Api),
-% 	file:delete(Dir),
-% 	ok.
-
-
-  
+	
 log_json() ->
 	Data = [
 	        {<<"user_name">>, unicode:characters_to_binary("小强")}
@@ -32,9 +30,9 @@ log_json() ->
 log_json(Json, LogFile) ->
 	LogDir = glib:root_dir() ++ "log/" ++ glib:date_str("y-m-d") ++ "-"++ glib:to_str(LogFile) ++"-log.txt",
 	% Log = " \n =====================" ++ date_str() ++ "============================ \n " ++ Str,	
-	% Log = glib:date_str() ++ ": " ++ Json,
+	Log = glib:date_str() ++ "=> " ++ Json,
 	%% 同时写入文件
-	append(LogDir, Json).
+	append(LogDir, Log).
 
 
 % root_dir() ->

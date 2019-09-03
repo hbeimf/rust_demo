@@ -12,7 +12,7 @@
 % --------------------------------------------------------------------
 % External exports
 % --------------------------------------------------------------------
--export([]).
+-export([log/2]).
 
 % gen_server callbacks
 -export([start_link/1]).
@@ -24,6 +24,12 @@
 -record(state, { 
 	port=0
 }).
+
+
+log(Pid, Log) ->
+	% ?LOG({Pid, Log}),
+	gen_server:cast(Pid, {write, Log}),
+	ok.
 
 % --------------------------------------------------------------------
 % External API
@@ -71,6 +77,10 @@ handle_call(Request, _From, State) ->
 %          {noreply, State, Timeout} |
 %          {stop, Reason, State}            (terminate/2 is called)
 % --------------------------------------------------------------------
+handle_cast({write, Log}, [LogFile|_] = State) ->
+	% ?LOG({LogFile, Log}),
+	sys_log:log_json(Log, LogFile),
+	{noreply, State};
 handle_cast(Msg, State) ->
 	?LOG(Msg),
 	{noreply, State}.

@@ -62,6 +62,29 @@
 %     % ok.
 
 
+log1() -> 
+    Data = [
+        {<<"user_name">>, unicode:characters_to_binary("小强")}
+        , {<<"password">>, <<"a123456">>}
+    ],
+    % Json = jsx:encode(Data),
+    lager:error("~p", [{?MODULE, ?LINE, Data}]),
+    ok.
+
+log() -> 
+    lists:foreach(fun(I) -> 
+        log_test()
+    end, lists:seq(1, 100)),
+    
+    ok.
+
+log_test() -> 
+    lists:foreach(fun(I) -> 
+        % lager:info("hallo world: ~p", [I]),
+        lager:error("hallo world: ~p", [I]),    
+        ok   
+    end, lists:seq(1, 1000)).
+
 
 test() ->
     lists:foreach(fun(I) -> 

@@ -30,7 +30,7 @@ log_json() ->
 log_json(Json, LogFile) ->
 	LogDir = glib:root_dir() ++ "log/" ++ glib:date_str("y-m-d") ++ "-"++ glib:to_str(LogFile) ++"-log.txt",
 	% Log = " \n =====================" ++ date_str() ++ "============================ \n " ++ Str,	
-	Log = glib:date_str() ++ "=> " ++ Json,
+	Log = glib:date_str() ++ " => " ++ Json,
 	%% 同时写入文件
 	append(LogDir, Log).
 

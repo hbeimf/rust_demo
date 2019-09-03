@@ -31,10 +31,25 @@ children() ->
 
 % sys_log_sup:start_child("log_test").
 start_child(LogFile) ->
-    WorkerId = work_id(LogFile),
-    MysqlcConnSup =  {WorkerId, {sys_log_worker, start_link, [LogFile]},
-               temporary, 5000, worker, [sys_log_worker]},
-    supervisor:start_child(?SERVER, MysqlcConnSup).
+	case sys_log_ets:get_config(LogFile) of
+		{ok, Pid} -> 
+			case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of 
+				true -> 
+					{ok, Pid};
+				_ -> 
+					WorkerId = work_id(LogFile),
+					    MysqlcConnSup =  {WorkerId, {sys_log_worker, start_link, [LogFile]},
+					               temporary, 5000, worker, [sys_log_worker]},
+					    supervisor:start_child(?SERVER, MysqlcConnSup)
+			end;
+		_ ->  
+			    WorkerId = work_id(LogFile),
+			    MysqlcConnSup =  {WorkerId, {sys_log_worker, start_link, [LogFile]},
+			               temporary, 5000, worker, [sys_log_worker]},
+			    supervisor:start_child(?SERVER, MysqlcConnSup)
+	end.
+
+
 
 
 close_child(LogFile) ->

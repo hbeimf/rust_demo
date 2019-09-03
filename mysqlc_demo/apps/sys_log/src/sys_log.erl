@@ -27,14 +27,17 @@ test_json(Index) ->
 	    ],
 	Json = jsx:encode(Data),
 	LogFile = "test_json_log",
-	write_line(LogFile, Json).
+	write_json(LogFile, Json).
 
-log_json(LogFile, Json) ->
+write_json(LogFile, Json) ->
 	write_line(LogFile, Json).
 	
 write_line(LogFile, Json) ->
+	Day = glib:date_str("y-m-d"),
+	Time = glib:date_str(),
+
 	{ok, Pid} = sys_log_sup:start_child(LogFile),
-	sys_log_worker:log(Pid, Json).
+	sys_log_worker:log(Pid, Json, Day, Time).
 
 	
 % log_json() ->
@@ -50,6 +53,13 @@ log_json(Json, LogFile) ->
 	LogDir = glib:root_dir() ++ "log/" ++ glib:date_str("y-m-d") ++ "-"++ glib:to_str(LogFile) ++"-log.txt",
 	% Log = " \n =====================" ++ date_str() ++ "============================ \n " ++ Str,	
 	Log = glib:date_str() ++ " => " ++ Json,
+	%% 同时写入文件
+	append(LogDir, Log).
+
+log_json(Json, LogFile, Day, Time) ->
+	LogDir = glib:root_dir() ++ "log/" ++ Day ++ "-"++ glib:to_str(LogFile) ++"-log.txt",
+	% Log = " \n =====================" ++ date_str() ++ "============================ \n " ++ Str,	
+	Log = Time ++ " - " ++ glib:date_str() ++ " => " ++ Json,
 	%% 同时写入文件
 	append(LogDir, Log).
 

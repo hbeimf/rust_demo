@@ -3,11 +3,27 @@
 -module(sys_log).
 -compile(export_all).
 
+-include_lib("glib/include/log.hrl").
 
-json() ->
+
+% tt() -> 
+% 	lists:foreach(fun(I) -> 
+% 		?LOG(I),
+% 		test()
+% 	end, lists:seq(1, 10)).
+
+test() -> 
+	lists:foreach(fun(I) -> 
+		?LOG(I),
+		json(I)
+	end, lists:seq(1, 10000)).
+
+json(Index) ->
 	Data = [
 	        {<<"user_name">>, unicode:characters_to_binary("小强")}
 	        , {<<"password">>, <<"a123456">>}
+	        , {<<"index">>, Index}
+
 	    ],
 	Json = jsx:encode(Data),
 	LogFile = "test_json_log",

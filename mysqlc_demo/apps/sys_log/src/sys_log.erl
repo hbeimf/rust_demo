@@ -4,7 +4,7 @@
 -compile(export_all).
 
 -include_lib("glib/include/log.hrl").
-
+-include_lib("sys_log/include/write_log.hrl").
 
 % tt() -> 
 % 	lists:foreach(fun(I) -> 
@@ -27,17 +27,19 @@ test_json(Index) ->
 	    ],
 	Json = jsx:encode(Data),
 	LogFile = "test_json_log",
-	write_json(LogFile, Json).
+	% write_json(LogFile, Json).
+	?WRITE_JSON(LogFile, Json),
+	ok.
 
-write_json(LogFile, Json) ->
-	write_line(LogFile, Json).
+write_json(Module, Line, LogFile, Json) ->
+	write_line(Module, Line, LogFile, Json).
 	
-write_line(LogFile, Json) ->
+write_line(Module, Line, LogFile, Json) ->
 	Day = glib:date_str("y-m-d"),
 	Time = glib:date_str(),
 
 	{ok, Pid} = sys_log_sup:start_child(LogFile),
-	sys_log_worker:log(Pid, Json, Day, Time).
+	sys_log_worker:log(Pid, Json, Day, Time, Module, Line).
 
 	
 % log_json() ->
@@ -60,6 +62,14 @@ log_json(Json, LogFile, Day, Time) ->
 	LogDir = glib:root_dir() ++ "log/" ++ Day ++ "-"++ glib:to_str(LogFile) ++"-log.txt",
 	% Log = " \n =====================" ++ date_str() ++ "============================ \n " ++ Str,	
 	Log = Time ++ " - " ++ glib:date_str() ++ " => " ++ Json,
+	%% 同时写入文件
+	append(LogDir, Log).
+
+log_json(Json, LogFile, Day, Time, Module, Line) ->
+	LogDir = glib:root_dir() ++ "log/" ++ Day ++ "-"++ glib:to_str(LogFile) ++"-log.txt",
+	% Log = " \n =====================" ++ date_str() ++ "============================ \n " ++ Str,	
+	% Log = Time ++ " - " ++ glib:date_str() ++ " => " ++ Json,
+	Log = lists:concat([Module, ":", Line, " <=> ", Time, " - ", glib:date_str(), " <=> ", glib:to_str(Json)]),
 	%% 同时写入文件
 	append(LogDir, Log).
 

@@ -1,0 +1,1 @@
+-define(WRITE_JSON(LogFile, Json), sys_log:write_json(?MODULE, ?LINE, LogFile, Json)).

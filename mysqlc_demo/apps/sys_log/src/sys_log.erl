@@ -28,7 +28,10 @@ test_json(Index) ->
 	Json = jsx:encode(Data),
 	LogFile = "test_json_log",
 	% write_json(LogFile, Json).
-	?WRITE_JSON(LogFile, Json),
+	?WRITE_LOG(LogFile, Json),
+	
+	?WRITE_LOG("test_erlang_ds", Data),
+
 	ok.
 
 write_json(Module, Line, LogFile, Json) ->
@@ -69,7 +72,9 @@ log_json(Json, LogFile, Day, Time, Module, Line) ->
 	LogDir = glib:root_dir() ++ "log/" ++ Day ++ "-"++ glib:to_str(LogFile) ++"-log.txt",
 	% Log = " \n =====================" ++ date_str() ++ "============================ \n " ++ Str,	
 	% Log = Time ++ " - " ++ glib:date_str() ++ " => " ++ Json,
-	Log = lists:concat([Module, ":", Line, " <=> ", Time, " - ", glib:date_str(), " <=> ", glib:to_str(Json)]),
+	% Log = lists:concat([Module, ":", Line, " <=> ", Time, " - ", glib:date_str(), " <=> ", glib:to_str(Json)]),
+	Log = lists:concat([Time, "\t", glib:date_str(), "\t", glib:to_str(sys_log_format:format(Json))]),
+
 	%% 同时写入文件
 	append(LogDir, Log).
 

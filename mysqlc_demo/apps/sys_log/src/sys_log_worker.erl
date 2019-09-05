@@ -12,7 +12,9 @@
 % --------------------------------------------------------------------
 % External exports
 % --------------------------------------------------------------------
--export([log/6]).
+-export([log/6
+	,log_json/6
+	]).
 
 % gen_server callbacks
 -export([start_link/1]).
@@ -30,6 +32,10 @@ log(Pid, Log, Day, Time, Module, Line) ->
 % log(Pid, Log, Day, Time) ->
 	% ?LOG({Pid, Log}),
 	gen_server:cast(Pid, {write, Log, Day, Time, Module, Line}),
+	ok.
+
+log_json(Pid, Log, Day, Time, Module, Line) -> 
+	gen_server:cast(Pid, {write_json, Log, Day, Time, Module, Line}),
 	ok.
 
 % --------------------------------------------------------------------
@@ -81,6 +87,10 @@ handle_call(Request, _From, State) ->
 handle_cast({write, Log, Day, Time, Module, Line}, [LogFile|_] = State) ->
 	% ?LOG({write, Log, Day, Time, Module, Line}),
 	sys_log:log_json(Log, LogFile, Day, Time, Module, Line),
+	{noreply, State};
+handle_cast({write_json, Log, Day, Time, Module, Line}, [LogFile|_] = State) ->
+	% ?LOG({write, Log, Day, Time, Module, Line}),
+	sys_log:log_json_in_data(Log, LogFile, Day, Time, Module, Line),
 	{noreply, State};
 handle_cast(Msg, State) ->
 	% ?LOG(Msg),

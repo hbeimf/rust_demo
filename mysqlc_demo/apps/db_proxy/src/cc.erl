@@ -68,7 +68,7 @@ log1() ->
         , {<<"password">>, <<"a123456">>}
     ],
     % Json = jsx:encode(Data),
-    lager:error("~p", [{?MODULE, ?LINE, Data}]),
+    % lager:error("~p", [{?MODULE, ?LINE, Data}]),
     ok.
 
 log() -> 
@@ -81,7 +81,7 @@ log() ->
 log_test() -> 
     lists:foreach(fun(I) -> 
         % lager:info("hallo world: ~p", [I]),
-        lager:error("hallo world: ~p", [I]),    
+        % lager:error("hallo world: ~p", [I]),    
         ok   
     end, lists:seq(1, 1000)).
 

@@ -49,8 +49,8 @@ handle_error(_P1, _P2) ->
 % }
 % // select end =================================
 handle_function('Select',  {SelectReq}) ->
-    lager:info("hallo world", []),
-    lager:error("hallo world", []),
+    % lager:info("hallo world", []),
+    % lager:error("hallo world", []),
 
     
     ?LOG(SelectReq),

@@ -3,9 +3,11 @@
 -compile(export_all).
 
 
+% 初始化数据库，表
 init_db(PoolConfig) ->
-	create_db(PoolConfig),
-	create_table(PoolConfig),
+	% create_db(PoolConfig),
+	% create_table(PoolConfig),
+	
 	ok.
 
 

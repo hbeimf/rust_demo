@@ -30,7 +30,7 @@ pool_name(ChannelId) ->
 		{ok, Val} -> 
 			Val;
 		_ ->  
-			PoolName = lists:concat(["pool_", ChannelId]),
+			PoolName = lists:concat(["pool_", glib:to_str(ChannelId)]),
 			Pn = to_atom(PoolName),
 			set_config(ChannelId, Pn),
 			Pn

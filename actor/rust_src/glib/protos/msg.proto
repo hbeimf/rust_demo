@@ -1,0 +1,46 @@
+syntax="proto3";
+
+package msg;
+
+
+message TestMsg{   
+    string  name = 1;
+    string  nick_name = 2;
+    string  phone  = 3;
+
+}
+
+message Login{   
+    int32  uid = 1;
+}
+
+// aes 加密
+message AesEncode{
+    string  key = 1;
+    string  from = 2;
+}
+
+// aes 解密
+message AesDecode{
+    string  key = 1;
+    string  from = 2;
+}
+
+// aes 解密回复
+message AesDecodeReply{
+    int32  code = 1;   // 1:成功； 2:失败
+    string  reply = 2;
+}
+
+message Payload{   
+    string  key = 1;
+    bytes  pack = 2;
+}
+
+message RpcPackage{   
+    string  key = 1;  
+    int32 cmd = 2;
+    bytes payload = 3;
+}
+
+

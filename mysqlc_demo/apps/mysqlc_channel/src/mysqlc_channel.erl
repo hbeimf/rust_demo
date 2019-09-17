@@ -1,5 +1,6 @@
+% mysqlc_channel.erl
 % demo.erl
--module(demo).
+-module(mysqlc_channel).
 
 -include_lib("glib/include/log.hrl").
 -compile(export_all).

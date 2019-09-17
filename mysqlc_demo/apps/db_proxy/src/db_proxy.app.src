@@ -6,7 +6,7 @@
   {applications,
    [kernel,
     stdlib
-    , mysqlc
+    , mysqlc_channel
 
    ]},
   {env,[]},

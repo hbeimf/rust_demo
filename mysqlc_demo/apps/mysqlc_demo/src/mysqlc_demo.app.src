@@ -6,7 +6,6 @@
   {applications,
    [kernel,
     stdlib
-    , mysqlc
     , db_proxy
     , sys_log
    ]},

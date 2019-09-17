@@ -19,7 +19,7 @@
 % --------------------------------------------------------------------
 % External API
 % --------------------------------------------------------------------
--export([get_config/1, reload/0, set_config/2]).
+-export([get_config/1, reload/0, set_config/2, show/0]).
 -define(ETS_OPTS,[set, public ,named_table , {keypos,2}, {heir,none}, {write_concurrency,true}, {read_concurrency,false}]).
 
 -define(SYS_CONFIG, sys_config).
@@ -28,6 +28,10 @@
 	val
 }).
 
+
+show() ->
+	Rows = ets:tab2list(?SYS_CONFIG),
+	Rows.
 
 % sys_config:reload().
 reload() ->

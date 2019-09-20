@@ -56,8 +56,8 @@ fn main() {
     // ws_server::start_server();
 
     // mq_client::start_mq_client();
-    rpmd::start_tcp_client();
-    
+    rpmd::start();
+
     let _ = sys.run();
 }
 

@@ -154,7 +154,7 @@ impl StreamHandler<codec::ChatResponse, io::Error> for TcpClient {
     fn handle(&mut self, msg: codec::ChatResponse, _: &mut Context<Self>) {
         match msg {
             codec::ChatResponse::Message(ref msg) => {
-                // println!("message: {}", msg);
+                println!("receive message: {:?}", msg);
 
                 debug!("tcpc 收到来自dev端的package: {:?}", msg);
             },

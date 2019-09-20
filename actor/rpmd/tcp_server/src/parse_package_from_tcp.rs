@@ -168,8 +168,12 @@ fn action_heart_beat_100(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &
     // let cmd:u32 = 10010;
     // let reply_package = glib::package(cmd, encode);
 
+    let ping:Vec<u8> = vec![];
+    let reply_package = glib::package(101u32, ping);
+    // act.framed.write(codec::ChatRequest::Message(msg_ping));
+
     // // 直接发给客户端
-    // client.framed.write(ChatResponse::Message(reply_package));
+    client.framed.write(ChatResponse::Message(reply_package));
 }
 
 

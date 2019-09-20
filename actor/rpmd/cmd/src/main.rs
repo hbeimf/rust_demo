@@ -6,6 +6,7 @@ extern crate tcp_server;
 extern crate sys_config;
 // extern crate mq_client;
 extern crate glib;
+extern crate table;
 
 extern crate flexi_logger;
 #[macro_use]
@@ -39,7 +40,10 @@ fn main() {
     write_pid(pid_file, process::id());
 
     let sys = actix::System::new("rpmd");
+    
+    table::start_room_actor();
     tcp_server::start_server();
+    
     let _ = sys.run();
 }
 

@@ -16,3 +16,5 @@ flexi_logger = "^0.10.3"
 tcp_server={path = "../tcp_server"}
 sys_config={path = "../sys_config"}
 glib={path = "../glib"}
+rpmd={path = "../rpmd"}
+

@@ -6,6 +6,7 @@ extern crate tcp_server;
 extern crate sys_config;
 // extern crate mq_client;
 extern crate glib;
+extern crate rpmd;
 
 extern crate flexi_logger;
 #[macro_use]
@@ -55,6 +56,8 @@ fn main() {
     // ws_server::start_server();
 
     // mq_client::start_mq_client();
+    rpmd::start_tcp_client();
+    
     let _ = sys.run();
 }
 

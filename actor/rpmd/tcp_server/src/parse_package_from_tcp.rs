@@ -34,6 +34,10 @@ pub fn parse_package(package: Vec<u8>, client: &mut ChatSession, ctx: &mut actix
                 10010 => {
                     action_cast_10010(cmd, pb, client, ctx);
                 }
+                cmd::CMD_HB_100 => {
+                    // 收到心跳包
+                    action_heart_beat_100(cmd, pb, client, ctx);
+                }
                 _ => {
                     action(cmd, pb, client, ctx);
                 }
@@ -154,6 +158,20 @@ fn action_cast_10010(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut 
     // 直接发给客户端
     client.framed.write(ChatResponse::Message(reply_package));
 }
+
+
+// 收到心跳 包
+fn action_heart_beat_100(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
+    println!("receive hb");
+    // // reply
+    // let encode:Vec<u8> = msg_proto::encode_msg();
+    // let cmd:u32 = 10010;
+    // let reply_package = glib::package(cmd, encode);
+
+    // // 直接发给客户端
+    // client.framed.write(ChatResponse::Message(reply_package));
+}
+
 
 // 业务逻辑部分
 fn action(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {

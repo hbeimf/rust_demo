@@ -8,15 +8,8 @@
 
 
 init_pool() ->
-	% ?LOG("init pool"),
-	Root = glib:root_dir(),
-	PoolConfigDir = lists:concat([Root, "db_pool.config"]),
-	?LOG({"init pool", Root, PoolConfigDir}),
-	{ok, [PoolConfigList|_]} = file:consult(PoolConfigDir),
-	% ?LOG(PoolConfigList),
-	
+	PoolConfigList = config_list(),
 	mysqlc_comm:start_pools(PoolConfigList),
-	
 	ok.
 
 
@@ -24,11 +17,8 @@ pool_config() ->
 	pool_config(2).
 
 pool_config(PoolId) ->
-	Root = glib:root_dir(),
-	PoolConfigDir = lists:concat([Root, "db_pool.config"]),
-	% ?LOG({"init pool", Root, PoolConfigDir}),
-	{ok, [PoolConfigList|_]} = file:consult(PoolConfigDir),
-	% ?LOG(PoolConfigList),
+	PoolConfigList = config_list(),
+
 	lists:foldl(fun(#{
 			pool_id := PoolId1,
 			host := Host, 
@@ -45,3 +35,13 @@ pool_config(PoolId) ->
 		end 
 	end, [], PoolConfigList).
 
+
+
+% 获取配置文件
+% mysqlc_channel_pool:config_list().
+config_list() -> 
+	Root = glib:root_dir(),
+	PoolConfigDir = lists:concat([Root, "db_pool.config"]),
+	% ?LOG({"init pool", Root, PoolConfigDir}),
+	{ok, [PoolConfigList|_]} = file:consult(PoolConfigDir),
+	PoolConfigList.

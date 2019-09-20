@@ -27,8 +27,15 @@ start_link() ->
 %%====================================================================
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
+% init([]) ->
+%     {ok, { {one_for_all, 0, 1}, []} }.
 init([]) ->
-    {ok, { {one_for_all, 0, 1}, []} }.
+    Mysqlc_channel_monitor = {mysqlc_channel_monitor, {mysqlc_channel_monitor, start_link, []},
+               permanent, 5000, worker, [mysqlc_channel_monitor]},
+              
+      Children = [Mysqlc_channel_monitor],
+    {ok, { {one_for_one, 10, 10}, Children} }.
+
 
 %%====================================================================
 %% Internal functions

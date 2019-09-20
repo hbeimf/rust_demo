@@ -77,6 +77,7 @@ log_json(Json, LogFile, Day, Time) ->
 
 log_json(Json, LogFile, Day, Time, Module, Line) ->
 	LogDir = glib:root_dir() ++ "log/" ++ Day ++ "-"++ glib:to_str(LogFile) ++"-log.txt",
+	?LOG(LogDir),
 	% Log = " \n =====================" ++ date_str() ++ "============================ \n " ++ Str,	
 	% Log = Time ++ " - " ++ glib:date_str() ++ " => " ++ Json,
 	% Log = lists:concat([Module, ":", Line, " <=> ", Time, " - ", glib:date_str(), " <=> ", glib:to_str(Json)]),
@@ -96,6 +97,7 @@ log_json_in_data(Json, LogFile, Day, Time, Module, Line) ->
 	end, 
 
 	LogDir = DataDir ++ Day ++ "-"++ glib:to_str(LogFile) ++"-log.txt",
+	?LOG(LogDir),
 	% Log = " \n =====================" ++ date_str() ++ "============================ \n " ++ Str,	
 	% Log = Time ++ " - " ++ glib:date_str() ++ " => " ++ Json,
 	% Log = lists:concat([Module, ":", Line, " <=> ", Time, " - ", glib:date_str(), " <=> ", glib:to_str(Json)]),

@@ -30,12 +30,11 @@ use actix::*;
 extern crate log;
 
 pub fn start_server() {
-	warn!("start tcp server!");
-
 	let tcp_config = sys_config::config_tcp();
-	
+	warn!("start server: {}", tcp_config);
+
 	Arbiter::new("tcp-server").do_send::<msgs::Execute>(msgs::Execute::new(move || {
-        crate::gen_server::TcpServer::new(tcp_config.as_ref());
-        Ok(())
-    }));
+        		crate::gen_server::TcpServer::new(tcp_config.as_ref());
+        		Ok(())
+	}));
 }

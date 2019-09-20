@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["maomao <5622876@qq.com>"]
 
 [[bin]]
-name = "rs-server"
+name = "rs-node1"
 path = "src/main.rs"
 
 [dependencies]

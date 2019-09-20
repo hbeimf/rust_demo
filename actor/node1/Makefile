@@ -1,11 +1,12 @@
 RUST_PATH := $(shell pwd)
+BIN_CMD := rs-node1
 
 compile:
 	cargo build
 
 run:
 	rm -rf ./logs/*
-	./target/debug/rs-server --config $(RUST_PATH)/config.ini -d $(RUST_PATH)/logs -l debug -p $(RUST_PATH)/rs.pid 
+	./target/debug/$(BIN_CMD) --config $(RUST_PATH)/config.ini -d $(RUST_PATH)/logs -l debug -p $(RUST_PATH)/rs.pid 
 
 rel:
 	cargo build --release
@@ -14,10 +15,10 @@ rrel: run_rel
 
 run_rel:
 	rm -rf ./logs/*
-	./target/release/rs-server --config $(RUST_PATH)/config.ini -d $(RUST_PATH)/logs -l debug
+	./target/release/$(BIN_CMD) --config $(RUST_PATH)/config.ini -d $(RUST_PATH)/logs -l debug
 
 help:
-	./target/debug/rs-server -h
+	./target/debug/$(BIN_CMD) -h
 
 
 push:

@@ -17,4 +17,6 @@ tcp_server={path = "../tcp_server"}
 sys_config={path = "../sys_config"}
 glib={path = "../glib"}
 rpmd={path = "../rpmd"}
+rpmd_broker={path = "../rpmd_broker"}
+
 

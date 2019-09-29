@@ -3,7 +3,7 @@ use std::collections::{HashMap};
 
 pub use crate::msg::{Connect, Disconnect, Message, TableMessage, RegisterBrokerWork};
 // pub use crate::msg::*;
-
+use crate::broker_work;
 
 // use rusqlite::types::ToSql;
 // use rusqlite::{Connection, NO_PARAMS};
@@ -15,6 +15,10 @@ pub use crate::msg::{Connect, Disconnect, Message, TableMessage, RegisterBrokerW
 //     room_id: String,
 // }
 
+
+//启动一个 rpmd tcp客户端,
+// 监控连接的断开消息， 当连接断开的时候要尝试重连
+// 收发来自连接上的消息
 pub struct BrokerSupActor {
     sessions: HashMap<String, Recipient<TableMessage>>,
     // db: rusqlite::Connection,
@@ -22,17 +26,6 @@ pub struct BrokerSupActor {
 
 impl Default for BrokerSupActor {
     fn default() -> BrokerSupActor {
-
-        // let conn = Connection::open_in_memory().unwrap();
-
-        // conn.execute(
-        //     "CREATE TABLE person (
-        //               id              INTEGER PRIMARY KEY,
-        //               uid             TEXT NOT NULL,
-        //               room_id         TEXT NOT NULL
-        //               )",
-        //     NO_PARAMS,
-        // ).unwrap();
 
         BrokerSupActor {
             sessions: HashMap::new(),
@@ -44,34 +37,6 @@ impl Default for BrokerSupActor {
 impl BrokerSupActor {
     fn broadcast_msg(&self, message: &Vec<u8>, _skip_id: u32) {
 
-        // // 经验证， 这两连接池是支持断线重连的，
-        // // mysqlc::test::test();
-        // // redisc::test();
-
-        // // debug!("send broadcast!!");
-        // // select where 
-        // let mut stmt = self.db
-        //     .prepare("SELECT id, uid, room_id FROM person where room_id = ?1")
-        //     .unwrap();
-        // let person_iter = stmt
-        //     .query_map(&[1], |row| Person { // where
-        //         id: row.get(0),
-        //         uid: row.get(1),
-        //         room_id: row.get(2),
-        //     }).unwrap();
-
-        // for person in person_iter {
-        //     let p = person.unwrap();
-
-        //     println!("Found person {:?}", p);
-
-        //     // let uid = p.uid.parse::<i32>().unwrap();
-
-        //     if let Some(addr) = self.sessions.get(&p.uid) {
-        //         // debug!("send broadcast");
-        //         let _ = addr.do_send(TableMessage(message.to_vec()));
-        //     }
-        // }
     }
 
 }
@@ -83,10 +48,14 @@ impl Actor for BrokerSupActor {
 impl actix::Supervised for BrokerSupActor {}
 
 impl SystemService for BrokerSupActor {
+    // supvisor 启动回调函数，在这个地儿启动 rpmd tcp client 客户端 actor
     fn service_started(&mut self, _ctx: &mut Context<Self>) {
-        println!("Service started");
+        println!("broker_sup 启动！ 在此处启动tcp 客户端  actor !!");
+        broker_work::start();
     }
 }
+
+// supervisor 待处理消息逻辑  ================================================
 
 impl Handler<Connect> for BrokerSupActor {
     type Result = u32;
@@ -94,7 +63,7 @@ impl Handler<Connect> for BrokerSupActor {
 
     fn handle(&mut self, msg: Connect, _: &mut Context<Self>) -> Self::Result {
 
-        // self.sessions.insert(msg.uid.to_string(), msg.addr);
+         self.sessions.insert(msg.uid.to_string(), msg.addr);
 
         // // insert sqlite
         // let room_id = 1;

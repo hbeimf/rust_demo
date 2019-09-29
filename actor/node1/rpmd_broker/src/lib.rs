@@ -34,7 +34,7 @@ use actix::prelude::*;
 
 pub fn start() {
     start_broker_sup();
-    broker_work::start();
+//    broker_work::start();
 }
 
 fn start_broker_sup() {

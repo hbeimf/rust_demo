@@ -10,12 +10,9 @@ use tokio_io::AsyncRead;
 use tokio_tcp::TcpStream;
 
 use glib::codec;
-// use crate::msg::{ConnectTcpcAddrMsg, DeconnectTcpcAddrMsg, PackageFromClient};
 use crate::msg::*;
 use crate::broker_sup::{BrokerSupActor};
 
-// use glib;
-// use crate::gen_server::{WsChatSession};
 
 pub fn start() {
     // Connect to server
@@ -55,19 +52,6 @@ pub struct BrokerWorkActor {
     // p_addr: actix::Addr<WsChatSession>,
 }
 
-// #[derive(Message)]
-// pub struct ConnectTcpcAddrMsg{
-//     pub addr: actix::Addr<BrokerWorkActor>,
-// }
-
-// #[derive(Message)]
-// pub struct DeconnectTcpcAddrMsg{
-    
-// }
-
-// #[derive(Message, Debug)]
-// pub struct PackageFromClient(pub Vec<u8>);
-
 impl Actor for BrokerWorkActor {
     type Context = Context<Self>;
 
@@ -75,8 +59,9 @@ impl Actor for BrokerWorkActor {
     fn started(&mut self, ctx: &mut Context<Self>) {
     	debug!("建立了一个tcp连接？？！！");
     	// 当连接建立的时候，将addr 发送给 p_addr
-        let self_addr = ctx.address();
+        let self_addr = ctx.address().recipient();
         let reg_msg = RegisterBrokerWork{
+            id: 1u32,
             addr: self_addr,
         };
 
@@ -106,7 +91,6 @@ impl Handler<PackageFromClient> for BrokerWorkActor {
 
     fn handle(&mut self, package: PackageFromClient, ctx: &mut Context<Self>) {
         // debug!("客户端转发过来的包: {:?}", package);
-        // self.wsc_write.binary(package.0)
         self.framed.write(codec::ChatRequest::Message(package.0));
     }
 }

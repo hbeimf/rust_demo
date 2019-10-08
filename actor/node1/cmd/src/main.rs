@@ -6,7 +6,7 @@ extern crate tcp_server;
 extern crate sys_config;
 // extern crate mq_client;
 extern crate glib;
-extern crate rpmd;
+//extern crate rpmd;
 extern crate rpmd_broker;
 
 
@@ -58,7 +58,7 @@ fn main() {
     // ws_server::start_server();
 
     // mq_client::start_mq_client();
-    rpmd::start();
+//    rpmd::start();
     rpmd_broker::start();
 
     let _ = sys.run();

@@ -13,6 +13,7 @@ use glib::codec;
 use crate::msg::*;
 use crate::broker_sup::{BrokerSupActor};
 
+use crate::parse_package;
 
 pub fn start() {
     // Connect to server
@@ -114,12 +115,13 @@ impl actix::io::WriteHandler<io::Error> for BrokerWorkActor {}
 
 /// Server communication
 impl StreamHandler<codec::ChatResponse, io::Error> for BrokerWorkActor {
-    fn handle(&mut self, msg: codec::ChatResponse, _: &mut Context<Self>) {
-        match msg {
-            codec::ChatResponse::Message(ref msg) => {
-                println!("收到来自rpmd端的package: {:?}", msg);
+    fn handle(&mut self, package: codec::ChatResponse, ctx: &mut Context<Self>) {
+        match package {
+            codec::ChatResponse::Message(package) => {
+                println!("收到来自rpmd端的package: {:?}", package);
+                debug!("收到来自rpmd端的package: {:?}", package);
 
-                debug!("收到来自rpmd端的package: {:?}", msg);
+                parse_package::parse_package(package, self, ctx);
             },
         }
     }

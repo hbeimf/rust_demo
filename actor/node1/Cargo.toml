@@ -6,7 +6,6 @@ members = [
     "glib",
     "table",
     "tcp_server",
-    "rpmd",
     "rpmd_broker",
 
 ]

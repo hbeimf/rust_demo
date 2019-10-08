@@ -27,9 +27,13 @@ extern crate glib;
 pub mod broker_work;
 pub mod msg;
 pub mod broker_sup;
+pub mod parse_package;
+pub mod cmd;
+
 
 use crate::broker_sup::{BrokerSupActor};
 use actix::prelude::*;
+
 
 
 pub fn start() {

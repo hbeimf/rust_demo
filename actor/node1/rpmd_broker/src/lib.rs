@@ -54,3 +54,10 @@ pub fn send(package: Vec<u8>) {
     let broker_sup_addr = System::current().registry().get::<BrokerSupActor>();
     broker_sup_addr.do_send(send_package);
 }
+
+
+pub fn test_send() {
+    let ping:Vec<u8> = vec![];
+    let msg_ping = glib::package(100u32, ping);
+    send(msg_ping);
+}

@@ -27,7 +27,6 @@ impl BrokerSupActor {
     // 遍历 sessions , 发送pakcage
     fn broadcast_package(&self, send_package: SendPackage) {
         for (key, addr) in &self.sessions {
-//            let send_package1 = send_package.clone();
             let _ = addr.do_send(send_package.clone());
         }
     }

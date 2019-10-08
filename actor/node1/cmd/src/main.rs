@@ -61,7 +61,7 @@ fn main() {
 //    rpmd::start();
     rpmd_broker::start();
 
-    rpmd_broker::test_send();
+//    rpmd_broker::test_send();
 
     let _ = sys.run();
 }

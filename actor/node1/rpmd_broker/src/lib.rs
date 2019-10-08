@@ -57,6 +57,7 @@ pub fn send(package: Vec<u8>) {
 
 
 pub fn test_send() {
+    println!("test_send");
     let ping:Vec<u8> = vec![];
     let msg_ping = glib::package(100u32, ping);
     send(msg_ping);

@@ -9,7 +9,7 @@ use crate::broker_work;
 // 监控连接的断开消息， 当连接断开的时候要尝试重连
 // 收发来自连接上的消息
 pub struct BrokerSupActor {
-    sessions: HashMap<String, Recipient<PackageFromClient>>,
+    sessions: HashMap<String, Recipient<SendPackage>>,
     // db: rusqlite::Connection,
 }
 
@@ -24,9 +24,13 @@ impl Default for BrokerSupActor {
 }
 
 impl BrokerSupActor {
-//    fn broadcast_msg(&self, message: &Vec<u8>, _skip_id: u32) {
-//
-//    }
+    // 遍历 sessions , 发送pakcage
+    fn broadcast_package(&self, send_package: SendPackage) {
+        for (key, addr) in &self.sessions {
+//            let send_package1 = send_package.clone();
+            let _ = addr.do_send(send_package.clone());
+        }
+    }
 
 }
 
@@ -58,3 +62,12 @@ impl Handler<RegisterBrokerWork> for BrokerSupActor {
     }
 }
 
+
+impl Handler<SendPackage> for BrokerSupActor {
+    type Result = ();
+
+    fn handle(&mut self, send_package: SendPackage, _: &mut Context<Self>) {
+//        println!(" send package: {:?}", send_package);
+        self.broadcast_package(send_package);
+    }
+}

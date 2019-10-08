@@ -34,14 +34,23 @@ pub mod cmd;
 use crate::broker_sup::{BrokerSupActor};
 use actix::prelude::*;
 
-
+use crate::msg::*;
 
 pub fn start() {
     start_broker_sup();
-//    broker_work::start();
 }
 
 fn start_broker_sup() {
     // warn!("start_broker_sup");
     let _act = System::current().registry().get::<BrokerSupActor>();
+}
+
+// 发送任意package 2 rpmd
+pub fn send(package: Vec<u8>) {
+    let send_package = SendPackage{
+        package: package,
+    };
+
+    let broker_sup_addr = System::current().registry().get::<BrokerSupActor>();
+    broker_sup_addr.do_send(send_package);
 }

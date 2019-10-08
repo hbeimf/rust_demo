@@ -86,13 +86,23 @@ impl Actor for BrokerWorkActor {
     }
 }
 
-// 客户端转发过来的包，
-impl Handler<PackageFromClient> for BrokerWorkActor {
+//// 客户端转发过来的包，
+//impl Handler<PackageFromClient> for BrokerWorkActor {
+//    type Result = ();
+//
+//    fn handle(&mut self, package: PackageFromClient, ctx: &mut Context<Self>) {
+//        // debug!("客户端转发过来的包: {:?}", package);
+//        self.framed.write(codec::ChatRequest::Message(package.0));
+//    }
+//}
+
+
+impl Handler<SendPackage> for BrokerWorkActor {
     type Result = ();
 
-    fn handle(&mut self, package: PackageFromClient, ctx: &mut Context<Self>) {
-        // debug!("客户端转发过来的包: {:?}", package);
-        self.framed.write(codec::ChatRequest::Message(package.0));
+    fn handle(&mut self, send_package: SendPackage, _: &mut Context<Self>) {
+        println!(" send package: {:?}", send_package);
+        self.framed.write(codec::ChatRequest::Message(send_package.package));
     }
 }
 

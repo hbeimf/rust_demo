@@ -13,7 +13,7 @@ pub struct Message {
 #[derive(Message)]
 pub struct RegisterBrokerWork{
     pub id: u32,
-    pub addr: Recipient<PackageFromClient>,
+    pub addr: Recipient<SendPackage>,
 }
 
 
@@ -24,3 +24,11 @@ pub struct UnregisterBrokerWork{
 
 #[derive(Message, Debug)]
 pub struct PackageFromClient(pub Vec<u8>);
+
+
+
+#[derive(Message, Debug, Clone)]
+pub struct SendPackage{
+    pub package: Vec<u8>,
+}
+

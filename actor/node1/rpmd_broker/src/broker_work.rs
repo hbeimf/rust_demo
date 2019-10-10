@@ -61,6 +61,8 @@ impl Actor for BrokerWorkActor {
     	debug!("建立了一个tcp连接？？！！");
     	// 当连接建立的时候，将addr 发送给 p_addr
         let self_addr = ctx.address().recipient();
+//        println!(" self_addr: {:?}", self_addr);
+
         let reg_msg = RegisterBrokerWork{
             id: 1u32,
             addr: self_addr,

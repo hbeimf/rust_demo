@@ -27,6 +27,7 @@ impl BrokerSupActor {
     // 遍历 sessions , 发送pakcage
     fn broadcast_package(&self, send_package: SendPackage) {
         for (key, addr) in &self.sessions {
+            println!("broadcast package: {:?}", send_package);
             let _ = addr.do_send(send_package.clone());
         }
     }
@@ -57,6 +58,9 @@ impl Handler<RegisterBrokerWork> for BrokerSupActor {
         // info!("Disconnect, OUT  OUT  OUT  OUT  Someone disconnected room");
         println!(" register broker work!!");
         self.sessions.insert(msg.id.to_string(), msg.addr);
+
+        // 当连接已经建立了，发送测试包
+         crate::test_send();
 
     }
 }

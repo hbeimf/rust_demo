@@ -63,6 +63,17 @@ fn send_unregister() {
     broker_sup_addr.do_send(unregister_msg);
 }
 
+fn send_register(work_addr: Recipient<SendPackage>) {
+    let reg_msg = RegisterBrokerWork{
+        id: 1u32,
+        addr: work_addr,
+    };
+
+    let broker_sup_addr = System::current().registry().get::<BrokerSupActor>();
+    broker_sup_addr.do_send(reg_msg);
+
+}
+
 impl Actor for BrokerWorkActor {
     type Context = Context<Self>;
 
@@ -72,13 +83,7 @@ impl Actor for BrokerWorkActor {
     	// 当连接建立的时候，将addr 发送给 p_addr
         let self_addr = ctx.address().recipient();
 
-        let reg_msg = RegisterBrokerWork{
-            id: 1u32,
-            addr: self_addr,
-        };
-
-        let broker_sup_addr = System::current().registry().get::<BrokerSupActor>();
-        broker_sup_addr.do_send(reg_msg);
+        send_register(self_addr);
 
         // start heartbeats otherwise server will disconnect after 10 seconds
         self.hb(ctx)
@@ -87,13 +92,6 @@ impl Actor for BrokerWorkActor {
     // 当连接断开时，把断开的消息发给sup，让sup重连
     fn stopped(&mut self, _: &mut Context<Self>) {
         debug!("tcp连接断开了！！");
-
-//        let unregister_msg = UnregisterBrokerWork{
-//            id: 1u32,
-//        };
-//
-//        let broker_sup_addr = System::current().registry().get::<BrokerSupActor>();
-//        broker_sup_addr.do_send(unregister_msg);
         send_unregister();
     }
 }

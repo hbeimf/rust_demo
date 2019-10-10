@@ -36,12 +36,13 @@ pub fn start() {
                     }
                 });
 
-                debug!("建立了一个tcp连接！！");
+                println!("建立了一个tcp连接！！");
 
                 futures::future::ok(())
             })
             .map_err(|e| {
-                debug!("不能建立连接: {}", e);
+                println!("不能建立连接: {}", e);
+                send_unregister();
                 ()
             }),
     );
@@ -53,12 +54,21 @@ pub struct BrokerWorkActor {
     // p_addr: actix::Addr<WsChatSession>,
 }
 
+fn send_unregister() {
+    let unregister_msg = UnregisterBrokerWork{
+        id: 1u32,
+    };
+
+    let broker_sup_addr = System::current().registry().get::<BrokerSupActor>();
+    broker_sup_addr.do_send(unregister_msg);
+}
+
 impl Actor for BrokerWorkActor {
     type Context = Context<Self>;
 
     // 当连接建立时，向sup注册自己的地址，所有与这个actor 交互的消息都由 sup发过来，
     fn started(&mut self, ctx: &mut Context<Self>) {
-    	debug!("建立了一个tcp连接？？！！");
+        println!("建立了一个tcp连接？？！！");
     	// 当连接建立的时候，将addr 发送给 p_addr
         let self_addr = ctx.address().recipient();
 
@@ -78,12 +88,13 @@ impl Actor for BrokerWorkActor {
     fn stopped(&mut self, _: &mut Context<Self>) {
         debug!("tcp连接断开了！！");
 
-        let unregister_msg = UnregisterBrokerWork{
-            id: 1u32,
-        };
-
-        let broker_sup_addr = System::current().registry().get::<BrokerSupActor>();
-        broker_sup_addr.do_send(unregister_msg);
+//        let unregister_msg = UnregisterBrokerWork{
+//            id: 1u32,
+//        };
+//
+//        let broker_sup_addr = System::current().registry().get::<BrokerSupActor>();
+//        broker_sup_addr.do_send(unregister_msg);
+        send_unregister();
     }
 }
 

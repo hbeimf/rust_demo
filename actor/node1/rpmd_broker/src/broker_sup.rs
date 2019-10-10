@@ -71,6 +71,8 @@ impl Handler<UnregisterBrokerWork> for BrokerSupActor {
 
     fn handle(&mut self, msg: UnregisterBrokerWork, _: &mut Context<Self>) {
         self.works_addr_map.remove(&msg.id.to_string());
+        // 启重一个新的 work
+        broker_work::start();
     }
 }
 

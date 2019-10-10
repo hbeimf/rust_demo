@@ -61,7 +61,6 @@ impl Actor for BrokerWorkActor {
     	debug!("建立了一个tcp连接？？！！");
     	// 当连接建立的时候，将addr 发送给 p_addr
         let self_addr = ctx.address().recipient();
-//        println!(" self_addr: {:?}", self_addr);
 
         let reg_msg = RegisterBrokerWork{
             id: 1u32,
@@ -75,29 +74,18 @@ impl Actor for BrokerWorkActor {
         self.hb(ctx)
     }
 
+    // 当连接断开时，把断开的消息发给sup，让sup重连
     fn stopped(&mut self, _: &mut Context<Self>) {
         debug!("tcp连接断开了！！");
 
-        // let tcpc_addr_msg = DeconnectTcpcAddrMsg{
-        // };
+        let unregister_msg = UnregisterBrokerWork{
+            id: 1u32,
+        };
 
-        // self.p_addr.do_send(tcpc_addr_msg);
-
-        // Stop application on disconnect
-        // System::current().stop();
+        let broker_sup_addr = System::current().registry().get::<BrokerSupActor>();
+        broker_sup_addr.do_send(unregister_msg);
     }
 }
-
-//// 客户端转发过来的包，
-//impl Handler<PackageFromClient> for BrokerWorkActor {
-//    type Result = ();
-//
-//    fn handle(&mut self, package: PackageFromClient, ctx: &mut Context<Self>) {
-//        // debug!("客户端转发过来的包: {:?}", package);
-//        self.framed.write(codec::ChatRequest::Message(package.0));
-//    }
-//}
-
 
 impl Handler<SendPackage> for BrokerWorkActor {
     type Result = ();

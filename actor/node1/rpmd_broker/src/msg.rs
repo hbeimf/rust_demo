@@ -19,12 +19,12 @@ pub struct RegisterBrokerWork{
 
 #[derive(Message)]
 pub struct UnregisterBrokerWork{
-    
+    pub id: u32,
 }
 
-#[derive(Message, Debug)]
-pub struct PackageFromClient(pub Vec<u8>);
-
+//#[derive(Message, Debug)]
+//pub struct PackageFromClient(pub Vec<u8>);
+//
 
 
 #[derive(Message, Debug, Clone)]

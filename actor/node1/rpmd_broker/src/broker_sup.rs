@@ -9,7 +9,7 @@ use crate::broker_work;
 // 监控连接的断开消息， 当连接断开的时候要尝试重连
 // 收发来自连接上的消息
 pub struct BrokerSupActor {
-    sessions: HashMap<String, Recipient<SendPackage>>,
+    works_addr_map: HashMap<String, Recipient<SendPackage>>,
     // db: rusqlite::Connection,
 }
 
@@ -17,7 +17,7 @@ impl Default for BrokerSupActor {
     fn default() -> BrokerSupActor {
 
         BrokerSupActor {
-            sessions: HashMap::new(),
+            works_addr_map: HashMap::new(),
             // db: conn,
         }
     }
@@ -26,7 +26,7 @@ impl Default for BrokerSupActor {
 impl BrokerSupActor {
     // 遍历 sessions , 发送pakcage
     fn broadcast_package(&self, send_package: SendPackage) {
-        for (key, addr) in &self.sessions {
+        for (key, addr) in &self.works_addr_map {
             println!("broadcast package: {:?}", send_package);
             let _ = addr.do_send(send_package.clone());
         }
@@ -57,7 +57,7 @@ impl Handler<RegisterBrokerWork> for BrokerSupActor {
     fn handle(&mut self, msg: RegisterBrokerWork, _: &mut Context<Self>) {
         // info!("Disconnect, OUT  OUT  OUT  OUT  Someone disconnected room");
         println!(" register broker work!!");
-        self.sessions.insert(msg.id.to_string(), msg.addr);
+        self.works_addr_map.insert(msg.id.to_string(), msg.addr);
 
         // 当连接已经建立了，发送测试包
          crate::test_send();
@@ -65,6 +65,14 @@ impl Handler<RegisterBrokerWork> for BrokerSupActor {
     }
 }
 
+//UnregisterBrokerWork
+impl Handler<UnregisterBrokerWork> for BrokerSupActor {
+    type Result = ();
+
+    fn handle(&mut self, msg: UnregisterBrokerWork, _: &mut Context<Self>) {
+        self.works_addr_map.remove(&msg.id.to_string());
+    }
+}
 
 impl Handler<SendPackage> for BrokerSupActor {
     type Result = ();

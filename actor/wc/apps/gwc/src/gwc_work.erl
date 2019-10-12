@@ -17,8 +17,20 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
 
+% api
+-export([send/0, send/1]).
+
 -define(LOG1(X), io:format("~n==========log1========{~p,~p}==============~n~p~n", [?MODULE,?LINE,X])).
 % -define(LOG1(X), true).
+
+
+send() -> 
+	Package = <<"hello world">>,
+	send(Package).
+
+send(Package) ->
+	gen_server:cast(?MODULE, {send, Package}).
+
 
 % --------------------------------------------------------------------
 % External API
@@ -36,7 +48,9 @@ start_link() ->
 %          {stop, Reason}
 % --------------------------------------------------------------------
 init([]) ->
-	{ok, []}.
+	{ok, ClientPid} = gc:start_link(),
+	State = #{ client_pid => ClientPid },
+	{ok, State}.
 
 % --------------------------------------------------------------------
 % Function: handle_call/3
@@ -59,6 +73,10 @@ handle_call(_Request, _From, State) ->
 %          {noreply, State, Timeout} |
 %          {stop, Reason, State}            (terminate/2 is called)
 % --------------------------------------------------------------------
+handle_cast({send, Package}, #{ client_pid := ClientPid } = State) ->
+	?LOG1(Package),
+	ClientPid ! {send, Package},
+	{noreply, State}; 
 handle_cast(_Msg, State) ->
 	{noreply, State}.
 

@@ -12,6 +12,12 @@
          websocket_terminate/3
         ]).
 
+% api
+-export([
+	send/0,
+	send/1
+	]).
+
 % 进程状态
 -record(state, { 
     data
@@ -19,6 +25,13 @@
 
 -define(LOG1(X), io:format("~n==========log1========{~p,~p}==============~n~p~n", [?MODULE,?LINE,X])).
 % -define(LOG1(X), true).
+
+send() -> 
+	Package = <<"test package ">>,
+	send(Package).
+
+send(Package) -> 
+	gwc_work:send(Package).
 
 start_link() ->
     websocket_client:start_link("ws://localhost:9988/ws", ?MODULE, []).

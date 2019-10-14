@@ -46,7 +46,7 @@ pub fn parse_package(package: Vec<u8>, client: &mut BrokerWorkActor, ctx: &mut a
 
 // 收到心跳 包
 fn action_heart_beat_101(_cmd:u32, pb:Vec<u8>, client: &mut BrokerWorkActor, _ctx: &mut actix::Context<BrokerWorkActor>) {
-    println!("receive hb reply");
+//    println!("receive hb reply");
 
 }
 

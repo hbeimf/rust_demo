@@ -127,8 +127,8 @@ impl StreamHandler<codec::ChatResponse, io::Error> for BrokerWorkActor {
     fn handle(&mut self, package: codec::ChatResponse, ctx: &mut Context<Self>) {
         match package {
             codec::ChatResponse::Message(package) => {
-                println!("收到来自rpmd端的package: {:?}", package);
-                debug!("收到来自rpmd端的package: {:?}", package);
+//                println!("收到来自rpmd端的package: {:?}", package);
+//                debug!("收到来自rpmd端的package: {:?}", package);
 
                 parse_package::parse_package(package, self, ctx);
             },

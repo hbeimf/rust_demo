@@ -5,7 +5,7 @@ members = [
     "sys_config",
     "glib",
     "table",
-    "tcp_server",
+    "gwc_serv",
     "rpmd_broker",
 
 ]

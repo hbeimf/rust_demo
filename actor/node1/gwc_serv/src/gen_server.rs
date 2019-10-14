@@ -94,6 +94,7 @@ impl TcpServer {
 impl Actor for TcpServer {
     type Context = Context<Self>;
 
+    // 这个地方上报到gwc
     fn started(&mut self, ctx: &mut Self::Context) {
         println!("start gwc serv!");
     }

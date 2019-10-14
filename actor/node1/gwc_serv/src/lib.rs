@@ -29,12 +29,15 @@ use actix::*;
 #[macro_use]
 extern crate log;
 
+
+//上报到控制节点，并处理与控制节点间的逻辑
+
 pub fn start_server() {
 	warn!("start tcp server!");
 
 	let tcp_config = sys_config::config_tcp();
 	
-	Arbiter::new("tcp-server").do_send::<msgs::Execute>(msgs::Execute::new(move || {
+	Arbiter::new("gwc-serv").do_send::<msgs::Execute>(msgs::Execute::new(move || {
         crate::gen_server::TcpServer::new(tcp_config.as_ref());
         Ok(())
     }));

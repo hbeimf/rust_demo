@@ -93,6 +93,15 @@ impl TcpServer {
 
 impl Actor for TcpServer {
     type Context = Context<Self>;
+
+    fn started(&mut self, ctx: &mut Self::Context) {
+        println!("start gwc serv!");
+    }
+
+    fn stopping(&mut self, ctx: &mut Self::Context) -> Running {
+        println!("stop gwc serv!");
+        Running::Stop
+    }
 }
 
 #[derive(Message)]

@@ -97,6 +97,8 @@ impl Actor for TcpServer {
     // 这个地方上报到gwc
     fn started(&mut self, ctx: &mut Self::Context) {
         println!("start gwc serv!");
+        glib::http_client::report_2_gwc();
+
     }
 
     fn stopping(&mut self, ctx: &mut Self::Context) -> Running {

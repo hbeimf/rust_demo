@@ -156,7 +156,7 @@ fn action_cast_10010(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut 
 }
 
 // 业务逻辑部分
-fn action(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
+fn action(cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Context<ChatSession>) {
 //    // tcp_client::start_tcp_client();
 //
 //
@@ -182,5 +182,5 @@ fn action(_cmd:u32, pb:Vec<u8>, client: &mut ChatSession, _ctx: &mut actix::Cont
 //    //     msg: reply_package,
 //    //     room: client.room.clone(),
 //    // })
-    println!("receive package!");
+    println!("receive package, cmd: {:?}", cmd);
 }

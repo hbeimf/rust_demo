@@ -17,5 +17,6 @@ gwc_serv={path = "../gwc_serv"}
 sys_config={path = "../sys_config"}
 glib={path = "../glib"}
 rpmd_broker={path = "../rpmd_broker"}
+gw_serv={path = "../gw_serv"}
 
 

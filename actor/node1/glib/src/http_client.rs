@@ -71,12 +71,12 @@ pub fn get_baidu() {
 pub fn report_2_gwc() {
     let server_type = "10010";
     let server_id = "1001001";
-    let server_uri = "127.0.0.1:10006";
+    let gw_uri = "127.0.0.1:5566/ws/";
     let gwc_uri = "127.0.0.1:54321";
 
     let max = 1000;
 
-    let pb = crate::pb::gwc_proto::encode_report_server_info(server_type.to_string(), server_id.to_string(), server_uri.to_string(),gwc_uri.to_string(), max);
+    let pb = crate::pb::gwc_proto::encode_report_server_info(server_type.to_string(), server_id.to_string(), gw_uri.to_string(),gwc_uri.to_string(), max);
 
     let base64_str = crate::aes::encode_base64(pb);
 

@@ -4,9 +4,23 @@
 -include_lib("glib/include/gw_proto.hrl").
 
 
-test() -> 
+test() ->
+	login(),
+	change_server(), 
 	ok.
 
+
+change_server() -> 
+	Package = package_change_server(),
+	gc:send(Package).
+
+package_change_server() -> 
+	Pb = glib_pb:encode_EnterGameReq(),
+	CmdId = 5,
+	ServerType = 10010,
+	ServerId = 1001001,
+	Package = glibpack:package(CmdId, ServerType, ServerId, Pb) ,
+	Package.
 
 
 

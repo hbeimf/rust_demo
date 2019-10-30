@@ -7,6 +7,16 @@
 
 -include_lib("glib/include/gw_proto.hrl").
 
+
+% message EnterGameReq { //请求进入游戏 此协议由客户端统一调用 cmd=5 客户端发起请求
+
+% }
+encode_EnterGameReq()->
+	EnterGameReq = #'EnterGameReq'{},
+	Pb = gw_proto:encode_msg(EnterGameReq),
+	Pb.	
+
+
 % message VerifyReq { //请求认证 cmd=3  http
 %                     string identity = 1; //用户身份
 %                     string channel_id = 2;

@@ -48,17 +48,17 @@ init([], _ConnState) ->
 %     {close, <<>>, "done"};
 
 % websocket_handle({binary, CurrentPackage}, _ConnState, State= #state{data= LastPackage}) ->
-%     ?LOG({"binary recv: ", CurrentPackage}),
+%     ?LOG1({"binary recv: ", CurrentPackage}),
 %     PackageBin = <<LastPackage/binary, CurrentPackage/binary>>,
-%     case parse_package_from_gs:parse_package(PackageBin, State) of 
+%     case glibpack:unpackage(PackageBin, State) of 
 %         {ok, waitmore, NextBin} -> 
 %             {ok, State#state{data = NextBin}};
 %         _ -> 
 %             {close, <<>>, "done"}
 %     end;
-	% {ok, State};
 
 websocket_handle(Msg, _ConnState, State) ->
+	?LOG1(Msg),
 	{ok, State}.
 
 websocket_info({send, Package}, _, State) ->
@@ -70,3 +70,7 @@ websocket_info(_Msg, _ConnState, State) ->
 websocket_terminate(Reason, _ConnState, State) ->
 	ok.
 
+
+parse_package(PackageBin, State) -> 
+
+	ok.

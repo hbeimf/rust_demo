@@ -22,6 +22,11 @@ fn main() {
     let log_dir = sys_config::config_log_dir();
     let pid_file = sys_config::config_pid_file();
 
+    
+    debug!("================================= start server =================================!");
+    debug!("log_dir: {:?}", log_dir);
+    debug!("log_level: {:?}", log_level);
+    debug!("pid_file: {:?}", pid_file);
 
     Logger::with_str(log_level.clone())
         .format(detailed_format)
@@ -29,13 +34,10 @@ fn main() {
         .directory(log_dir.clone())
         .rotate_over_size(200000000)
         .o_timestamp(true)
-        .start_reconfigurable()
+        // .start_reconfigurable()
+        .start()
         .unwrap_or_else(|e| panic!("Logger initialization failed with {}", e));
 
-    debug!("================================= start server =================================!");
-    debug!("log_dir: {:?}", log_dir);
-    debug!("log_level: {:?}", log_level);
-    debug!("pid_file: {:?}", pid_file);
 
     write_pid(pid_file, process::id());
 

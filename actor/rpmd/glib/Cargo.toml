@@ -37,4 +37,4 @@ reqwest = "0.9.9"
 md5 = "0.6.1"
 
 [build-dependencies]
-protobuf-codegen-pure = "2.2.0"
+protobuf-codegen-pure = "2.8.1"

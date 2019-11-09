@@ -31,7 +31,7 @@ fn main() {
         .directory(log_dir.clone())
         .rotate_over_size(200000000)
         .o_timestamp(true)
-        .start_reconfigurable()
+        .start()
         .unwrap_or_else(|e| panic!("Logger initialization failed with {}", e));
 
     // error!("This is an error message");

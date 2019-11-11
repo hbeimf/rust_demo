@@ -45,6 +45,7 @@ impl StreamHandler<ChatRequest, io::Error> for ChatSession {
             ChatRequest::Message(package) => {
                 debug!("Peer message XXXX: {:?}", package);
                 debug!("room: {:?}", self.room);
+//                接收来自gwc的包
                 parse_package_from_tcp::parse_package(package, self, ctx);   
             }
         }

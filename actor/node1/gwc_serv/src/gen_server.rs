@@ -73,6 +73,7 @@ impl ChatSession {
 
 }
 
+//接收来自gwc的tcp连接
 pub struct TcpServer {
 
 }

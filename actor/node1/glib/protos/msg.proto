@@ -44,3 +44,9 @@ message RpcPackage{
 }
 
 
+// 通用
+message Msg{    
+    int32 cmd = 1;
+    bytes payload = 2;
+}
+

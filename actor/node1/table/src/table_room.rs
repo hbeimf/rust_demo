@@ -93,6 +93,9 @@ impl Handler<Connect> for RoomActor {
 
         self.sessions.insert(msg.uid.to_string(), msg.addr);
 
+
+        // dyn 语法
+        // rustc 1.40.0-nightly (1423bec54 2019-11-05)
         // insert sqlite
         let room_id = 1;
         self.db.execute(

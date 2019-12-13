@@ -12,7 +12,7 @@ use tokio_tcp::TcpStream;
 use glib::codec;
 
 use glib;
-use crate::gen_server::{WsChatSession};
+use crate::gw_actor::{WsChatSession};
 
 pub fn start_tcpc(addr_from: actix::Addr<WsChatSession>) {
     // Connect to server

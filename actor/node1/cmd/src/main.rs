@@ -7,7 +7,7 @@ extern crate sys_config;
 // extern crate mq_client;
 extern crate glib;
 //extern crate rpmd;
-extern crate rpmd_broker;
+// extern crate rpmd_broker;
 extern crate gw_serv;
 
 extern crate flexi_logger;
@@ -60,7 +60,10 @@ fn main() {
 
     // mq_client::start_mq_client();
 //    rpmd::start();
-    rpmd_broker::start();
+
+
+
+    // rpmd_broker::start();
 
 //    rpmd_broker::test_send();
 

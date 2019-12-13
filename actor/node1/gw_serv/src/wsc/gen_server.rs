@@ -2,7 +2,7 @@
 extern crate actix;
 extern crate actix_web;
 extern crate futures;
-use crate::gen_server::{WsChatSession};
+use crate::gw_actor::{WsChatSession};
 use std::time::Duration;
 use actix::*;
 use actix_web::ws::{Client, ClientWriter, Message, ProtocolError};

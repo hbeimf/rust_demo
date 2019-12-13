@@ -2,7 +2,7 @@ extern crate tokio;
 use futures::Future;
 
 use glib;
-use crate::gen_server::{WsChatSession, WsChatSessionState};
+use crate::gw_actor::{WsChatSession, WsChatSessionState};
 
 use actix_web::{ ws};
 use table;

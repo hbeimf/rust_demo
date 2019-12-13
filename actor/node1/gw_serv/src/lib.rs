@@ -23,7 +23,7 @@ extern crate sys_config;
 extern crate table;
 extern crate glib;
 
-pub mod gen_server;
+pub mod gw_actor;
 pub mod action;
 pub mod tcpc;
 pub mod wsc;
@@ -35,12 +35,12 @@ pub fn start_server() {
 	let websocket_config = sys_config::config_websocket();
 	
 	HttpServer::new(move || {
-        let state = crate::gen_server::WsChatSessionState {
+        let state = crate::gw_actor::WsChatSessionState {
 
         };
 
         App::with_state(state)
-            .resource("/ws/", |r| r.route().f(crate::gen_server::chat_route))
+            .resource("/ws/", |r| r.route().f(crate::gw_actor::chat_route))
     }).bind(websocket_config.clone())
         .unwrap()
         .start();

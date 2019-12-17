@@ -71,14 +71,21 @@ leader(Node) ->
 
 %% 如果没有可用的followers, 则直接用leader 
 followers(Leader) -> 
-	% Nodes = nodes(),
-	case nodes() of 
+	Nodes = nodes(),
+	Nodes1 = [node()|Nodes],
+	case Nodes1 of 
 		[] -> 
 			[Leader];
-		Nodes -> 
-			lists:foldl(fun(N, Reply) -> 
+		_ -> 
+			F = lists:foldl(fun(N, Reply) -> 
 				[{raft_callback, N}|Reply]
-			end, [], Nodes)
+			end, [], Nodes1),
+			case lists:delete(Leader, F) of 
+				[] ->
+					[Leader];
+				F1 -> 
+					F1
+			end
 	end.	
 
 

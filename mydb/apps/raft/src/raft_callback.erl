@@ -7,7 +7,7 @@
 -export([
 	 init/1,
 	 % init/0,
-	 apply/3,
+	 apply/3
 
 	 % put/2,
 	 % get/1,

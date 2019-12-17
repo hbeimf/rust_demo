@@ -30,10 +30,10 @@ test() ->
 	R1 = ?MODULE:put(Leader, "MyValue1"),
 	R11 = ?MODULE:get(hd(Followers)),
 
-	R2 = ?MODULE:put(Leader, "MyValue2"),
-	R22 = ?MODULE:get(hd(Followers)),
+	% R2 = ?MODULE:put(Leader, "MyValue2"),
+	% R22 = ?MODULE:get(hd(Followers)),
 
-	?LOG({R1, R11, R2, R22}),
+	?LOG({R1, R11}),
 	ok.
 
 test1() ->

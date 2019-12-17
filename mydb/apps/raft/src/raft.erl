@@ -25,11 +25,11 @@ test() ->
 	% R2 = ?MODULE:get({raft_callback, 'mydb1@127.0.0.1'}),
 	% ?LOG({R1, R2}),
 	{Leader, Followers} = leader(),
-	R1 = ?MODULE:put({raft_callback, Leader}, "MyValue1"),
-	R11 = ?MODULE:get({raft_callback, hd(Followers)}),
+	R1 = ?MODULE:put(Leader, "MyValue1"),
+	R11 = ?MODULE:get(hd(Followers)),
 
-	R2 = ?MODULE:put({raft_callback, Leader}, "MyValue2"),
-	R22 = ?MODULE:get({raft_callback, hd(Followers)}),
+	R2 = ?MODULE:put(Leader, "MyValue2"),
+	R22 = ?MODULE:get(hd(Followers)),
 
 	?LOG({R1, R11, R2, R22}),
 	ok.

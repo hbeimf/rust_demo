@@ -25,6 +25,8 @@ test() ->
 	% R2 = ?MODULE:get({raft_callback, 'mydb1@127.0.0.1'}),
 	% ?LOG({R1, R2}),
 	{Leader, Followers} = leader(),
+
+	?LOG({leader, Leader, followers, Followers}),
 	R1 = ?MODULE:put(Leader, "MyValue1"),
 	R11 = ?MODULE:get(hd(Followers)),
 

@@ -52,14 +52,19 @@ leader() ->
 
 leader(Node) ->
     case ra:members({raft_callback, Node}) of
-	{ok, Result, Leader} -> 
-		% io:format("Cluster Members:~nLeader:~p~nFollowers:~p~n" ++
-		% 			      "Nodes:~p~n", [Leader, lists:delete(Leader, Result), Result]),
+		{ok, Result, Leader} -> 
+			% io:format("Cluster Members:~nLeader:~p~nFollowers:~p~n" ++
+			% 			      "Nodes:~p~n", [Leader, lists:delete(Leader, Result), Result]),
+			case lists:delete(Leader, Result) of 
+				[] ->
+					{Leader, [Leader]};
+				Followers -> 
+					{Leader, Followers}
+			end;
 
-		{Leader, lists:delete(Leader, Result)};
-	Err -> 
-		% io:format("Cluster Status error: ~p", [Err])
-		false
+		Err -> 
+			% io:format("Cluster Status error: ~p", [Err])
+			false
     end.
 
 

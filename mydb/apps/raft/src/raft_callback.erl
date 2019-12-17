@@ -53,7 +53,7 @@ apply(_Meta, {put, Value},
 apply(#{index := Idx}, {put, Value},
       #?MODULE{watchers = Watchers, value = OldValue} = State0) ->
 
-	?LOG({put, node(), Value}),
+	?LOG({put, node(), glib:micro_sec(), Value}),
     %% notify all watchers of the change of value
     Effects0 = maps:fold(
 		 fun(P, _, Acc) ->

@@ -1,13 +1,12 @@
-{application, node1,
+{application, table,
  [{description, "An OTP application"},
-  {vsn, "0.1.0"},
+  {vsn, "0.1.7"},
   {registered, []},
-  {mod, { node1_app, []}},
+  {mod, { table_app, []}},
   {applications,
    [kernel,
+   glib,
     stdlib
-    , glib
-    , table
    ]},
   {env,[]},
   {modules, []},

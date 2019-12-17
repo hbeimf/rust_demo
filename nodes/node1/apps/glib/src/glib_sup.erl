@@ -36,8 +36,8 @@ init([]) ->
 %%====================================================================
 children() -> 
   [
-      
-      child(glib_cluster_actor)
+      child(sys_config)
+      , child(glib_cluster_actor)
   ].
 
 

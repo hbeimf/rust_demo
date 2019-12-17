@@ -161,16 +161,16 @@ start() ->
 test() ->
 	% start(),
 	?MODULE:members(),
-	R1 = ?MODULE:put({?MODULE, 'tikv1@127.0.0.1'}, "MyValue"),
-	R2 = ?MODULE:get({?MODULE, 'tikv1@127.0.0.1'}),
+	R1 = ?MODULE:put({?MODULE, 'mydb1@127.0.0.1'}, "MyValue"),
+	R2 = ?MODULE:get({?MODULE, 'mydb1@127.0.0.1'}),
 	?LOG({R1, R2}),
 	ok.
 
 test1() ->
 	% start(),
 	?MODULE:members(),
-	R1 = ?MODULE:put({?MODULE, 'tikv1@127.0.0.1'}, "MyValue"),
-	R2 = ?MODULE:get({?MODULE, 'tikv2@127.0.0.1'}),
+	R1 = ?MODULE:put({?MODULE, 'mydb1@127.0.0.1'}, "MyValue"),
+	R2 = ?MODULE:get({?MODULE, 'mydb2@127.0.0.1'}),
 	?LOG({R1, R2}),
 	ok.
 

@@ -45,6 +45,7 @@ init(_) ->
 %     init(init).
 
 apply(_Meta, {put, Value},
+		?LOG({put, node(), Value}),
       #?MODULE{value = Value} = State) ->
     %% no change
     {State, ok, []};

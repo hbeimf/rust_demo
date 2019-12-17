@@ -9,20 +9,20 @@
 	 % init/0,
 	 apply/3,
 
-	 put/2,
-	 get/1,
-	 watch/1,
+	 % put/2,
+	 % get/1,
+	 % watch/1,
 
-	 start/1,
-	 start/2,
+	 % start/1,
+	 % start/2,
 
-	 members/0,
-	 members/1,
+	 % members/0,
+	 % members/1,
 
-	 state_enter/2
+	 % state_enter/2
 	]).
 
--export([start/0, test/0, test1/0]).
+% -export([start/0, test/0, test1/0]).
 
 -record(?MODULE, {value :: term(),
 		  watchers = #{} :: #{pid() => ok}}).
@@ -92,87 +92,87 @@ apply(_Meta, {nodedown, _}, State) ->
     {State, ok, []}.
 
 
-%% when a server enters leader state we need to re-issue all monitors
-state_enter(leader, #?MODULE{watchers = Watchers}) ->
-    maps:fold(
-      fun(P, _, Acc) ->
-	      [{monitor, process, P} | Acc]
-      end, [], Watchers);
-state_enter(_, _) ->
-    [].
+% %% when a server enters leader state we need to re-issue all monitors
+% state_enter(leader, #?MODULE{watchers = Watchers}) ->
+%     maps:fold(
+%       fun(P, _, Acc) ->
+% 	      [{monitor, process, P} | Acc]
+%       end, [], Watchers);
+% state_enter(_, _) ->
+%     [].
 
-%% API
+% %% API
 
-put(Server, Value) ->
-    case ra:process_command(Server, {put, Value}) of
-	{ok, _, _} -> ok;
-	Err -> Err
-    end.
+% put(Server, Value) ->
+%     case ra:process_command(Server, {put, Value}) of
+% 	{ok, _, _} -> ok;
+% 	Err -> Err
+%     end.
 
-get(Server) ->
-    case ra:process_command(Server, get) of
-	{ok, Value, _} ->
-	    {ok, Value};
-	Err -> Err
-    end.
+% get(Server) ->
+%     case ra:process_command(Server, get) of
+% 	{ok, Value, _} ->
+% 	    {ok, Value};
+% 	Err -> Err
+%     end.
 
-watch(Server) ->
-    case ra:process_command(Server, {watch, self()}) of
-	{ok, _, _} -> ok;
-	Err -> Err
-    end.
+% watch(Server) ->
+%     case ra:process_command(Server, {watch, self()}) of
+% 	{ok, _, _} -> ok;
+% 	Err -> Err
+%     end.
 
-start(Name) ->
-    start(Name, [node()]).
-
-
+% start(Name) ->
+%     start(Name, [node()]).
 
 
 
-start(Name, Nodes) ->
-    Servers = [{?MODULE, N} || N <- Nodes],
-    ra:start_cluster(Name, {module, ?MODULE, #{}}, Servers).
-
-members() ->
-    members(node()).
-
-members(Node) ->
-    case ra:members({?MODULE, Node}) of
-	{ok, Result, Leader} -> io:format("Cluster Members:~nLeader:~p~nFollowers:~p~n" ++
-					      "Nodes:~p~n", [Leader, lists:delete(Leader, Result), Result]);
-	Err -> io:format("Cluster Status error: ~p", [Err])
-    end.
 
 
--ifdef(TEST).
--include_lib("eunit/include/eunit.hrl").
+% start(Name, Nodes) ->
+%     Servers = [{?MODULE, N} || N <- Nodes],
+%     ra:start_cluster(Name, {module, ?MODULE, #{}}, Servers).
 
--endif.
+% members() ->
+%     members(node()).
+
+% members(Node) ->
+%     case ra:members({?MODULE, Node}) of
+% 	{ok, Result, Leader} -> io:format("Cluster Members:~nLeader:~p~nFollowers:~p~n" ++
+% 					      "Nodes:~p~n", [Leader, lists:delete(Leader, Result), Result]);
+% 	Err -> io:format("Cluster Status error: ~p", [Err])
+%     end.
 
 
-start() -> 
-	% ErlangNodes = ['tikv1@127.0.0.1', 'tikv2@127.0.0.1', 'tikv3@127.0.0.1'],
-	% ?MODULE:start("My Test CLuster", ErlangNodes),
-	% ok.
-	ErlangNodes = glib_node:get_all_nodes(),
-	start("MyDBCLuster", ErlangNodes),
-	ok.
+% -ifdef(TEST).
+% -include_lib("eunit/include/eunit.hrl").
 
-test() ->
-	% start(),
-	?MODULE:members(),
-	R1 = ?MODULE:put({?MODULE, 'mydb1@127.0.0.1'}, "MyValue"),
-	R2 = ?MODULE:get({?MODULE, 'mydb1@127.0.0.1'}),
-	?LOG({R1, R2}),
-	ok.
+% -endif.
 
-test1() ->
-	% start(),
-	?MODULE:members(),
-	R1 = ?MODULE:put({?MODULE, 'mydb1@127.0.0.1'}, "MyValue"),
-	R2 = ?MODULE:get({?MODULE, 'mydb2@127.0.0.1'}),
-	?LOG({R1, R2}),
-	ok.
+
+% start() -> 
+% 	% ErlangNodes = ['tikv1@127.0.0.1', 'tikv2@127.0.0.1', 'tikv3@127.0.0.1'],
+% 	% ?MODULE:start("My Test CLuster", ErlangNodes),
+% 	% ok.
+% 	ErlangNodes = glib_node:get_all_nodes(),
+% 	start("MyDBCLuster", ErlangNodes),
+% 	ok.
+
+% test() ->
+% 	% start(),
+% 	?MODULE:members(),
+% 	R1 = ?MODULE:put({?MODULE, 'mydb1@127.0.0.1'}, "MyValue"),
+% 	R2 = ?MODULE:get({?MODULE, 'mydb1@127.0.0.1'}),
+% 	?LOG({R1, R2}),
+% 	ok.
+
+% test1() ->
+% 	% start(),
+% 	?MODULE:members(),
+% 	R1 = ?MODULE:put({?MODULE, 'mydb1@127.0.0.1'}, "MyValue"),
+% 	R2 = ?MODULE:get({?MODULE, 'mydb2@127.0.0.1'}),
+% 	?LOG({R1, R2}),
+% 	ok.
 
 
 

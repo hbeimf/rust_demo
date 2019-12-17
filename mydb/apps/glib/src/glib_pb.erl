@@ -8,7 +8,7 @@
 -include_lib("glib/include/msg_proto.hrl").
 
 test() ->
-	Key = 123,
+	Key = <<"123">>,
 	Str = <<"xx">>,
 	AesEncode = #'AesEncode'{
                         key = Key,

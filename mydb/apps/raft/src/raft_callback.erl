@@ -151,8 +151,11 @@ members(Node) ->
 
 
 start() -> 
-	ErlangNodes = ['tikv1@127.0.0.1', 'tikv2@127.0.0.1', 'tikv3@127.0.0.1'],
-	?MODULE:start("My Test CLuster", ErlangNodes),
+	% ErlangNodes = ['tikv1@127.0.0.1', 'tikv2@127.0.0.1', 'tikv3@127.0.0.1'],
+	% ?MODULE:start("My Test CLuster", ErlangNodes),
+	% ok.
+	ErlangNodes = glib_node:get_all_nodes(),
+	start("MyDBCLuster", ErlangNodes),
 	ok.
 
 test() ->

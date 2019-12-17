@@ -1,0 +1,6 @@
+-sname mydb
+
+-setcookie mydb_cookie
+
++K true
++A30

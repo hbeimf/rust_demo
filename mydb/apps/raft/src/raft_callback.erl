@@ -48,10 +48,12 @@ apply(_Meta, {put, Value},
       #?MODULE{value = Value} = State) ->
     %% no change
     ?LOG({put, node(), Value}),
-    
+
     {State, ok, []};
 apply(#{index := Idx}, {put, Value},
       #?MODULE{watchers = Watchers, value = OldValue} = State0) ->
+
+	?LOG({put, node(), Value}),
     %% notify all watchers of the change of value
     Effects0 = maps:fold(
 		 fun(P, _, Acc) ->

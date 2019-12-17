@@ -45,9 +45,10 @@ init(_) ->
 %     init(init).
 
 apply(_Meta, {put, Value},
-		?LOG({put, node(), Value}),
       #?MODULE{value = Value} = State) ->
     %% no change
+    ?LOG({put, node(), Value}),
+    
     {State, ok, []};
 apply(#{index := Idx}, {put, Value},
       #?MODULE{watchers = Watchers, value = OldValue} = State0) ->

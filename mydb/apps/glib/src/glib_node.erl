@@ -9,6 +9,11 @@
 
 
 
+get_all_nodes() -> 
+	{ok, NodeConfig} = sys_config:get_config(nodes),
+	lists:foldl(fun({_, N}, Reply) -> 
+		[N|Reply]
+	end, [], NodeConfig).
 
 
 get_nodes() -> 

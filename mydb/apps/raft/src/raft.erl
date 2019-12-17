@@ -20,10 +20,18 @@ start(Name, Nodes) ->
 
 test() ->
 	% start(),
-	?MODULE:members(),
-	R1 = ?MODULE:put({raft_callback, 'mydb1@127.0.0.1'}, "MyValue"),
-	R2 = ?MODULE:get({raft_callback, 'mydb1@127.0.0.1'}),
-	?LOG({R1, R2}),
+	% ?MODULE:members(),
+	% R1 = ?MODULE:put({raft_callback, 'mydb1@127.0.0.1'}, "MyValue"),
+	% R2 = ?MODULE:get({raft_callback, 'mydb1@127.0.0.1'}),
+	% ?LOG({R1, R2}),
+	{Leader, Followers} = leader(),
+	R1 = ?MODULE:put({raft_callback, Leader}, "MyValue1"),
+	R11 = ?MODULE:get({raft_callback, hd(Followers)}),
+
+	R2 = ?MODULE:put({raft_callback, Leader}, "MyValue2"),
+	R22 = ?MODULE:get({raft_callback, hd(Followers)}),
+
+	?LOG({R1, R11, R2, R22}).
 	ok.
 
 test1() ->
@@ -33,6 +41,26 @@ test1() ->
 	R2 = ?MODULE:get({raft_callback, 'mydb2@127.0.0.1'}),
 	?LOG({R1, R2}),
 	ok.
+
+
+
+
+leader() ->
+    leader(node()).
+
+leader(Node) ->
+    case ra:members({raft_callback, Node}) of
+	{ok, Result, Leader} -> 
+		% io:format("Cluster Members:~nLeader:~p~nFollowers:~p~n" ++
+		% 			      "Nodes:~p~n", [Leader, lists:delete(Leader, Result), Result]),
+
+		{Leader, lists:delete(Leader, Result)};
+	Err -> 
+		% io:format("Cluster Status error: ~p", [Err])
+		false
+    end.
+
+
 
 members() ->
     members(node()).

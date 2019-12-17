@@ -1,10 +1,16 @@
 {"1.1.0",
 [{<<"aten">>,{pkg,<<"aten">>,<<"0.5.2">>},1},
+ {<<"esnowflake">>,{pkg,<<"esnowflake">>,<<"0.2.0">>},0},
  {<<"gen_batch_server">>,{pkg,<<"gen_batch_server">>,<<"0.8.2">>},1},
- {<<"ra">>,{pkg,<<"ra">>,<<"1.0.5">>},0}]}.
+ {<<"ra">>,{pkg,<<"ra">>,<<"1.0.5">>},0},
+ {<<"zucchini">>,
+  {git,"https://github.com/devinus/zucchini.git",
+       {ref,"429c9e0f9f67911c1825fbebff7d0fdc59e56b90"}},
+  0}]}.
 [
 {pkg_hash,[
  {<<"aten">>, <<"2B4D31261D36C0A11CD6D04AE3F96C8951EB32106E9D2013A5B33BA14F7875AE">>},
+ {<<"esnowflake">>, <<"083BB3EBAA4F7DB24E935D70EF5CE33C84817A484B28DAED8292E29253E19642">>},
  {<<"gen_batch_server">>, <<"547F5656937AB36F1FB7921263F2F3E82D685AE99F32BCE06B803719AAE5D829">>},
  {<<"ra">>, <<"FE00816DF33241406B08FFC03ADF1F37EA00CB9EB3611AB322409BFFDD19E536">>}]}
 ].

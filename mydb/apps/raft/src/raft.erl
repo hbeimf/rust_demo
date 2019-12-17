@@ -31,7 +31,7 @@ test() ->
 	R2 = ?MODULE:put({raft_callback, Leader}, "MyValue2"),
 	R22 = ?MODULE:get({raft_callback, hd(Followers)}),
 
-	?LOG({R1, R11, R2, R22}).
+	?LOG({R1, R11, R2, R22}),
 	ok.
 
 test1() ->

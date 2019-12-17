@@ -130,14 +130,14 @@ start(Name) ->
 
 
 start(Name, Nodes) ->
-    Servers = [{refcell, N} || N <- Nodes],
+    Servers = [{?MODULE, N} || N <- Nodes],
     ra:start_cluster(Name, {module, ?MODULE, #{}}, Servers).
 
 members() ->
     members(node()).
 
 members(Node) ->
-    case ra:members({refcell, Node}) of
+    case ra:members({?MODULE, Node}) of
 	{ok, Result, Leader} -> io:format("Cluster Members:~nLeader:~p~nFollowers:~p~n" ++
 					      "Nodes:~p~n", [Leader, lists:delete(Leader, Result), Result]);
 	Err -> io:format("Cluster Status error: ~p", [Err])
@@ -152,22 +152,22 @@ members(Node) ->
 
 start() -> 
 	ErlangNodes = ['tikv1@127.0.0.1', 'tikv2@127.0.0.1', 'tikv3@127.0.0.1'],
-	refcell:start("My Test CLuster", ErlangNodes),
+	?MODULE:start("My Test CLuster", ErlangNodes),
 	ok.
 
 test() ->
 	% start(),
-	refcell:members(),
-	R1 = refcell:put({refcell, 'tikv1@127.0.0.1'}, "MyValue"),
-	R2 = refcell:get({refcell, 'tikv1@127.0.0.1'}),
+	?MODULE:members(),
+	R1 = ?MODULE:put({?MODULE, 'tikv1@127.0.0.1'}, "MyValue"),
+	R2 = ?MODULE:get({?MODULE, 'tikv1@127.0.0.1'}),
 	?LOG({R1, R2}),
 	ok.
 
 test1() ->
 	% start(),
-	refcell:members(),
-	R1 = refcell:put({refcell, 'tikv1@127.0.0.1'}, "MyValue"),
-	R2 = refcell:get({refcell, 'tikv2@127.0.0.1'}),
+	?MODULE:members(),
+	R1 = ?MODULE:put({?MODULE, 'tikv1@127.0.0.1'}, "MyValue"),
+	R2 = ?MODULE:get({?MODULE, 'tikv2@127.0.0.1'}),
 	?LOG({R1, R2}),
 	ok.
 

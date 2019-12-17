@@ -15,7 +15,7 @@ start() ->
 
 start(Name, Nodes) ->
     Servers = [{raft_callback, N} || N <- Nodes],
-    ra:start_cluster(Name, {module, ?MODULE, #{}}, Servers).
+    ra:start_cluster(Name, {module, raft_callback, #{}}, Servers).
 
 
 test() ->

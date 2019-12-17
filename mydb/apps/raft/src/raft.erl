@@ -55,17 +55,31 @@ leader(Node) ->
 		{ok, Result, Leader} -> 
 			% io:format("Cluster Members:~nLeader:~p~nFollowers:~p~n" ++
 			% 			      "Nodes:~p~n", [Leader, lists:delete(Leader, Result), Result]),
-			case lists:delete(Leader, Result) of 
-				[] ->
-					{Leader, [Leader]};
-				Followers -> 
-					{Leader, Followers}
-			end;
+			% case lists:delete(Leader, Result) of 
+			% 	[] ->
+			% 		{Leader, [Leader]};
+			% 	Followers -> 
+			% 		{Leader, Followers}
+			% end;
+
+			{Leader, followers(Leader)};
 
 		Err -> 
 			% io:format("Cluster Status error: ~p", [Err])
 			false
     end.
+
+%% 如果没有可用的followers, 则直接用leader 
+followers(Leader) -> 
+	% Nodes = nodes(),
+	case nodes() of 
+		[] -> 
+			[Leader];
+		Nodes -> 
+			lists:foldl(fun(N, Reply) -> 
+				[{raft_callback, N}|Reply]
+			end, [], Nodes)
+	end.	
 
 
 

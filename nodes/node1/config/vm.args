@@ -1,0 +1,6 @@
+-sname node1
+
+-setcookie node1_cookie
+
++K true
++A30

@@ -88,6 +88,7 @@ handle_call({spawn_worker, Wid}, _From, State = #state{workers = Wrks,
     NewWrks = maps:put(Wid, Wrk, Wrks),
     {reply, Wrk, State#state{workers = NewWrks, worker_num = Num+1}};
 handle_call(fetch, _From, State = #state{worker_num = Num, workers = Wrks}) ->
+    %% 取纳秒 erlang:system_time(nano_seconds)
     Wid = erlang:system_time(nano_seconds) rem Num,
     {ok, Wrk} = maps:find(Wid, Wrks),
     {reply, Wrk, State}.

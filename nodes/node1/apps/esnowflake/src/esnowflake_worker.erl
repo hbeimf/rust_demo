@@ -71,6 +71,7 @@ init([Id]) ->
 -spec generate_id(pid()) -> integer() |
                             {err_clock_backwards, term()}.
 generate_id(Pid) ->
+    %% 取毫秒 erlang:system_time(milli_seconds)
     gen_server:call(Pid, {generate, erlang:system_time(milli_seconds)}).
 
 -spec generate_ids(pid(), integer()) -> [integer()] |

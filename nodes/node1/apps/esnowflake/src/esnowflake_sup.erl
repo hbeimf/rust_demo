@@ -7,6 +7,8 @@
 
 -behaviour(supervisor).
 
+-include("esnowflake.hrl").
+
 %% API
 -export([start_link/1]).
 
@@ -61,4 +63,5 @@ init([Version]) ->
       modules  => ['esnowflake_stats']
      },
 
+    ?LOG([WrkSupSpec, PoolSpec, StatsSpec]),
     {ok, {SupFlags, [WrkSupSpec, PoolSpec, StatsSpec]}}.

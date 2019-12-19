@@ -63,6 +63,9 @@ uid() ->
 			Uid
 	end.
 
+system_info() -> 
+	esnowflake_stats:stats().
+
 
 
 

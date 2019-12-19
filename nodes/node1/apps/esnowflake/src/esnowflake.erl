@@ -22,6 +22,7 @@
 %% @end
 -spec generate_id() -> snowflake_id().
 generate_id() ->
+    %% 根据机器纳秒取余随机选出一个工作进程
     Wrk = esnowflake_worker_pool:fetch(),
     esnowflake_worker:generate_id(Wrk).
 

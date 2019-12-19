@@ -130,7 +130,7 @@ start_link() ->
 %          {stop, Reason}
 % --------------------------------------------------------------------
 init([]) ->
-	glib:write_req(start_sys_config, "debug", true),
+	% glib:write_req(start_sys_config, "debug", true),
 
 	?MODULE = ets:new(?SYS_CONFIG, ?ETS_OPTS),
 
@@ -200,7 +200,7 @@ handle_info(_Info, State) ->
 % Returns: any (ignored by gen_server)
 % --------------------------------------------------------------------
 terminate(_Reason, _State) ->
-	glib:write_req(stop_sys_config, "debug", true),
+	% glib:write_req(stop_sys_config, "debug", true),
     ok.
 
 % --------------------------------------------------------------------

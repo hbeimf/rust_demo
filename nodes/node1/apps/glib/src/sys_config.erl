@@ -10,7 +10,7 @@
 % --------------------------------------------------------------------
 % External exports
 % --------------------------------------------------------------------
--export([stop/0]).
+-export([]).
 
 % gen_server callbacks
 -export([start_link/0]).
@@ -117,10 +117,6 @@ get_config(Sec, Key) ->
 			false
 	end. 	
 
-
-stop() -> 
-		gen_server:call(?MODULE, stop).
-
 start_link() ->
     gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
@@ -167,11 +163,6 @@ init([]) ->
 %          {stop, Reason, Reply, State}   | (terminate/2 is called)
 %          {stop, Reason, State}            (terminate/2 is called)
 % --------------------------------------------------------------------
-
-handle_call(stop, _From, State) ->
-    % Reply = ok,
-    {stop, normal, State};
-
 handle_call(_Request, _From, State) ->
     Reply = ok,
     {reply, Reply, State}.

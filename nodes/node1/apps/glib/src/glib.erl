@@ -455,13 +455,7 @@ header_list() ->
 
 	].
 
-% glib:report_2_gwc().
-report_2_gwc() ->
-	ReportUri = glib_pb:report_uri(),
-	%?LOG(ReportUri),
-	Reply = glib:http_get(ReportUri),
-	%?LOG(Reply),
-	ok.	
+	
 
 
 gold_to_binary(Num)->

@@ -1,12 +1,12 @@
 run1:
-	rebar3 shell --name ego1@127.0.0.1 --setcookie ego 
+	./rebar3 shell --name ego1@127.0.0.1 --setcookie ego 
 
 run2:
-	rebar3 shell --name ego2@127.0.0.1 --setcookie ego 
+	./rebar3 shell --name ego2@127.0.0.1 --setcookie ego 
 
 
 run3:
-	rebar3 shell --name ego3@127.0.0.1 --setcookie ego 
+	./rebar3 shell --name ego3@127.0.0.1 --setcookie ego 
 
 
 stop:
@@ -20,4 +20,7 @@ push:
 ps:
 	ps aux | grep xgn.node
 
-
+rel: 
+	./rebar3 compile
+	./rebar3 release
+	./rebar3 tar

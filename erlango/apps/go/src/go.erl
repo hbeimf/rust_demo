@@ -37,11 +37,17 @@ call(Package, _Cmd) ->
 
 cast() ->
     % cast(<<"hello world!">>).
-    % Bin = term_to_binary({hello, world}),
-    Name = <<"test_name">>,
-    NickName = <<"test_nick_name">>,
-    Phone = <<"138912341234">>,
-    Bin = glib_pb:encode_TestMsg(Name, NickName, Phone),
+	% Bin = term_to_binary({hello, world}),
+	
+    % Name = <<"test_name">>,
+    % NickName = <<"test_nick_name">>,
+    % Phone = <<"138912341234">>,
+	% Bin = glib_pb:encode_TestMsg(Name, NickName, Phone),
+	
+	Key = glib:to_binary(glib:uid()),	
+	Cmd = 1000,
+	Payload = <<"hello world!!">>,
+	Bin = glib_pb:encode_RpcPackage(Key, Cmd, Payload),
     cast(Bin).
 
 cast(Package) ->

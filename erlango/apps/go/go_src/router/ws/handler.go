@@ -76,15 +76,28 @@ func (c *Client) readPump() {
 		log.Printf("msg: %v", message)
 
 		// 进行解码
-		newRpcPackage := &glib.TestMsg{}
-		// pData := buf[:cnt]
+		newRpcPackage := &glib.RpcPackage{}
 		err1 := proto.Unmarshal(message, newRpcPackage)
 		if err1 != nil {
 			log.Fatal("unmarshaling error: ", err)
 		}
-		log.Printf("decode package Key KKKKKKKKKKKKKKKKKKK: %#v", newRpcPackage.GetName())
-		log.Printf("decode package payload PPPPPPPPPPPP: %#v", newRpcPackage.GetNickName())
-		log.Printf("decode package payload PPPPPPPPPPPP: %#v", newRpcPackage.GetPhone())
+		// message RpcPackage{   
+		// 	string  key = 1;  
+		// 	int32 cmd = 2;
+		// 	bytes payload = 3;
+		// }
+		log.Printf("decode package Key KKKKKKKKKKKKKKKKKKK: %#v", newRpcPackage.GetKey())
+		log.Printf("decode package payload PPPPPPPPPPPP: %#v", newRpcPackage.GetCmd())
+		log.Printf("decode package payload PPPPPPPPPPPP: %#v", newRpcPackage.GetPayload())
+
+		// newRpcPackage := &glib.TestMsg{}
+		// err1 := proto.Unmarshal(message, newRpcPackage)
+		// if err1 != nil {
+		// 	log.Fatal("unmarshaling error: ", err)
+		// }
+		// log.Printf("decode package Key KKKKKKKKKKKKKKKKKKK: %#v", newRpcPackage.GetName())
+		// log.Printf("decode package payload PPPPPPPPPPPP: %#v", newRpcPackage.GetNickName())
+		// log.Printf("decode package payload PPPPPPPPPPPP: %#v", newRpcPackage.GetPhone())
 		
 		// message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 

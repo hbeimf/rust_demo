@@ -2,14 +2,7 @@
 
 -behaviour(websocket_client_handler).
 
-% -define(ETS_OPTS,[set, public ,named_table , {keypos,2}, {heir,none}, {write_concurrency,true}, {read_concurrency,false}]).
-% -define(WS_CONTROL_CENTER, control_center_handler_client).
 
-
-% -record(control_center_handler_client, {
-%     key,
-%     val
-% }).
 
 -export([
          start_link/1,
@@ -20,61 +13,6 @@
         ]).
 
 
-% -export([
-%     connect/0,
-%     connect_control_center/0,
-%     send/1,
-%     send/0
-%     ]).
-
-% -include("gateway_proto.hrl").
-% -include("cmd_gateway.hrl").
-% -include_lib("ws_server/include/log.hrl").
-
-% % 进程状态
-% -record(state, { 
-%     data
-%     }).
-
-% % control_center_handler_client:send().
-% send() ->
-% 	Package = glibpack:package(1, <<"hello world!">>),
-% 	send(Package).
-
-
-% % control_center_handler_client:send(<<"test send">>).
-% send(Package) ->
-%     % case ets:match_object(?WS_CONTROL_CENTER, #control_center_handler_client{key = key(), _='_'}) of
-%     %     [{?WS_CONTROL_CENTER, _Key, Pid}] -> 
-%     %         Pid ! {binary, Package},
-%     %         ok;
-%     %     [] -> ok
-%     % end, 
-%     % ok.
-%     control_monitor:send(Package).
-
-% connect() ->
-%     connect_control_center().
-
-% connect_control_center() -> 
-%     ets:new(?WS_CONTROL_CENTER, ?ETS_OPTS),
-%     {ok, Pid} = start_link(key()),
-%     ets:insert(?WS_CONTROL_CENTER, #control_center_handler_client{key=key(), val=Pid}),
-%     %%　上报网关信息
-%     GatewayLogin = #'Gateway'{
-%                         gateway_id = 1,
-%                         ws_addr = <<"ws://localhost:7788/websocket">>
-%                     },
-
-%     PbBin = gateway_proto:encode_msg(GatewayLogin),
-%     Package = glib:package(?GATEWAY_CMD_REPORT, PbBin),
-
-%     send(Package),
-
-%     ok.
-
-% key() -> 
-%     <<"control_center_handler_client">>.
 
 start_link(Index) ->
     Host = "ws://localhost:8000/ws",
@@ -83,9 +21,7 @@ start_link(Index) ->
     
 
 init([_Index], _ConnState) ->
-    % websocket_client:cast(self(), {text, <<"message 1">>}),
-    % io:format("client pid: ~p ~n", [self()]),
-    % State = #state{data= <<>>},
+    
     State = #{},
     {ok, State}.
 

@@ -2,7 +2,7 @@
 
 -behaviour(websocket_client_handler).
 
-
+-include_lib("glib/include/log.hrl").
 
 -export([
          start_link/1,
@@ -59,7 +59,7 @@ websocket_info({text, Txt}, _ConnState, State) ->
     % ?LOG({text, Txt}),
 	{reply, {text, Txt}, State};
 websocket_info({send, Bin}, _ConnState, State) ->
-    % ?LOG({binary, Bin}),
+    ?LOG({binary, Bin}),
 	{reply, {binary, Bin}, State}.
 
 websocket_terminate(_Reason, _ConnState, _State) ->

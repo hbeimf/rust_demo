@@ -34,8 +34,8 @@ init([]) ->
 
 
     {Ip, Port} = {"127.0.0.1", 8000},
-    PoolSpecs = {go_client_pool,{poolboy,start_link,
-             [[{name,{local,go_client_pool}},
+    PoolSpecs = {go_pool,{poolboy,start_link,
+             [[{name,{local,go_pool}},
                {worker_module,go_actor},
                {size,10},
                {max_overflow,20}],

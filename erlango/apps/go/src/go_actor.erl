@@ -79,6 +79,9 @@ handle_call(_Request, _From, State) ->
 %          {noreply, gs_tcp_state, Timeout} |
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
+handle_cast({send, Package}, #{ws_pid := Pid} = State) ->
+	Pid ! {send, Package},
+	{noreply, State};
 handle_cast(_Msg, State) ->
 	{noreply, State}.		
 

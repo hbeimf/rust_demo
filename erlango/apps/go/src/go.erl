@@ -36,7 +36,9 @@ call(Package, _Cmd) ->
 	end.
 
 cast() ->
-    cast(<<"hello world!">>).
+    % cast(<<"hello world!">>).
+    Bin = term_to_binary({hello, world}),
+    cast(Bin).
 
 cast(Package) ->
 	% Key = to_binary(to_str(uid())),	

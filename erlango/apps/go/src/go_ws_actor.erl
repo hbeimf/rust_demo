@@ -33,7 +33,9 @@ init([_Index], _ConnState) ->
 
 websocket_handle({binary, CurrentPackage}, _ConnState, State) ->
 	% io:format("Client received binary here ~p~n", [Bin]),
-    ?LOG({receive_binary, CurrentPackage}),
+    Decode = binary_to_term(CurrentPackage),
+    ?LOG({receive_binary, CurrentPackage, Decode}),
+
     % ?LOG({"binary recv: ", CurrentPackage}),
     % PackageBin = <<LastPackage/binary, CurrentPackage/binary>>,
     % case parse_package_from_gwc:parse_package(PackageBin, State) of 

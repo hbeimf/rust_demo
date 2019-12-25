@@ -124,32 +124,10 @@ stop_rs_server(Port) ->
 
 start_rs_server() ->
 	CmdPath = code:lib_dir(rs, priv),
-	RootDir = root_dir(),
+	RootDir = glib:root_dir(),
 	Cmd = lists:concat([CmdPath, "/rs-server ", "--config ", CmdPath, "/config.ini -d ", RootDir, "logs -l debug -p ", CmdPath, "/rs.pid"]),
 	?LOG(Cmd),
 	Port = open_port({spawn, Cmd},[exit_status]),
 	Port.
 
 
-root_dir() ->
-	replace(os:cmd("pwd"), "\n", "/"). 
-
-replace() -> 
-	S = replace("xxx'yyy'zzz", "'", "\\'"),
-	io:format("str: ~p ~n ", [S]).
-
-replace(Str, SubStr, NewStr) ->
-	replace("", Str, SubStr, NewStr). 
-
-replace(Result, Str, SubStr, NewStr) ->
-	case string:str(Str, SubStr) of
-		Pos when Pos == 0 ->
-			string:concat(Result, Str);
-		Pos when Pos == 1 ->
-			Tail = string:substr(Str, string:len(SubStr) + 1),
-			replace(string:concat(Result, NewStr), Tail, SubStr, NewStr);
-		Pos ->
-			Head = string:substr(Str, 1, Pos - 1),
-			Tail = string:substr(Str, Pos + string:len(SubStr)),
-			replace(string:concat(Result, string:concat(Head, NewStr)), Tail, SubStr, NewStr)
-	end.

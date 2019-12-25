@@ -45,14 +45,13 @@ cast() ->
 	% Bin = glib_pb:encode_TestMsg(Name, NickName, Phone),
 	
 	% Key = glib:to_binary(glib:uid()),	
-	?LOG(self()),
-	% Key = base64:encode(term_to_binary({self()})),
+	Key = base64:encode(term_to_binary({self()})),
 	Cmd = 1000,
-	ReqPayload = term_to_binary({<<"hello world!!">>, self()}),
-	% Bin = glib_pb:encode_RpcPackage(Key, Cmd, Payload),
-    cast(Cmd, ReqPayload).
+	Payload = term_to_binary({<<"hello world!!">>, self()}),
+	Bin = glib_pb:encode_RpcPackage(Key, Cmd, Payload),
+    cast(Bin).
 
-cast(Cmd, ReqPayload) ->
+cast(Package) ->
 	% Key = to_binary(to_str(uid())),	
 	% RpcPackage = #'RpcPackage'{
     %                     key = Key,
@@ -60,9 +59,9 @@ cast(Cmd, ReqPayload) ->
     %                 },
 	% RpcPackageBin = msg_proto:encode_msg(RpcPackage),
     % RpcPackageBin1 = package(?CMD_CAST_10010, RpcPackageBin),
-    Pid = self(),
+    
 	poolboy:transaction(pool_name(), fun(Worker) ->
-		gen_server:cast(Worker, {send, Pid, Cmd, ReqPayload})
+		gen_server:cast(Worker, {send, Package})
 	end).
 
 

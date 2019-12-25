@@ -12,6 +12,7 @@ message TestMsg{
 
 message Login{   
     int32  uid = 1;
+    int32 uuid =2;
 }
 
 // aes 加密

@@ -46,8 +46,8 @@ aes_test1() ->
 	Key = <<"123456">>,
 	Encode = aes_encode(Str, Key),
 	?LOG(Encode),
-	Decode = aes_decode(Encode, Key),
-	?LOG(Decode),
+	% Decode = aes_decode(Encode, Key),
+	% ?LOG(Decode),
 	ok.
 
 aes_encode(Str, Key) ->
@@ -72,17 +72,23 @@ aes_decode(Encode, Key) ->
  	
 %% priv	
 call(Package, Cmd) ->
-	Key = to_binary(to_str(uid())),	
-	RpcPackage = #'RpcPackage'{
-                        key = Key,
-                        cmd = Cmd,
-                        payload = Package
-                    },
-	RpcPackageBin = msg_proto:encode_msg(RpcPackage),
-	RpcPackageBin1 = package(?CMD_CALL_10008, RpcPackageBin),
-	poolboy:transaction(pool_name(), fun(Worker) ->
-		gen_server:call(Worker, {call, Key, RpcPackageBin1}, ?TIMEOUT)
-	end).
+	try 
+		Key = to_binary(to_str(uid())),	
+		RpcPackage = #'RpcPackage'{
+							key = Key,
+							cmd = Cmd,
+							payload = Package
+						},
+		RpcPackageBin = msg_proto:encode_msg(RpcPackage),
+		RpcPackageBin1 = package(?CMD_CALL_10008, RpcPackageBin),
+		poolboy:transaction(pool_name(), fun(Worker) ->
+			gen_server:call(Worker, {call, Key, RpcPackageBin1}, ?TIMEOUT)
+		end)
+	catch 
+			_K:_Error_msg->
+				% glib:write_req({?MODULE, ?LINE, Req, erlang:get_stacktrace()}, "canBeModifyUserAccount-exception"),
+				{false, exception}
+	end.
 
 
 

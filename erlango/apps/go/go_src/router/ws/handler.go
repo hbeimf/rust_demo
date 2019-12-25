@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	// "github.com/goerlang/etf"
 )
 
 const (
@@ -69,10 +70,21 @@ func (c *Client) readPump() {
 			}
 			break
 		}
+
+		log.Printf("msg: %v", message)
 		// message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 
 		// https://github.com/gorilla/websocket/blob/master/examples/echo/server.go
 		err = c.conn.WriteMessage(mt, message)
+
+		// switch req := message.(type) {
+		// 	case etf.Tuple:
+		// 		key := string(req[0].(etf.Atom))
+		// 		log.Printf("msg: %v", key)
+		// 	case etf.Atom:
+		// 		log.Printf("msg--: %v", message)
+		// }
+	
 		if err != nil {
 			log.Println("write:", err)
 			break

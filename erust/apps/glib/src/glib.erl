@@ -413,3 +413,16 @@ gold_to_binary(Num)->
 	Num1= to_str(Num),
 	[Gold|_] = explode(Num1, "."),
 	to_integer(Gold).
+
+get_by_key(Key, TupleList) ->
+	get_by_key(Key, TupleList, <<"">>).
+
+get_by_key(Key, TupleList, Default) ->
+	case lists:keytake(Key, 1, TupleList) of 
+		{_, {_, undefined}, _} ->
+			Default;
+		{_, {_, Val}, _} ->
+			Val;
+		_ ->
+			Default
+	end.

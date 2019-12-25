@@ -15,7 +15,7 @@
 % gen_server callbacks
 -export([start_link/0]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
--export([stop_rs_server/0]).
+-export([stop_rs_server/1]).
 
 -include("log.hrl").
 
@@ -90,8 +90,8 @@ handle_info(_Info, State) ->
 % Description: Shutdown the server
 % Returns: any (ignored by gen_server)
 % --------------------------------------------------------------------
-terminate(_Reason, _State) ->
-	stop_rs_server(),
+terminate(_Reason, State=#state{port=Port}) ->
+	stop_rs_server(Port),
 	ok.
 
 % --------------------------------------------------------------------
@@ -103,11 +103,19 @@ code_change(_OldVsn, State, _Extra) ->
 	{ok, State}.
 
 % rs_server_monitor:stop_rs_server().
-stop_rs_server() ->
- 	CmdPath = code:lib_dir(rs, priv),
-	PidFile = lists:concat([CmdPath, "/rs.pid"]),
-	Cmd             = lists:flatten(["kill -9 $(cat ", PidFile, ")"]),
-    	os:cmd(Cmd),
+stop_rs_server(Port) ->
+ 	% CmdPath = code:lib_dir(rs, priv),
+	% PidFile = lists:concat([CmdPath, "/rs.pid"]),
+	% Cmd             = lists:flatten(["kill -9 $(cat ", PidFile, ")"]),
+    % 	os:cmd(Cmd),
+	% ok.
+	Info = erlang:port_info(Port),
+	% {os_pid,13477}]
+	Pid = glib:get_by_key(os_pid, Info),
+	?LOG(Pid),
+	?LOG(Info),
+	Cmd = lists:flatten(["kill -9 ", Pid]),
+    os:cmd(Cmd),
 	ok.
 
 start_rs_server() ->

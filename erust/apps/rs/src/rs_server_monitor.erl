@@ -109,13 +109,17 @@ stop_rs_server(Port) ->
 	% Cmd             = lists:flatten(["kill -9 $(cat ", PidFile, ")"]),
     % 	os:cmd(Cmd),
 	% ok.
-	Info = erlang:port_info(Port),
-	% {os_pid,13477}]
-	Pid = glib:get_by_key(os_pid, Info),
-	?LOG(Pid),
-	?LOG(Info),
-	Cmd = lists:flatten(["kill -9 ", Pid]),
-    os:cmd(Cmd),
+
+	% Info = erlang:port_info(Port),
+	% % {os_pid,13477}]
+	% Pid = glib:get_by_key(os_pid, Info),
+	% ?LOG(Pid),
+	% ?LOG(Info),
+	% Cmd = lists:flatten(["kill -9 ", Pid]),
+	% os:cmd(Cmd),
+	
+	erlang:port_close(Port),
+
 	ok.
 
 start_rs_server() ->

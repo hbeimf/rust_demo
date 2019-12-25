@@ -12,6 +12,8 @@ import (
 
 	"github.com/gorilla/websocket"
 	// "github.com/goerlang/etf"
+	"../../glib"
+	"github.com/golang/protobuf/proto"
 )
 
 const (
@@ -72,6 +74,18 @@ func (c *Client) readPump() {
 		}
 
 		log.Printf("msg: %v", message)
+
+		// 进行解码
+		newRpcPackage := &glib.TestMsg{}
+		// pData := buf[:cnt]
+		err1 := proto.Unmarshal(message, newRpcPackage)
+		if err1 != nil {
+			log.Fatal("unmarshaling error: ", err)
+		}
+		log.Printf("decode package Key KKKKKKKKKKKKKKKKKKK: %#v", newRpcPackage.GetName())
+		log.Printf("decode package payload PPPPPPPPPPPP: %#v", newRpcPackage.GetNickName())
+		log.Printf("decode package payload PPPPPPPPPPPP: %#v", newRpcPackage.GetPhone())
+		
 		// message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 
 		// https://github.com/gorilla/websocket/blob/master/examples/echo/server.go

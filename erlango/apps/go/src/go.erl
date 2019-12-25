@@ -11,12 +11,25 @@ tt() ->
 
 
 
+test() -> 
+	lists:foreach(fun(Id) -> 
+		?LOG(Id),
+		call()
+	end, lists:seq(1, 10000)),
+	ok.
+
 
 call() ->
 	ReqPackage = term_to_binary({<<"hello world!!">>, self()}),
     R = call(2001, ReqPackage),
-    R1 = binary_to_term(R),
-    ?LOG(R1),
+    case R of 
+    	{false, exception} -> 
+    		ok;
+    	_ -> 
+		    R1 = binary_to_term(R),
+		    ?LOG(R1),
+		  	ok
+	end,
     ok.
 
 call(Cmd, ReqPackage) ->

@@ -17,7 +17,7 @@
 % }).
 
 -define(TIMER_SECONDS, 30000).  % 
--define(TIMEOUT, 5000).
+-define(TIMEOUT, 1000).
 
 % --------------------------------------------------------------------
 % External exports
@@ -51,35 +51,13 @@ start_link(Params) ->
 %          ignore               |
 %          {stop, Reason}
 % --------------------------------------------------------------------
-init([Params]) ->
-	% ?LOG(Index),
-	% Ip = "127.0.0.1",
-	% Port = 12345,
-	% [Ip, Port|_] = Params,
-	% case ranch_tcp:connect(Ip, Port,[],3000) of
-	% 	{ok,Socket} ->
-    %     			ok = ranch_tcp:setopts(Socket, [{active, once}]),
-	% 		% erlang:start_timer(1000, self(), {regist}),
-	% 		% self() ! {timeout, <<"Heartbeat!">>, <<"Heartbeat!">>},
-	% 		% erlang:start_timer(?TIMER_SECONDS, self(), <<"Heartbeat!">>),
-	% 		% ?LOG({connect, Ip, Port}),
-	% 		State = #state{socket = Socket, transport = ranch_tcp, data = <<>>, ip = Ip, port = Port, call_pid=undefined},
-	% 		{ok,  State};
-	% 	{error,econnrefused} -> 
-	% 		erlang:start_timer(3000, self(), {reconnect,{Ip,Port}}),
-	% 		State = #state{socket = undefined, transport = ranch_tcp, data = <<>>, ip = Ip, port = Port, call_pid=undefined},
-	% 		{ok,State};
-	% 	% {error,econnrefused} -> 
-	% 	% 	?LOG(econnrefused),
-	% 	% 	{stop,econnrefused};
-	% 	{error,Reason} ->
-	% 		?LOG(error),
-	% 		{stop,Reason}
-    % end.
-    {ok, Pid} = go_ws_actor:start_link(1),
+init([_Params]) ->
+	erlang:send_after(?TIMEOUT, self(), check_state), %
+	
+    % {ok, Pid} = go_ws_actor:start_link(1),
 
-    {ok, #{ws_pid => Pid}}.
-
+    % {ok, #{ws_pid => Pid}}.
+	{ok, #{ws_pid => false}}.
 % --------------------------------------------------------------------
 % Function: handle_call/3
 % Description: Handling call messages
@@ -178,7 +156,24 @@ handle_cast(_Msg, State) ->
 % %     ranch_tcp:send(Socket, Package),
 % %     erlang:start_timer(?TIMER_SECONDS, self(), <<"Heartbeat!">>),
 % % 	{noreply, State};
-handle_info(_Info, State) -> 
+
+% erlang:send_after(?TIMEOUT, self(), check_state), %
+handle_info(check_state, #{ws_pid := Pid} = State) -> 
+	% ?LOG({info, Info}),
+	% {stop, normal, gs_tcp_state}.
+	erlang:send_after(?TIMEOUT, self(), check_state), %
+	case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
+		true -> 
+			{noreply, State};
+		_ -> 
+			case go_ws_actor:start_link(1) of 
+				{ok, NewPid} -> 
+					{noreply, #{ws_pid => NewPid}};
+				_ -> 
+					{noreply, State}
+			end
+	end;
+handle_info(_Info, State) ->  
 	% ?LOG({info, Info}),
 	% {stop, normal, gs_tcp_state}.
 	{noreply, State}.

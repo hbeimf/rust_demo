@@ -7,9 +7,9 @@
    [kernel,
    rs,
    glib,
-   eredis_cluster,
-    stdlib,
-    redisc
+   %%eredis_cluster,
+    stdlib
+    %%redisc
    ]},
   {env,[]},
   {modules, []},

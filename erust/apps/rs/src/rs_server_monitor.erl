@@ -114,7 +114,7 @@ start_rs_server() ->
 	CmdPath = code:lib_dir(rs, priv),
 	RootDir = root_dir(),
 	Cmd = lists:concat([CmdPath, "/rs-server ", "--config ", CmdPath, "/config.ini -d ", RootDir, "logs -l debug -p ", CmdPath, "/rs.pid"]),
-	% ?LOG(Cmd),
+	?LOG(Cmd),
 	Port = open_port({spawn, Cmd},[exit_status]),
 	Port.
 

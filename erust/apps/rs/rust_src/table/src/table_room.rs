@@ -98,7 +98,7 @@ impl Handler<Connect> for RoomActor {
         self.db.execute(
             "INSERT INTO person (uid, room_id)
                       VALUES (?1, ?2)",
-            &[&msg.uid as &ToSql, &room_id],
+            &[&msg.uid as &dyn ToSql, &room_id],
         ).unwrap();
 
         // send id back
@@ -114,7 +114,7 @@ impl Handler<Disconnect> for RoomActor {
 
         self.db.execute(
             "delete from person where uid = ?1",
-            &[&msg.uid as &ToSql],
+            &[&msg.uid as &dyn ToSql],
         ).unwrap();
 
     }

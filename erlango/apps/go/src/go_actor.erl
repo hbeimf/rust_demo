@@ -79,7 +79,9 @@ handle_call(_Request, _From, State) ->
 %          {noreply, gs_tcp_state, Timeout} |
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
-handle_cast({send, Package}, #{ws_pid := Pid} = State) ->
+handle_cast({send, FromPid, Cmd, ReqPayload}, #{ws_pid := Pid} = State) ->
+	Key = base64:encode(term_to_binary({FromPid, self()})),
+	Package = glib_pb:encode_RpcPackage(Key, Cmd, ReqPayload),
 	Pid ! {send, Package},
 	{noreply, State};
 handle_cast(_Msg, State) ->

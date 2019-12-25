@@ -34,9 +34,9 @@ init([_Index], _ConnState) ->
 websocket_handle({binary, CurrentPackage}, _ConnState, State) ->
 	% io:format("Client received binary here ~p~n", [Bin]),
     % Decode = binary_to_term(CurrentPackage),
-    Decode = glib_pb:decode_RpcPackage(CurrentPackage),
+    {Key, Cmd, Payload} = glib_pb:decode_RpcPackage(CurrentPackage),
 
-    ?LOG({receive_binary, CurrentPackage, Decode}),
+    ?LOG({receive_binary, CurrentPackage, {binary_to_term(base64:decode(Key)), Cmd, binary_to_term(Payload)}}),
 
     % ?LOG({"binary recv: ", CurrentPackage}),
     % PackageBin = <<LastPackage/binary, CurrentPackage/binary>>,

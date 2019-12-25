@@ -7,13 +7,13 @@ import (
     "log"
     "os"
 
-    _ "./mysqlc"
-    _ "./redisc"
-    "./tcp_server"
-    "./ws_server"
+    // _ "./mysqlc"
+    // _ "./redisc"
+    // "./tcp_server"
+    // "./ws_server"
 
-    "./erpc"
-    "./rpc"
+    // "./erpc"
+    // "./rpc"
 )
 
 var LogFile string
@@ -38,13 +38,13 @@ func main() {
     setup_logging()
     write_pid()
 
-    go tcp_server.Start()
+    // go tcp_server.Start()
 
-    go rpc.Start()
+    // go rpc.Start()
 
-    go erpc.Start()
+    // go erpc.Start()
 
-    ws_server.Start()
+    // ws_server.Start()
 
     return
 }

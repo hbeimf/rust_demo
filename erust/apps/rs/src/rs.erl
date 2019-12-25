@@ -23,7 +23,7 @@ tt() ->
 	lists:foreach(fun(Id) -> 
 		?LOG(Id),
 		aes_test1()
-	end, lists:seq(1, 1000)),
+	end, lists:seq(1, 100000)),
 	ok.
 
 

@@ -1,4 +1,5 @@
 run:stop_mac
+	rm -rf ./logs/*
 	rebar3 shell
 
 stop_mac:

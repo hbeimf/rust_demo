@@ -13,21 +13,16 @@ tt() ->
 
 
 call() ->
-    call(<<"hello world">>, 100).
+	ReqPackage = term_to_binary({<<"hello world!!">>, self()}),
+    R = call(2001, ReqPackage),
+    R1 = binary_to_term(R),
+    ?LOG(R1),
+    ok.
 
-call(Package, _Cmd) ->
+call(Cmd, ReqPackage) ->
 	try 
-		% Key = to_binary(to_str(uid())),	
-		% RpcPackage = #'RpcPackage'{
-		% 					key = Key,
-		% 					cmd = Cmd,
-		% 					payload = Package
-		% 				},
-		% RpcPackageBin = msg_proto:encode_msg(RpcPackage),
-        % RpcPackageBin1 = package(?CMD_CALL_10008, RpcPackageBin),
-        
 		poolboy:transaction(pool_name(), fun(Worker) ->
-			gen_server:call(Worker, {call, Package}, ?TIMEOUT)
+			gen_server:call(Worker, {call, Cmd, ReqPackage}, ?TIMEOUT)
 		end)
 	catch 
 			_K:_Error_msg->

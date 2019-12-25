@@ -68,6 +68,16 @@ init([_Params]) ->
 %          {stop, Reason, Reply, gs_tcp_state}   | (terminate/2 is called)
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
+
+handle_call({call, Cmd, ReqPackage}, From, #{ws_pid := Pid} = State) ->
+	Key = base64:encode(term_to_binary(From)),
+	Package = glib_pb:encode_RpcPackage(Key, Cmd, ReqPackage),
+	Pid ! {send, Package},
+
+	{noreply, State};
+
+	% Reply = ok,
+	% {reply, Reply, State}.
 handle_call(_Request, _From, State) ->
 	Reply = ok,
 	{reply, Reply, State}.

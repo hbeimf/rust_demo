@@ -36,7 +36,17 @@ websocket_handle({binary, CurrentPackage}, _ConnState, State) ->
     % Decode = binary_to_term(CurrentPackage),
     {Key, Cmd, Payload} = glib_pb:decode_RpcPackage(CurrentPackage),
 
-    ?LOG({receive_binary, CurrentPackage, {binary_to_term(base64:decode(Key)), Cmd, binary_to_term(Payload)}}),
+    case Cmd > 2000 of 
+        true -> 
+            From = binary_to_term(base64:decode(Key)),
+            ?LOG({receive_binary, CurrentPackage, {From, Cmd, binary_to_term(Payload)}}),
+
+            safe_reply(From, Payload),
+            ok;
+        _ -> 
+            ?LOG({receive_binary, CurrentPackage, {binary_to_term(base64:decode(Key)), Cmd, binary_to_term(Payload)}}),
+            ok
+    end,
 
     % ?LOG({"binary recv: ", CurrentPackage}),
     % PackageBin = <<LastPackage/binary, CurrentPackage/binary>>,
@@ -70,3 +80,8 @@ websocket_terminate(_Reason, _ConnState, _State) ->
     % io:format("~nClient closed in state ~p wih reason ~p~n", [State, Reason]),
     % ?LOG({ws_terminate}),
     ok.
+
+safe_reply(undefined, _Value) ->
+    ok;
+safe_reply(From, Value) ->
+    gen_server:reply(From, Value).

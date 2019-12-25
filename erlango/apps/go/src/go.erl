@@ -37,7 +37,11 @@ call(Package, _Cmd) ->
 
 cast() ->
     % cast(<<"hello world!">>).
-    Bin = term_to_binary({hello, world}),
+    % Bin = term_to_binary({hello, world}),
+    Name = <<"test_name">>,
+    NickName = <<"test_nick_name">>,
+    Phone = <<"138912341234">>,
+    Bin = glib_pb:encode_TestMsg(Name, NickName, Phone),
     cast(Bin).
 
 cast(Package) ->

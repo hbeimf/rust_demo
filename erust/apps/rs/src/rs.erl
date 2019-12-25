@@ -19,6 +19,13 @@ test() ->
 	aes_test(),
 	aes_test1().
 
+tt() -> 
+	lists:foreach(fun(Id) -> 
+		?LOG(Id),
+		aes_test1()
+	end, lists:seq(1, 1000)),
+	ok.
+
 
 % message AesEncode{   
 %     string  key = 1;

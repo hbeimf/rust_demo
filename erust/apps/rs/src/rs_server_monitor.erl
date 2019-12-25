@@ -39,6 +39,7 @@ start_link() ->
 %          {stop, Reason}
 % --------------------------------------------------------------------
 init([]) ->
+	% erlang:send_after(1000, self(), check_port_state), %
 	Port = start_rs_server(),
 	State = #state{port = Port},
 	{ok, State}.

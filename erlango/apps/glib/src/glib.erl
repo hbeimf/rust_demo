@@ -118,9 +118,22 @@ time() ->
 
 
 
-root_dir() ->
-	replace(os:cmd("pwd"), "\n", "/"). 
+% root_dir() ->
+% 	replace(os:cmd("pwd"), "\n", "/"). 
 
+root_dir() ->
+	Key = root_dir,
+	case sys_config:get_config(Key) of 
+		{ok, Val} -> 
+			% ?LOG({cache, Val}),
+			Val;
+		_ -> 
+			% ?LOG({shell}),
+			Dir = replace(os:cmd("pwd"), "\n", "/"),
+			sys_config:set_config(Key, Dir),
+			Dir
+	end.
+	
 append(Dir, Data) ->
 	case file_exists(Dir) of
 		true ->

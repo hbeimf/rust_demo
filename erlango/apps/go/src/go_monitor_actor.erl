@@ -103,6 +103,22 @@ terminate(_Reason, State=#state{port=Port}) ->
 code_change(_OldVsn, State, _Extra) ->
 	{ok, State}.
 
+
+%% priv ===================================
+write_pid(Port) ->
+	Info = erlang:port_info(Port),
+	% {os_pid,13477}]
+	Pid = glib:get_by_key(os_pid, Info),
+	RootDir = glib:root_dir(),
+    Dir = lists:concat([RootDir, "go.pid"]),
+    ?LOG({Dir, Pid}),
+    R = file:write_file(Dir, glib:to_binary(Pid)),
+    ?LOG(R),
+	ok.
+	
+
+
+
 % rs_server_monitor:stop_rs_server().
 stop_go_server(Port) ->
  	% CmdPath = code:lib_dir(rs, priv),
@@ -129,6 +145,7 @@ start_go_server() ->
     Cmd = lists:concat([CmdPath, "/go-server"]),
 	?LOG(Cmd),
 	Port = open_port({spawn, Cmd},[exit_status]),
+	write_pid(Port),
 	Port.
 
 

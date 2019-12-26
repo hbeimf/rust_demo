@@ -41,9 +41,9 @@ call() ->
     	_ -> 
 		    R1 = binary_to_term(R),
 		    ?LOG(R1),
-		  	ok
-	end,
-    ok.
+		  	% ok
+		  	R1
+	end.
 
 call(Cmd, ReqPackage) -> 
 	case try_call(Cmd, ReqPackage) of

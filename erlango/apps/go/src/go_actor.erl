@@ -78,9 +78,15 @@ handle_call({call, Cmd, ReqPackage}, From, #{ws_pid := Pid} = State) ->
 			Pid ! {send, Package},
 			{noreply, State};
 		_ ->
-			?WRITE_LOG("link_exception", {call, Cmd, ReqPackage}),
-			Reply = {false, link_exception},
-			{reply, Reply, State}
+			case go_ws_actor:start_link(1) of 
+				{ok, NewPid} -> 
+					NewPid ! {send, Package},
+					{noreply, #{ws_pid => NewPid}};
+				_ -> 
+					?WRITE_LOG("link_exception", {call, Cmd, ReqPackage}),
+					Reply = {false, link_exception},
+					{reply, Reply, State}
+			end		
 	end;
 handle_call(_Request, _From, State) ->
 	Reply = ok,

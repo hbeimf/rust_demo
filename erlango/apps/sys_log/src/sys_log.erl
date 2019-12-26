@@ -97,9 +97,10 @@ log_json(Json, LogFile, Day, Time, Module, Line) ->
 	LogDir = glib:log_dir() ++ "log/" ++ Day ++ "-"++ glib:to_str(LogFile) ++"-log.txt",
 
 	Data = [
-		{<<"term">>, glib:to_binary(glib:to_str(sys_log_format:format(Json)))}
-		, {<<"module">>, glib:to_binary(Module)}
-		, {<<"line">>, glib:to_binary(Line)}
+		% {<<"term">>, glib:to_binary(glib:to_str(sys_log_format:format(Json)))}
+		{<<"term">>, Json}
+		, {<<"module">>, Module}
+		, {<<"line">>, Line}
 		, {<<"receive_time">>, glib:to_binary(Time)}
 		, {<<"write_time">>, glib:to_binary(glib:date_str())}
 	],
@@ -122,18 +123,38 @@ log_json_in_data(Json, LogFile, Day, _Time, _Module, _Line) ->
 	% Log = " \n =====================" ++ date_str() ++ "============================ \n " ++ Str,	
 	% Log = Time ++ " - " ++ glib:date_str() ++ " => " ++ Json,
 	% Log = lists:concat([Module, ":", Line, " <=> ", Time, " - ", glib:date_str(), " <=> ", glib:to_str(Json)]),
-	Log = lists:concat([glib:to_str(sys_log_format:format(Json))]),
+	% Log = lists:concat([glib:to_str(sys_log_format:format(Json))]),
 
 	%% 同时写入文件
-	append(LogDir, Log).
+	append(LogDir, Json).
 
 % log_dir() ->
 % 	replace(os:cmd("pwd"), "\n", "/"). 
 
 append(Dir, Data) ->
+	append(jsx:is_json(Data), Dir, Data).
+
+append(true, Dir, Data) ->
 	case glib:file_exists(Dir) of
 		true ->
-			file:write_file(Dir, "\n" ++ Data, [append]);
+			file:write_file(Dir, "\n" ++ Data, [append, raw]);
 		_ ->
-			file:write_file(Dir, Data, [append])
-	end.
+			file:write_file(Dir, Data, [append, raw])
+	end;
+append(_, Dir, Data) ->
+	{ok, S} = file:open(Dir, write),
+
+    %% io:format(IoDevice, Format, Args)
+    %% Format是一个包含了格式化代码的字符串
+    %% ~p 完整打印参数
+    %% ~s 字符串参数
+    %% ~w 标准语法写入数据
+    %% ~n 换行符
+    %% Args为数据项
+    % lists:foreach(fun(X) ->io:format(S, "~p.~n", [X]) end, L),
+    io:format(S, "~p.~n", [Data]),
+    file:close(S).
+
+
+
+

@@ -1,5 +1,6 @@
 {"1.1.0",
 [{<<"esnowflake">>,{pkg,<<"esnowflake">>,<<"0.2.0">>},0},
+ {<<"jsx">>,{pkg,<<"jsx">>,<<"2.9.0">>},0},
  {<<"poolboy">>,
   {git,"https://github.com/devinus/poolboy.git",
        {ref,"3bb48a893ff5598f7c73731ac17545206d259fac"}},
@@ -14,5 +15,6 @@
   0}]}.
 [
 {pkg_hash,[
- {<<"esnowflake">>, <<"083BB3EBAA4F7DB24E935D70EF5CE33C84817A484B28DAED8292E29253E19642">>}]}
+ {<<"esnowflake">>, <<"083BB3EBAA4F7DB24E935D70EF5CE33C84817A484B28DAED8292E29253E19642">>},
+ {<<"jsx">>, <<"D2F6E5F069C00266CAD52FB15D87C428579EA4D7D73A33669E12679E203329DD">>}]}
 ].

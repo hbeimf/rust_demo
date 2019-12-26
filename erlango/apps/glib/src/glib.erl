@@ -486,3 +486,33 @@ apps() ->
 
     io:format("~n~p~n~n", [AppList]),
     ok.
+
+log_dir() -> 
+	Dir = case sys_config:get_config(log) of 
+		{ok, LogConfig} -> 
+			D = get_by_key(dir, LogConfig, root_dir()),
+			case is_dir(D) of
+				true -> 
+					D;
+				_ -> 
+					root_dir()
+			end; 
+		_ -> 
+			root_dir()
+	end,
+	Dir1 = rtrim(Dir, "/"),
+	lists:concat([Dir1, "/"]).
+
+
+get_by_key(Key, TupleList) ->
+	get_by_key(Key, TupleList, <<"">>).
+
+get_by_key(Key, TupleList, Default) ->
+	case lists:keytake(Key, 1, TupleList) of 
+		{_, {_, undefined}, _} ->
+			Default;
+		{_, {_, Val}, _} ->
+			Val;
+		_ ->
+			Default
+	end.

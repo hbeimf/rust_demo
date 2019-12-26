@@ -25,6 +25,10 @@ call() ->
     R = call(2001, ReqPackage),
     case R of 
     	{false, exception} -> 
+    		?WRITE_LOG("exception", {exception}),
+    		ok;
+    	{false, link_exception}->
+    		?WRITE_LOG("exception", {link_exception}),
     		ok;
     	_ -> 
 		    R1 = binary_to_term(R),

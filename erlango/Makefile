@@ -1,4 +1,4 @@
-run:stop_mac
+run:
 	./rebar3 shell --name erlango@127.0.0.1 --setcookie erlango_cookie
 
 stop_mac:

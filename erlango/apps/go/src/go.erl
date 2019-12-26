@@ -23,7 +23,7 @@ test() ->
 				?WRITE_LOG("call-fail", {Any}),
 				ok
 		end
-	end, lists:seq(1, 1000000)),
+	end, lists:seq(1, 10000)),
 	?WRITE_LOG("time", {end_time, glib:time(), glib:date_str()}),
 	ok.
 

@@ -32,12 +32,12 @@ call() ->
 	ReqPackage = term_to_binary({<<"hello world!!">>, self()}),
     R = call(2001, ReqPackage),
     case R of 
-    	{false, exception} -> 
-    		?WRITE_LOG("exception", {exception}),
+    	{false, Reason} -> 
+    		?WRITE_LOG("exception", {exception, Reason}),
     		ok;
-    	{false, link_exception}->
-    		?WRITE_LOG("exception", {link_exception}),
-    		ok;
+    	% {false, link_exception}->
+    	% 	?WRITE_LOG("exception", {link_exception}),
+    	% 	ok;
     	_ -> 
 		    R1 = binary_to_term(R),
 		    ?LOG(R1),
@@ -61,8 +61,7 @@ try_call(Cmd, ReqPackage) ->
 		end)
 	catch 
 			K:Error_msg->
-				?WRITE_LOG("call_exception", {K, gap_xx, Error_msg, gap_xx, erlang:get_stacktrace()}),
-				% glib:write_req({?MODULE, ?LINE, Req, erlang:get_stacktrace()}, "canBeModifyUserAccount-exception"),
+				% ?WRITE_LOG("call_exception", {K, gap_xx, Error_msg, gap_xx, erlang:get_stacktrace()}),
 				{false, exception}
 	end.
 

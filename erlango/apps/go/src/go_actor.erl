@@ -25,6 +25,7 @@
 -export([start_link/1]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
+-include_lib("sys_log/include/write_log.hrl").
 % --------------------------------------------------------------------
 % External API
 % --------------------------------------------------------------------
@@ -72,12 +73,15 @@ init([_Params]) ->
 handle_call({call, Cmd, ReqPackage}, From, #{ws_pid := Pid} = State) ->
 	Key = base64:encode(term_to_binary(From)),
 	Package = glib_pb:encode_RpcPackage(Key, Cmd, ReqPackage),
-	Pid ! {send, Package},
-
-	{noreply, State};
-
-	% Reply = ok,
-	% {reply, Reply, State}.
+	case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
+		true -> 
+			Pid ! {send, Package},
+			{noreply, State};
+		_ ->
+			?WRITE_LOG("link_exception", {call, Cmd, ReqPackage}),
+			Reply = {false, link_exception},
+			{reply, Reply, State}
+	end;
 handle_call(_Request, _From, State) ->
 	Reply = ok,
 	{reply, Reply, State}.

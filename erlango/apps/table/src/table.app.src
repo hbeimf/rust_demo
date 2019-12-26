@@ -1,13 +1,12 @@
-{application, erlango,
+{application, table,
  [{description, "An OTP application"},
-  {vsn, "0.1.0"},
+  {vsn, "0.1.7"},
   {registered, []},
-  {mod, { erlango_app, []}},
+  {mod, { table_app, []}},
   {applications,
    [kernel,
-    stdlib,
-    go,
-    table
+   glib,
+    stdlib
    ]},
   {env,[]},
   {modules, []},

@@ -15,7 +15,7 @@ test() ->
 	lists:foreach(fun(Id) -> 
 		?LOG(Id),
 		call()
-	end, lists:seq(1, 10000)),
+	end, lists:seq(1, 100000)),
 	ok.
 
 

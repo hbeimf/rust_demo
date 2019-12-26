@@ -13,10 +13,12 @@ tt() ->
 
 
 test() -> 
+	?WRITE_LOG("time", {start_time, glib:time(), glib:date_str()}),
 	lists:foreach(fun(Id) -> 
 		?LOG(Id),
 		call()
 	end, lists:seq(1, 1000000)),
+	?WRITE_LOG("time", {end_time, glib:time(), glib:date_str()}),
 	ok.
 
 

@@ -4,6 +4,7 @@
 -define(TIMEOUT, 5000).
 
 -include_lib("glib/include/log.hrl").
+-include_lib("sys_log/include/write_log.hrl").
 
 tt() ->
     cast(),
@@ -38,7 +39,8 @@ call(Cmd, ReqPackage) ->
 			gen_server:call(Worker, {call, Cmd, ReqPackage}, ?TIMEOUT)
 		end)
 	catch 
-			_K:_Error_msg->
+			K:Error_msg->
+				?WRITE_LOG("test_erlang_ds", {K, Error_msg, erlang:get_stacktrace()}),
 				% glib:write_req({?MODULE, ?LINE, Req, erlang:get_stacktrace()}, "canBeModifyUserAccount-exception"),
 				{false, exception}
 	end.

@@ -37,7 +37,16 @@ call() ->
 	end,
     ok.
 
-call(Cmd, ReqPackage) ->
+call(Cmd, ReqPackage) -> 
+	case try_call(Cmd, ReqPackage) of
+		 {false, exception} ->
+		 	call(Cmd, ReqPackage);
+		 Reply -> 
+		 	Reply
+	end.
+
+
+try_call(Cmd, ReqPackage) ->
 	try 
 		poolboy:transaction(pool_name(), fun(Worker) ->
 			gen_server:call(Worker, {call, Cmd, ReqPackage}, ?TIMEOUT)

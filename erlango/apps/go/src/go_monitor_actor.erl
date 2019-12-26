@@ -111,9 +111,9 @@ write_pid(Port) ->
 	Pid = glib:get_by_key(os_pid, Info),
 	RootDir = glib:root_dir(),
     Dir = lists:concat([RootDir, "go.pid"]),
-    ?LOG({Dir, Pid}),
+    % ?LOG({Dir, Pid}),
     R = file:write_file(Dir, glib:to_binary(Pid)),
-    ?LOG(R),
+    % ?LOG(R),
 	ok.
 	
 

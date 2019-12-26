@@ -25,6 +25,20 @@ start_link() ->
 %%====================================================================
 %% Supervisor callbacks
 %%====================================================================
+% https://www.iteye.com/blog/stephen830-2016237
+% $ sysctl kern.maxfiles  
+% kern.maxfiles: 12288  
+% $ sysctl kern.maxfilesperproc  
+% kern.maxfilesperproc: 10240  
+% $ sudo sysctl -w kern.maxfiles=1048600  
+% kern.maxfiles: 12288 -> 1048600  
+% $ sudo sysctl -w kern.maxfilesperproc=1048576  
+% kern.maxfilesperproc: 10240 -> 1048576  
+% $ ulimit -n  
+% 256  
+% $ ulimit -n 1048576  
+% $ ulimit -n  
+% 1048576 
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
@@ -37,7 +51,7 @@ init([]) ->
     PoolSpecs = {go_pool,{poolboy,start_link,
              [[{name,{local,go_pool}},
                {worker_module,go_actor},
-               {size,100},
+               {size,300},
                {max_overflow,20}],
       		[Ip, glib:to_integer(Port)]]},
       permanent,5000,worker,

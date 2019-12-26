@@ -27,7 +27,7 @@ const (
 	pingPeriod = (pongWait * 9) / 10
 
 	// Maximum message size allowed from peer.
-	maxMessageSize = 51200
+	maxMessageSize = 51200000
 )
 
 var (
@@ -36,8 +36,8 @@ var (
 )
 
 var upgrader = websocket.Upgrader{
-	ReadBufferSize:  102400,
-	WriteBufferSize: 102400,
+	ReadBufferSize:  10240000,
+	WriteBufferSize: 10240000,
 }
 
 // Client is a middleman between the websocket connection and the hub.

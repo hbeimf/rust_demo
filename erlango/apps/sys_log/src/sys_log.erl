@@ -143,15 +143,6 @@ append(true, Dir, Data) ->
 	end;
 append(_, Dir, Data) ->
 	{ok, S} = file:open(Dir, write),
-
-    %% io:format(IoDevice, Format, Args)
-    %% Format是一个包含了格式化代码的字符串
-    %% ~p 完整打印参数
-    %% ~s 字符串参数
-    %% ~w 标准语法写入数据
-    %% ~n 换行符
-    %% Args为数据项
-    % lists:foreach(fun(X) ->io:format(S, "~p.~n", [X]) end, L),
     io:format(S, "~p.~n", [Data]),
     file:close(S).
 

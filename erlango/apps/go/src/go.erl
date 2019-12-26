@@ -44,7 +44,7 @@ call(Cmd, ReqPackage) ->
 		end)
 	catch 
 			K:Error_msg->
-				?WRITE_LOG("call_exception", {K, Error_msg, erlang:get_stacktrace()}),
+				?WRITE_LOG("call_exception", {K, gap_xx, Error_msg, gap_xx, erlang:get_stacktrace()}),
 				% glib:write_req({?MODULE, ?LINE, Req, erlang:get_stacktrace()}, "canBeModifyUserAccount-exception"),
 				{false, exception}
 	end.

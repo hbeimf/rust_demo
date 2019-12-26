@@ -51,7 +51,7 @@ init([]) ->
     PoolSpecs = {go_pool,{poolboy,start_link,
              [[{name,{local,go_pool}},
                {worker_module,go_actor},
-               {size,500},
+               {size,100},
                {max_overflow,20}],
       		[Ip, glib:to_integer(Port)]]},
       permanent,5000,worker,

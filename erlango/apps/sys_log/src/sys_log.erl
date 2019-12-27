@@ -24,10 +24,10 @@ tt() ->
 	
 	Base_num = 10000,
 	lists:foreach(fun(Index) -> 
-		Rand = glib:random_number(Base_num),
-		?WRITE_LOG("rand_num_new", {Index, Rand}),
+%%		Rand = glib:random_number(Base_num),
+		?WRITE_LOG("rand_num_new", {Index, Index}),
 		ok
-	end, lists:seq(1, 100000)),
+	end, lists:seq(1, 100)),
 	
 	ok.
 
@@ -96,7 +96,7 @@ log_json(Json, LogFile, Day, Time) ->
 log_json(Json, LogFile, Day, Time, Module, Line) ->
 	LogDir = glib:log_dir() ++ "log/" ++ Day ++ "-"++ glib:to_str(LogFile) ++"-log.txt",
 
-	Data = [
+	Log = [
 		% {<<"term">>, glib:to_binary(glib:to_str(sys_log_format:format(Json)))}
 		{<<"term">>, Json}
 		, {<<"module">>, Module}
@@ -104,7 +104,7 @@ log_json(Json, LogFile, Day, Time, Module, Line) ->
 		, {<<"receive_time">>, glib:to_binary(Time)}
 		, {<<"write_time">>, glib:to_binary(glib:date_str())}
 	],
-	Log = jsx:encode(Data),
+%%	Log = jsx:encode(Data),
 
 	%% 同时写入文件
 	append(LogDir, Log).
@@ -142,8 +142,8 @@ append(true, Dir, Data) ->
 			file:write_file(Dir, Data, [append, raw])
 	end;
 append(_, Dir, Data) ->
-	{ok, S} = file:open(Dir, write),
-    io:format(S, "~p.~n", [Data]),
+	{ok, S} = file:open(Dir, [append]),
+    io:format(S, "~p.~n~n", [Data]),
     file:close(S).
 
 

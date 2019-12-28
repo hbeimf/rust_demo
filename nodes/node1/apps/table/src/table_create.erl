@@ -40,7 +40,7 @@ init_slave() ->
 	case mnesia:change_config(extra_db_nodes, [MasterNode]) of
         {ok, [MasterNode]} ->
         	?LOG({"init_slave"}),
-            Res3 = mnesia:add_table_copy(room_list, node(), ram_copies),
+            Res3 = mnesia:add_table_copy(key_pid, node(), ram_copies),
             Tables = mnesia:system_info(tables),
             mnesia:wait_for_tables(Tables, ?WAIT_FOR_TABLES);
         Any ->
@@ -58,7 +58,7 @@ init_master() ->
 		Any -> 
 			?LOG("create and start"),
 			    mnesia:start(),
-			    mnesia:create_table(room_list, [{attributes,record_info(fields,room_list)}]),
+			    mnesia:create_table(key_pid, [{attributes,record_info(fields,key_pid)}]),
 
 			    ok;
 		  Any -> 

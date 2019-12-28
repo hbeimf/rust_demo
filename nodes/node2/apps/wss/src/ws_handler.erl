@@ -41,7 +41,9 @@ websocket_handle({binary, Package}, Req, State) ->
 	?LOG({"binary recv: ", Package}),
 	% R = glibpack:unpackage(Package),
 	% ?LOG({unpackage,  R}),
-	 
+
+	wss_action:action(Package),
+	
 	{ok, Req, State};
 websocket_handle(Data, Req, State) ->
 	?LOG({"XXy", Data}),
@@ -50,6 +52,8 @@ websocket_handle(Data, Req, State) ->
 % websocket_info({broadcast, Msg}, Req, {_, Uid} = State) ->
 % 	?LOG({broadcast, Msg}),
 % 	{reply, {text, << "That's what she said! ", Msg/binary >>}, Req, State};
+websocket_info({send, Package}, Req, State) ->
+	{reply, {binary, Package}, Req, State};
 websocket_info({timeout, _Ref, Msg}, Req, State) ->
 	% erlang:start_timer(1000, self(), <<"How' you doin'?">>),
 	{reply, {text, Msg}, Req, State};

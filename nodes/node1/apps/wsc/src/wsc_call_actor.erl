@@ -71,9 +71,11 @@ init([_Params]) ->
 % --------------------------------------------------------------------
 
 handle_call({call, Cmd, ReqPackage}, From, #{wsc_send_actor_pid := Pid} = State) ->
-	Key = base64:encode(term_to_binary(From)),
+	% Key = base64:encode(term_to_binary(From)),
     % Package = glib_pb:encode_RpcPackage(Key, Cmd, ReqPackage),
-    Package = term_to_binary({Key, Cmd, ReqPackage}),
+	% Package = term_to_binary({Key, Cmd, ReqPackage}),
+	Package = term_to_binary({From, Cmd, ReqPackage}),
+	
 	case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
 		true -> 
 			Pid ! {send, Package},

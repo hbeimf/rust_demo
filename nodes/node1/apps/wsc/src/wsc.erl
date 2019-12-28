@@ -12,25 +12,25 @@ tt() ->
 
 
 
-test() -> 
-	?WRITE_LOG("time", {start_time, glib:time(), glib:date_str()}),
-	lists:foreach(fun(Id) -> 
-		?LOG(Id),
-		case call() of 
-			{<<"hello world!!">>, _Pid} ->
-				ok;
-			Any ->
-				?WRITE_LOG("call-fail", {Any}),
-				ok
-		end
-	end, lists:seq(1, 1000000)),
-	?WRITE_LOG("time", {end_time, glib:time(), glib:date_str()}),
-	ok.
+% test() -> 
+% 	?WRITE_LOG("time", {start_time, glib:time(), glib:date_str()}),
+% 	lists:foreach(fun(Id) -> 
+% 		?LOG(Id),
+% 		case call() of 
+% 			{<<"hello world!!">>, _Pid} ->
+% 				ok;
+% 			Any ->
+% 				?WRITE_LOG("call-fail", {Any}),
+% 				ok
+% 		end
+% 	end, lists:seq(1, 1000000)),
+% 	?WRITE_LOG("time", {end_time, glib:time(), glib:date_str()}),
+% 	ok.
 
 
-call() ->
-	ReqPackage = term_to_binary({<<"hello world!!">>, self()}),
-    R = call(2001, ReqPackage),
+ping() ->
+	ReqPackage = ping,
+    R = call(1000, ReqPackage),
     case R of 
     	{false, Reason} -> 
     		?WRITE_LOG("exception", {exception, Reason}),
@@ -39,10 +39,10 @@ call() ->
     	% 	?WRITE_LOG("exception", {link_exception}),
     	% 	ok;
     	_ -> 
-		    R1 = binary_to_term(R),
-		    ?LOG(R1),
+		    % R1 = binary_to_term(R),
+		    ?LOG(R),
 		  	% ok
-		  	R1
+		  	R
 	end.
 
 call(Cmd, ReqPackage) -> 

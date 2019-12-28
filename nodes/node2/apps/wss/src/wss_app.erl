@@ -17,8 +17,7 @@
 start(_StartType, _StartArgs) ->
     Dispatch = cowboy_router:compile([
 		{'_', [
-			{"/ws", ws_handler_game_server, []},
-			{"/websocket", ws_handler_gateway, []}
+			{"/ws", ws_handler, []}
 		]}
 	]),
 

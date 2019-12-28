@@ -30,8 +30,8 @@ start_link() ->
 init([]) ->
     % {ok, { {one_for_all, 0, 1}, []} }.
     {Ip, Port} = {"127.0.0.1", 8000},
-    PoolSpecs = {wsc_pool,{poolboy,start_link,
-             [[{name,{local,wsc_pool}},
+    PoolSpecs = {wsc:pool_name(),{poolboy,start_link,
+             [[{name,{local,wsc:pool_name()}},
                {worker_module,wsc_call_actor},
                {size,100},
                {max_overflow,20}],

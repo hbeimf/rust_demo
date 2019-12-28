@@ -24,8 +24,8 @@ tt() ->
 
 	Base_num = 10000,
 	lists:foreach(fun(Index) ->
-		Rand = glib:random_number(Base_num),
-		?WRITE_LOG("rand_num_new", {Index, Rand}),
+		% Rand = glib:random_number(Base_num),
+		?WRITE_LOG("rand_num_new", {Index, Index}),
 		ok
 								end, lists:seq(1, 100000)),
 

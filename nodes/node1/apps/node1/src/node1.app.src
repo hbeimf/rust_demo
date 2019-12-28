@@ -8,6 +8,7 @@
     stdlib
     , glib
     , table
+    , wsc
    ]},
   {env,[]},
   {modules, []},

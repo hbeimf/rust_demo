@@ -10,7 +10,7 @@
 
 
 % -include("log.hrl").
-% -include_lib("stdlib/include/qlc.hrl").
+-include_lib("glib/include/log.hrl").
 
 
 init({tcp, http}, _Req, _Opts) ->
@@ -38,13 +38,13 @@ websocket_init(_TransportName, Req, _Opts) ->
 
 
 websocket_handle({binary, Package}, Req, State) ->
-	% ?LOG({"binary recv: ", Package}),
+	?LOG({"binary recv: ", Package}),
 	% R = glibpack:unpackage(Package),
 	% ?LOG({unpackage,  R}),
 	 
 	{ok, Req, State};
 websocket_handle(Data, Req, State) ->
-	% ?LOG({"XXy", Data}),
+	?LOG({"XXy", Data}),
 	{ok, Req, State}.
 
 % websocket_info({broadcast, Msg}, Req, {_, Uid} = State) ->

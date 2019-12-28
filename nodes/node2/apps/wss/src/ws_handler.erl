@@ -38,7 +38,7 @@ websocket_init(_TransportName, Req, _Opts) ->
 
 
 websocket_handle({binary, Package}, Req, State) ->
-	?LOG({"binary recv: ", Package}),
+	% ?LOG({"binary recv: ", Package}),
 	% R = glibpack:unpackage(Package),
 	% ?LOG({unpackage,  R}),
 

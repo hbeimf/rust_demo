@@ -26,6 +26,8 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
 -include_lib("sys_log/include/write_log.hrl").
+-include("rr.hrl").
+-include_lib("glib/include/log.hrl").
 % --------------------------------------------------------------------
 % External API
 % --------------------------------------------------------------------
@@ -74,7 +76,16 @@ handle_call({call, Cmd, ReqPackage}, From, #{wsc_send_actor_pid := Pid} = State)
 	% Key = base64:encode(term_to_binary(From)),
     % Package = glib_pb:encode_RpcPackage(Key, Cmd, ReqPackage),
 	% Package = term_to_binary({Key, Cmd, ReqPackage}),
-	Package = term_to_binary({From, Cmd, ReqPackage}),
+	% Package = term_to_binary({From, Cmd, ReqPackage}),
+	
+	% Package = term_to_binary(#{from => From, cmd => Cmd, req => ReqPackage}),
+	% Opts1 = #server_opts{port=80}.  
+	% -record(request, {
+	% 	from, 
+	% 	req_cmd,
+	% 	req_data
+	% }).
+	Package = term_to_binary(#request{from = From, req_cmd = Cmd, req_data = ReqPackage}),
 	
 	case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
 		true -> 
@@ -102,10 +113,25 @@ handle_call(_Request, _From, State) ->
 %          {noreply, gs_tcp_state, Timeout} |
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
-handle_cast({send, Package}, #{ws_pid := Pid} = State) ->
-	Pid ! {send, Package},
-	{noreply, State};
-handle_cast(_Msg, State) ->
+handle_cast({send, Cmd, ReqPackage}, #{wsc_send_actor_pid := Pid} = State) ->
+	% ?LOG({send, Cmd, ReqPackage}),
+	Package = term_to_binary(#request{from = null, req_cmd = Cmd, req_data = ReqPackage}),
+	case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
+		true ->
+			Pid ! {send, Package},
+			{noreply, State};
+		_ ->
+			case wsc_send_actor:start_link(1) of 
+				{ok, NewPid} -> 
+					NewPid ! {send, Package},
+					{noreply, #{wsc_send_actor_pid => NewPid}};
+				_ -> 
+					?WRITE_LOG("link_exception", {cast, Package}),
+					{noreply, State}
+			end
+	end;
+handle_cast(Msg, State) ->
+	?LOG(Msg),
 	{noreply, State}.		
 
 % --------------------------------------------------------------------

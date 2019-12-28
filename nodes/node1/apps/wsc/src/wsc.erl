@@ -7,7 +7,13 @@
 -include_lib("sys_log/include/write_log.hrl").
 
 tt() ->
-    cast(),
+	% cast(),
+	?WRITE_LOG("time", {start_time, glib:time(), glib:date_str()}),
+	lists:foreach(fun(Id) -> 
+		?LOG(Id),
+		cast()
+	end, lists:seq(1, 10000)),
+	?WRITE_LOG("time", {end_time, glib:time(), glib:date_str()}),
     ok.
 
 
@@ -20,10 +26,11 @@ test() ->
 			pong ->
 				ok;
 			Any ->
+				?LOG(fail),
 				?WRITE_LOG("call-fail", {Any}),
 				ok
 		end
-	end, lists:seq(1, 10000)),
+	end, lists:seq(1, 1000000)),
 	?WRITE_LOG("time", {end_time, glib:time(), glib:date_str()}),
 	ok.
 
@@ -36,7 +43,7 @@ ping() ->
     		?WRITE_LOG("exception", {exception, Reason}),
     		ok;
     	_ -> 
-		    ?LOG(R),
+		    % ?LOG(R),
 		  	R
 	end.
 
@@ -61,32 +68,17 @@ try_call(Cmd, ReqPackage) ->
 	end.
 
 cast() ->
-    % cast(<<"hello world!">>).
-	% Bin = term_to_binary({hello, world}),
-	
-    % Name = <<"test_name">>,
-    % NickName = <<"test_nick_name">>,
-    % Phone = <<"138912341234">>,
-	% Bin = glib_pb:encode_TestMsg(Name, NickName, Phone),
-	
-	% Key = glib:to_binary(glib:uid()),	
-	Key = base64:encode(term_to_binary({self()})),
-	Cmd = 1000,
+	% Key = base64:encode(term_to_binary({self()})),
+	Cmd = 1003,
 	Payload = term_to_binary({<<"hello world!!">>, self()}),
-	Bin = glib_pb:encode_RpcPackage(Key, Cmd, Payload),
-    cast(Bin).
+	% Bin = glib_pb:encode_RpcPackage(Key, Cmd, Payload),
+    cast(Cmd, Payload).
 
-cast(Package) ->
-	% Key = to_binary(to_str(uid())),	
-	% RpcPackage = #'RpcPackage'{
-    %                     key = Key,
-    %                     payload = Package
-    %                 },
-	% RpcPackageBin = msg_proto:encode_msg(RpcPackage),
-    % RpcPackageBin1 = package(?CMD_CAST_10010, RpcPackageBin),
-    
+% {send, Cmd, ReqPackage}
+cast(Cmd, Package) ->
+	% ?LOG({cast, Cmd, Package}),
 	poolboy:transaction(pool_name(), fun(Worker) ->
-		gen_server:cast(Worker, {send, Package})
+		gen_server:cast(Worker, {send, Cmd, Package})
 	end).
 
 

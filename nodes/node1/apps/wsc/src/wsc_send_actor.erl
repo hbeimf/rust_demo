@@ -3,6 +3,7 @@
 -behaviour(websocket_client_handler).
 
 -include_lib("glib/include/log.hrl").
+-include("rr.hrl").
 
 -export([
          start_link/1,
@@ -36,8 +37,16 @@ websocket_handle({binary, CurrentPackage}, _ConnState, State) ->
     % Decode = binary_to_term(CurrentPackage),
     % {From, _Cmd, Payload} = glib_pb:decode_RpcPackage(CurrentPackage),
     
-    {From, Cmd, Payload} = binary_to_term(CurrentPackage),
-    ?LOG({From, Cmd, Payload}),
+    % {From, Cmd, Payload} = binary_to_term(CurrentPackage),
+    % -record(reply, {
+    % 	from, 
+    %     reply_code,
+    %     reply_data
+    % }).
+
+    #reply{from = From, reply_code = Cmd, reply_data = Payload} = binary_to_term(CurrentPackage),
+
+    % ?LOG({From, Cmd, Payload}),
 
     safe_reply(From, Payload),
 
@@ -71,7 +80,7 @@ websocket_handle(Msg, _ConnState, State) ->
     {ok, State}.
 
 websocket_info({send, Bin}, _ConnState, State) ->
-	?LOG({send, Bin}),
+	% ?LOG({send, Bin}),
 	{reply, {binary, Bin}, State};
 websocket_info(close, _ConnState, _State) ->
     % ?LOG({close}),

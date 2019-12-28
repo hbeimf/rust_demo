@@ -1,0 +1,18 @@
+{application, glib,
+ [{description, "An OTP application"},
+  {vsn, "0.6.1"},
+  {registered, []},
+  {mod, { glib_app, []}},
+  {applications,
+   [kernel,
+    stdlib,
+    inets,
+    esnowflake
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {maintainers, []},
+  {licenses, []},
+  {links, []}
+ ]}.

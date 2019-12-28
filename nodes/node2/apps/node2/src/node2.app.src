@@ -1,0 +1,18 @@
+{application, node2,
+ [{description, "An OTP application"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, { node2_app, []}},
+  {applications,
+   [kernel,
+    stdlib
+    , glib
+    , table
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {maintainers, []},
+  {licenses, []},
+  {links, []}
+ ]}.

@@ -28,7 +28,20 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-    {ok, { {one_for_all, 0, 1}, []} }.
+    % {ok, { {one_for_all, 0, 1}, []} }.
+    {Ip, Port} = {"127.0.0.1", 8000},
+    PoolSpecs = {wsc_pool,{poolboy,start_link,
+             [[{name,{local,wsc_pool}},
+               {worker_module,wsc_call_actor},
+               {size,100},
+               {max_overflow,20}],
+      		[Ip, glib:to_integer(Port)]]},
+      permanent,5000,worker,
+      [poolboy]},
+
+      Children = [PoolSpecs],
+
+      {ok, {{one_for_one, 10, 10}, Children}}.
 
 %%====================================================================
 %% Internal functions

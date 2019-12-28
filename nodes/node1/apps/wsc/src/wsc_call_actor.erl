@@ -125,8 +125,8 @@ handle_cast({send, Cmd, ReqPackage}, #{wsc_send_actor_pid := Pid} = State) ->
 				{ok, NewPid} -> 
 					NewPid ! {send, Package},
 					{noreply, #{wsc_send_actor_pid => NewPid}};
-				_ -> 
-					?WRITE_LOG("link_exception", {cast, Package}),
+				Any -> 
+					?WRITE_LOG("link_exception", {Any, cast, Package}),
 					{noreply, State}
 			end
 	end;

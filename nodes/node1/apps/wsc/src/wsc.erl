@@ -11,8 +11,8 @@ tt() ->
 	?WRITE_LOG("time", {start_time, glib:time(), glib:date_str()}),
 	lists:foreach(fun(Id) -> 
 		?LOG(Id),
-		cast()
-	end, lists:seq(1, 10000)),
+		cast(Id)
+	end, lists:seq(1, 1000000)),
 	?WRITE_LOG("time", {end_time, glib:time(), glib:date_str()}),
     ok.
 
@@ -67,12 +67,13 @@ try_call(Cmd, ReqPackage) ->
 				{false, exception}
 	end.
 
-cast() ->
+cast(Id) ->
 	% Key = base64:encode(term_to_binary({self()})),
 	Cmd = 1003,
-	Payload = term_to_binary({<<"hello world!!">>, self()}),
+	% Payload = term_to_binary({<<"hello world!!">>, self()}),
+	Req = {Id},
 	% Bin = glib_pb:encode_RpcPackage(Key, Cmd, Payload),
-    cast(Cmd, Payload).
+    cast(Cmd, Req).
 
 % {send, Cmd, ReqPackage}
 cast(Cmd, Package) ->

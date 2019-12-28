@@ -35,13 +35,8 @@ ping() ->
     	{false, Reason} -> 
     		?WRITE_LOG("exception", {exception, Reason}),
     		ok;
-    	% {false, link_exception}->
-    	% 	?WRITE_LOG("exception", {link_exception}),
-    	% 	ok;
     	_ -> 
-		    % R1 = binary_to_term(R),
 		    ?LOG(R),
-		  	% ok
 		  	R
 	end.
 

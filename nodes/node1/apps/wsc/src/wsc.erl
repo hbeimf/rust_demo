@@ -12,20 +12,20 @@ tt() ->
 
 
 
-% test() -> 
-% 	?WRITE_LOG("time", {start_time, glib:time(), glib:date_str()}),
-% 	lists:foreach(fun(Id) -> 
-% 		?LOG(Id),
-% 		case call() of 
-% 			{<<"hello world!!">>, _Pid} ->
-% 				ok;
-% 			Any ->
-% 				?WRITE_LOG("call-fail", {Any}),
-% 				ok
-% 		end
-% 	end, lists:seq(1, 1000000)),
-% 	?WRITE_LOG("time", {end_time, glib:time(), glib:date_str()}),
-% 	ok.
+test() -> 
+	?WRITE_LOG("time", {start_time, glib:time(), glib:date_str()}),
+	lists:foreach(fun(Id) -> 
+		?LOG(Id),
+		case ping() of 
+			pong ->
+				ok;
+			Any ->
+				?WRITE_LOG("call-fail", {Any}),
+				ok
+		end
+	end, lists:seq(1, 10000)),
+	?WRITE_LOG("time", {end_time, glib:time(), glib:date_str()}),
+	ok.
 
 
 ping() ->

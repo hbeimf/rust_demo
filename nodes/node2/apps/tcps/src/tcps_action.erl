@@ -9,11 +9,12 @@
 
 
 action(Package) -> 
-    % #request{from = From, req_cmd = Cmd, req_data = ReqPackage} = binary_to_term(Package),
-    % action(Cmd, ReqPackage, From),
-    ?LOG(Package),
-    R = binary_to_term(Package),
-    ?LOG(R),
+    #request{from = From, req_cmd = Cmd, req_data = ReqPackage} = binary_to_term(Package),
+    action(Cmd, ReqPackage, From),
+
+    % ?LOG(Package),
+    % R = binary_to_term(Package),
+    % ?LOG(R),
     ok.
 
 
@@ -22,10 +23,12 @@ action(Package) ->
 %     reply_code,
 %     reply_data
 % }).
-% action(1000, _, From) ->
-%     Reply = term_to_binary(#reply{from = From, reply_code = 1001, reply_data = pong}),
-%     self() ! {send, Reply},
-%     ok;
+action(1000, _, From) ->
+    ?LOG(From),
+    Reply = term_to_binary(#reply{from = From, reply_code = 1001, reply_data = pong}),
+    Package = glib:package(1001, Reply),
+    self() ! {send, Package},
+    ok;
 action(Cmd, ReqPackage, From) ->
     ?LOG({Cmd, ReqPackage, From}),
     ok.

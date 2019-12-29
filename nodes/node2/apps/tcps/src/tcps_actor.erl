@@ -20,9 +20,10 @@
 % -record(state, {socket, transport, data}).
 -include("state.hrl").
 -include_lib("glib/include/log.hrl").
-% -include("cmd.hrl").
+-include_lib("glib/include/rr.hrl").
+
 % -include_lib("glib/include/log.hrl").
-	
+
 start_link(Ref, Socket, Transport, Opts) ->
 	{ok, proc_lib:spawn_link(?MODULE, init, [{Ref, Socket, Transport, Opts}])}.
 
@@ -86,13 +87,34 @@ parse_package(Bin, State) ->
 	case glib:unpackage(Bin) of
 		{ok, waitmore}  -> {ok, waitmore, Bin};
 		{ok,{Cmd, ValueBin},LefBin} ->
-			action(Cmd, ValueBin, State),
+			try_action(Cmd, ValueBin, State),
 			% ?LOG({Type, ValueBin}),
 			parse_package(LefBin, State);
 		_ ->
 			error		
 	end.
 
-action(Cmd, ValueBin, State) -> 
-	?LOG({Cmd, ValueBin, State}),
+try_action(Cmd, ValueBin, State) -> 
+    ?LOG({Cmd, ValueBin, State}),
+    % action(ValueBin),
 	ok.
+
+action(Package) -> 
+    #request{from = From, req_cmd = Cmd, req_data = ReqPackage} = binary_to_term(Package),
+    action(Cmd, ReqPackage, From),
+    ok.
+
+
+% -record(reply, {
+% 	from, 
+%     reply_code,
+%     reply_data
+% }).
+action(1000, _, From) ->
+    % Reply = term_to_binary(#reply{from = From, reply_code = 1001, reply_data = pong}),
+    % self() ! {send, Reply},
+    ?LOG(pong),
+    ok;
+action(Cmd, ReqPackage, From) ->
+    ?LOG({Cmd, ReqPackage, From}),
+    ok.

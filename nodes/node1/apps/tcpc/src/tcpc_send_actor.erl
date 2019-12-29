@@ -117,20 +117,20 @@ init([_Params]) ->
 %     end, lists:seq(1, 100)),
 
 %     {reply, [], ac_state};
-handle_call({request, Key, Package}, From, #tcpc_state{transport = _Transport,socket=Socket} = State) ->
-	% ?LOG({call, Package}),
-	% ?LOG(Key),
-	case is_port(Socket) of
-		true -> 
-			ets_ac:insert(Key, From),
-			% ?LOG({Socket, is_port(Socket), State}),
-			ranch_tcp:send(Socket, Package),
-			{noreply, State};
-		_ -> 
-			?WRITE_LOG("tcpc-exception", {error,socket_error}),
-			Reply = {false, connect_error},
-			{reply, Reply, State}
-	end;
+% handle_call({request, Key, Package}, From, #tcpc_state{transport = _Transport,socket=Socket} = State) ->
+% 	% ?LOG({call, Package}),
+% 	% ?LOG(Key),
+% 	case is_port(Socket) of
+% 		true -> 
+% 			ets_ac:insert(Key, From),
+% 			% ?LOG({Socket, is_port(Socket), State}),
+% 			ranch_tcp:send(Socket, Package),
+% 			{noreply, State};
+% 		_ -> 
+% 			?WRITE_LOG("tcpc-exception", {error,socket_error}),
+% 			Reply = {false, connect_error},
+% 			{reply, Reply, State}
+% 	end;
 handle_call(_Request, _From, State) ->
     Reply = ok,
     {reply, Reply, State}.
@@ -173,6 +173,7 @@ handle_info({tcp, Socket, CurrentPackage}, State=#tcpc_state{socket=Socket, tran
 			{stop, normal,State}
 	end;
 handle_info({send, Package}, State = #tcpc_state{socket = Socket}) ->
+	?LOG({send, Package}),
 	ranch_tcp:send(Socket, Package),
 	{noreply, State};
 handle_info({timeout,_,{reconnect,{Ip,Port}}}, #tcpc_state{transport = Transport} = State) ->
@@ -246,5 +247,13 @@ parse_package(Bin, State) ->
 
 action(Cmd, ValueBin, State) -> 
 	?LOG({Cmd, ValueBin, State}),
+	#reply{from = From, reply_code = _ReplyCode, reply_data = Payload} = binary_to_term(ValueBin),
+	safe_reply(From, Payload),
 	ok.
 
+safe_reply(undefined, _Value) ->
+    ok;
+safe_reply(null, _Value) ->
+    ok;
+safe_reply(From, Value) ->
+    gen_server:reply(From, Value).

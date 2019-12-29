@@ -3,7 +3,7 @@
  {<<"cowlib">>,{pkg,<<"cowlib">>,<<"1.0.2">>},1},
  {<<"esnowflake">>,{pkg,<<"esnowflake">>,<<"0.2.0">>},0},
  {<<"jsx">>,{pkg,<<"jsx">>,<<"2.9.0">>},0},
- {<<"ranch">>,{pkg,<<"ranch">>,<<"1.3.2">>},1},
+ {<<"ranch">>,{pkg,<<"ranch">>,<<"1.3.2">>},0},
  {<<"zucchini">>,
   {git,"https://github.com/hbeimf/zucchini.git",
        {ref,"429c9e0f9f67911c1825fbebff7d0fdc59e56b90"}},

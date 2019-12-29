@@ -231,13 +231,17 @@ code_change(_OldVsn, State, _Extra) ->
 %% ====================================================================
 parse_package(Bin, State) ->
 	% case tcp_package:unpackage(Bin) of
-	case glib_big_pack:unpackage(Bin) of
+	case glib:unpackage(Bin) of
 		{ok, waitmore}  -> {ok, waitmore, Bin};
-		{ok, DataBin, NextPageckage} ->
-            % action(DataBin),
-            ?LOG(DataBin),
-			parse_package(NextPageckage, State);
+		{ok,{Cmd, ValueBin},LefBin} ->
+			action(Cmd, ValueBin, State),
+			% ?LOG({Type, ValueBin}),
+			parse_package(LefBin, State);
 		_ ->
 			error		
 	end.
+
+action(Cmd, ValueBin, State) -> 
+	?LOG({Cmd, ValueBin, State}),
+	ok.
 

@@ -74,6 +74,7 @@ cast() ->
     cast(123).
 
 cast(Id) ->
+	?LOG(Id),
 	% Key = base64:encode(term_to_binary({self()})),
 	% Cmd = 1003,
 	% Payload = term_to_binary({<<"hello world!!">>, self()}),

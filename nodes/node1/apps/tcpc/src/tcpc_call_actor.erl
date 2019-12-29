@@ -119,7 +119,7 @@ handle_call(_Request, _From, State) ->
 handle_cast({send, Cmd, ReqPackage}, #{tcpc_send_actor_pid := Pid} = State) ->
 	% ?LOG({send, Cmd, ReqPackage}),
 	ReqPackage1 = term_to_binary(#request{from = null, req_cmd = Cmd, req_data = ReqPackage}),
-	?LOG({Cmd, ReqPackage1, binary_to_term(ReqPackage1)}),
+	% ?LOG({Cmd, ReqPackage1, binary_to_term(ReqPackage1)}),
 	Package = glib:package(Cmd, ReqPackage1),
 
 	case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of

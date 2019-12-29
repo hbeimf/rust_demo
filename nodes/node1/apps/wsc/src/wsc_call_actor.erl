@@ -55,7 +55,7 @@ start_link(Params) ->
 %          {stop, Reason}
 % --------------------------------------------------------------------
 init([_Params]) ->
-	erlang:send_after(?TIMEOUT, self(), check_state), %
+	% erlang:send_after(?TIMEOUT, self(), check_state), %
 	
     % {ok, Pid} = go_ws_actor:start_link(1),
 
@@ -141,22 +141,22 @@ handle_cast(Msg, State) ->
 %          {noreply, gs_tcp_state, Timeout} |
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
-% erlang:send_after(?TIMEOUT, self(), check_state), %
-handle_info(check_state, #{ws_pid := Pid} = State) -> 
-	% ?LOG({info, Info}),
-	% {stop, normal, gs_tcp_state}.
-	erlang:send_after(?TIMEOUT, self(), check_state), %
-	case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
-		true -> 
-			{noreply, State};
-		_ -> 
-			case go_ws_actor:start_link(1) of 
-				{ok, NewPid} -> 
-					{noreply, #{ws_pid => NewPid}};
-				_ -> 
-					{noreply, State}
-			end
-	end;
+% % erlang:send_after(?TIMEOUT, self(), check_state), %
+% handle_info(check_state, #{ws_pid := Pid} = State) -> 
+% 	% ?LOG({info, Info}),
+% 	% {stop, normal, gs_tcp_state}.
+% 	erlang:send_after(?TIMEOUT, self(), check_state), %
+% 	case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
+% 		true -> 
+% 			{noreply, State};
+% 		_ -> 
+% 			case go_ws_actor:start_link(1) of 
+% 				{ok, NewPid} -> 
+% 					{noreply, #{ws_pid => NewPid}};
+% 				_ -> 
+% 					{noreply, State}
+% 			end
+% 	end;
 handle_info(_Info, State) ->  
 	% ?LOG({info, Info}),
 	% {stop, normal, gs_tcp_state}.

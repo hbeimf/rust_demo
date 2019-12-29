@@ -23,8 +23,8 @@ action(Package) ->
 %     reply_code,
 %     reply_data
 % }).
-action(1000, _, From) ->
-    ?LOG(From),
+action(1000, Req, From) ->
+    ?LOG({From, Req}),
     Reply = term_to_binary(#reply{from = From, reply_code = 1001, reply_data = pong}),
     Package = glib:package(1001, Reply),
     self() ! {send, Package},

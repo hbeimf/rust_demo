@@ -12,6 +12,8 @@ action(Package) ->
     % #request{from = From, req_cmd = Cmd, req_data = ReqPackage} = binary_to_term(Package),
     % action(Cmd, ReqPackage, From),
     ?LOG(Package),
+    R = binary_to_term(Package),
+    ?LOG(R),
     ok.
 
 

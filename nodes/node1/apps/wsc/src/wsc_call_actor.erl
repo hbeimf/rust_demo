@@ -26,7 +26,7 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
 -include_lib("sys_log/include/write_log.hrl").
--include("rr.hrl").
+-include_lib("glib/include/rr.hrl").
 -include_lib("glib/include/log.hrl").
 % --------------------------------------------------------------------
 % External API

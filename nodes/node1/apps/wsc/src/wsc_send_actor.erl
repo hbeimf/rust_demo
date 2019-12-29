@@ -3,7 +3,7 @@
 -behaviour(websocket_client_handler).
 
 -include_lib("glib/include/log.hrl").
--include("rr.hrl").
+-include_lib("glib/include/rr.hrl").
 
 -export([
          start_link/1,

@@ -7,6 +7,8 @@
    [kernel,
     stdlib,
     ranch
+    , glib
+    , sys_log
    ]},
   {env,[]},
   {modules, []},

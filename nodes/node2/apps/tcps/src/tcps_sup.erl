@@ -20,6 +20,8 @@
 %%====================================================================
 
 start_link() ->
+    Port = 5679,
+    {ok, _} = ranch:start_listener(tcp_server, 100, ranch_tcp, [{port, Port}, {max_connections, 1000000}], tcps_actor, []),
     supervisor:start_link({local, ?SERVER}, ?MODULE, []).
 
 %%====================================================================

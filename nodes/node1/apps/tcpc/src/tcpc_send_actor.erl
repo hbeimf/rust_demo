@@ -57,8 +57,10 @@ start_link(Params) ->
 %          ignore               |
 %          {stop, Reason}
 % --------------------------------------------------------------------
-init([Params]) ->
-	[Ip, Port|_] = Params,
+init([_Params]) ->
+    % [Ip, Port|_] = Params,
+    Ip = sys_config:get_config(tcp, host),
+    Port = sys_config:get_config(tcp, port),
 	% Ip = sys_config:get_config(account_service, server),
 	% Port = sys_config:get_config(account_service, tcp_port),
 	case ranch_tcp:connect(Ip, Port,[],3000) of
@@ -72,20 +74,20 @@ init([Params]) ->
 			State = #tcpc_state{socket = Socket, transport = ranch_tcp, data = <<>>, ip = Ip, port = Port},
 			{ok,  State};
 		{error,econnrefused} -> 
-			?WRITE_LOG("ac-exception", {error,econnrefused}),
+			?WRITE_LOG("tcpc-exception", {error,econnrefused}),
 			?LOG({error,econnrefused}),
 			erlang:start_timer(?TIMER_SECONDS, self(), {reconnect,{Ip,Port}}),
 			State = #tcpc_state{socket = econnrefused, transport = ranch_tcp, data = <<>>,ip = Ip, port = Port},
 			{ok,State};
 		{error,Reason} ->
 			?LOG({error,Reason}),
-			?WRITE_LOG("ac-exception", {error,Reason}),
+			?WRITE_LOG("tcpc-exception", {error,Reason}),
 			erlang:start_timer(?TIMER_SECONDS, self(), {reconnect,{Ip,Port}}),
 			State = #tcpc_state{socket = error, transport = ranch_tcp, data = <<>>,ip = Ip, port = Port},
 			{ok,State};
 		_ -> 
-			?LOG({error, reconnect}),
-			?WRITE_LOG("ac-exception", {error,reconnect}),
+			% ?LOG({error, reconnect}),
+			?WRITE_LOG("tcpc-exception", {error,reconnect}),
 			erlang:start_timer(?TIMER_SECONDS, self(), {reconnect,{Ip,Port}}),
 			State = #tcpc_state{socket = error, transport = ranch_tcp, data = <<>>,ip = Ip, port = Port},
 			{ok,State}

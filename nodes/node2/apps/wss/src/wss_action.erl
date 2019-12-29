@@ -5,7 +5,7 @@
 
 -include_lib("glib/include/log.hrl").
 -include_lib("sys_log/include/write_log.hrl").
--include("rr.hrl").
+-include_lib("glib/include/rr.hrl").
 
 
 action(Package) -> 

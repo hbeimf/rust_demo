@@ -16,7 +16,8 @@
 
 
 start_link(Index) ->
-    Host = "ws://localhost:5678/ws",
+    % Host = "ws://localhost:5678/ws",
+    Host = sys_config:get_config(http, ws),
     websocket_client:start_link(Host, ?MODULE, [Index]).
 
     

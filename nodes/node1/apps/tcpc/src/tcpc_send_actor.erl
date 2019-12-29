@@ -76,24 +76,27 @@ init([_Params]) ->
 	        erlang:start_timer(?TIMEER_HEARTBEAT, self(), ping),
 			State = #tcpc_state{socket = Socket, transport = ranch_tcp, data = <<>>, ip = Ip, port = Port},
 			{ok,  State};
-		{error,econnrefused} -> 
-			?WRITE_LOG("tcpc-exception", {error,econnrefused}),
-			?LOG({error,econnrefused}),
-			erlang:start_timer(?TIMER_SECONDS, self(), {reconnect,{Ip,Port}}),
-			State = #tcpc_state{socket = econnrefused, transport = ranch_tcp, data = <<>>,ip = Ip, port = Port},
-			{ok,State};
-		{error,Reason} ->
-			?LOG({error,Reason}),
-			?WRITE_LOG("tcpc-exception", {error,Reason}),
-			erlang:start_timer(?TIMER_SECONDS, self(), {reconnect,{Ip,Port}}),
-			State = #tcpc_state{socket = error, transport = ranch_tcp, data = <<>>,ip = Ip, port = Port},
-			{ok,State};
-		_ -> 
-			% ?LOG({error, reconnect}),
-			?WRITE_LOG("tcpc-exception", {error,reconnect}),
-			erlang:start_timer(?TIMER_SECONDS, self(), {reconnect,{Ip,Port}}),
-			State = #tcpc_state{socket = error, transport = ranch_tcp, data = <<>>,ip = Ip, port = Port},
-			{ok,State}
+		% {error,econnrefused} -> 
+		% 	?WRITE_LOG("tcpc-exception", {error,econnrefused}),
+		% 	?LOG({error,econnrefused}),
+		% 	erlang:start_timer(?TIMER_SECONDS, self(), {reconnect,{Ip,Port}}),
+		% 	State = #tcpc_state{socket = econnrefused, transport = ranch_tcp, data = <<>>,ip = Ip, port = Port},
+		% 	{ok,State};
+		% {error,Reason} ->
+		% 	?LOG({error,Reason}),
+		% 	?WRITE_LOG("tcpc-exception", {error,Reason}),
+		% 	erlang:start_timer(?TIMER_SECONDS, self(), {reconnect,{Ip,Port}}),
+		% 	State = #tcpc_state{socket = error, transport = ranch_tcp, data = <<>>,ip = Ip, port = Port},
+		% 	{ok,State};
+		% _ -> 
+		% 	% ?LOG({error, reconnect}),
+		% 	?WRITE_LOG("tcpc-exception", {error,reconnect}),
+		% 	erlang:start_timer(?TIMER_SECONDS, self(), {reconnect,{Ip,Port}}),
+		% 	State = #tcpc_state{socket = error, transport = ranch_tcp, data = <<>>,ip = Ip, port = Port},
+		% 	{ok,State}
+		Any -> 
+			?WRITE_LOG("tcpc-exception", {error,Any}),
+			{stop, normal}
 	end.
 
 
@@ -176,37 +179,41 @@ handle_info({send, Package}, State = #tcpc_state{socket = Socket}) ->
 	% ?LOG({send, Package}),
 	ranch_tcp:send(Socket, Package),
 	{noreply, State};
-handle_info({timeout,_,{reconnect,{Ip,Port}}}, #tcpc_state{transport = Transport} = State) ->
-	?LOG({timeout, reconnect}),
-	?WRITE_LOG("tcpc-exception", {reconnect,{Ip,Port}}),
-	% io:format("reconnect ip:[~p],port:[~p] ~n",[Ip,Port]),
-	case Transport:connect(Ip,Port,[],3000) of
-		{ok,Socket} ->
-			ok = Transport:setopts(Socket, [{active, once}]),
-			PingPackage = ping(),
-	        self() ! {send, PingPackage},
-			% erlang:start_timer(1000, self(), {regist}),
-			{noreply,State#tcpc_state{socket = Socket}};
-		{error,Reason} ->
-			% io:format("==============Res:[~p]~n",[Reason]),
-			?WRITE_LOG("tcpc-exception", {reconnect-fail,{Ip,Port}, Reason}),
-			erlang:start_timer(?TIMER_SECONDS, self(), {reconnect,{Ip,Port}}),
-			{noreply, State}
-	end;
-handle_info({tcp_closed, _Socket}, #tcpc_state{socket = Socket, ip = Ip, port = Port} = State) ->
-	?LOG({tcp_closed}),
-	erlang:start_timer(?TIMER_SECONDS, self(), {reconnect,{Ip,Port}}),
-	{noreply, State#tcpc_state{socket = undefined ,data = <<>>}};
+% handle_info({timeout,_,{reconnect,{Ip,Port}}}, #tcpc_state{transport = Transport} = State) ->
+% 	?LOG({timeout, reconnect}),
+% 	?WRITE_LOG("tcpc-exception", {reconnect,{Ip,Port}}),
+% 	% io:format("reconnect ip:[~p],port:[~p] ~n",[Ip,Port]),
+% 	case Transport:connect(Ip,Port,[],3000) of
+% 		{ok,Socket} ->
+% 			ok = Transport:setopts(Socket, [{active, once}]),
+% 			PingPackage = ping(),
+% 	        self() ! {send, PingPackage},
+% 			% erlang:start_timer(1000, self(), {regist}),
+% 			{noreply,State#tcpc_state{socket = Socket}};
+% 		{error,Reason} ->
+% 			% io:format("==============Res:[~p]~n",[Reason]),
+% 			?WRITE_LOG("tcpc-exception", {reconnect-fail,{Ip,Port}, Reason}),
+% 			erlang:start_timer(?TIMER_SECONDS, self(), {reconnect,{Ip,Port}}),
+% 			{noreply, State}
+% 	end;
+handle_info({tcp_closed, _Socket}, #tcpc_state{ip = Ip, port = Port} = State) ->
+	% ?LOG({tcp_closed}),
+	% erlang:start_timer(?TIMER_SECONDS, self(), {reconnect,{Ip,Port}}),
+	% {noreply, State#tcpc_state{socket = undefined ,data = <<>>}};
+	?WRITE_LOG("tcpc-exception", {tcp_closed,{Ip,Port}}),
+	{stop, normal, State};
 handle_info({tcp_error, _, _Reason}, #tcpc_state{ip = Ip, port = Port} = State) ->
-	erlang:start_timer(?TIMER_SECONDS, self(), {reconnect,{Ip,Port}}),
-	{noreply, State#tcpc_state{socket = undefined ,data = <<>>}};
-handle_info({timeout,_, ping}, State) -> 
-	% ?LOG({info, ping}),
-	PingPackage = ping(),
-	self() ! {send, PingPackage},
-	erlang:start_timer(?TIMEER_HEARTBEAT, self(), ping),
-	% {stop, normal, ac_state}.
-	{noreply, State};
+	% erlang:start_timer(?TIMER_SECONDS, self(), {reconnect,{Ip,Port}}),
+	% {noreply, State#tcpc_state{socket = undefined ,data = <<>>}};
+	?WRITE_LOG("tcpc-exception", {tcp_error,{Ip,Port}}),
+	{stop, normal, State};
+% handle_info({timeout,_, ping}, State) -> 
+% 	% ?LOG({info, ping}),
+% 	PingPackage = ping(),
+% 	self() ! {send, PingPackage},
+% 	erlang:start_timer(?TIMEER_HEARTBEAT, self(), ping),
+% 	% {stop, normal, ac_state}.
+% 	{noreply, State};
 handle_info(Info, State) -> 
 	?LOG({info, Info}),
 	% {stop, normal, ac_state}.

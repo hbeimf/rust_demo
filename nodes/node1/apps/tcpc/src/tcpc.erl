@@ -45,7 +45,7 @@ ping() ->
     		?WRITE_LOG("exception", {exception, Reason}),
     		ok;
     	_ -> 
-		    % ?LOG(R),
+		    ?LOG(R),
 		  	R
 	end.
 

@@ -55,7 +55,7 @@ handle_info({tcp, Socket, CurrentPackage}, State=#state{
 	end;	
 
 handle_info({send, Package}, #state{transport = Transport,socket=Socket} = State) ->
-	?LOG({send, Package}),
+	% ?LOG({send, Package}),
 	Transport:send(Socket, Package),
 	{noreply, State};
 handle_info({tcp_closed, _Socket}, State) ->

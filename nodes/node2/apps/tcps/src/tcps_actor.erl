@@ -86,35 +86,40 @@ parse_package(Bin, State) ->
 	% case tcp_package:unpackage(Bin) of
 	case glib:unpackage(Bin) of
 		{ok, waitmore}  -> {ok, waitmore, Bin};
-		{ok,{Cmd, ValueBin},LefBin} ->
-			try_action(Cmd, ValueBin, State),
+		{ok,{_Cmd, ValueBin},LefBin} ->
+			tcps_action:action(ValueBin),
 			% ?LOG({Type, ValueBin}),
 			parse_package(LefBin, State);
 		_ ->
 			error		
 	end.
 
-try_action(Cmd, ValueBin, State) -> 
-    ?LOG({Cmd, ValueBin, State}),
-    % action(ValueBin),
-	ok.
+% try_action(Cmd, ValueBin, _State) -> 
+%     ?LOG({Cmd, ValueBin, binary_to_term(ValueBin)}),
+%     % ?LOG(ValueBin),
+%     % R = binary_to_term(ValueBin),
+%     % % Req = binary_to_term(ValueBin),
+%     % ?LOG(R),
+%     % action(ValueBin),
+%     % wss_action:action(ValueBin),
+% 	ok.
 
-action(Package) -> 
-    #request{from = From, req_cmd = Cmd, req_data = ReqPackage} = binary_to_term(Package),
-    action(Cmd, ReqPackage, From),
-    ok.
+% action(Package) -> 
+%     #request{from = From, req_cmd = Cmd, req_data = ReqPackage} = binary_to_term(Package),
+    
+%     ok.
 
 
-% -record(reply, {
-% 	from, 
-%     reply_code,
-%     reply_data
-% }).
-action(1000, _, From) ->
-    % Reply = term_to_binary(#reply{from = From, reply_code = 1001, reply_data = pong}),
-    % self() ! {send, Reply},
-    ?LOG(pong),
-    ok;
-action(Cmd, ReqPackage, From) ->
-    ?LOG({Cmd, ReqPackage, From}),
-    ok.
+% % -record(reply, {
+% % 	from, 
+% %     reply_code,
+% %     reply_data
+% % }).
+% action(1000, _, From) ->
+%     % Reply = term_to_binary(#reply{from = From, reply_code = 1001, reply_data = pong}),
+%     % self() ! {send, Reply},
+%     ?LOG(pong),
+%     ok;
+% action(Cmd, ReqPackage, From) ->
+%     ?LOG({Cmd, ReqPackage, From}),
+%     ok.

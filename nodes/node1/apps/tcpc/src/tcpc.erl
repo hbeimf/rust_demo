@@ -64,7 +64,7 @@ try_call(Cmd, ReqPackage) ->
 			gen_server:call(Worker, {call, Cmd, ReqPackage}, ?TIMEOUT)
 		end)
 	catch 
-			K:Error_msg->
+			_K:_Error_msg->
 				% ?WRITE_LOG("call_exception", {K, gap_xx, Error_msg, gap_xx, erlang:get_stacktrace()}),
 				{false, exception}
 	end.

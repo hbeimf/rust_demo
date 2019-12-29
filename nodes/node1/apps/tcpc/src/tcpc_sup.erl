@@ -32,7 +32,7 @@ init([]) ->
     {Ip, Port} = {"127.0.0.1", 8000},
     PoolSpecs = {tcpc:pool_name(),{poolboy,start_link,
              [[{name,{local,tcpc:pool_name()}},
-               {worker_module,tcp_call_actor},
+               {worker_module,tcpc_call_actor},
                {size,100},
                {max_overflow,20}],
       		[Ip, glib:to_integer(Port)]]},

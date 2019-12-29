@@ -9,6 +9,7 @@
     , glib
     , table
     , wsc
+    , tcpc
    ]},
   {env,[]},
   {modules, []},

@@ -5,7 +5,8 @@
   {mod, { tcpc_app, []}},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
+    ranch
    ]},
   {env,[]},
   {modules, []},

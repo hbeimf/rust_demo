@@ -34,6 +34,8 @@
 
 -include_lib("glib/include/log.hrl").
 -include_lib("glib/include/rr.hrl").
+-include_lib("glib/include/cmd.hrl").
+
 
 % -include("ac_state.hrl").
 % -include("cmd_ac.hrl").
@@ -43,7 +45,7 @@
 -include_lib("sys_log/include/write_log.hrl").
 
 ping() -> 
-    ping.
+	glib:package(?CMD_1000, <<"">>).
 
 start_link(Params) ->
     gen_server:start_link(?MODULE, [Params], []).

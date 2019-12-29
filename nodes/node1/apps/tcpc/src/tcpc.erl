@@ -5,7 +5,7 @@
 
 -include_lib("glib/include/log.hrl").
 -include_lib("sys_log/include/write_log.hrl").
-
+-include_lib("glib/include/cmd.hrl").
 
 
 tt() ->
@@ -69,13 +69,17 @@ try_call(Cmd, ReqPackage) ->
 				{false, exception}
 	end.
 
+
+cast() ->
+    cast(123).
+
 cast(Id) ->
 	% Key = base64:encode(term_to_binary({self()})),
-	Cmd = 1003,
+	% Cmd = 1003,
 	% Payload = term_to_binary({<<"hello world!!">>, self()}),
 	Req = {Id},
 	% Bin = glib_pb:encode_RpcPackage(Key, Cmd, Payload),
-    cast(Cmd, Req).
+    cast(?CMD_1000, Req).
 
 % {send, Cmd, ReqPackage}
 cast(Cmd, Package) ->

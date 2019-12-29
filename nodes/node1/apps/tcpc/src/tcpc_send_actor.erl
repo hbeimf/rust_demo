@@ -165,7 +165,8 @@ handle_info({tcp, Socket, CurrentPackage}, State=#tcpc_state{socket=Socket, tran
 		{ok, waitmore, Bin} -> 
 			{noreply, State#tcpc_state{data = Bin}};
 		Any -> 
-			% glib:write_log({?MODULE, ?LINE, stop_noreason, PackageBin, Any, ServerID, ServerType}),
+            % glib:write_log({?MODULE, ?LINE, stop_noreason, PackageBin, Any, ServerID, ServerType}),
+            ?WRITE_LOG("tcpc-exception", {parse_package_error, Any}),
 			{stop, normal,State}
 	end;
 handle_info({send, Package}, State = #tcpc_state{socket = Socket}) ->

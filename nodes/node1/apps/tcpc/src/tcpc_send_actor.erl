@@ -68,7 +68,7 @@ init([_Params]) ->
 	% Port = sys_config:get_config(account_service, tcp_port),
 	case ranch_tcp:connect(Ip, Port,[],3000) of
 		{ok,Socket} ->
-			?LOG(connect_ok),
+			% ?LOG(connect_ok),
 	        ok = ranch_tcp:setopts(Socket, [{active, once}]),
 	        PingPackage = ping(),
 	        self() ! {send, PingPackage},
@@ -173,7 +173,7 @@ handle_info({tcp, Socket, CurrentPackage}, State=#tcpc_state{socket=Socket, tran
 			{stop, normal,State}
 	end;
 handle_info({send, Package}, State = #tcpc_state{socket = Socket}) ->
-	?LOG({send, Package}),
+	% ?LOG({send, Package}),
 	ranch_tcp:send(Socket, Package),
 	{noreply, State};
 handle_info({timeout,_,{reconnect,{Ip,Port}}}, #tcpc_state{transport = Transport} = State) ->
@@ -245,8 +245,8 @@ parse_package(Bin, State) ->
 			error		
 	end.
 
-action(Cmd, ValueBin, State) -> 
-	?LOG({Cmd, ValueBin, State}),
+action(_Cmd, ValueBin, _State) -> 
+	% ?LOG({Cmd, ValueBin, State}),
 	#reply{from = From, reply_code = _ReplyCode, reply_data = Payload} = binary_to_term(ValueBin),
 	safe_reply(From, Payload),
 	ok.

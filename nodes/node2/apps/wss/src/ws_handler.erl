@@ -52,8 +52,11 @@ websocket_handle(Data, Req, State) ->
 % websocket_info({broadcast, Msg}, Req, {_, Uid} = State) ->
 % 	?LOG({broadcast, Msg}),
 % 	{reply, {text, << "That's what she said! ", Msg/binary >>}, Req, State};
+websocket_info({reply, Reply}, Req, State) ->
+	{reply, {binary, term_to_binary(Reply)}, Req, State};
 websocket_info({send, Package}, Req, State) ->
 	{reply, {binary, Package}, Req, State};
+
 websocket_info({timeout, _Ref, Msg}, Req, State) ->
 	% erlang:start_timer(1000, self(), <<"How' you doin'?">>),
 	{reply, {text, Msg}, Req, State};

@@ -26,7 +26,7 @@ start(_StartType, _StartArgs) ->
   {_, {port, Port}, _} = lists:keytake(port, 1, ConfigList),
 
 
-  {ok, _} = cowboy:start_http(http, 100, [{port, Port}],
+  {ok, _} = cowboy:start_http(http, 100, [{port, Port}, {max_connections, 1000000}],
     [{env, [{dispatch, Dispatch}]}]),
   wss_sup:start_link().
 

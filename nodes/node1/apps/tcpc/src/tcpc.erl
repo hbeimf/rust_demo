@@ -42,6 +42,7 @@ ping() ->
     R = call(1000, ReqPackage),
     case R of 
     	{false, Reason} -> 
+			?LOG({false, Reason}),
     		?WRITE_LOG("exception", {exception, Reason}),
     		ok;
     	_ -> 

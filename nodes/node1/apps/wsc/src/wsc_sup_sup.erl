@@ -3,7 +3,7 @@
 %% @end
 %%%-------------------------------------------------------------------
 
--module(wsc_sup).
+-module(wsc_sup_sup).
 
 -behaviour(supervisor).
 
@@ -20,7 +20,7 @@
 %%====================================================================
 
 start_link() ->
-    supervisor:start_link({local, ?SERVER}, ?MODULE, []).
+  supervisor:start_link({local, ?SERVER}, ?MODULE, []).
 
 %%====================================================================
 %% Supervisor callbacks
@@ -28,24 +28,21 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-      Children = children(),
-      {ok, {{one_for_one, 10, 10}, Children}}.
+  % {ok, { {one_for_all, 0, 1}, []} }.
+  {Ip, Port} = {"127.0.0.1", 8000},
+  PoolSpecs = {wsc:pool_name(),{poolboy,start_link,
+    [[{name,{local,wsc:pool_name()}},
+      {worker_module,wsc_call_actor},
+      {size,100},
+      {max_overflow,20}],
+      [Ip, glib:to_integer(Port)]]},
+    permanent,5000,worker,
+    [poolboy]},
+
+  Children = [PoolSpecs],
+
+  {ok, {{one_for_one, 10, 10}, Children}}.
 
 %%====================================================================
 %% Internal functions
 %%====================================================================
-children() ->
-  [
-    child_sup(wsc_sup_sup)
-  ].
-
-
-% child(Mod) ->
-% 	Child = {Mod, {Mod, start_link, []},
-%                permanent, 5000, worker, [Mod]},
-%                Child.
-
-child_sup(Mod) ->
-  Child = {Mod, {Mod, start_link, []},
-    permanent, 5000, supervisor, [Mod]},
-  Child.

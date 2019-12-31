@@ -1,14 +1,13 @@
-{application, ers,
+{application, glib,
  [{description, "An OTP application"},
-  {vsn, "0.1.0"},
+  {vsn, "0.6.1"},
   {registered, []},
-  {mod, { ers_app, []}},
+  {mod, { glib_app, []}},
   {applications,
    [kernel,
-    stdlib
-    , glib
-    , table
-    , wsc
+    stdlib,
+    inets,
+    esnowflake
    ]},
   {env,[]},
   {modules, []},

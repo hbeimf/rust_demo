@@ -1,14 +1,12 @@
-{application, ers,
+{application, wsc,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { ers_app, []}},
+  {mod, { wsc_app, []}},
   {applications,
    [kernel,
     stdlib
-    , glib
-    , table
-    , wsc
+    , sys_log
    ]},
   {env,[]},
   {modules, []},

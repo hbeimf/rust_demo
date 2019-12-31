@@ -1,14 +1,14 @@
-{application, ers,
+{application, tcpc,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { ers_app, []}},
+  {mod, { tcpc_app, []}},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
+    ranch
     , glib
-    , table
-    , wsc
+    , sys_log
    ]},
   {env,[]},
   {modules, []},

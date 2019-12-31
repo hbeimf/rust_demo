@@ -23,6 +23,15 @@ action(1000, _, From) ->
   Reply = #reply{from = From, reply_code = 1001, reply_data = pong},
   self() ! {reply, Reply},
   ok;
+action(1003, {Mod, F, Params}, From) ->
+%%  Reply = Mon:F(),
+%%  ?LOG({Mod, F, Params}),
+  R = erlang:apply(Mod, F, Params),
+%%  ?LOG(R),
+  Reply = #reply{from = From, reply_code = 1004, reply_data = R},
+  self() ! {reply, Reply},
+  ok;
+
 action(Cmd, ReqPackage, From) ->
   ?LOG({Cmd, ReqPackage, From}),
   ok.

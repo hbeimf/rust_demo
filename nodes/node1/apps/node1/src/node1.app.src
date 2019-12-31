@@ -1,20 +1,21 @@
 {application, node1,
- [{description, "An OTP application"},
-  {vsn, "0.1.0"},
-  {registered, []},
-  {mod, { node1_app, []}},
-  {applications,
-   [kernel,
-    stdlib
-    , glib
-    , table
-    , wsc
-    , tcpc
-   ]},
-  {env,[]},
-  {modules, []},
+  [{description, "An OTP application"},
+    {vsn, "0.1.0"},
+    {registered, []},
+    {mod, {node1_app, []}},
+    {applications,
+      [kernel,
+        stdlib
+        , glib
+        , table
+        , wsc
+        , tcpc
+        , wsc_common
+      ]},
+    {env, []},
+    {modules, []},
 
-  {maintainers, []},
-  {licenses, []},
-  {links, []}
- ]}.
+    {maintainers, []},
+    {licenses, []},
+    {links, []}
+  ]}.

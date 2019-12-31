@@ -157,9 +157,9 @@ handle_cast(Msg, State) ->
 % 					{noreply, State}
 % 			end
 % 	end;
-handle_info(_Info, State) ->  
-	% ?LOG({info, Info}),
-	% {stop, normal, gs_tcp_state}.
+handle_info(Info, State) ->
+	?LOG({info, Info}),
+%%	% {stop, normal, gs_tcp_state}.
 	{noreply, State}.
 
 

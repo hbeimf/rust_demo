@@ -49,7 +49,11 @@ ping() ->
 
 
 rpc() ->
-  rpc(1003,{glib, time, []}).
+  R = rpc(1003,{glib, time, []}),
+  ?LOG(R),
+  R1 = rpc(1003, {glib, replace, ["helloworld", "world", " you"]}),
+  ?LOG(R1),
+  ok.
 
 %%wsc:rpc(1003, {glib, replace, ["helloworld", "world", " you"]}).
 rpc(Cmd, Req) ->

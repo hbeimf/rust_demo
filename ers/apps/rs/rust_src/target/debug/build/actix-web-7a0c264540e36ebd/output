@@ -1,3 +1,0 @@
-cargo:rustc-cfg=actix_impl_trait
-cargo:rustc-cfg=actix_nightly
-cargo:rustc-cfg=actix_impl_trait

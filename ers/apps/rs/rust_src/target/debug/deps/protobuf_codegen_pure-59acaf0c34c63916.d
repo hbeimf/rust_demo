@@ -1,0 +1,11 @@
+/Users/mm/install/rust_demo/ers/apps/rs/rust_src/target/debug/deps/protobuf_codegen_pure-59acaf0c34c63916.rmeta: /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/lib.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/convert.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/model.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/parser.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/str_lit.rs
+
+/Users/mm/install/rust_demo/ers/apps/rs/rust_src/target/debug/deps/libprotobuf_codegen_pure-59acaf0c34c63916.rlib: /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/lib.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/convert.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/model.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/parser.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/str_lit.rs
+
+/Users/mm/install/rust_demo/ers/apps/rs/rust_src/target/debug/deps/protobuf_codegen_pure-59acaf0c34c63916.d: /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/lib.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/convert.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/model.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/parser.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/str_lit.rs
+
+/Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/lib.rs:
+/Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/convert.rs:
+/Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/model.rs:
+/Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/parser.rs:
+/Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/protobuf-codegen-pure-2.8.1/src/str_lit.rs:

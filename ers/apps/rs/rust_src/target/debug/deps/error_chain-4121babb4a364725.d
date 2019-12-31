@@ -1,0 +1,11 @@
+/Users/mm/install/rust_demo/ers/apps/rs/rust_src/target/debug/deps/error_chain-4121babb4a364725.rmeta: /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/lib.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/impl_error_chain_kind.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/error_chain.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/quick_main.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/backtrace.rs
+
+/Users/mm/install/rust_demo/ers/apps/rs/rust_src/target/debug/deps/liberror_chain-4121babb4a364725.rlib: /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/lib.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/impl_error_chain_kind.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/error_chain.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/quick_main.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/backtrace.rs
+
+/Users/mm/install/rust_demo/ers/apps/rs/rust_src/target/debug/deps/error_chain-4121babb4a364725.d: /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/lib.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/impl_error_chain_kind.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/error_chain.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/quick_main.rs /Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/backtrace.rs
+
+/Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/lib.rs:
+/Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/impl_error_chain_kind.rs:
+/Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/error_chain.rs:
+/Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/quick_main.rs:
+/Users/mm/.cargo/registry/src/github.com-1ecc6299db9ec823/error-chain-0.12.1/src/backtrace.rs:

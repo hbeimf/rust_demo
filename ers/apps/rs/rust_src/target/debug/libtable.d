@@ -1,0 +1,1 @@
+/Users/mm/install/rust_demo/ers/apps/rs/rust_src/target/debug/libtable.rlib: /Users/mm/install/rust_demo/ers/apps/rs/rust_src/table/src/lib.rs /Users/mm/install/rust_demo/ers/apps/rs/rust_src/table/src/msg.rs /Users/mm/install/rust_demo/ers/apps/rs/rust_src/table/src/table_room.rs

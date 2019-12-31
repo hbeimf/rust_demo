@@ -1,0 +1,18 @@
+{application, rs,
+ [{description, "An OTP application"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, { rs_app, []}},
+  {applications,
+   [kernel
+    , zucchini
+    , stdlib
+    , esnowflake
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {maintainers, []},
+  {licenses, []},
+  {links, []}
+ ]}.

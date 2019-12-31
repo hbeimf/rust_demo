@@ -49,15 +49,26 @@ ping() ->
 
 
 rpc() ->
-  R = rpc(1003,{glib, time, []}),
+  R = rpc(1003, {glib, time, []}),
   ?LOG(R),
   R1 = rpc(1003, {glib, replace, ["helloworld", "world", " you"]}),
   ?LOG(R1),
   ok.
 
+t() ->
+  ?WRITE_LOG("time", {start_time, glib:time(), glib:date_str()}),
+  lists:foreach(fun(Index) ->
+%%    ?LOG(Index),
+    Reply = rpc(1003, {glib, replace, ["helloworld", "world", " you"]}),
+    ?LOG({Index, Reply}),
+    ok
+                end, lists:seq(1, 1000000)),
+  ?WRITE_LOG("time", {end_time, glib:time(), glib:date_str()}),
+  ok.
+
 %%wsc:rpc(1003, {glib, replace, ["helloworld", "world", " you"]}).
 rpc(Cmd, Req) ->
-  ?LOG({Cmd, Req}),
+%%  ?LOG({Cmd, Req}),
   call(Cmd, Req).
 
 call(Cmd, ReqPackage) ->

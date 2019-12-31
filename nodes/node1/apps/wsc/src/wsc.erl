@@ -82,9 +82,10 @@ call(Cmd, ReqPackage) ->
 
 try_call(Cmd, ReqPackage) ->
   try
-    poolboy:transaction(pool_name(), fun(Worker) ->
-      gen_server:call(Worker, {call, Cmd, ReqPackage}, ?TIMEOUT)
-                                     end)
+    poolboy:transaction(pool_name(),
+      fun(Worker) ->
+        gen_server:call(Worker, {call, Cmd, ReqPackage}, ?TIMEOUT)
+      end)
   catch
     K:Error_msg ->
       % ?WRITE_LOG("call_exception", {K, gap_xx, Error_msg, gap_xx, erlang:get_stacktrace()}),

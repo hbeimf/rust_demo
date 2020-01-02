@@ -57,13 +57,15 @@ start_link(Params) ->
   {error, Reason :: term()}).
 init([{PoolId}|_]) ->
   ?LOG(PoolId),
-  {Ip, Port} = {"127.0.0.1", 8000},
+%%  {Ip, Port} = {"127.0.0.1", 8000},
+%%  WsAddr = "ws://localhost:5678/ws",
+  WsAddr = wsc_common:pool_addr(PoolId),
   PoolSpecs = {wsc_common:pool_name(PoolId),{poolboy,start_link,
     [[{name,{local,wsc_common:pool_name(PoolId)}},
       {worker_module,wsc_common_call_actor},
       {size,10},
       {max_overflow,20}],
-      [Ip, glib:to_integer(Port)]]},
+      [WsAddr]]},
     permanent,5000,worker,
     [poolboy]},
 

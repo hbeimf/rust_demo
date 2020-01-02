@@ -19,7 +19,10 @@ start_pool() ->
 start_pool(PoolId) ->
   wsc_common_sup:start_wsc_pool(PoolId).
 
-pool_name(_)->
+pool_name(_PoolId)->
   pool_1.
+
+pool_addr(_PoolId) ->
+  "ws://localhost:5678/ws".
 
 

@@ -40,7 +40,7 @@ init([]) ->
 
     SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
 
-    ChildSup = child_sup(wsc_sup_sup),
+    ChildSup = child_sup(wsc_common_sup_sup),
 
     {ok, {SupFlags, [ChildSup]}}.
 

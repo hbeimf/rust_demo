@@ -63,7 +63,8 @@ start_link(Params) ->
 %          ignore               |
 %          {stop, Reason}
 % --------------------------------------------------------------------
-init([_Params]) ->
+init([[WsAddr|_]|_]) ->
+  ?LOG(WsAddr),
   % erlang:send_after(?TIMEOUT, self(), check_state), %
 
   % {ok, Pid} = go_ws_actor:start_link(1),

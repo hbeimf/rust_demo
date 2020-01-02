@@ -17,7 +17,7 @@ start_pool() ->
   start_pool(1).
 
 start_pool(PoolId) ->
-  wsc_common_sup:start_wsc_pool(PoolId).
+  wsc_common_pool_sup:start_wsc_pool(PoolId).
 
 pool_name(_PoolId)->
   pool_1.

@@ -47,7 +47,6 @@ pool_name(_PoolId)->
   pool_100.
 
 pool_addr(PoolId) ->
-%%  "ws://localhost:5678/ws".
   Configs = config_list(),
   Addr = addr(Configs, PoolId),
   Addr.
@@ -61,9 +60,16 @@ addr([#{pool_id := _Id, addr := _Addr}|OtherConfig], PoolId) ->
 
 % 获取配置文件
 config_list() ->
-  Root = glib:root_dir(),
-  PoolConfigDir = lists:concat([Root, "pool_addr.config"]),
-  % ?LOG({"init pool", Root, PoolConfigDir}),
-  {ok, [PoolConfigList|_]} = file:consult(PoolConfigDir),
-  PoolConfigList.
+  Key = wsc_common_config_list,
+  case sys_config:get_config(Key) of
+    {ok, Val} ->
+      Val;
+    _ ->
+      Root = glib:root_dir(),
+      PoolConfigDir = lists:concat([Root, "pool_addr.config"]),
+      % ?LOG({"init pool", Root, PoolConfigDir}),
+      {ok, [PoolConfigList|_]} = file:consult(PoolConfigDir),
+      sys_config:set_config(Key, PoolConfigList),
+      PoolConfigList
+  end.
 

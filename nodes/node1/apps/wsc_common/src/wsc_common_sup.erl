@@ -41,16 +41,13 @@ init([]) ->
 children() ->
     [
         child_sup(wsc_common_pool_sup)
-
-
-
+        , child(wsc_common_pool_actor)
     ].
 
-
-% child(Mod) ->
-% 	Child = {Mod, {Mod, start_link, []},
-%                permanent, 5000, worker, [Mod]},
-%                Child.
+child(Mod) ->
+ 	Child = {Mod, {Mod, start_link, []},
+                permanent, 5000, worker, [Mod]},
+                Child.
 
 child_sup(Mod) ->
     Child = {Mod, {Mod, start_link, []},

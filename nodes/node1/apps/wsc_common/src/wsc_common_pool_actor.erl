@@ -60,6 +60,7 @@ start_link() ->
   {ok, State :: #state{}} | {ok, State :: #state{}, timeout() | hibernate} |
   {stop, Reason :: term()} | ignore).
 init([]) ->
+  wsc_common:start_pool(),
   {ok, #state{}}.
 
 %%--------------------------------------------------------------------

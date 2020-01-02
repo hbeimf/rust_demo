@@ -106,7 +106,7 @@ cast(Id) ->
 
 % {send, Cmd, ReqPackage}
 cast(PoolId, Cmd, Package) ->
-  % ?LOG({cast, Cmd, Package}),
+  ?LOG({cast, Cmd, Package}),
   poolboy:transaction(wsc_common:pool_name(PoolId), fun(Worker) ->
     gen_server:cast(Worker, {send, Cmd, Package})
                                    end).

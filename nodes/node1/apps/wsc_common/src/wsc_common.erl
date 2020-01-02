@@ -14,9 +14,10 @@
 -include_lib("sys_log/include/write_log.hrl").
 
 start_pool() ->
-  lists:foreach(fun(Id)->
-    start_pool(Id)
-                end, lists:seq(1, 10)).
+  Configs = config_list(),
+  lists:foreach(fun(#{pool_id := PoolId, addr := _Addr}) ->
+                start_pool(PoolId)
+                end, Configs).
 
 start_pool(PoolId) ->
   wsc_common_pool_sup:start_wsc_pool(PoolId).
@@ -45,7 +46,24 @@ pool_name(10)->
 pool_name(_PoolId)->
   pool_100.
 
-pool_addr(_PoolId) ->
-  "ws://localhost:5678/ws".
+pool_addr(PoolId) ->
+%%  "ws://localhost:5678/ws".
+  Configs = config_list(),
+  Addr = addr(Configs, PoolId),
+  Addr.
 
+addr([], _PoolId) ->
+  null;
+addr([#{pool_id := PoolId, addr := Addr}|_], PoolId) ->
+  Addr;
+addr([#{pool_id := _Id, addr := _Addr}|OtherConfig], PoolId) ->
+  addr(OtherConfig, PoolId).
+
+% 获取配置文件
+config_list() ->
+  Root = glib:root_dir(),
+  PoolConfigDir = lists:concat([Root, "pool_addr.config"]),
+  % ?LOG({"init pool", Root, PoolConfigDir}),
+  {ok, [PoolConfigList|_]} = file:consult(PoolConfigDir),
+  PoolConfigList.
 

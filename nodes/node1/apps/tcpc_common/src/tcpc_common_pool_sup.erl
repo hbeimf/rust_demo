@@ -1,14 +1,16 @@
 %%%-------------------------------------------------------------------
-%% @doc room top level supervisor.
+%% @doc wsc_common top level supervisor.
 %% @end
 %%%-------------------------------------------------------------------
 
--module(tcpc_common_sup).
+-module(tcpc_common_pool_sup).
 
 -behaviour(supervisor).
 
 %% API
 -export([start_link/0]).
+-export([start_tcpc_pool/1]).
+
 
 %% Supervisor callbacks
 -export([init/1]).
@@ -18,12 +20,13 @@
 %%====================================================================
 %% API functions
 %%====================================================================
+start_tcpc_pool(PoolId) ->
+  Params = {PoolId},
+  supervisor:start_child(?SERVER, [Params]).
+
 
 start_link() ->
-    supervisor:start_link({local, ?SERVER}, ?MODULE, []).
-
-
-
+  supervisor:start_link({local, ?SERVER}, ?MODULE, []).
 
 %%====================================================================
 %% Supervisor callbacks
@@ -31,25 +34,27 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-    Children = children(),
+  RestartStrategy = simple_one_for_one,
+  MaxRestarts = 0,
+  MaxSecondsBetweenRestarts = 1,
 
-    {ok, { {one_for_one, 10, 10}, Children} }.
+  SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
+
+  ChildSup = child_sup(tcpc_common_sup_sup),
+
+  {ok, {SupFlags, [ChildSup]}}.
 
 %%====================================================================
 %% Internal functions
 %%====================================================================
-children() ->
-    [
-        child_sup(tcpc_common_pool_sup)
-        , child(tcpc_common_pool_actor)
-    ].
+%%
+%% child(Mod) ->
+%% 	Child = {Mod, {Mod, start_link, []},
+%%                permanent, 5000, worker, [Mod]},
+%%                Child.
 
-child(Mod) ->
-    Child = {Mod, {Mod, start_link, []},
-        permanent, 5000, worker, [Mod]},
-    Child.
 
 child_sup(Mod) ->
-    Child = {Mod, {Mod, start_link, []},
-        permanent, 5000, supervisor, [Mod]},
-    Child.
+  Child = {Mod, {Mod, start_link, []},
+    permanent, 5000, supervisor, [Mod]},
+  Child.

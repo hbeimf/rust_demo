@@ -80,9 +80,18 @@ rpc(PoolId, Req) ->
   call(PoolId, 1003, Req).
 
 call(PoolId, Cmd, ReqPackage) ->
+  call(PoolId, Cmd, ReqPackage, 1, 3).
+
+call(PoolId, Cmd, ReqPackage, Time, FailTime) ->
   case try_call(PoolId, Cmd, ReqPackage) of
     {false, exception} ->
-      call(PoolId, Cmd, ReqPackage);
+      case Time < FailTime of
+        true ->
+          call(PoolId, Cmd, ReqPackage, Time+1, FailTime);
+        _ ->
+          ?WRITE_LOG("call_exception", {PoolId, Cmd, ReqPackage}),
+          {false, exception}
+      end;
     Reply ->
       Reply
   end.

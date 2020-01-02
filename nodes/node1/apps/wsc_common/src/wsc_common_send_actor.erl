@@ -24,14 +24,14 @@
 
 
 
-start_link(Index) ->
+start_link(WsAddr) ->
   % Host = "ws://localhost:5678/ws",
-  Host = sys_config:get_config(http, ws),
-  websocket_client:start_link(Host, ?MODULE, [Index]).
+%%  Host = sys_config:get_config(http, ws),
+  websocket_client:start_link(WsAddr, ?MODULE, []).
 
 
 
-init([_Index], _ConnState) ->
+init([], _ConnState) ->
 
   State = #{},
   {ok, State}.

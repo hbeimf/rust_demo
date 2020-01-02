@@ -82,7 +82,7 @@ init([[WsAddr|_]|_]) ->
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
 
-handle_call({call, Cmd, ReqPackage}, From, #{wsc_send_actor_pid := Pid} = State) ->
+handle_call({call, Cmd, ReqPackage}, From, #{wsc_send_actor_pid := Pid, ws_addr := WsAddr} = State) ->
   % Key = base64:encode(term_to_binary(From)),
   % Package = glib_pb:encode_RpcPackage(Key, Cmd, ReqPackage),
   % Package = term_to_binary({Key, Cmd, ReqPackage}),
@@ -102,10 +102,10 @@ handle_call({call, Cmd, ReqPackage}, From, #{wsc_send_actor_pid := Pid} = State)
       Pid ! {send, Package},
       {noreply, State};
     _ ->
-      case wsc_send_actor:start_link(1) of
+      case wsc_common_send_actor:start_link(WsAddr) of
         {ok, NewPid} ->
           NewPid ! {send, Package},
-          {noreply, #{wsc_send_actor_pid => NewPid}};
+          {noreply, #{wsc_send_actor_pid => NewPid, ws_addr => WsAddr}};
         _ ->
           ?WRITE_LOG("link_exception", {call, Cmd, ReqPackage}),
           Reply = {false, wsc_send_actor_exception},
@@ -123,7 +123,7 @@ handle_call(_Request, _From, State) ->
 %          {noreply, gs_tcp_state, Timeout} |
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
-handle_cast({send, Cmd, ReqPackage}, #{wsc_send_actor_pid := Pid} = State) ->
+handle_cast({send, Cmd, ReqPackage}, #{wsc_send_actor_pid := Pid, ws_addr := WsAddr} = State) ->
   % ?LOG({send, Cmd, ReqPackage}),
   Package = term_to_binary(#request{from = null, req_cmd = Cmd, req_data = ReqPackage}),
   case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
@@ -131,10 +131,10 @@ handle_cast({send, Cmd, ReqPackage}, #{wsc_send_actor_pid := Pid} = State) ->
       Pid ! {send, Package},
       {noreply, State};
     _ ->
-      case wsc_send_actor:start_link(1) of
+      case wsc_send_actor:start_link(WsAddr) of
         {ok, NewPid} ->
           NewPid ! {send, Package},
-          {noreply, #{wsc_send_actor_pid => NewPid}};
+          {noreply, #{wsc_send_actor_pid => NewPid, ws_addr => WsAddr}};
         Any ->
           ?WRITE_LOG("link_exception", {Any, cast, Package}),
           {noreply, State}

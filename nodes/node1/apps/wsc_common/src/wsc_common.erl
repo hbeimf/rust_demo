@@ -43,6 +43,8 @@ pool_name(9)->
   pool_9;
 pool_name(10)->
   pool_10;
+pool_name(11)->
+  pool_11;
 pool_name(_PoolId)->
   pool_100.
 

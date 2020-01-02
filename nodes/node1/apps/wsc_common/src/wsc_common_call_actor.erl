@@ -64,13 +64,13 @@ start_link(Params) ->
 %          {stop, Reason}
 % --------------------------------------------------------------------
 init([[WsAddr|_]|_]) ->
-  ?LOG(WsAddr),
+%%  ?LOG(WsAddr),
   % erlang:send_after(?TIMEOUT, self(), check_state), %
 
   % {ok, Pid} = go_ws_actor:start_link(1),
 
   % {ok, #{ws_pid => Pid}}.
-  {ok, #{wsc_send_actor_pid => false}}.
+  {ok, #{wsc_send_actor_pid => false, ws_addr => WsAddr}}.
 % --------------------------------------------------------------------
 % Function: handle_call/3
 % Description: Handling call messages

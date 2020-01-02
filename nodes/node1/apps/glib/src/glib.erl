@@ -512,3 +512,14 @@ get_by_key(Key, TupleList, Default) ->
 		_ ->
 			Default
 	end.
+
+shuffle_list(L) ->
+	% ?LOG(L),
+	% Len = length(L),
+	NL = lists:map(fun(X) ->
+		<<A:32,_B:32,_C:32>> = crypto:strong_rand_bytes(12),
+		{A, X}
+								 end, L),
+	NLL = lists:sort(NL),
+	% ?LOG({NL, NLL}),
+	[ V || {_,V} <- NLL].

@@ -36,7 +36,7 @@ test() ->
 
 
 ping() ->
-  PoolId = 1,
+  PoolId = t_pool_id(),
   ReqPackage = ping,
   R = call(PoolId, 1000, ReqPackage),
   case R of
@@ -48,6 +48,10 @@ ping() ->
       R
   end.
 
+t_pool_id() ->
+  PoolIds = lists:seq(1, 4),
+  [PoolId | _] = glib:shuffle_list(PoolIds),
+  PoolId.
 
 rpc() ->
   PoolId = 1,
@@ -59,11 +63,12 @@ rpc() ->
 
 t() ->
   ?WRITE_LOG("time", {start_time, glib:time(), glib:date_str()}),
-  PoolId = 1,
+%%  PoolId = t_pool_id(),
   lists:foreach(fun(Index) ->
 %%    ?LOG(Index),
+    PoolId = t_pool_id(),
     Reply = rpc(PoolId, {glib, replace, ["helloworld", "world", " you"]}),
-    ?LOG({Index, Reply}),
+    ?LOG({PoolId, Index, Reply}),
     ok
                 end, lists:seq(1, 1000000)),
   ?WRITE_LOG("time", {end_time, glib:time(), glib:date_str()}),
@@ -109,5 +114,5 @@ cast(PoolId, Cmd, Package) ->
   ?LOG({cast, Cmd, Package}),
   poolboy:transaction(wsc_common:pool_name(PoolId), fun(Worker) ->
     gen_server:cast(Worker, {send, Cmd, Package})
-                                   end).
+                                                    end).
 

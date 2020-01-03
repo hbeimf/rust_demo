@@ -126,7 +126,7 @@ handle_call(_Request, _From, State) ->
 %          {noreply, gs_tcp_state, Timeout} |
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
-handle_cast({send, Cmd, ReqPackage}, #{tcpc_send_actor_pid := Pid} = State) ->
+handle_cast({send, Cmd, ReqPackage}, #{tcpc_send_actor_pid := Pid, config := Config} = State) ->
   % ?LOG({send, Cmd, ReqPackage}),
   ReqPackage1 = term_to_binary(#request{from = null, req_cmd = Cmd, req_data = ReqPackage}),
   % ?LOG({Cmd, ReqPackage1, binary_to_term(ReqPackage1)}),
@@ -137,7 +137,7 @@ handle_cast({send, Cmd, ReqPackage}, #{tcpc_send_actor_pid := Pid} = State) ->
       Pid ! {send, Package},
       {noreply, State};
     _ ->
-      case tcpc_send_actor:start_link(1) of
+      case tcpc_common_send_actor:start_link(Config) of
         {ok, NewPid} ->
           NewPid ! {send, Package},
           {noreply, #{tcpc_send_actor_pid => NewPid}};

@@ -54,7 +54,7 @@
 -include_lib("sys_log/include/write_log.hrl").
 
 ping() ->
-  ReqPackage = term_to_binary(#request{from = null, req_cmd = ?CMD_1000, req_data = ping}),
+  ReqPackage = term_to_binary(#request{from = null, req_cmd = ?CMD_1000, req_data = tcp_ping}),
   glib:package(?CMD_1000, ReqPackage).
 
 start_link(Config) ->
@@ -69,7 +69,7 @@ start_link(Config) ->
 %          ignore               |
 %          {stop, Reason}
 % --------------------------------------------------------------------
-init([Config|_]) ->
+init([[Config|_]|_]) ->
   % [Ip, Port|_] = Params,
 %%  Ip = sys_config:get_config(tcp, host),
 %%  Port = sys_config:get_config(tcp, port),

@@ -71,10 +71,27 @@ rpc(Req) ->
 %%  ?LOG({Cmd, Req}),
   call(1003, Req).
 
+%%call(Cmd, ReqPackage) ->
+%%  case try_call(Cmd, ReqPackage) of
+%%    {false, exception} ->
+%%      call(Cmd, ReqPackage);
+%%    Reply ->
+%%      Reply
+%%  end.
+
 call(Cmd, ReqPackage) ->
+  call(Cmd, ReqPackage, 1, 3).
+
+call(Cmd, ReqPackage, Time, FailTime) ->
   case try_call(Cmd, ReqPackage) of
     {false, exception} ->
-      call(Cmd, ReqPackage);
+      case Time < FailTime of
+        true ->
+          call(Cmd, ReqPackage, Time+1, FailTime);
+        _ ->
+          ?WRITE_LOG("call_exception", {Cmd, ReqPackage}),
+          {false, exception}
+      end;
     Reply ->
       Reply
   end.

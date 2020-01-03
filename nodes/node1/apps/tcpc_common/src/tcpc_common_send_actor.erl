@@ -262,7 +262,7 @@ parse_package(Bin, State) ->
       error
   end.
 
-action(Cmd, ValueBin, State) ->
+action(_Cmd, ValueBin, _State) ->
 %%  ?LOG({Cmd, ValueBin, State}),
   #reply{from = From, reply_code = _ReplyCode, reply_data = Payload} = binary_to_term(ValueBin),
   safe_reply(From, Payload),

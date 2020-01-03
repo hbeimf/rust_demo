@@ -11,6 +11,7 @@
         , wsc
         , tcpc
         , wsc_common
+        , tcpc_common
       ]},
     {env, []},
     {modules, []},

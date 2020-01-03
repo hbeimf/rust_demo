@@ -57,8 +57,8 @@ ping() ->
   ReqPackage = term_to_binary(#request{from = null, req_cmd = ?CMD_1000, req_data = ping}),
   glib:package(?CMD_1000, ReqPackage).
 
-start_link(Params) ->
-  gen_server:start_link(?MODULE, [Params], []).
+start_link(Config) ->
+  gen_server:start_link(?MODULE, [Config], []).
 
 
 % --------------------------------------------------------------------
@@ -69,10 +69,11 @@ start_link(Params) ->
 %          ignore               |
 %          {stop, Reason}
 % --------------------------------------------------------------------
-init([_Params]) ->
+init([Config|_]) ->
   % [Ip, Port|_] = Params,
-  Ip = sys_config:get_config(tcp, host),
-  Port = sys_config:get_config(tcp, port),
+%%  Ip = sys_config:get_config(tcp, host),
+%%  Port = sys_config:get_config(tcp, port),
+  #{host := Ip, port := Port} = Config,
   % Ip = sys_config:get_config(account_service, server),
   % Port = sys_config:get_config(account_service, tcp_port),
   case ranch_tcp:connect(Ip, Port,[],3000) of

@@ -60,6 +60,7 @@ init([{PoolId}|_]) ->
 %%  {Ip, Port} = {"127.0.0.1", 8000},
 %%  WsAddr = "ws://localhost:5678/ws",
   Addr = tcpc_common:pool_addr(PoolId),
+  ?LOG(Addr),
   PoolSpecs = {tcpc_common:pool_name(PoolId),{poolboy,start_link,
     [[{name,{local,tcpc_common:pool_name(PoolId)}},
       {worker_module,tcpc_common_call_actor},

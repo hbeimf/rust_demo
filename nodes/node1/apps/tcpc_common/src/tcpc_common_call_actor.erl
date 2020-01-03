@@ -51,8 +51,8 @@
 %     gen_server:start_link({local, ?MODULE}, ?MODULE, [ServerID, ServerType, ServerURI, GwcURI, Max], []).
 
 
-start_link(Params) ->
-  gen_server:start_link(?MODULE, [Params], []).
+start_link(Config) ->
+  gen_server:start_link(?MODULE, [Config], []).
 
 
 % --------------------------------------------------------------------
@@ -63,13 +63,14 @@ start_link(Params) ->
 %          ignore               |
 %          {stop, Reason}
 % --------------------------------------------------------------------
-init([_Params]) ->
-  erlang:send_after(?TIMEOUT, self(), check_state), %
+init([Config]) ->
+  ?LOG(Config),
+%%  erlang:send_after(?TIMEOUT, self(), check_state), %
 
   % {ok, Pid} = go_ws_actor:start_link(1),
 
   % {ok, #{ws_pid => Pid}}.
-  {ok, #{tcpc_send_actor_pid => false}}.
+  {ok, #{tcpc_send_actor_pid => false, config => Config}}.
 % --------------------------------------------------------------------
 % Function: handle_call/3
 % Description: Handling call messages
@@ -81,7 +82,7 @@ init([_Params]) ->
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
 
-handle_call({call, Cmd, ReqPackage}, From, #{tcpc_send_actor_pid := Pid} = State) ->
+handle_call({call, Cmd, ReqPackage}, From, #{tcpc_send_actor_pid := Pid, config := Config} = State) ->
   % Key = base64:encode(term_to_binary(From)),
   % Package = glib_pb:encode_RpcPackage(Key, Cmd, ReqPackage),
   % Package = term_to_binary({Key, Cmd, ReqPackage}),
@@ -104,7 +105,7 @@ handle_call({call, Cmd, ReqPackage}, From, #{tcpc_send_actor_pid := Pid} = State
       Pid ! {send, Package},
       {noreply, State};
     _ ->
-      case tcpc_common_send_actor:start_link(1) of
+      case tcpc_common_send_actor:start_link(Config) of
         {ok, NewPid} ->
           NewPid ! {send, Package},
           {noreply, #{tcpc_send_actor_pid => NewPid}};

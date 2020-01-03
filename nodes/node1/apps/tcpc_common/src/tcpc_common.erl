@@ -16,12 +16,13 @@
 
 start_pool() ->
   Configs = config_list(),
-  lists:foreach(fun(#{pool_id := PoolId, addr := _Addr}) ->
+  lists:foreach(fun(#{pool_id := PoolId}) ->
     start_pool(PoolId)
                 end, Configs).
 
 start_pool(PoolId) ->
-  wsc_common_pool_sup:start_wsc_pool(PoolId).
+  ?LOG(PoolId),
+  tcpc_common_pool_sup:start_pool(PoolId).
 
 
 pool_name(1)->
@@ -56,14 +57,14 @@ pool_addr(PoolId) ->
 
 addr([], _PoolId) ->
   null;
-addr([#{pool_id := PoolId, addr := Addr}|_], PoolId) ->
-  Addr;
-addr([#{pool_id := _Id, addr := _Addr}|OtherConfig], PoolId) ->
+addr([#{pool_id := PoolId} = Config|_], PoolId) ->
+  Config;
+addr([#{pool_id := _Id}|OtherConfig], PoolId) ->
   addr(OtherConfig, PoolId).
 
 % 获取配置文件
 config_list() ->
-  Key = wsc_common_config_list,
+  Key = tcpc_common_pool_config_list,
   case sys_config:get_config(Key) of
     {ok, Val} ->
       Val;

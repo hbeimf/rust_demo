@@ -9,7 +9,7 @@
 
 %% API
 -export([start_link/0]).
--export([start_tcpc_pool/1]).
+-export([start_pool/1]).
 
 
 %% Supervisor callbacks
@@ -20,7 +20,7 @@
 %%====================================================================
 %% API functions
 %%====================================================================
-start_tcpc_pool(PoolId) ->
+start_pool(PoolId) ->
   Params = {PoolId},
   supervisor:start_child(?SERVER, [Params]).
 

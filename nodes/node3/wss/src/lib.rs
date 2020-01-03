@@ -32,6 +32,7 @@ use actix_web::*;
 
 pub fn start_server() {
     let websocket_config = sys_config::config_websocket();
+    debug!("websocket_config: {:?}", websocket_config);
 
     HttpServer::new(move || {
         let state = crate::wss_actor::WsChatSessionState {

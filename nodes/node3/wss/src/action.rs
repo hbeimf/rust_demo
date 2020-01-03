@@ -93,20 +93,21 @@ pub fn action(cmd:u32, pb:Vec<u8>, package: Vec<u8>
               , client: &mut WsChatSession
               , ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>) {
 
-    // reply
-    let encode:Vec<u8> = msg_proto::encode_msg();
-    let cmd:u32 = 123;
-    let reply_package = glib::package(cmd, encode);
-
-    // 直接发给客户端
-    let reply_package1 = reply_package.clone();
-    ctx.binary(reply_package1);
-    ctx.text("hello".to_owned());
-
-    let act = System::current().registry().get::<RoomActor>();
-    act.do_send(table::table_room::Message {
-        id: client.uid,
-        msg: reply_package,
-        room: client.room.clone(),
-    })
+    println!("cmd:{:?}, pb:{:?} !!", cmd, pb);
+//    // reply
+//    let encode:Vec<u8> = msg_proto::encode_msg();
+//    let cmd:u32 = 123;
+//    let reply_package = glib::package(cmd, encode);
+//
+//    // 直接发给客户端
+//    let reply_package1 = reply_package.clone();
+//    ctx.binary(reply_package1);
+//    ctx.text("hello".to_owned());
+//
+//    let act = System::current().registry().get::<RoomActor>();
+//    act.do_send(table::table_room::Message {
+//        id: client.uid,
+//        msg: reply_package,
+//        room: client.room.clone(),
+//    })
 }

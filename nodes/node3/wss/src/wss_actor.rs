@@ -152,27 +152,28 @@ impl StreamHandler<ws::Message, ws::ProtocolError> for WsChatSession {
 
 // 解包
 pub fn parse_package(package: Vec<u8>, client: &mut WsChatSession, ctx: &mut ws::WebsocketContext<WsChatSession, WsChatSessionState>)  {
-    // let _addr = ctx.address();
-    let unpackage = glib::unpackage(package.clone());
-
-    match unpackage {
-        Some(glib::UnPackageResult{len:_len, cmd, pb}) => {
-            match cmd {
-                10000 => {
-//                    action::action_10000(cmd, pb, package, client, ctx);
-                }
-                _ => {
-                    action::action(cmd, pb, package, client, ctx);
-                }
-            }
-            // action(cmd, pb, package, client, ctx);
-        }
-        None => {
-            // 如果解包失败，直接关掉连接
-            debug!("unpackage error ...");
-            ctx.stop();
-        }
-    }
+    println!("package: {:?} !!", package);
+//    // let _addr = ctx.address();
+//    let unpackage = glib::unpackage(package.clone());
+//
+//    match unpackage {
+//        Some(glib::UnPackageResult{len:_len, cmd, pb}) => {
+//            match cmd {
+//                10000 => {
+////                    action::action_10000(cmd, pb, package, client, ctx);
+//                }
+//                _ => {
+//                    action::action(cmd, pb, package, client, ctx);
+//                }
+//            }
+//            // action(cmd, pb, package, client, ctx);
+//        }
+//        None => {
+//            // 如果解包失败，直接关掉连接
+//            debug!("unpackage error ...");
+//            ctx.stop();
+//        }
+//    }
 }
 
 // 心跳 ping

@@ -1,0 +1,11 @@
+[workspace]
+
+members = [
+    "cmd",
+    "sys_config",
+    "glib",
+    "table",
+    "gwc_serv",
+    "rpmd_broker",
+
+]

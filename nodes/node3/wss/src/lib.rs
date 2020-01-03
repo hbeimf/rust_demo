@@ -23,24 +23,23 @@ extern crate sys_config;
 extern crate table;
 extern crate glib;
 
-pub mod gw_actor;
+pub mod wss_actor;
 pub mod action;
-pub mod tcpc;
-pub mod wsc;
+
 
 use actix_web::server::HttpServer;
 use actix_web::*;
 
 pub fn start_server() {
-	let websocket_config = sys_config::config_websocket();
-	
-	HttpServer::new(move || {
-        let state = crate::gw_actor::WsChatSessionState {
+    let websocket_config = sys_config::config_websocket();
+
+    HttpServer::new(move || {
+        let state = crate::wss_actor::WsChatSessionState {
 
         };
 
         App::with_state(state)
-            .resource("/ws/", |r| r.route().f(crate::gw_actor::chat_route))
+            .resource("/ws/", |r| r.route().f(crate::wss_actor::chat_route))
     }).bind(websocket_config.clone())
         .unwrap()
         .start();

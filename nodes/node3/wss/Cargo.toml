@@ -1,8 +1,10 @@
 [package]
-name = "gw_serv"
+name = "wss"
 version = "0.1.0"
-authors = ["mm <mm@mail.com>"]
+authors = ["mm"]
 edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 rand = "0.5.5"
@@ -28,4 +30,3 @@ log = "0.4.6"
 sys_config={path = "../sys_config"}
 glib={path = "../glib"}
 table={path = "../table"}
-

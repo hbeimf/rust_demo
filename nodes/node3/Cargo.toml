@@ -5,5 +5,6 @@ members = [
     "sys_config",
     "glib",
     "table",
+    "wss",
 
 ]

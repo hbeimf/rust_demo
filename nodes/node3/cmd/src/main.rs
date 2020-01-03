@@ -8,7 +8,8 @@ extern crate sys_config;
 extern crate glib;
 //extern crate rpmd;
 // extern crate rpmd_broker;
-extern crate gw_serv;
+
+extern crate wss;
 
 extern crate flexi_logger;
 #[macro_use]
@@ -56,7 +57,7 @@ fn main() {
     let sys = actix::System::new("rs-server");
 //    gwc_serv::start_server();
     // ws_server::start_server();
-    gw_serv::start_server();
+    wss::start_server();
 
     // mq_client::start_mq_client();
 //    rpmd::start();

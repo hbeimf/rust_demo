@@ -1,7 +1,7 @@
 extern crate actix;
 // extern crate mysqlc;
 // extern crate redisc;
-extern crate gwc_serv;
+//extern crate gwc_serv;
 // extern crate ws_server;
 extern crate sys_config;
 // extern crate mq_client;
@@ -54,7 +54,7 @@ fn main() {
     // dbg!(log_dir);
 
     let sys = actix::System::new("rs-server");
-    gwc_serv::start_server();
+//    gwc_serv::start_server();
     // ws_server::start_server();
     gw_serv::start_server();
 

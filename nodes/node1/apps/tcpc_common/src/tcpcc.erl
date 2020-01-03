@@ -28,7 +28,7 @@ test() ->
       pong ->
         ok;
       Any ->
-        ?LOG(fail),
+        ?LOG({fail, Any}),
         ?WRITE_LOG("call-fail", {Any}),
         ok
     end
@@ -55,6 +55,7 @@ call(PoolId, Cmd, ReqPackage) ->
     {false, exception} ->
       call(PoolId, Cmd, ReqPackage);
     Reply ->
+      ?LOG(Reply),
       Reply
   end.
 

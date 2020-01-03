@@ -108,7 +108,7 @@ handle_call({call, Cmd, ReqPackage}, From, #{tcpc_send_actor_pid := Pid, config 
       case tcpc_common_send_actor:start_link(Config) of
         {ok, NewPid} ->
           NewPid ! {send, Package},
-          {noreply, #{tcpc_send_actor_pid => NewPid}};
+          {noreply, #{tcpc_send_actor_pid => NewPid, config => Config}};
         _ ->
           ?WRITE_LOG("link_exception", {call, Cmd, ReqPackage}),
           Reply = {false, tcpc_send_actor_exception},
@@ -140,7 +140,7 @@ handle_cast({send, Cmd, ReqPackage}, #{tcpc_send_actor_pid := Pid, config := Con
       case tcpc_common_send_actor:start_link(Config) of
         {ok, NewPid} ->
           NewPid ! {send, Package},
-          {noreply, #{tcpc_send_actor_pid => NewPid}};
+          {noreply, #{tcpc_send_actor_pid => NewPid, config => Config}};
         Any ->
           ?WRITE_LOG("link_exception", {Any, cast, Package}),
           {noreply, State}

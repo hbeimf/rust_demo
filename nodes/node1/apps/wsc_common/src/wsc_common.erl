@@ -24,9 +24,9 @@ start_pool() ->
 start_pool(PoolId) ->
   wsc_common_pool_sup:start_wsc_pool(PoolId).
 
-dynamic_start_pool(PoolId) ->
-  set_config_list(),
-  start_pool(PoolId).
+%%dynamic_start_pool(PoolId) ->
+%%  set_config_list(),
+%%  start_pool(PoolId).
 
 dynamic_start_pool(PoolId, Addr) ->
   set_config_list(PoolId, Addr),
@@ -54,6 +54,24 @@ pool_name(10)->
   pool_10;
 pool_name(11)->
   pool_11;
+pool_name(12)->
+  pool_13;
+pool_name(13)->
+  pool_13;
+pool_name(14)->
+  pool_14;
+pool_name(15)->
+  pool_15;
+pool_name(16)->
+  pool_16;
+pool_name(17)->
+  pool_17;
+pool_name(18)->
+  pool_18;
+pool_name(19)->
+  pool_19;
+pool_name(20)->
+  pool_20;
 pool_name(_PoolId)->
   pool_100.
 

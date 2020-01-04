@@ -86,3 +86,5 @@ cast(Id) ->
   wsc_common:cast(PoolId, Cmd, Req).
 
 
+status() ->
+  wsc_common:status().

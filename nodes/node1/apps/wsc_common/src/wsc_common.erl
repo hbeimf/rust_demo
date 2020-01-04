@@ -37,7 +37,7 @@ stop_pool(PoolId) ->
 %%  cleanup(PoolId),
   ok.
 
-pool_name(PoolName)  when is_atom(PoolName) ->
+pool_name(PoolName) when is_atom(PoolName) ->
   PoolName;
 pool_name(1) ->
   pool_1;

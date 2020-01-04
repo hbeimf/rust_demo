@@ -195,7 +195,7 @@ cleanup(PoolId) ->
 cleanup([], _PoolName) ->
   ok;
 cleanup([{Pid, PoolName, _}|Other], PoolName) ->
-%%  erlang:exit(Pid, kill),
+  erlang:exit(Pid, kill),
   ?LOG({PoolName, Pid}),
   cleanup(Other, PoolName);
 cleanup([_|Other], PoolName) ->

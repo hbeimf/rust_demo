@@ -11,7 +11,6 @@
 -export([start_link/0]).
 -export([start_wsc_pool/1]).
 -export([children/0]).
-%%-export([cleanup/1]).
 
 
 %% Supervisor callbacks
@@ -61,7 +60,12 @@ init([]) ->
 %%                Child.
 
 
+%%child_sup(Mod) ->
+%%  Child = {Mod, {Mod, start_link, []},
+%%    permanent, 5000, supervisor, [Mod]},
+%%  Child.
+
 child_sup(Mod) ->
   Child = {Mod, {Mod, start_link, []},
-    permanent, 5000, supervisor, [Mod]},
+    temporary, 5000, supervisor, [Mod]},
   Child.

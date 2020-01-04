@@ -182,8 +182,15 @@ handle_info(Info, State) ->
 % Description: Shutdown the server
 % Returns: any (ignored by gen_server)
 % --------------------------------------------------------------------
-terminate(_Reason, _State) ->
-  % ?LOG(closed),
+terminate(_Reason, #{wsc_send_actor_pid := Pid} = State) ->
+  case erlang:is_pid(Pid) andalso erlang:is_process_alive(Pid) of
+    true ->
+      Pid ! close,
+      ok;
+    _ ->
+      ok
+  end,
+  ?WRITE_LOG("call_actor_close", {State}),
   ok.
 
 % --------------------------------------------------------------------

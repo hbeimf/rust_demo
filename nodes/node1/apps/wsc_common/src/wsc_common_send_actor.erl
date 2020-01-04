@@ -13,6 +13,7 @@
 
 -include_lib("glib/include/log.hrl").
 -include_lib("glib/include/rr.hrl").
+-include_lib("sys_log/include/write_log.hrl").
 
 -export([
   start_link/1,
@@ -99,9 +100,10 @@ websocket_info({text, Txt}, _ConnState, State) ->
   % ?LOG({text, Txt}),
   {reply, {text, Txt}, State}.
 
-websocket_terminate(_Reason, _ConnState, _State) ->
+websocket_terminate(_Reason, _ConnState, State) ->
   % io:format("~nClient closed in state ~p wih reason ~p~n", [State, Reason]),
   % ?LOG({ws_terminate}),
+  ?WRITE_LOG("wsc_close", {State}),
   ok.
 
 safe_reply(undefined, _Value) ->

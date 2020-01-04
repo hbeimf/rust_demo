@@ -188,15 +188,23 @@ status() ->
 %%  ?LOG(Status),
   Status.
 
-cleanup(PoolId) ->
-  Status = status(),
-  cleanup(Status, pool_name(PoolId)).
+%%cleanup(PoolId) ->
+%%  Status = status(),
+%%  cleanup(Status, pool_name(PoolId)).
+%%
+%%cleanup([], _PoolName) ->
+%%  ok;
+%%cleanup([{Pid, PoolName, _}|Other], PoolName) ->
+%%  erlang:exit(Pid, kill),
+%%  ?LOG({PoolName, Pid}),
+%%  cleanup(Other, PoolName);
+%%cleanup([_|Other], PoolName) ->
+%%  cleanup(Other, PoolName).
 
-cleanup([], _PoolName) ->
-  ok;
-cleanup([{Pid, PoolName, _}|Other], PoolName) ->
-  erlang:exit(Pid, kill),
-  ?LOG({PoolName, Pid}),
-  cleanup(Other, PoolName);
-cleanup([_|Other], PoolName) ->
-  cleanup(Other, PoolName).
+
+works(PoolId) ->
+  Pool = pool_name(PoolId),
+  Works = gen_server:call(Pool, get_all_workers),
+  ?LOG(Works),
+  Works.
+

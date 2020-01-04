@@ -88,3 +88,10 @@ cast(Id) ->
 
 status() ->
   wsc_common:status().
+
+
+%%get_all_workers
+
+works() ->
+  wsc_common:works(1).
+

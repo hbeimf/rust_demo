@@ -219,8 +219,20 @@ status() ->
   Status.
 
 started_pool() ->
-  Status = status(),
-  lists:map(fun({_, P, _}) -> P end, Status).
+%%  Status = status(),
+  Children = wsc_common_pool_sup:children(),
+%%  ?LOG(Children),
+  lists:foldl(
+    fun({_, Pid, _, _} = _Child, Reply) ->
+      [{PoolName, PoolPid, _, _} | _] = wsc_common_sup_sup:children(Pid),
+%%      Status1 = poolboy:status(PoolPid),
+%%      ?LOG({PoolName, Status}),
+      [PoolName | Reply]
+    end, [], Children).
+%%  ?LOG(Status),
+%%  Status.
+%%  lists:map(fun({_, P, _}) -> P end, Status).
+
 
 %%cleanup(PoolId) ->
 %%  Status = status(),

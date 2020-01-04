@@ -167,10 +167,29 @@ handle_cast(Msg, State) ->
 % 					{noreply, State}
 % 			end
 % 	end;
-handle_info({reconnect, Addr}, State) ->
+handle_info({reconnect, Addr}, #{wsc_send_actor_pid := Pid, ws_addr := WsAddr} = State) ->
   ?LOG({info, Addr}),
+  case Addr of
+    WsAddr ->
+      {noreply, State};
+    _ ->
+      case erlang:is_pid(Pid) andalso erlang:is_process_alive(Pid) of
+        true ->
+          Pid ! close,
+          ok;
+        _ ->
+          ok
+      end,
+      case wsc_send_actor:start_link(Addr) of
+        {ok, NewPid} ->
+          {noreply, #{wsc_send_actor_pid => NewPid, ws_addr => Addr}};
+        Any ->
+          ?WRITE_LOG("reconnect_exception", {Any, Addr}),
+          {noreply, State}
+      end
+  end;
 %%	% {stop, normal, gs_tcp_state}.
-  {noreply, State};
+%%  {noreply, State};
 handle_info(Info, State) ->
   ?LOG({info, Info}),
 %%	% {stop, normal, gs_tcp_state}.

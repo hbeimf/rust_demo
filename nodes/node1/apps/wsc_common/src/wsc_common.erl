@@ -24,6 +24,9 @@ start_pool() ->
 start_pool(PoolId) ->
   wsc_common_pool_sup:start_wsc_pool(PoolId).
 
+dynamic_start_pool(PoolId) ->
+  update_config_list(),
+  start_pool(PoolId).
 
 pool_name(1)->
   pool_1;
@@ -64,18 +67,25 @@ addr([#{pool_id := _Id, addr := _Addr}|OtherConfig], PoolId) ->
 
 % 获取配置文件
 config_list() ->
-  Key = wsc_common_config_list,
+  Key = key(),
   case sys_config:get_config(Key) of
     {ok, Val} ->
       Val;
     _ ->
-      Root = glib:root_dir(),
-      PoolConfigDir = lists:concat([Root, "pool_addr.config"]),
-      % ?LOG({"init pool", Root, PoolConfigDir}),
-      {ok, [PoolConfigList|_]} = file:consult(PoolConfigDir),
-      sys_config:set_config(Key, PoolConfigList),
-      PoolConfigList
+      update_config_list()
   end.
+
+key() ->
+  wsc_common_config_list.
+
+update_config_list() ->
+  Key = key(),
+  Root = glib:root_dir(),
+  PoolConfigDir = lists:concat([Root, "pool_addr.config"]),
+  % ?LOG({"init pool", Root, PoolConfigDir}),
+  {ok, [PoolConfigList|_]} = file:consult(PoolConfigDir),
+  sys_config:set_config(Key, PoolConfigList),
+  PoolConfigList.
 
 % {send, Cmd, ReqPackage}
 cast(PoolId, Cmd, Package) ->

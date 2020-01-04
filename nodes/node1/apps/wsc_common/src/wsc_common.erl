@@ -25,7 +25,7 @@ start_pool(PoolId) ->
   wsc_common_pool_sup:start_wsc_pool(PoolId).
 
 dynamic_start_pool(PoolId) ->
-  update_config_list(),
+  set_config_list(),
   start_pool(PoolId).
 
 pool_name(1)->
@@ -72,13 +72,13 @@ config_list() ->
     {ok, Val} ->
       Val;
     _ ->
-      update_config_list()
+      set_config_list()
   end.
 
 key() ->
   wsc_common_config_list.
 
-update_config_list() ->
+set_config_list() ->
   Key = key(),
   Root = glib:root_dir(),
   PoolConfigDir = lists:concat([Root, "pool_addr.config"]),

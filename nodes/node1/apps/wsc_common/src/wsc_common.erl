@@ -203,8 +203,7 @@ status() ->
 
 
 works(PoolId) ->
-  Pool = pool_name(PoolId),
-  Works = gen_server:call(Pool, get_all_workers),
-  ?LOG(Works),
+  Works = gen_server:call(pool_name(PoolId), get_all_workers),
+%%  ?LOG(Works),
   Works.
 

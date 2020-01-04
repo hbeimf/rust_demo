@@ -13,6 +13,7 @@
 
 %% API
 -export([start_link/1]).
+-export([children/1]).
 
 %% Supervisor callbacks
 -export([init/1]).
@@ -34,6 +35,8 @@
 start_link(Params) ->
   supervisor:start_link(?MODULE, [Params]).
 
+children(Pid) ->
+  supervisor:which_children(Pid).
 %%%===================================================================
 %%% Supervisor callbacks
 %%%===================================================================

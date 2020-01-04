@@ -118,3 +118,15 @@ try_call(PoolId, Cmd, ReqPackage) ->
       % ?WRITE_LOG("call_exception", {K, gap_xx, Error_msg, gap_xx, erlang:get_stacktrace()}),
       {false, exception}
   end.
+
+status() ->
+  Children = wsc_common_pool_sup:children(),
+  Status = lists:foldl(
+    fun({_,Pid,_,_} = _Child, Reply) ->
+      [{PoolName,PoolPid,_,_}|_] = wsc_common_sup_sup:children(Pid),
+      Status1 = poolboy:status(PoolPid),
+%%      ?LOG({PoolName, Status}),
+      [{PoolName, Status1}|Reply]
+    end, [], Children),
+  ?LOG(Status),
+  Status.

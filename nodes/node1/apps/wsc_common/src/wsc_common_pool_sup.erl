@@ -38,8 +38,8 @@ start_link() ->
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
   RestartStrategy = simple_one_for_one,
-  MaxRestarts = 0,
-  MaxSecondsBetweenRestarts = 1,
+  MaxRestarts = 6,
+  MaxSecondsBetweenRestarts = 3600,
 
   SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
 

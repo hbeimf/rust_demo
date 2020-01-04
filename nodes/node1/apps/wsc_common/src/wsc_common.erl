@@ -28,6 +28,10 @@ dynamic_start_pool(PoolId) ->
   set_config_list(),
   start_pool(PoolId).
 
+dynamic_start_pool(PoolId, Addr) ->
+  set_config_list(PoolId, Addr),
+  start_pool(PoolId).
+
 pool_name(1)->
   pool_1;
 pool_name(2)->
@@ -83,9 +87,28 @@ set_config_list() ->
   Root = glib:root_dir(),
   PoolConfigDir = lists:concat([Root, "pool_addr.config"]),
   % ?LOG({"init pool", Root, PoolConfigDir}),
-  {ok, [PoolConfigList|_]} = file:consult(PoolConfigDir),
+  PoolConfigList = case glib:file_exists(PoolConfigDir) of
+    true ->
+      {ok, [C|_]} = file:consult(PoolConfigDir),
+      C;
+    _ ->
+      []
+  end,
   sys_config:set_config(Key, PoolConfigList),
   PoolConfigList.
+
+set_config_list(PoolId, Addr) ->
+  Key = key(),
+  Config = #{pool_id => PoolId, addr => Addr},
+  ConfigList = config_list(),
+  case lists:member(Config, ConfigList) of
+    true ->
+      ConfigList;
+    _ ->
+      NewConfigList = [Config|ConfigList],
+      sys_config:set_config(Key, NewConfigList),
+      NewConfigList
+  end.
 
 % {send, Cmd, ReqPackage}
 cast(PoolId, Cmd, Package) ->

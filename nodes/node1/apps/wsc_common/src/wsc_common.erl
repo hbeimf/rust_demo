@@ -136,9 +136,17 @@ set_config_list(PoolId, Addr) ->
 % {send, Cmd, ReqPackage}
 cast(PoolId, Cmd, Package) ->
   ?LOG({cast, Cmd, Package}),
-  poolboy:transaction(wsc_common:pool_name(PoolId), fun(Worker) ->
-    gen_server:cast(Worker, {send, Cmd, Package})
-                                                    end).
+  case is_pool_alive(PoolId) of
+    true ->
+      poolboy:transaction(wsc_common:pool_name(PoolId), fun(Worker) ->
+        gen_server:cast(Worker, {send, Cmd, Package})
+                                                        end);
+    _ ->
+      ?WRITE_LOG("pool_exception", {PoolId, Cmd, Package}),
+      start_pool(PoolId),
+      false
+  end.
+
 
 %%wsc:rpc(1003, {glib, replace, ["helloworld", "world", " you"]}).
 rpc(PoolId, Req) ->
@@ -165,10 +173,16 @@ call(PoolId, Cmd, ReqPackage, Time, FailTime) ->
 
 try_call(PoolId, Cmd, ReqPackage) ->
   try
-    poolboy:transaction(wsc_common:pool_name(PoolId),
-      fun(Worker) ->
-        gen_server:call(Worker, {call, Cmd, ReqPackage}, ?TIMEOUT)
-      end)
+    case is_pool_alive(PoolId) of
+      true ->
+        poolboy:transaction(wsc_common:pool_name(PoolId),
+          fun(Worker) ->
+            gen_server:call(Worker, {call, Cmd, ReqPackage}, ?TIMEOUT)
+          end);
+      _ ->
+        ?WRITE_LOG("pool_exception", {PoolId, Cmd, ReqPackage}),
+        {false, exception}
+    end
   catch
     _K:_Error_msg ->
       % ?WRITE_LOG("call_exception", {K, gap_xx, Error_msg, gap_xx, erlang:get_stacktrace()}),

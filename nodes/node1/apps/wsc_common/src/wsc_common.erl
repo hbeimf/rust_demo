@@ -149,6 +149,11 @@ cast(PoolId, Cmd, Package) ->
       false
   end.
 
+cast_other(PoolId, Cmd, Package) ->
+  OtherPool = other_pool(PoolId),
+  lists:foreach(fun(PoolName)->
+                cast(PoolName, Cmd, Package)
+                end, OtherPool).
 
 %%wsc:rpc(1003, {glib, replace, ["helloworld", "world", " you"]}).
 rpc(PoolId, Req) ->
@@ -156,9 +161,11 @@ rpc(PoolId, Req) ->
   call(PoolId, 1003, Req).
 
 call_other(PoolId, Cmd, ReqPackage) ->
-  StartedPool = started_pool(),
-  PoolName = pool_name(PoolId),
-  OtherPool = StartedPool -- [PoolName],
+%%  StartedPool = started_pool(),
+%%  PoolName = pool_name(PoolId),
+%%  OtherPool = StartedPool -- [PoolName],
+%%
+  OtherPool = other_pool(PoolId),
 %%  ?LOG({StartedPool, PoolName, OtherPool}),
   Res = lists:foldl(
     fun(Pool, Reply) ->
@@ -168,6 +175,11 @@ call_other(PoolId, Cmd, ReqPackage) ->
 %%  ?LOG(Res),
   Res.
 
+other_pool(PoolId) ->
+  StartedPool = started_pool(),
+  PoolName = pool_name(PoolId),
+  OtherPool = StartedPool -- [PoolName],
+  OtherPool.
 
 call(PoolId, Cmd, ReqPackage) ->
   call(PoolId, Cmd, ReqPackage, 1, 3).

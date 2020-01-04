@@ -34,7 +34,7 @@ dynamic_start_pool(PoolId, Addr) ->
 
 stop_pool(PoolId) ->
   ?LOG(PoolId),
-  cleanup(PoolId),
+%%  cleanup(PoolId),
   ok.
 
 pool_name(1) ->

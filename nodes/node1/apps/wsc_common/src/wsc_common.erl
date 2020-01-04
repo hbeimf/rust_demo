@@ -223,7 +223,7 @@ works(PoolId) ->
 %%  ?LOG(Works),
       Works;
     _ ->
-      false
+      []
   end.
 
 pool_pid(PoolId) ->
@@ -243,3 +243,20 @@ is_pool_alive(PoolId) ->
       end
   end.
 
+%%wsc_common:pool_reconnect(1, "ws://localhost:5678/ws").
+pool_reconnect(PoolId, Addr) ->
+%%  ?LOG({PoolId, Addr}),
+  Works = works(PoolId),
+%%  ?LOG(Works),
+  lists:foreach(
+    fun({_, Pid, _, _}) ->
+%%      ?LOG(Pid),
+      case erlang:is_pid(Pid) andalso erlang:is_process_alive(Pid) of
+        true ->
+          Pid ! {reconnect, Addr},
+          ok;
+        _ ->
+          ok
+      end
+    end, Works),
+  ok.

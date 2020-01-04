@@ -167,6 +167,10 @@ handle_cast(Msg, State) ->
 % 					{noreply, State}
 % 			end
 % 	end;
+handle_info({reconnect, Addr}, State) ->
+  ?LOG({info, Addr}),
+%%	% {stop, normal, gs_tcp_state}.
+  {noreply, State};
 handle_info(Info, State) ->
   ?LOG({info, Info}),
 %%	% {stop, normal, gs_tcp_state}.

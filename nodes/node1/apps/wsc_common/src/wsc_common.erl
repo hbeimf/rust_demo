@@ -207,3 +207,20 @@ works(PoolId) ->
 %%  ?LOG(Works),
   Works.
 
+pool_pid(PoolId) ->
+  erlang:whereis(pool_name(PoolId)).
+
+is_pool_alive(PoolId) ->
+  PoolPid = pool_pid(PoolId),
+  case PoolPid of
+    undefined ->
+      false;
+    _ ->
+      case erlang:is_pid(PoolPid) andalso erlang:is_process_alive(PoolPid) of
+        true ->
+          true;
+        _ ->
+          false
+      end
+  end.
+

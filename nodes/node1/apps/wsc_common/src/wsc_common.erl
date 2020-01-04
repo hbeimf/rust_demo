@@ -37,6 +37,8 @@ stop_pool(PoolId) ->
 %%  cleanup(PoolId),
   ok.
 
+pool_name(PoolName)  when is_atom(PoolName) ->
+  PoolName;
 pool_name(1) ->
   pool_1;
 pool_name(2) ->
@@ -201,6 +203,10 @@ status() ->
     end, [], Children),
 %%  ?LOG(Status),
   Status.
+
+started_pool() ->
+  Status = status(),
+  lists:map(fun({_, P, _})-> P end, Status).
 
 %%cleanup(PoolId) ->
 %%  Status = status(),

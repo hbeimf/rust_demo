@@ -34,6 +34,7 @@ dynamic_start_pool(PoolId, Addr) ->
 
 stop_pool(PoolId) ->
   ?LOG(PoolId),
+  cleanup(PoolId),
   ok.
 
 pool_name(1) ->
@@ -187,9 +188,15 @@ status() ->
 %%  ?LOG(Status),
   Status.
 
-cleanup() ->
+cleanup(PoolId) ->
   Status = status(),
-  lists:foreach(
-    fun({Pid, _, _}) ->
-      erlang:exit(Pid, kill)
-    end, Status).
+  cleanup(Status, pool_name(PoolId)).
+
+cleanup([], _PoolName) ->
+  ok;
+cleanup([{Pid, PoolName, _}|Other], PoolName) ->
+%%  erlang:exit(Pid, kill),
+  ?LOG({PoolName, Pid}),
+  cleanup(Other, PoolName);
+cleanup([_|Other], PoolName) ->
+  cleanup(Other, PoolName).

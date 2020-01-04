@@ -13,6 +13,8 @@
 -include_lib("glib/include/log.hrl").
 -include_lib("sys_log/include/write_log.hrl").
 
+-define(TIMEOUT, 5000).
+
 start_pool() ->
   Configs = config_list(),
   lists:foreach(fun(#{pool_id := PoolId, addr := _Addr}) ->
@@ -75,3 +77,44 @@ config_list() ->
       PoolConfigList
   end.
 
+% {send, Cmd, ReqPackage}
+cast(PoolId, Cmd, Package) ->
+  ?LOG({cast, Cmd, Package}),
+  poolboy:transaction(wsc_common:pool_name(PoolId), fun(Worker) ->
+    gen_server:cast(Worker, {send, Cmd, Package})
+                                                    end).
+
+%%wsc:rpc(1003, {glib, replace, ["helloworld", "world", " you"]}).
+rpc(PoolId, Req) ->
+%%  ?LOG({Cmd, Req}),
+  call(PoolId, 1003, Req).
+
+call(PoolId, Cmd, ReqPackage) ->
+  call(PoolId, Cmd, ReqPackage, 1, 3).
+
+call(PoolId, Cmd, ReqPackage, Time, FailTime) ->
+  case try_call(PoolId, Cmd, ReqPackage) of
+    {false, exception} ->
+      case Time < FailTime of
+        true ->
+          call(PoolId, Cmd, ReqPackage, Time+1, FailTime);
+        _ ->
+          ?WRITE_LOG("call_exception", {PoolId, Cmd, ReqPackage}),
+          {false, exception}
+      end;
+    Reply ->
+      Reply
+  end.
+
+
+try_call(PoolId, Cmd, ReqPackage) ->
+  try
+    poolboy:transaction(wsc_common:pool_name(PoolId),
+      fun(Worker) ->
+        gen_server:call(Worker, {call, Cmd, ReqPackage}, ?TIMEOUT)
+      end)
+  catch
+    _K:_Error_msg ->
+      % ?WRITE_LOG("call_exception", {K, gap_xx, Error_msg, gap_xx, erlang:get_stacktrace()}),
+      {false, exception}
+  end.

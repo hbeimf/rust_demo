@@ -95,3 +95,15 @@ status() ->
 works() ->
   wsc_common:works(1).
 
+ping_other() ->
+  PoolId = t_pool_id(),
+  ReqPackage = ping,
+  R = wsc_common:call_other(PoolId, 1000, ReqPackage),
+  case R of
+    {false, Reason} ->
+      ?WRITE_LOG("exception", {exception, Reason}),
+      ok;
+    _ ->
+      ?LOG(R),
+      R
+  end.

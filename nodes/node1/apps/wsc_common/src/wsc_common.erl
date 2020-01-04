@@ -155,6 +155,20 @@ rpc(PoolId, Req) ->
 %%  ?LOG({Cmd, Req}),
   call(PoolId, 1003, Req).
 
+call_other(PoolId, Cmd, ReqPackage) ->
+  StartedPool = started_pool(),
+  PoolName = pool_name(PoolId),
+  OtherPool = StartedPool -- [PoolName],
+%%  ?LOG({StartedPool, PoolName, OtherPool}),
+  Res = lists:foldl(
+    fun(Pool, Reply) ->
+      R = call(Pool, Cmd, ReqPackage),
+      [{Pool, R}|Reply]
+    end, [], OtherPool),
+%%  ?LOG(Res),
+  Res.
+
+
 call(PoolId, Cmd, ReqPackage) ->
   call(PoolId, Cmd, ReqPackage, 1, 3).
 
@@ -206,7 +220,7 @@ status() ->
 
 started_pool() ->
   Status = status(),
-  lists:map(fun({_, P, _})-> P end, Status).
+  lists:map(fun({_, P, _}) -> P end, Status).
 
 %%cleanup(PoolId) ->
 %%  Status = status(),

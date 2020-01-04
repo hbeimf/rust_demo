@@ -32,6 +32,10 @@ dynamic_start_pool(PoolId, Addr) ->
   set_config_list(PoolId, Addr),
   start_pool(PoolId).
 
+stop_pool(PoolId) ->
+  ?LOG(PoolId),
+  ok.
+
 pool_name(1)->
   pool_1;
 pool_name(2)->
@@ -172,6 +176,7 @@ try_call(PoolId, Cmd, ReqPackage) ->
 
 status() ->
   Children = wsc_common_pool_sup:children(),
+  ?LOG(Children),
   Status = lists:foldl(
     fun({_,Pid,_,_} = _Child, Reply) ->
       [{PoolName,PoolPid,_,_}|_] = wsc_common_sup_sup:children(Pid),

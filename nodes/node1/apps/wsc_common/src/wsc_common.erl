@@ -203,9 +203,14 @@ status() ->
 
 
 works(PoolId) ->
-  Works = gen_server:call(pool_name(PoolId), get_all_workers),
+  case is_pool_alive(PoolId) of
+    true ->
+      Works = gen_server:call(pool_name(PoolId), get_all_workers),
 %%  ?LOG(Works),
-  Works.
+      Works;
+    _ ->
+      false
+  end.
 
 pool_pid(PoolId) ->
   erlang:whereis(pool_name(PoolId)).

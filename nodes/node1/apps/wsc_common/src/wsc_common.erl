@@ -18,7 +18,7 @@
 start_pool() ->
   Configs = config_list(),
   lists:foreach(fun(#{pool_id := PoolId, addr := _Addr}) ->
-                start_pool(PoolId)
+    start_pool(PoolId)
                 end, Configs).
 
 start_pool(PoolId) ->
@@ -36,47 +36,47 @@ stop_pool(PoolId) ->
   ?LOG(PoolId),
   ok.
 
-pool_name(1)->
+pool_name(1) ->
   pool_1;
-pool_name(2)->
+pool_name(2) ->
   pool_2;
-pool_name(3)->
+pool_name(3) ->
   pool_3;
-pool_name(4)->
+pool_name(4) ->
   pool_4;
-pool_name(5)->
+pool_name(5) ->
   pool_5;
-pool_name(6)->
+pool_name(6) ->
   pool_6;
-pool_name(7)->
+pool_name(7) ->
   pool_7;
-pool_name(8)->
+pool_name(8) ->
   pool_8;
-pool_name(9)->
+pool_name(9) ->
   pool_9;
-pool_name(10)->
+pool_name(10) ->
   pool_10;
-pool_name(11)->
+pool_name(11) ->
   pool_11;
-pool_name(12)->
+pool_name(12) ->
   pool_13;
-pool_name(13)->
+pool_name(13) ->
   pool_13;
-pool_name(14)->
+pool_name(14) ->
   pool_14;
-pool_name(15)->
+pool_name(15) ->
   pool_15;
-pool_name(16)->
+pool_name(16) ->
   pool_16;
-pool_name(17)->
+pool_name(17) ->
   pool_17;
-pool_name(18)->
+pool_name(18) ->
   pool_18;
-pool_name(19)->
+pool_name(19) ->
   pool_19;
-pool_name(20)->
+pool_name(20) ->
   pool_20;
-pool_name(_PoolId)->
+pool_name(_PoolId) ->
   pool_100.
 
 pool_addr(PoolId) ->
@@ -86,9 +86,9 @@ pool_addr(PoolId) ->
 
 addr([], _PoolId) ->
   null;
-addr([#{pool_id := PoolId, addr := Addr}|_], PoolId) ->
+addr([#{pool_id := PoolId, addr := Addr} | _], PoolId) ->
   Addr;
-addr([#{pool_id := _Id, addr := _Addr}|OtherConfig], PoolId) ->
+addr([#{pool_id := _Id, addr := _Addr} | OtherConfig], PoolId) ->
   addr(OtherConfig, PoolId).
 
 % 获取配置文件
@@ -110,12 +110,12 @@ set_config_list() ->
   PoolConfigDir = lists:concat([Root, "pool_addr.config"]),
   % ?LOG({"init pool", Root, PoolConfigDir}),
   PoolConfigList = case glib:file_exists(PoolConfigDir) of
-    true ->
-      {ok, [C|_]} = file:consult(PoolConfigDir),
-      C;
-    _ ->
-      []
-  end,
+                     true ->
+                       {ok, [C | _]} = file:consult(PoolConfigDir),
+                       C;
+                     _ ->
+                       []
+                   end,
   sys_config:set_config(Key, PoolConfigList),
   PoolConfigList.
 
@@ -127,7 +127,7 @@ set_config_list(PoolId, Addr) ->
     true ->
       ConfigList;
     _ ->
-      NewConfigList = [Config|ConfigList],
+      NewConfigList = [Config | ConfigList],
       sys_config:set_config(Key, NewConfigList),
       NewConfigList
   end.
@@ -152,7 +152,7 @@ call(PoolId, Cmd, ReqPackage, Time, FailTime) ->
     {false, exception} ->
       case Time < FailTime of
         true ->
-          call(PoolId, Cmd, ReqPackage, Time+1, FailTime);
+          call(PoolId, Cmd, ReqPackage, Time + 1, FailTime);
         _ ->
           ?WRITE_LOG("call_exception", {PoolId, Cmd, ReqPackage}),
           {false, exception}
@@ -176,13 +176,20 @@ try_call(PoolId, Cmd, ReqPackage) ->
 
 status() ->
   Children = wsc_common_pool_sup:children(),
-  ?LOG(Children),
+%%  ?LOG(Children),
   Status = lists:foldl(
-    fun({_,Pid,_,_} = _Child, Reply) ->
-      [{PoolName,PoolPid,_,_}|_] = wsc_common_sup_sup:children(Pid),
+    fun({_, Pid, _, _} = _Child, Reply) ->
+      [{PoolName, PoolPid, _, _} | _] = wsc_common_sup_sup:children(Pid),
       Status1 = poolboy:status(PoolPid),
 %%      ?LOG({PoolName, Status}),
-      [{PoolName, Status1}|Reply]
+      [{Pid, PoolName, Status1} | Reply]
     end, [], Children),
-  ?LOG(Status),
+%%  ?LOG(Status),
   Status.
+
+cleanup() ->
+  Status = status(),
+  lists:foreach(
+    fun({Pid, _, _}) ->
+      erlang:exit(Pid, kill)
+    end, Status).

@@ -11,6 +11,8 @@
 -export([start_link/0]).
 -export([start_wsc_pool/1]).
 -export([children/0]).
+%%-export([cleanup/1]).
+
 
 %% Supervisor callbacks
 -export([init/1]).
@@ -27,6 +29,8 @@ start_wsc_pool(PoolId) ->
   Params = {PoolId},
   supervisor:start_child(?SERVER, [Params]).
 
+%%cleanup(Pid) ->
+%%  exit(Pid, shutdown).
 
 start_link() ->
   supervisor:start_link({local, ?SERVER}, ?MODULE, []).

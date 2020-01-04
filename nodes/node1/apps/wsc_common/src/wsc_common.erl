@@ -160,6 +160,9 @@ rpc(PoolId, Req) ->
 %%  ?LOG({Cmd, Req}),
   call(PoolId, 1003, Req).
 
+rpc_other(PoolId, Req) ->
+  call_other(PoolId, 1003, Req).
+
 call_other(PoolId, Cmd, ReqPackage) ->
 %%  StartedPool = started_pool(),
 %%  PoolName = pool_name(PoolId),

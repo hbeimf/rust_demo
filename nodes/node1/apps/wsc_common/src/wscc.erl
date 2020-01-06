@@ -159,3 +159,6 @@ s2(PoolId) ->
   wsc_common:stop_pool(PoolId),
   ?LOG(C2),
   ok.
+
+cc() ->
+  (1578336495 - 1578332924).

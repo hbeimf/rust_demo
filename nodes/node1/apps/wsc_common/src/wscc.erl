@@ -75,6 +75,21 @@ t() ->
   ok.
 
 
+t_all() ->
+  ?WRITE_LOG("time", {start_time, glib:time(), glib:date_str()}),
+%%  PoolId = t_pool_id(),
+  lists:foreach(fun(Index) ->
+%%    ?LOG(Index),
+%%    PoolId = t_pool_id(),
+%%    Reply = wsc_common:rpc(PoolId, {glib, replace, ["helloworld", "world", " you"]}),
+    Reply = ping_all(),
+    ?LOG({Index, Reply}),
+    ok
+                end, lists:seq(1, 100000)),
+  ?WRITE_LOG("time", {end_time, glib:time(), glib:date_str()}),
+  ok.
+
+
 
 cast(Id) ->
   % Key = base64:encode(term_to_binary({self()})),

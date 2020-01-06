@@ -66,10 +66,10 @@ init([{PoolId}|_]) ->
   PoolSpecs = {wsc_common:pool_name(PoolId),{poolboy,start_link,
     [[{name,{local,wsc_common:pool_name(PoolId)}},
       {worker_module,wsc_common_call_actor},
-      {size,10},
+      {size,5},
       {max_overflow,20}],
-      [WsAddr]]},
-    permanent,5000,worker,
+      [{PoolId, WsAddr}]]},
+    transient,5000,worker,
     [poolboy]},
 
   Children = [PoolSpecs],

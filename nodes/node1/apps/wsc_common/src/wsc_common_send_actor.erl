@@ -25,16 +25,16 @@
 
 
 
-start_link(WsAddr) ->
+start_link({PoolId, WsAddr}) ->
   % Host = "ws://localhost:5678/ws",
 %%  Host = sys_config:get_config(http, ws),
-  websocket_client:start_link(WsAddr, ?MODULE, []).
+  websocket_client:start_link(WsAddr, ?MODULE, [{PoolId, WsAddr}]).
 
 
 
-init([], _ConnState) ->
-
-  State = #{},
+init([{PoolId, WsAddr}|_], _ConnState) ->
+  ?WRITE_LOG("send_actor", {start, PoolId, WsAddr}),
+  State = #{pool_id => PoolId, ws_addr => WsAddr},
   {ok, State}.
 
 % websocket_handle({pong, _}, _ConnState, State) ->
@@ -103,7 +103,8 @@ websocket_info({text, Txt}, _ConnState, State) ->
 websocket_terminate(_Reason, _ConnState, State) ->
   % io:format("~nClient closed in state ~p wih reason ~p~n", [State, Reason]),
   % ?LOG({ws_terminate}),
-  ?WRITE_LOG("wsc_close", {State}),
+%%  ?WRITE_LOG("wsc_close", {State}),
+  ?WRITE_LOG("send_actor", {close, State}),
   ok.
 
 safe_reply(undefined, _Value) ->

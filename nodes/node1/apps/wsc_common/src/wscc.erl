@@ -120,3 +120,25 @@ ping_all() ->
       ?LOG(R),
       R
   end.
+
+c1() ->
+  C1 = erlang:system_info(process_count),
+  ?LOG(C1),
+  ok.
+
+s1(PoolId) ->
+  C1 = erlang:system_info(process_count),
+  ?LOG(C1),
+  wsc_common:dynamic_start_pool(PoolId, "ws://localhost:5678/ws"),
+  C2 = erlang:system_info(process_count),
+  ?LOG(C2),
+  ok.
+
+s2(PoolId) ->
+  C1 = erlang:system_info(process_count),
+  ?LOG(C1),
+%%  wsc_common:dynamic_start_pool(PoolId, "ws://localhost:5678/ws"),
+  C2 = erlang:system_info(process_count),
+  wsc_common:stop_pool(PoolId),
+  ?LOG(C2),
+  ok.

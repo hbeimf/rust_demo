@@ -113,9 +113,13 @@ handle_call({call, Cmd, ReqPackage}, From, #{wsc_send_actor_pid := Pid, ws_addr 
           {reply, Reply, State}
       end
   end;
+handle_call(get_send_pid, _From, #{wsc_send_actor_pid := Pid} = State) ->
+%%  Reply = {send_pid, Pid},
+  {reply, Pid, State};
 handle_call(_Request, _From, State) ->
   Reply = ok,
   {reply, Reply, State}.
+
 
 % --------------------------------------------------------------------
 % Function: handle_cast/2

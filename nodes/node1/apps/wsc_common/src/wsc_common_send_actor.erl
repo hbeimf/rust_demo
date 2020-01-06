@@ -104,7 +104,7 @@ websocket_terminate(_Reason, _ConnState, State) ->
   % io:format("~nClient closed in state ~p wih reason ~p~n", [State, Reason]),
   % ?LOG({ws_terminate}),
 %%  ?WRITE_LOG("wsc_close", {State}),
-  ?WRITE_LOG("send_actor", {close, State}),
+  ?WRITE_LOG("send_actor_close", {close, State}),
   ok.
 
 safe_reply(undefined, _Value) ->

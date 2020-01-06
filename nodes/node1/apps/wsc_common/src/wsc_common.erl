@@ -268,25 +268,25 @@ cleanup(PoolId) ->
 cleanup([], _PoolName) ->
   ok;
 cleanup([{Pid, PoolName, _} | Other], PoolName) ->
-%%  Works = works(PoolName),
-%%  ?LOG(Works),
-%%
-%%  lists:foreach(
-%%    fun({_, WorkPid, _, _}) ->
-%%      case erlang:is_pid(WorkPid) andalso erlang:is_process_alive(WorkPid) of
-%%        true ->
-%%          ?LOG({stop, WorkPid}),
-%%          ?WRITE_LOG("stop_pool", {stop_pool, WorkPid}),
-%%          WorkPid ! stop;
-%%        _ ->
-%%          ?LOG({stop1, WorkPid}),
-%%          ?WRITE_LOG("stop_pool_1", {stop_pool, WorkPid}),
-%%          ok
-%%      end
-%%    end, Works),
-  erlang:exit(Pid, kill),
+  Works = works(PoolName),
+  SendPids = lists:map(
+    fun({_, WorkPid, _, _}) ->
+      gen_server:call(WorkPid, get_send_pid)
+    end, Works),
+  ?LOG({send_pids, SendPids}),
   poolboy:stop(PoolName),
-
+  erlang:exit(Pid, kill),
+  lists:foreach(
+    fun(SendPid) ->
+      ?LOG(SendPid),
+      case erlang:is_pid(SendPid) andalso erlang:is_process_alive(SendPid) of
+        true ->
+          ?LOG(SendPid),
+          SendPid ! stop;
+        _ ->
+          ok
+      end
+    end, SendPids),
   ?LOG({PoolName, Pid}),
   cleanup(Other, PoolName);
 cleanup([_ | Other], PoolName) ->

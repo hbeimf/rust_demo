@@ -59,13 +59,13 @@ init([]) ->
 %%                permanent, 5000, worker, [Mod]},
 %%                Child.
 
+%%
+%%child_sup(Mod) ->
+%%  Child = {Mod, {Mod, start_link, []},
+%%    permanent, 5000, supervisor, [Mod]},
+%%  Child.
 
 child_sup(Mod) ->
   Child = {Mod, {Mod, start_link, []},
-    permanent, 5000, supervisor, [Mod]},
+    temporary, 5000, supervisor, [Mod]},
   Child.
-
-%%child_sup(Mod) ->
-%%  Child = {Mod, {Mod, start_link, []},
-%%    temporary, 5000, supervisor, [Mod]},
-%%  Child.

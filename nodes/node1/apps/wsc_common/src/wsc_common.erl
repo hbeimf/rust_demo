@@ -34,7 +34,7 @@ dynamic_start_pool(PoolId, Addr) ->
 
 stop_pool(PoolId) ->
   ?LOG(PoolId),
-%%  cleanup(PoolId),
+  cleanup(PoolId),
   ok.
 
 pool_name(PoolName) when is_atom(PoolName) ->
@@ -261,18 +261,18 @@ started_pool() ->
 %%  lists:map(fun({_, P, _}) -> P end, Status).
 
 
-%%cleanup(PoolId) ->
-%%  Status = status(),
-%%  cleanup(Status, pool_name(PoolId)).
-%%
-%%cleanup([], _PoolName) ->
-%%  ok;
-%%cleanup([{Pid, PoolName, _}|Other], PoolName) ->
-%%  erlang:exit(Pid, kill),
-%%  ?LOG({PoolName, Pid}),
-%%  cleanup(Other, PoolName);
-%%cleanup([_|Other], PoolName) ->
-%%  cleanup(Other, PoolName).
+cleanup(PoolId) ->
+  Status = status(),
+  cleanup(Status, pool_name(PoolId)).
+
+cleanup([], _PoolName) ->
+  ok;
+cleanup([{Pid, PoolName, _}|Other], PoolName) ->
+  erlang:exit(Pid, kill),
+  ?LOG({PoolName, Pid}),
+  cleanup(Other, PoolName);
+cleanup([_|Other], PoolName) ->
+  cleanup(Other, PoolName).
 
 
 works(PoolId) ->

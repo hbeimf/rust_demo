@@ -78,6 +78,7 @@ t() ->
 t_all() ->
   ?WRITE_LOG("time", {start_time, glib:time(), glib:date_str()}),
 %%  PoolId = t_pool_id(),
+  List = lists:seq(1, 10000),
   lists:foreach(
     fun(Id) ->
       lists:foreach(
@@ -85,8 +86,8 @@ t_all() ->
           Reply = ping_all(),
           ?LOG({{Id, Index}, Reply}),
           ok
-        end, lists:seq(1, 10000))
-    end, lists:seq(1, 100)),
+        end, List)
+    end, lists:seq(1, 1000)),
   ?WRITE_LOG("time", {end_time, glib:time(), glib:date_str()}),
   ok.
 
@@ -133,7 +134,7 @@ ping_all() ->
       ?WRITE_LOG("exception", {exception, Reason}),
       ok;
     _ ->
-      ?LOG(R),
+%%      ?LOG(R),
       R
   end.
 

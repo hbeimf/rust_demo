@@ -78,14 +78,15 @@ t() ->
 t_all() ->
   ?WRITE_LOG("time", {start_time, glib:time(), glib:date_str()}),
 %%  PoolId = t_pool_id(),
-  lists:foreach(fun(Index) ->
-%%    ?LOG(Index),
-%%    PoolId = t_pool_id(),
-%%    Reply = wsc_common:rpc(PoolId, {glib, replace, ["helloworld", "world", " you"]}),
-    Reply = ping_all(),
-    ?LOG({Index, Reply}),
-    ok
-                end, lists:seq(1, 100000)),
+  lists:foreach(
+    fun(Id) ->
+      lists:foreach(
+        fun(Index) ->
+          Reply = ping_all(),
+          ?LOG({{Id, Index}, Reply}),
+          ok
+        end, lists:seq(1, 10000))
+    end, lists:seq(1, 100)),
   ?WRITE_LOG("time", {end_time, glib:time(), glib:date_str()}),
   ok.
 

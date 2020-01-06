@@ -69,7 +69,7 @@ init([{PoolId}|_]) ->
       {size,5},
       {max_overflow,20}],
       [{PoolId, WsAddr}]]},
-    transient,5000,worker,
+    permanent,5000,worker,
     [poolboy]},
 
   Children = [PoolSpecs],

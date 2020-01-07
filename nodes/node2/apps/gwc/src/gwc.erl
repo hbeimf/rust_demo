@@ -35,13 +35,13 @@ start_pool() ->
 %%config =================
 register_config() ->
   #{
-    cluster_id => 1,
-    node_id => 1,
-    addr => "ws://localhost:5678/ws"
+    cluster_id => sys_config:get_config(node, cluster_id),
+    node_id => sys_config:get_config(node, node_id),
+    addr => sys_config:get_config(node, addr)
   }.
 
 config() ->
   #{
     pool_id=>1,
-    addr=> "ws://localhost:8899/ws"
+    addr=> sys_config:get_config(hub, addr)
   }.

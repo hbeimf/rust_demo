@@ -32,6 +32,11 @@ action(1003, {Mod, F, Params}, From) ->
   self() ! {reply, Reply},
   ok;
 
+action(register_gw, {ClusterId, NodeId, Addr}, From) ->
+  ?LOG({register_gw, {ClusterId, NodeId, Addr}, From}),
+  wsc_common:dynamic_start_pool(ClusterId, Addr),
+  ok;
+
 action(Cmd, ReqPackage, From) ->
   ?LOG({Cmd, ReqPackage, From}),
   ok.

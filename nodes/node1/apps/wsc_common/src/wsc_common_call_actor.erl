@@ -136,7 +136,7 @@ handle_cast({send, Cmd, ReqPackage}, #{wsc_send_actor_pid := Pid, ws_addr := WsA
       Pid ! {send, Package},
       {noreply, State};
     _ ->
-      case wsc_send_actor:start_link({PoolId, WsAddr}) of
+      case wsc_common_send_actor:start_link({PoolId, WsAddr}) of
         {ok, NewPid} ->
           NewPid ! {send, Package},
           {noreply, #{wsc_send_actor_pid => NewPid, ws_addr => WsAddr, pool_id => PoolId}};
@@ -185,7 +185,7 @@ handle_info({reconnect, Addr}, #{wsc_send_actor_pid := Pid, ws_addr := WsAddr, p
         _ ->
           ok
       end,
-      case wsc_send_actor:start_link({PoolId, Addr}) of
+      case wsc_common_send_actor:start_link({PoolId, Addr}) of
         {ok, NewPid} ->
           {noreply, #{wsc_send_actor_pid => NewPid, ws_addr => Addr, pool_id => PoolId}};
         Any ->

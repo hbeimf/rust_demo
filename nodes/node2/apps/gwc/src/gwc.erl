@@ -19,9 +19,13 @@ init() ->
   ok.
 
 regiter_gw() ->
-  #{cluster_id := ClusterId, node_id := NodeId} = register_config(),
-  wsc_common:cast_all(register_gw, {ClusterId, NodeId}),
+  #{cluster_id := ClusterId
+    , node_id := NodeId
+    , addr := Addr} = register_config(),
+  #{pool_id := PoolId} = config(),
+  wsc_common:cast(PoolId, register_gw, {ClusterId, NodeId, Addr}),
   ok.
+
 
 start_pool() ->
   #{pool_id := PoolId, addr := Addr} = config(),
@@ -32,7 +36,8 @@ start_pool() ->
 register_config() ->
   #{
     cluster_id => 1,
-    node_id => 1
+    node_id => 1,
+    addr => "ws://localhost:5678/ws"
   }.
 
 config() ->

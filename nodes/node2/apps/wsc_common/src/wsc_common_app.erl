@@ -1,9 +1,9 @@
 %%%-------------------------------------------------------------------
-%% @doc wsc public API
+%% @doc wsc_common public API
 %% @end
 %%%-------------------------------------------------------------------
 
--module(wsc_app).
+-module(wsc_common_app).
 
 -behaviour(application).
 
@@ -15,7 +15,7 @@
 %%====================================================================
 
 start(_StartType, _StartArgs) ->
-    wsc_sup:start_link().
+    wsc_common_sup:start_link().
 
 %%--------------------------------------------------------------------
 stop(_State) ->

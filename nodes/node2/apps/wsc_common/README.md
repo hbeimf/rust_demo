@@ -1,4 +1,4 @@
-wsc
+wsc_common
 =====
 
 An OTP application

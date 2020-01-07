@@ -1,13 +1,13 @@
-{application, wsc,
+{application, wsc_common,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { wsc_app, []}},
+  {mod, { wsc_common_app, []}},
   {applications,
    [kernel,
     stdlib
-    , sys_log
     ,glib
+    ,sys_log
    ]},
   {env,[]},
   {modules, []},

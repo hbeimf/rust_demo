@@ -1,16 +1,12 @@
-{application, node2,
+{application, gwc,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { node2_app, []}},
+  {mod, { gwc_app, []}},
   {applications,
    [kernel,
     stdlib
-    , glib
-    , table
-    , wss
     , wsc_common
-    , gwc
    ]},
   {env,[]},
   {modules, []},

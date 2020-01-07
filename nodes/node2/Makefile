@@ -1,11 +1,11 @@
-run1:
+node1:
 	./rebar3 shell --name node21@127.0.0.1 --setcookie node2
 
-run2:
+node2:
 	./rebar3 shell --name node22@127.0.0.1 --setcookie node2
 
 
-run3:
+node3:
 	./rebar3 shell --name node23@127.0.0.1 --setcookie node2
 
 

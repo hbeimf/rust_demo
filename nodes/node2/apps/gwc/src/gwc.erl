@@ -15,10 +15,10 @@
 
 init() ->
   start_pool(),
-  regiter_gw(),
+  regiter_gw_2_gwc(),
   ok.
 
-regiter_gw() ->
+regiter_gw_2_gwc() ->
   #{cluster_id := ClusterId
     , node_id := NodeId
     , addr := Addr} = register_config(),

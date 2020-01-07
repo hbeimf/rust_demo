@@ -170,6 +170,9 @@ rpc(PoolId, Req) ->
 rpc_other(PoolId, Req) ->
   call_other(PoolId, 1003, Req).
 
+rpc_all(Req) ->
+  call_all(1003, Req).
+
 call_other(PoolId, Cmd, ReqPackage) ->
   OtherPool = other_pool(PoolId),
   call_pool(OtherPool, Cmd, ReqPackage).

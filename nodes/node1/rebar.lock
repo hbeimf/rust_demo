@@ -1,5 +1,7 @@
 {"1.1.0",
-[{<<"esnowflake">>,{pkg,<<"esnowflake">>,<<"0.2.0">>},0},
+[{<<"cowboy">>,{pkg,<<"cowboy">>,<<"1.1.2">>},0},
+ {<<"cowlib">>,{pkg,<<"cowlib">>,<<"1.0.2">>},1},
+ {<<"esnowflake">>,{pkg,<<"esnowflake">>,<<"0.2.0">>},0},
  {<<"jsx">>,{pkg,<<"jsx">>,<<"2.9.0">>},0},
  {<<"poolboy">>,
   {git,"https://github.com/devinus/poolboy.git",
@@ -16,6 +18,8 @@
   0}]}.
 [
 {pkg_hash,[
+ {<<"cowboy">>, <<"61AC29EA970389A88ECA5A65601460162D370A70018AFE6F949A29DCA91F3BB0">>},
+ {<<"cowlib">>, <<"9D769A1D062C9C3AC753096F868CA121E2730B9A377DE23DEC0F7E08B1DF84EE">>},
  {<<"esnowflake">>, <<"083BB3EBAA4F7DB24E935D70EF5CE33C84817A484B28DAED8292E29253E19642">>},
  {<<"jsx">>, <<"D2F6E5F069C00266CAD52FB15D87C428579EA4D7D73A33669E12679E203329DD">>},
  {<<"ranch">>, <<"E4965A144DC9FBE70E5C077C65E73C57165416A901BD02EA899CFD95AA890986">>}]}

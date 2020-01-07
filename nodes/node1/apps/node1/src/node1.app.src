@@ -9,6 +9,7 @@
         , glib
         , table
         , wsc_common
+        , wss
       ]},
     {env, []},
     {modules, []},

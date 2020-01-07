@@ -1,0 +1,19 @@
+{application, wss,
+ [{description, "An OTP application"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, { wss_app, []}},
+  {applications,
+   [kernel,
+    stdlib
+    , cowboy
+    , glib
+    , sys_log
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {maintainers, []},
+  {licenses, []},
+  {links, []}
+ ]}.

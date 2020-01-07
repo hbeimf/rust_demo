@@ -7,7 +7,7 @@
 -include("table.hrl").
 -include_lib("glib/include/log.hrl").
 
--define(WAIT_FOR_TABLES, 10000).
+-define(WAIT_FOR_TABLES, 100000).
 
 %% 初始化mnesia表结构
 init() ->

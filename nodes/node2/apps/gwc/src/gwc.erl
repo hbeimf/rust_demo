@@ -18,9 +18,9 @@ init() ->
   regiter_gw(),
   ok.
 
-
 regiter_gw() ->
-
+  #{cluster_id := ClusterId, node_id := NodeId} = register_config(),
+  wsc_common:cast_all(register_gw, {ClusterId, NodeId}),
   ok.
 
 start_pool() ->
@@ -28,6 +28,12 @@ start_pool() ->
   wsc_common:dynamic_start_pool(PoolId, Addr),
   ok.
 
+%%config =================
+register_config() ->
+  #{
+    cluster_id => 1,
+    node_id => 1
+  }.
 
 config() ->
   #{

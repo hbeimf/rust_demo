@@ -1,9 +1,9 @@
 %%%-------------------------------------------------------------------
-%% @doc tcps top level supervisor.
+%% @doc wsc top level supervisor.
 %% @end
 %%%-------------------------------------------------------------------
 
--module(tcps_sup).
+-module(wsc_sup).
 
 -behaviour(supervisor).
 
@@ -20,8 +20,6 @@
 %%====================================================================
 
 start_link() ->
-    Port = sys_config:get_config(tcp, port),
-    {ok, _} = ranch:start_listener(tcp_server, 100, ranch_tcp, [{port, Port}, {max_connections, 1000000}], tcps_actor, []),
     supervisor:start_link({local, ?SERVER}, ?MODULE, []).
 
 %%====================================================================
@@ -30,8 +28,24 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-    {ok, { {one_for_all, 0, 1}, []} }.
+      Children = children(),
+      {ok, {{one_for_one, 10, 10}, Children}}.
 
 %%====================================================================
 %% Internal functions
 %%====================================================================
+children() ->
+  [
+    child_sup(wsc_sup_sup)
+  ].
+
+
+% child(Mod) ->
+% 	Child = {Mod, {Mod, start_link, []},
+%                permanent, 5000, worker, [Mod]},
+%                Child.
+
+child_sup(Mod) ->
+  Child = {Mod, {Mod, start_link, []},
+    permanent, 5000, supervisor, [Mod]},
+  Child.

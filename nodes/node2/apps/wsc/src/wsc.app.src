@@ -1,12 +1,13 @@
-{application, tcps,
+{application, wsc,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { tcps_app, []}},
+  {mod, { wsc_app, []}},
   {applications,
    [kernel,
     stdlib
-    , ranch
+    , sys_log
+    ,glib
    ]},
   {env,[]},
   {modules, []},

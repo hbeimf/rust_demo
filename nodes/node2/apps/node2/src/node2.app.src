@@ -9,7 +9,7 @@
     , glib
     , table
     , wss
-    , tcps
+    , wsc
    ]},
   {env,[]},
   {modules, []},

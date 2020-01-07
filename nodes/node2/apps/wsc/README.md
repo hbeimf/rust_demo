@@ -1,4 +1,4 @@
-tcps
+wsc
 =====
 
 An OTP application

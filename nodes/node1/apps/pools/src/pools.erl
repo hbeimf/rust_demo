@@ -24,7 +24,7 @@ start_pool() ->
                 end, Configs).
 
 start_pool(PoolId) ->
-  wsc_common_pool_sup:start_wsc_pool(PoolId).
+  pools_pool_sup:start_pool(PoolId).
 
 %%dynamic_start_pool(PoolId) ->
 %%  set_config_list(),
@@ -107,12 +107,12 @@ config_list() ->
   end.
 
 key() ->
-  wsc_common_config_list.
+  pools_config_list.
 
 set_config_list() ->
   Key = key(),
   Root = glib:root_dir(),
-  PoolConfigDir = lists:concat([Root, "pool_addr.config"]),
+  PoolConfigDir = lists:concat([Root, "pools.config"]),
   % ?LOG({"init pool", Root, PoolConfigDir}),
   PoolConfigList = case glib:file_exists(PoolConfigDir) of
                      true ->
@@ -142,7 +142,7 @@ cast(PoolId, Cmd, Package) ->
   ?LOG({cast, Cmd, Package}),
   case is_pool_alive(PoolId) of
     true ->
-      poolboy:transaction(wsc_common:pool_name(PoolId), fun(Worker) ->
+      poolboy:transaction(pool_name(PoolId), fun(Worker) ->
         gen_server:cast(Worker, {send, Cmd, Package})
                                                         end);
     _ ->
@@ -223,7 +223,7 @@ try_call(PoolId, Cmd, ReqPackage) ->
   try
     case is_pool_alive(PoolId) of
       true ->
-        poolboy:transaction(wsc_common:pool_name(PoolId),
+        poolboy:transaction(pool_name(PoolId),
           fun(Worker) ->
             gen_server:call(Worker, {call, Cmd, ReqPackage}, ?TIMEOUT)
           end);
@@ -238,11 +238,11 @@ try_call(PoolId, Cmd, ReqPackage) ->
   end.
 
 status() ->
-  Children = wsc_common_pool_sup:children(),
+  Children = pools_pool_sup:children(),
 %%  ?LOG(Children),
   Status = lists:foldl(
     fun({_, Pid, _, _} = _Child, Reply) ->
-      [{PoolName, PoolPid, _, _} | _] = wsc_common_sup_sup:children(Pid),
+      [{PoolName, PoolPid, _, _} | _] = pools_sup_sup:children(Pid),
       Status1 = poolboy:status(PoolPid),
 %%      ?LOG({PoolName, Status}),
       [{Pid, PoolName, Status1} | Reply]
@@ -252,11 +252,11 @@ status() ->
 
 started_pool() ->
 %%  Status = status(),
-  Children = wsc_common_pool_sup:children(),
+  Children = pools_pool_sup:children(),
 %%  ?LOG(Children),
   lists:foldl(
     fun({_, Pid, _, _} = _Child, Reply) ->
-      [{PoolName, _PoolPid, _, _} | _] = wsc_common_sup_sup:children(Pid),
+      [{PoolName, _PoolPid, _, _} | _] = pools_sup_sup:children(Pid),
 %%      Status1 = poolboy:status(PoolPid),
 %%      ?LOG({PoolName, Status}),
       [PoolName | Reply]

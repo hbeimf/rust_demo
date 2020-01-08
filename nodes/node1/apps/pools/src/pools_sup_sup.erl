@@ -60,12 +60,10 @@ children(Pid) ->
   {error, Reason :: term()}).
 init([{PoolId}|_]) ->
   ?LOG(PoolId),
-%%  {Ip, Port} = {"127.0.0.1", 8000},
-%%  WsAddr = "ws://localhost:5678/ws",
-  WsAddr = wsc_common:pool_addr(PoolId),
-  PoolSpecs = {wsc_common:pool_name(PoolId),{poolboy,start_link,
-    [[{name,{local,wsc_common:pool_name(PoolId)}},
-      {worker_module,pools_call_actor},
+  WsAddr = pools:pool_addr(PoolId),
+  PoolSpecs = {pools:pool_name(PoolId),{poolboy,start_link,
+    [[{name,{local,pools:pool_name(PoolId)}},
+      {worker_module,pools_work_actor},
       {size,10},
       {max_overflow,30}],
       [{PoolId, WsAddr}]]},

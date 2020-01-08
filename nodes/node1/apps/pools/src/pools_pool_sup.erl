@@ -13,7 +13,7 @@
 
 %% API
 -export([start_link/0]).
--export([start_wsc_pool/1]).
+-export([start_pool/1]).
 -export([children/0]).
 
 
@@ -28,7 +28,7 @@
 children() ->
   supervisor:which_children(?SERVER).
 
-start_wsc_pool(PoolId) ->
+start_pool(PoolId) ->
   Params = {PoolId},
   supervisor:start_child(?SERVER, [Params]).
 

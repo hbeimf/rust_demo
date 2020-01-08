@@ -12,6 +12,7 @@
 
 -include_lib("glib/include/log.hrl").
 -include_lib("sys_log/include/write_log.hrl").
+-include_lib("glib/include/rr.hrl").
 
 -define(TIMEOUT, 5000).
 
@@ -340,3 +341,7 @@ pool_reconnect(PoolId, Addr) ->
       end
     end, Works),
   ok.
+
+req(Cmd, Req) ->
+  ReqPackage = term_to_binary(#request{from = null, req_cmd = Cmd, req_data = Req}),
+  ReqPackage.

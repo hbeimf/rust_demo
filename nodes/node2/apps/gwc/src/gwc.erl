@@ -19,11 +19,15 @@ init() ->
   ok.
 
 regiter_gw_2_gwc() ->
-  #{cluster_id := ClusterId
-    , node_id := NodeId
-    , addr := Addr} = register_config(),
   #{pool_id := PoolId} = config(),
-  wsc_common:cast(PoolId, register_gw, {ClusterId, NodeId, Addr}),
+  Works = wsc_common:works(PoolId),
+%%  ?LOG(Works),
+  RegisterConfig = register_config(),
+  Register = wsc_common:req(register_gw, RegisterConfig),
+  lists:foreach(
+    fun({_, Pid, _, _}) ->
+      Pid ! {send, Register}
+    end, Works),
   ok.
 
 
@@ -35,9 +39,10 @@ start_pool() ->
 %%config =================
 register_config() ->
   #{
-    cluster_id => sys_config:get_config(node, cluster_id),
-    node_id => sys_config:get_config(node, node_id),
-    addr => sys_config:get_config(node, addr)
+    cluster_id => sys_config:get_config(node, cluster_id)
+    , node_id => sys_config:get_config(node, node_id)
+    , addr => sys_config:get_config(node, addr)
+    , size => 10
   }.
 
 config() ->

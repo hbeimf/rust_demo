@@ -44,6 +44,8 @@ action(1003, {Mod, F, Params}, From) ->
 
 action(register_gw, RegisterConfig, From) ->
   ?LOG({register_gw, RegisterConfig, From, self()}),
+  #{cluster_id := ClusterId,node_id := NodeId,size := Size, work_id := WorkId} = RegisterConfig,
+  table_cluster:add({ClusterId, WorkId}, NodeId, Size, WorkId, self()),
 %%  wsc_common:dynamic_start_pool(ClusterId, Addr),
   ok;
 

@@ -1,9 +1,9 @@
 %%%-------------------------------------------------------------------
-%% @doc wss top level supervisor.
+%% @doc wss_common top level supervisor.
 %% @end
 %%%-------------------------------------------------------------------
 
--module(wss_sup).
+-module(wss_common_sup).
 
 -behaviour(supervisor).
 

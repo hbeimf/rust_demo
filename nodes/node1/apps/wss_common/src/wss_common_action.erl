@@ -1,4 +1,14 @@
--module(wss_action).
+%%%-------------------------------------------------------------------
+%%% @author mm
+%%% @copyright (C) 2020, <COMPANY>
+%%% @doc
+%%%
+%%% @end
+%%% Created : 08. Jan 2020 10:37 AM
+%%%-------------------------------------------------------------------
+-module(wss_common_action).
+-author("mm").
+
 -compile(export_all).
 
 -define(TIMEOUT, 5000).
@@ -15,7 +25,7 @@ action(Package) ->
 
 
 % -record(reply, {
-% 	from, 
+% 	from,
 %     reply_code,
 %     reply_data
 % }).
@@ -40,6 +50,7 @@ action(register_gw, {ClusterId, NodeId, Addr}, From) ->
 action(Cmd, ReqPackage, From) ->
   ?LOG({Cmd, ReqPackage, From}),
   ok.
+
 
 
 

@@ -1,4 +1,4 @@
-wss
+wss_common
 =====
 
 An OTP application

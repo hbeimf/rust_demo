@@ -28,8 +28,25 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-    {ok, { {one_for_all, 0, 1}, []} }.
+    Children = children(),
+
+    {ok, { {one_for_one, 10, 10}, Children} }.
 
 %%====================================================================
 %% Internal functions
 %%====================================================================
+children() ->
+    [
+        child_sup(wss_common_pool_sup)
+%%        , child(wsc_common_pool_actor)
+    ].
+
+%%child(Mod) ->
+%%    Child = {Mod, {Mod, start_link, []},
+%%        permanent, 5000, worker, [Mod]},
+%%    Child.
+
+child_sup(Mod) ->
+    Child = {Mod, {Mod, start_link, []},
+        permanent, 5000, supervisor, [Mod]},
+    Child.

@@ -37,7 +37,7 @@ init([]) ->
 %%====================================================================
 children() ->
     [
-        child_sup(wss_common_pool_sup)
+%%        child_sup(wss_common_pool_sup)
 %%        , child(wsc_common_pool_actor)
     ].
 

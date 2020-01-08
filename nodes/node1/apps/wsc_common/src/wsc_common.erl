@@ -29,8 +29,13 @@ start_pool(PoolId) ->
 %%  start_pool(PoolId).
 
 dynamic_start_pool(PoolId, Addr) ->
-  set_config_list(PoolId, Addr),
-  start_pool(PoolId).
+  case is_pool_alive(PoolId) of
+    false ->
+      set_config_list(PoolId, Addr),
+      start_pool(PoolId);
+    _ ->
+      already_started
+  end.
 
 stop_pool(PoolId) ->
   ?LOG(PoolId),

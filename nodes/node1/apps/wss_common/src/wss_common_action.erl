@@ -42,8 +42,8 @@ action(1003, {Mod, F, Params}, From) ->
   self() ! {reply, Reply},
   ok;
 
-action(register_gw, {ClusterId, NodeId, Addr}, From) ->
-  ?LOG({register_gw, {ClusterId, NodeId, Addr}, From}),
+action(register_gw, RegisterConfig, From) ->
+  ?LOG({register_gw, RegisterConfig, From, self()}),
 %%  wsc_common:dynamic_start_pool(ClusterId, Addr),
   ok;
 

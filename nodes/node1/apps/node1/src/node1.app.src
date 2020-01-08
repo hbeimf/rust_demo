@@ -9,6 +9,7 @@
         , glib
         , table
         , wss_common
+        , pools
       ]},
     {env, []},
     {modules, []},

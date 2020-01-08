@@ -63,15 +63,17 @@ start_link(Params) ->
 %          ignore               |
 %          {stop, Reason}
 % --------------------------------------------------------------------
-init([[{PoolId, WsAddr}|_]|_]) ->
-  ?WRITE_LOG("call_actor", {start, PoolId, WsAddr, self()}),
+init([[{PoolId}|_]|_]) ->
+  ?WRITE_LOG("call_actor", {start, PoolId, self()}),
 %%  ?LOG(WsAddr),
   % erlang:send_after(?TIMEOUT, self(), check_state), %
 
   % {ok, Pid} = go_ws_actor:start_link(1),
 
   % {ok, #{ws_pid => Pid}}.
-  {ok, #{wsc_send_actor_pid => false, ws_addr => WsAddr, pool_id => PoolId}}.
+  Pids = pools:get_pids(PoolId),
+
+  {ok, #{pids => Pids, pool_id => PoolId}}.
 % --------------------------------------------------------------------
 % Function: handle_call/3
 % Description: Handling call messages

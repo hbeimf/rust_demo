@@ -346,3 +346,7 @@ pool_reconnect(PoolId, Addr) ->
 req(Cmd, Req) ->
   ReqPackage = term_to_binary(#request{from = null, req_cmd = Cmd, req_data = Req}),
   ReqPackage.
+
+get_pids(PoolId) ->
+  ?LOG(PoolId),
+  [].

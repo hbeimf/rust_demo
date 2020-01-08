@@ -60,13 +60,13 @@ children(Pid) ->
   {error, Reason :: term()}).
 init([{PoolId}|_]) ->
   ?LOG(PoolId),
-  WsAddr = pools:pool_addr(PoolId),
+%%  WsAddr = pools:pool_addr(PoolId),
   PoolSpecs = {pools:pool_name(PoolId),{poolboy,start_link,
     [[{name,{local,pools:pool_name(PoolId)}},
       {worker_module,pools_work_actor},
       {size,10},
       {max_overflow,30}],
-      [{PoolId, WsAddr}]]},
+      [{PoolId}]]},
     permanent,5000,worker,
     [poolboy]},
 

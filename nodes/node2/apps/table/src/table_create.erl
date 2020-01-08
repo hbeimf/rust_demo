@@ -55,7 +55,7 @@ init_master() ->
 	% R  = mnesia:delete_schema([node()]),
 	% ?LOG({node(), R, nodes()}),
 	case mnesia:create_schema([node()]) of
-		Any -> 
+		ok ->
 			?LOG("create and start"),
 			    mnesia:start(),
 			    mnesia:create_table(key_pid, [{attributes,record_info(fields,key_pid)}]),

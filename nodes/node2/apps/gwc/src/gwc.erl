@@ -21,15 +21,15 @@ init() ->
 regiter_gw_2_gwc() ->
   #{pool_id := PoolId} = config(),
   Works = wsc_common:works(PoolId),
-%%  ?LOG(Works),
-  RegisterConfig = register_config(),
-  Register = wsc_common:req(register_gw, RegisterConfig),
-  lists:foreach(
-    fun({_, Pid, _, _}) ->
-      Pid ! {send, Register}
-    end, Works),
-  ok.
+  register_gw_2_gwc(Works, erlang:length(Works), 1).
 
+register_gw_2_gwc([], _Size, _WorkId) ->
+  ok;
+register_gw_2_gwc([{_, Pid, _, _}|OtherWork], Size, WorkId) ->
+  RegisterConfig = register_config(Size, WorkId),
+  Register = wsc_common:req(register_gw, RegisterConfig),
+  Pid ! {send, Register},
+  register_gw_2_gwc(OtherWork, Size, WorkId+1).
 
 start_pool() ->
   #{pool_id := PoolId, addr := Addr} = config(),
@@ -37,12 +37,13 @@ start_pool() ->
   ok.
 
 %%config =================
-register_config() ->
+register_config(Size, WorkId) ->
   #{
     cluster_id => sys_config:get_config(node, cluster_id)
     , node_id => sys_config:get_config(node, node_id)
-    , addr => sys_config:get_config(node, addr)
-    , size => 10
+%%    , addr => sys_config:get_config(node, addr)
+    , size => Size
+    , work_id => WorkId
   }.
 
 config() ->

@@ -52,9 +52,9 @@ init_slave() ->
 
 
 init_master() ->
-  %mnesia:stop(),
-  % R  = mnesia:delete_schema([node()]),
-  % ?LOG({node(), R, nodes()}),
+  mnesia:stop(),
+  R  = mnesia:delete_schema([node()]),
+  ?LOG({node(), R, nodes()}),
   case mnesia:create_schema([node()]) of
     ok ->
       ?LOG("create and start"),
@@ -63,7 +63,7 @@ init_master() ->
       mnesia:create_table(cluster, [{attributes, record_info(fields, cluster)}]),
       ok;
     Any ->
-      % ?LOG({"start", Any}),
+      ?LOG({"start", Any}),
       mnesia:start()
   end.
 

@@ -1,12 +1,12 @@
 run1:
-	./rebar3 shell --name ego1@127.0.0.1 --setcookie ego 
+	./rebar3 shell --name run1@127.0.0.1 --setcookie node1_cookie
 
 run2:
-	./rebar3 shell --name ego2@127.0.0.1 --setcookie ego 
+	./rebar3 shell --name run2@127.0.0.1 --setcookie node1_cookie
 
 
 run3:
-	./rebar3 shell --name ego3@127.0.0.1 --setcookie ego 
+	./rebar3 shell --name run3@127.0.0.1 --setcookie node1_cookie
 
 
 stop:

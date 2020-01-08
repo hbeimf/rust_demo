@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 08. Jan 2020 3:46 PM
 %%%-------------------------------------------------------------------
--module(table_cluster_table).
+-module(table_cluster).
 -author("mm").
 
 -compile(export_all).

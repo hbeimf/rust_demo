@@ -30,8 +30,8 @@ start_pool(PoolId) ->
 %%  set_config_list(),
 %%  start_pool(PoolId).
 
-dynamic_start_pool(PoolId, Addr) ->
-  set_config_list(PoolId, Addr),
+dynamic_start_pool(PoolId) ->
+  set_config_list(PoolId),
   start_pool(PoolId).
 
 stop_pool(PoolId) ->
@@ -124,9 +124,9 @@ set_config_list() ->
   sys_config:set_config(Key, PoolConfigList),
   PoolConfigList.
 
-set_config_list(PoolId, Addr) ->
+set_config_list(PoolId) ->
   Key = key(),
-  Config = #{pool_id => PoolId, addr => Addr},
+  Config = #{pool_id => PoolId},
   ConfigList = config_list(),
   case lists:member(Config, ConfigList) of
     true ->

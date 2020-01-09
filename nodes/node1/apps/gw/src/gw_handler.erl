@@ -59,7 +59,7 @@ websocket_handle({binary, Package}, Req, State) ->
       safe_reply(From, Payload),
       ok;
     Any ->
-      ?LOG(Any),
+%%      ?LOG(Any),
       gw_action:action(Package),
       ok
   end,

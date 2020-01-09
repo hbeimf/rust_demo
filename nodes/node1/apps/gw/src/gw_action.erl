@@ -29,12 +29,18 @@ action(Package) ->
 %     reply_code,
 %     reply_data
 % }).
-action(cast_ping, Req, From) ->
-  ?LOG({cast_ping, Req, From, glib:date_str()}),
-  ok;
-action(ping, _, From) ->
-  Reply = #reply{from = From, reply_code = 1001, reply_data = pong},
-  self() ! {reply, Reply},
+%%action(cast_ping, Req, From) ->
+%%  ?LOG({cast_ping, Req, From, glib:date_str()}),
+%%  ok;
+action(ping, Req, From) ->
+  ?LOG({ping, Req, From}),
+  case From of
+    null ->
+      ok;
+    _ ->
+      Reply = #reply{from = From, reply_code = 1001, reply_data = pong},
+      self() ! {reply, Reply}
+  end,
   ok;
 action(call_fun, {Mod, F, Params}, From) ->
 %%  Reply = Mon:F(),

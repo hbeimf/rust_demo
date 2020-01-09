@@ -30,22 +30,14 @@ action(ping, Req, From) ->
   Reply = #reply{from = From, reply_code = 1001, reply_data = pong},
   self() ! {reply, Reply},
   ok;
-action(1003, {Mod, F, Params}, From) ->
+action(call_fun, {Mod, F, Params}, From) ->
 %%  Reply = Mon:F(),
-%%  ?LOG({Mod, F, Params}),
+  ?LOG({Mod, F, Params, From}),
   R = erlang:apply(Mod, F, Params),
 %%  ?LOG(R),
   Reply = #reply{from = From, reply_code = 1004, reply_data = R},
   self() ! {reply, Reply},
   ok;
-
-%%action(register_gw, RegisterConfig, From) ->
-%%  ?LOG({register_gw, RegisterConfig, From, self()}),
-%%  #{cluster_id := ClusterId,node_id := NodeId,size := Size, work_id := WorkId} = RegisterConfig,
-%%  table_pools:add({ClusterId, NodeId, WorkId}, Size, self(), ClusterId),
-%%  pools:create_pool(ClusterId),
-%%
-%%  ok;
 
 action(Cmd, ReqPackage, From) ->
   ?LOG({Cmd, ReqPackage, From}),

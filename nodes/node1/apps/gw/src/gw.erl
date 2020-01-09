@@ -21,7 +21,7 @@ test() ->
   ?LOG(test),
   ok.
 
-call() ->
+ping() ->
   PoolId = 1,
   Cmd = ping,
   Req = {ping},

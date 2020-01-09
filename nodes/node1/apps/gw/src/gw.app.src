@@ -1,8 +1,8 @@
-{application, wss_common,
+{application, gw,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { wss_common_app, []}},
+  {mod, { gw_app, []}},
   {applications,
    [kernel,
     stdlib

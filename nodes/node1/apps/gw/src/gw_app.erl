@@ -1,9 +1,9 @@
 %%%-------------------------------------------------------------------
-%% @doc wss_common public API
+%% @doc gw public API
 %% @end
 %%%-------------------------------------------------------------------
 
--module(wss_common_app).
+-module(gw_app).
 
 -behaviour(application).
 
@@ -15,8 +15,8 @@
 %%====================================================================
 
 start(_StartType, _StartArgs) ->
-    start_ws_server(),
-    wss_common_sup:start_link().
+    start_gw_server(),
+    gw_sup:start_link().
 
 %%--------------------------------------------------------------------
 stop(_State) ->
@@ -25,11 +25,10 @@ stop(_State) ->
 %%====================================================================
 %% Internal functions
 %%====================================================================
-
-start_ws_server() ->
+start_gw_server() ->
     Dispatch = cowboy_router:compile([
         {'_', [
-            {"/ws", wss_common_handler, []}
+            {"/ws", gw_handler, []}
         ]}
     ]),
 

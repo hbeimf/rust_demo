@@ -4,9 +4,9 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 08. Jan 2020 10:36 AM
+%%% Created : 09. Jan 2020 11:47 AM
 %%%-------------------------------------------------------------------
--module(wss_common_handler).
+-module(gw_handler).
 -author("mm").
 
 -behaviour(cowboy_websocket_handler).
@@ -52,7 +52,7 @@ websocket_handle({binary, Package}, Req, State) ->
   % R = glibpack:unpackage(Package),
   % ?LOG({unpackage,  R}),
 
-  wss_common_action:action(Package),
+  gw_action:action(Package),
 
   {ok, Req, State};
 websocket_handle(Data, Req, State) ->

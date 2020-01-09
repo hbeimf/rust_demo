@@ -8,7 +8,7 @@
         stdlib
         , glib
         , table
-        , wss_common
+        , gw
         , pools
       ]},
     {env, []},

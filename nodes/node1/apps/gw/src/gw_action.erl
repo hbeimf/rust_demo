@@ -4,9 +4,9 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 08. Jan 2020 10:37 AM
+%%% Created : 09. Jan 2020 11:48 AM
 %%%-------------------------------------------------------------------
--module(wss_common_action).
+-module(gw_action).
 -author("mm").
 
 -compile(export_all).

@@ -6,6 +6,8 @@
   {applications,
    [kernel,
     stdlib
+    ,sys_log
+    ,glib
    ]},
   {env,[]},
   {modules, []},

@@ -29,7 +29,12 @@ ping() ->
   ?LOG(R),
   ok.
 
-
+call_fun() ->
+  PoolId = 1,
+  ReqPackage = {glib, replace, ["helloworld", "world", " you"]},
+  R = pools:call(PoolId, call_fun, ReqPackage),
+  ?LOG(R),
+  ok.
 
 
 

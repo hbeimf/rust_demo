@@ -166,7 +166,7 @@ cast(PoolId, Cmd, Package) ->
                                              end);
     _ ->
       ?WRITE_LOG("pool_exception", {PoolId, Cmd, Package}),
-      start_pool(PoolId),
+%%      start_pool(PoolId),
       false
   end.
 

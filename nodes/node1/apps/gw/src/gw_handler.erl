@@ -67,6 +67,8 @@ websocket_terminate(_Reason, _Req, State) ->
   ?LOG({close, State}),
   ok.
 
+safe_reply(null, _Value) ->
+  ok;
 safe_reply(undefined, _Value) ->
   ok;
 safe_reply(From, Value) ->

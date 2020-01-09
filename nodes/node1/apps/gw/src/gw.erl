@@ -21,7 +21,7 @@ test() ->
   ?LOG(test),
   ok.
 
-ping() ->
+ping_pong() ->
   PoolId = 1,
   Cmd = ping,
   Req = {ping},
@@ -37,4 +37,8 @@ call_fun() ->
   ok.
 
 
-
+ping() ->
+  Cmd = ping,
+  Req = {cast_ping},
+  PoolId = 1,
+  pools:cast(PoolId, Cmd, Req).

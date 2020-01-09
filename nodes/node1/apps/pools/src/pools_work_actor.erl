@@ -115,7 +115,7 @@ handle_call(_Request, _From, State) ->
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
 handle_cast({send, Cmd, ReqPackage}, #{pids := [Pid|_Pids], pool_id := _PoolId} = State) ->
-  ?LOG({send, Cmd, ReqPackage}),
+%%  ?LOG({send, Cmd, ReqPackage}),
   Package = term_to_binary(#request{from = null, req_cmd = Cmd, req_data = ReqPackage}),
   case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
     true ->

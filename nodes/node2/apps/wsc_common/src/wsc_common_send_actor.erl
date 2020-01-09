@@ -25,16 +25,16 @@
 
 
 
-start_link({PoolId, WsAddr}) ->
+start_link({PoolId, WsAddr, CallBack}) ->
   % Host = "ws://localhost:5678/ws",
 %%  Host = sys_config:get_config(http, ws),
-  websocket_client:start_link(WsAddr, ?MODULE, [{PoolId, WsAddr}]).
+  websocket_client:start_link(WsAddr, ?MODULE, [{PoolId, WsAddr, CallBack}]).
 
 
 
-init([{PoolId, WsAddr} | _], _ConnState) ->
+init([{PoolId, WsAddr, CallBack} | _], _ConnState) ->
   ?WRITE_LOG("send_actor", {start, PoolId, WsAddr}),
-  State = #{pool_id => PoolId, ws_addr => WsAddr},
+  State = #{pool_id => PoolId, ws_addr => WsAddr, call_back => CallBack},
   {ok, State}.
 
 % websocket_handle({pong, _}, _ConnState, State) ->
@@ -43,13 +43,14 @@ init([{PoolId, WsAddr} | _], _ConnState) ->
 %     io:format("Received msg ~p~n", [Msg]),
 %     {close, <<>>, "done"};
 
-websocket_handle({binary, CurrentPackage}, _ConnState, State) ->
+websocket_handle({binary, CurrentPackage}, _ConnState, #{call_back := CallBack} = State) ->
   case binary_to_term(CurrentPackage) of
     #reply{from = From, reply_code = _Cmd, reply_data = Payload} ->
       safe_reply(From, Payload),
       ok;
     Any ->
       ?LOG(Any),
+      CallBack:action(CurrentPackage),
       ok
   end,
   {ok, State};
@@ -61,6 +62,9 @@ websocket_handle(Msg, _ConnState, State) ->
   % {reply, {text, <<"hello, this is message #", BinInt/binary >>}, State + 1}.
   {ok, State}.
 
+websocket_info({reply, Term}, _ConnState, State) ->
+  % ?LOG({reply, Bin}),
+  {reply, {binary, term_to_binary(Term)}, State};
 websocket_info({send, Bin}, _ConnState, State) ->
   % ?LOG({send, Bin}),
   {reply, {binary, Bin}, State};

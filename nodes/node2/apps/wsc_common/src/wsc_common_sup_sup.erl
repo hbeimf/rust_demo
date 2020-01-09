@@ -58,7 +58,7 @@ children(Pid) ->
   }} |
   ignore |
   {error, Reason :: term()}).
-init([{PoolId}|_]) ->
+init([{PoolId, Callback}|_]) ->
   ?LOG(PoolId),
 %%  {Ip, Port} = {"127.0.0.1", 8000},
 %%  WsAddr = "ws://localhost:5678/ws",
@@ -68,7 +68,7 @@ init([{PoolId}|_]) ->
       {worker_module,wsc_common_call_actor},
       {size,10},
       {max_overflow,30}],
-      [{PoolId, WsAddr}]]},
+      [{PoolId, WsAddr, Callback}]]},
     permanent,5000,worker,
     [poolboy]},
 

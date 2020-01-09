@@ -36,7 +36,7 @@ test() ->
 
 
 ping() ->
-  PoolId = t_pool_id(),
+  PoolId = 1,
   ReqPackage = ping,
   R = wsc_common:call(PoolId, 1000, ReqPackage),
   case R of

@@ -17,21 +17,22 @@
 -define(TIMEOUT, 5000).
 
 start_pool() ->
-  Configs = config_list(),
-  lists:foreach(fun(#{pool_id := PoolId, addr := _Addr}) ->
-    start_pool(PoolId)
-                end, Configs).
+  _Configs = config_list(),
+  ok.
+%%  lists:foreach(fun(#{pool_id := PoolId, addr := _Addr}) ->
+%%    start_pool(PoolId)
+%%                end, Configs).
 
-start_pool(PoolId) ->
-  wsc_common_pool_sup:start_wsc_pool(PoolId).
+start_pool(PoolId, Callback) ->
+  wsc_common_pool_sup:start_wsc_pool({PoolId, Callback}).
 
 %%dynamic_start_pool(PoolId) ->
 %%  set_config_list(),
 %%  start_pool(PoolId).
 
-dynamic_start_pool(PoolId, Addr) ->
+dynamic_start_pool(PoolId, Addr, Callback) ->
   set_config_list(PoolId, Addr),
-  start_pool(PoolId).
+  start_pool(PoolId, Callback).
 
 stop_pool(PoolId) ->
   ?LOG(PoolId),
@@ -146,7 +147,7 @@ cast(PoolId, Cmd, Package) ->
                                                         end);
     _ ->
       ?WRITE_LOG("pool_exception", {PoolId, Cmd, Package}),
-      start_pool(PoolId),
+%%      start_pool(PoolId),
       false
   end.
 

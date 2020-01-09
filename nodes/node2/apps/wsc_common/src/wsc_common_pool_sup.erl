@@ -24,8 +24,8 @@
 children() ->
   supervisor:which_children(?SERVER).
 
-start_wsc_pool(PoolId) ->
-  Params = {PoolId},
+start_wsc_pool({PoolId, Callback}) ->
+  Params = {PoolId, Callback},
   supervisor:start_child(?SERVER, [Params]).
 
 %%cleanup(Pid) ->

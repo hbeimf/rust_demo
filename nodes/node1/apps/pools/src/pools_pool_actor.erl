@@ -26,10 +26,13 @@
 
 -record(state, {}).
 
+-export([start_pool/1]).
+
 %%%===================================================================
 %%% API
 %%%===================================================================
-
+start_pool(PoolId) ->
+  gen_server:cast(?MODULE, {start_pool, PoolId}).
 %%--------------------------------------------------------------------
 %% @doc
 %% Starts the server
@@ -92,6 +95,9 @@ handle_call(_Request, _From, State) ->
   {noreply, NewState :: #state{}} |
   {noreply, NewState :: #state{}, timeout() | hibernate} |
   {stop, Reason :: term(), NewState :: #state{}}).
+handle_cast({start_pool, PoolId}, State) ->
+  pools:dynamic_start_pool(PoolId),
+  {noreply, State};
 handle_cast(_Request, State) ->
   {noreply, State}.
 

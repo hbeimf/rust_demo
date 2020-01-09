@@ -11,3 +11,11 @@
   work_id,
   work_pid
 }).
+
+
+-record(pools, {
+  pool_id,
+  pool_size,
+  pid,
+  pool_group
+}).

@@ -42,6 +42,8 @@ init_slave() ->
       ?LOG({"init_slave"}),
       _Res3 = mnesia:add_table_copy(key_pid, node(), ram_copies),
       _Res4 = mnesia:add_table_copy(cluster, node(), ram_copies),
+      _Res5 = mnesia:add_table_copy(pools, node(), ram_copies),
+
       Tables = mnesia:system_info(tables),
       mnesia:wait_for_tables(Tables, ?WAIT_FOR_TABLES);
     Any ->
@@ -61,6 +63,8 @@ init_master() ->
       mnesia:start(),
       mnesia:create_table(key_pid, [{attributes, record_info(fields, key_pid)}]),
       mnesia:create_table(cluster, [{attributes, record_info(fields, cluster)}]),
+      mnesia:create_table(pools, [{attributes, record_info(fields, pools)}]),
+
       ok;
     Any ->
       ?LOG({"start", Any}),

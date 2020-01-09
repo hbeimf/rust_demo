@@ -45,8 +45,9 @@ action(1003, {Mod, F, Params}, From) ->
 action(register_gw, RegisterConfig, From) ->
   ?LOG({register_gw, RegisterConfig, From, self()}),
   #{cluster_id := ClusterId,node_id := NodeId,size := Size, work_id := WorkId} = RegisterConfig,
-  table_cluster:add({ClusterId, WorkId}, NodeId, Size, WorkId, self()),
-  pools:dynamic_start_pool(ClusterId),
+  table_pools:add({ClusterId, NodeId, WorkId}, Size, self(), ClusterId),
+  pools:create_pool(ClusterId),
+
   ok;
 
 action(Cmd, ReqPackage, From) ->

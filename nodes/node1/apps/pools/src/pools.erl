@@ -17,6 +17,9 @@
 
 -define(TIMEOUT, 5000).
 
+create_pool(PoolId) ->
+  pools_pool_actor:start_pool(PoolId).
+
 start_pool() ->
   Configs = config_list(),
   lists:foreach(fun(#{pool_id := PoolId, addr := _Addr}) ->
@@ -31,8 +34,24 @@ start_pool(PoolId) ->
 %%  start_pool(PoolId).
 
 dynamic_start_pool(PoolId) ->
-  set_config_list(PoolId),
-  start_pool(PoolId).
+  case is_pool_alive(PoolId) of
+    true ->
+      update(PoolId);
+    _ ->
+      set_config_list(PoolId),
+      start_pool(PoolId)
+  end.
+
+update() ->
+  update(1).
+update(PoolId) ->
+  Works = works(PoolId),
+  lists:foreach(
+    fun({_, Pid, _, _})->
+      Pid ! update
+    end, Works),
+  ?LOG(Works),
+  ok.
 
 stop_pool(PoolId) ->
   ?LOG(PoolId),
@@ -144,7 +163,7 @@ cast(PoolId, Cmd, Package) ->
     true ->
       poolboy:transaction(pool_name(PoolId), fun(Worker) ->
         gen_server:cast(Worker, {send, Cmd, Package})
-                                                        end);
+                                             end);
     _ ->
       ?WRITE_LOG("pool_exception", {PoolId, Cmd, Package}),
       start_pool(PoolId),
@@ -349,4 +368,10 @@ req(Cmd, Req) ->
 
 get_pids(PoolId) ->
   ?LOG(PoolId),
-  [].
+  PoolList = table_pools:select(PoolId),
+  lists:map(
+    fun(Pool) ->
+      table_pools:get_client(Pool, pid)
+    end, PoolList).
+%%  ?LOG(Pool),
+%%  [].

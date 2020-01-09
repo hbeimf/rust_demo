@@ -369,9 +369,13 @@ req(Cmd, Req) ->
 get_pids(PoolId) ->
   ?LOG(PoolId),
   PoolList = table_pools:select(PoolId),
-  lists:map(
-    fun(Pool) ->
-      table_pools:get_client(Pool, pid)
-    end, PoolList).
-%%  ?LOG(Pool),
-%%  [].
+  lists:foldl(
+    fun(Pool, Reply) ->
+      Pid = table_pools:get_client(Pool, pid),
+      case erlang:is_pid(Pid) andalso erlang:is_process_alive(Pid) of
+        true ->
+          [Pid|Reply];
+        _ ->
+          Reply
+      end
+    end, [], PoolList).

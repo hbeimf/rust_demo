@@ -48,8 +48,8 @@ websocket_handle({binary, CurrentPackage}, _ConnState, #{call_back := CallBack} 
     #reply{from = From, reply_code = _Cmd, reply_data = Payload} ->
       safe_reply(From, Payload),
       ok;
-    Any ->
-      ?LOG(Any),
+    _Any ->
+%%      ?LOG(Any),
       CallBack:action(CurrentPackage),
       ok
   end,

@@ -25,7 +25,8 @@ action(Package) ->
 %     reply_code,
 %     reply_data
 % }).
-action(ping, _, From) ->
+action(ping, Req, From) ->
+  ?LOG({Req, From}),
   Reply = #reply{from = From, reply_code = 1001, reply_data = pong},
   self() ! {reply, Reply},
   ok;

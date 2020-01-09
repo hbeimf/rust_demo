@@ -23,15 +23,6 @@ action(Package) ->
   action(Cmd, ReqPackage, From),
   ok.
 
-
-% -record(reply, {
-% 	from,
-%     reply_code,
-%     reply_data
-% }).
-%%action(cast_ping, Req, From) ->
-%%  ?LOG({cast_ping, Req, From, glib:date_str()}),
-%%  ok;
 action(ping, Req, From) ->
   ?LOG({ping, Req, From}),
   case From of
@@ -42,11 +33,9 @@ action(ping, Req, From) ->
       self() ! {reply, Reply}
   end,
   ok;
+
 action(call_fun, {Mod, F, Params}, From) ->
-%%  Reply = Mon:F(),
-%%  ?LOG({Mod, F, Params}),
   R = erlang:apply(Mod, F, Params),
-%%  ?LOG(R),
   Reply = #reply{from = From, reply_code = 1004, reply_data = R},
   self() ! {reply, Reply},
   ok;
@@ -56,7 +45,6 @@ action(register_gw, RegisterConfig, From) ->
   #{cluster_id := ClusterId,node_id := NodeId,size := Size, work_id := WorkId} = RegisterConfig,
   table_pools:add({ClusterId, NodeId, WorkId}, Size, self(), ClusterId),
   pools:create_pool(ClusterId),
-
   ok;
 
 action(Cmd, ReqPackage, From) ->

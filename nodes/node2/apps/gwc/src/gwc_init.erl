@@ -28,7 +28,7 @@ register_gw_2_gwc([], _Size, _WorkId) ->
 register_gw_2_gwc([{_, Pid, _, _}|OtherWork], Size, WorkId) ->
   RegisterConfig = register_config(Size, WorkId),
   Register = wsc_common:req(register_gw, RegisterConfig),
-  Pid ! {send, Register},
+  Pid ! {init_send, Register},
   register_gw_2_gwc(OtherWork, Size, WorkId+1).
 
 start_pool() ->
@@ -41,7 +41,6 @@ register_config(Size, WorkId) ->
   #{
     cluster_id => sys_config:get_config(node, cluster_id)
     , node_id => sys_config:get_config(node, node_id)
-%%    , addr => sys_config:get_config(node, addr)
     , size => Size
     , work_id => WorkId
   }.

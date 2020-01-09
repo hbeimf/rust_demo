@@ -25,16 +25,16 @@
 
 
 
-start_link({PoolId, WsAddr, CallBack}) ->
+start_link({PoolId, WsAddr, CallBack, SupPid}) ->
   % Host = "ws://localhost:5678/ws",
 %%  Host = sys_config:get_config(http, ws),
-  websocket_client:start_link(WsAddr, ?MODULE, [{PoolId, WsAddr, CallBack}]).
+  websocket_client:start_link(WsAddr, ?MODULE, [{PoolId, WsAddr, CallBack, SupPid}]).
 
 
 
-init([{PoolId, WsAddr, CallBack} | _], _ConnState) ->
+init([{PoolId, WsAddr, CallBack, SupPid} | _], _ConnState) ->
   ?WRITE_LOG("send_actor", {start, PoolId, WsAddr}),
-  State = #{pool_id => PoolId, ws_addr => WsAddr, call_back => CallBack},
+  State = #{pool_id => PoolId, ws_addr => WsAddr, call_back => CallBack, sup_pid => SupPid},
   {ok, State}.
 
 % websocket_handle({pong, _}, _ConnState, State) ->
@@ -75,6 +75,10 @@ websocket_info({text, Txt}, _ConnState, State) ->
   % ?LOG({text, Txt}),
   {reply, {text, Txt}, State}.
 
+websocket_terminate(_Reason, _ConnState, #{sup_pid := SupPid} = State) ->
+  SupPid ! link_closed,
+  ?WRITE_LOG("wsc_common_link_closed", {close, State}),
+  ok;
 websocket_terminate(_Reason, _ConnState, State) ->
   % io:format("~nClient closed in state ~p wih reason ~p~n", [State, Reason]),
   % ?LOG({ws_terminate}),

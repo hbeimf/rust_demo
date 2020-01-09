@@ -21,7 +21,7 @@
 
 % -include("log.hrl").
 -include_lib("glib/include/log.hrl").
-
+-include_lib("glib/include/rr.hrl").
 
 init({tcp, http}, _Req, _Opts) ->
   {upgrade, protocol, cowboy_websocket}.
@@ -52,8 +52,17 @@ websocket_handle({binary, Package}, Req, State) ->
   % R = glibpack:unpackage(Package),
   % ?LOG({unpackage,  R}),
 
-  gw_action:action(Package),
+%%  gw_action:action(Package),
 
+  case binary_to_term(Package) of
+    #reply{from = From, reply_code = _Cmd, reply_data = Payload} ->
+      safe_reply(From, Payload),
+      ok;
+    Any ->
+      ?LOG(Any),
+      gw_action:action(Package),
+      ok
+  end,
   {ok, Req, State};
 websocket_handle(Data, Req, State) ->
   ?LOG({"XXy", Data}),
@@ -75,3 +84,8 @@ websocket_info(_Info, Req, State) ->
 
 websocket_terminate(_Reason, _Req, _State) ->
   ok.
+
+safe_reply(undefined, _Value) ->
+  ok;
+safe_reply(From, Value) ->
+  gen_server:reply(From, Value).

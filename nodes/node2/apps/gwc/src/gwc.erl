@@ -16,7 +16,14 @@
 ping() ->
   PoolId = 1,
   ReqPackage = ping,
-  R = wsc_common:call(PoolId, 1000, ReqPackage),
+  R = wsc_common:call(PoolId, ping, ReqPackage),
+  ?LOG(R),
+  ok.
+
+call_fun() ->
+  PoolId = 1,
+  ReqPackage = {glib, replace, ["helloworld", "world", " you"]},
+  R = wsc_common:call(PoolId, call_fun, ReqPackage),
   ?LOG(R),
   ok.
 

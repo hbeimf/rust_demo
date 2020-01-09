@@ -30,7 +30,7 @@ call_fun() ->
 
 
 cast() ->
-  Cmd = cast_ping,
+  Cmd = ping,
   Req = {cast_ping},
   PoolId = 1,
   wsc_common:cast(PoolId, Cmd, Req).

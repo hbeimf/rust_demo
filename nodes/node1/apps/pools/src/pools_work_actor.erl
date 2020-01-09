@@ -86,7 +86,7 @@ init([[{PoolId}|_]|_]) ->
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
 
-handle_call({call, Cmd, ReqPackage}, From, #{pids := [Pid|_Pids], pool_id := PoolId} = State) ->
+handle_call({call, Cmd, ReqPackage}, From, #{pids := [Pid|_Pids], pool_id := _PoolId} = State) ->
 
   Package = term_to_binary(#request{from = From, req_cmd = Cmd, req_data = ReqPackage}),
 
@@ -99,7 +99,7 @@ handle_call({call, Cmd, ReqPackage}, From, #{pids := [Pid|_Pids], pool_id := Poo
       Reply = false,
       {reply, Reply, State}
   end;
-handle_call(get_send_pid, _From, #{wsc_send_actor_pid := Pid} = State) ->
+handle_call(get_send_pid, _From, #{pids := Pid} = State) ->
 %%  Reply = {send_pid, Pid},
   {reply, Pid, State};
 handle_call(_Request, _From, State) ->
@@ -114,7 +114,7 @@ handle_call(_Request, _From, State) ->
 %          {noreply, gs_tcp_state, Timeout} |
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
-handle_cast({send, Cmd, ReqPackage}, #{wsc_send_actor_pid := Pid, ws_addr := WsAddr, pool_id := PoolId} = State) ->
+handle_cast({send, Cmd, ReqPackage}, #{pids := [Pid|_Pids], pool_id := _PoolId} = State) ->
   ?LOG({send, Cmd, ReqPackage}),
   Package = term_to_binary(#request{from = null, req_cmd = Cmd, req_data = ReqPackage}),
   case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
@@ -122,14 +122,8 @@ handle_cast({send, Cmd, ReqPackage}, #{wsc_send_actor_pid := Pid, ws_addr := WsA
       Pid ! {send, Package},
       {noreply, State};
     _ ->
-      case wsc_common_send_actor:start_link({PoolId, WsAddr}) of
-        {ok, NewPid} ->
-          NewPid ! {send, Package},
-          {noreply, #{wsc_send_actor_pid => NewPid, ws_addr => WsAddr, pool_id => PoolId}};
-        Any ->
-          ?WRITE_LOG("link_exception", {Any, cast, Package}),
-          {noreply, State}
-      end
+      ?WRITE_LOG("link_exception", { cast, Cmd, Package}),
+      {noreply, State}
   end;
 handle_cast(Msg, State) ->
   ?LOG(Msg),
@@ -143,7 +137,7 @@ handle_cast(Msg, State) ->
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
 % % erlang:send_after(?TIMEOUT, self(), check_state), %
-handle_info({send, Package}, #{wsc_send_actor_pid := Pid, ws_addr := WsAddr, pool_id := PoolId} = State) ->
+handle_info({send, Package}, #{pids := [Pid|_Pids], pool_id := _PoolId} = State) ->
 %%  ?LOG({send, Cmd, ReqPackage}),
 %%  Package = term_to_binary(#request{from = null, req_cmd = Cmd, req_data = ReqPackage}),
   case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
@@ -151,36 +145,30 @@ handle_info({send, Package}, #{wsc_send_actor_pid := Pid, ws_addr := WsAddr, poo
       Pid ! {send, Package},
       {noreply, State};
     _ ->
-      case wsc_common_send_actor:start_link({PoolId, WsAddr}) of
-        {ok, NewPid} ->
-          NewPid ! {send, Package},
-          {noreply, #{wsc_send_actor_pid => NewPid, ws_addr => WsAddr, pool_id => PoolId}};
-        Any ->
-          ?WRITE_LOG("link_exception", {Any, cast, Package}),
-          {noreply, State}
-      end
+      ?WRITE_LOG("link_exception", {send, Package}),
+      {noreply, State}
   end;
-handle_info({reconnect, Addr}, #{wsc_send_actor_pid := Pid, ws_addr := WsAddr, pool_id := PoolId} = State) ->
-  ?LOG({info, Addr}),
-  case Addr of
-    WsAddr ->
-      {noreply, State};
-    _ ->
-      case erlang:is_pid(Pid) andalso erlang:is_process_alive(Pid) of
-        true ->
-          Pid ! close,
-          ok;
-        _ ->
-          ok
-      end,
-      case wsc_common_send_actor:start_link({PoolId, Addr}) of
-        {ok, NewPid} ->
-          {noreply, #{wsc_send_actor_pid => NewPid, ws_addr => Addr, pool_id => PoolId}};
-        Any ->
-          ?WRITE_LOG("reconnect_exception", {Any, Addr}),
-          {noreply, State}
-      end
-  end;
+%%handle_info({reconnect, Addr}, #{wsc_send_actor_pid := Pid, ws_addr := WsAddr, pool_id := PoolId} = State) ->
+%%  ?LOG({info, Addr}),
+%%  case Addr of
+%%    WsAddr ->
+%%      {noreply, State};
+%%    _ ->
+%%      case erlang:is_pid(Pid) andalso erlang:is_process_alive(Pid) of
+%%        true ->
+%%          Pid ! close,
+%%          ok;
+%%        _ ->
+%%          ok
+%%      end,
+%%      case wsc_common_send_actor:start_link({PoolId, Addr}) of
+%%        {ok, NewPid} ->
+%%          {noreply, #{wsc_send_actor_pid => NewPid, ws_addr => Addr, pool_id => PoolId}};
+%%        Any ->
+%%          ?WRITE_LOG("reconnect_exception", {Any, Addr}),
+%%          {noreply, State}
+%%      end
+%%  end;
 %%	% {stop, normal, gs_tcp_state}.
 %%  {noreply, State};
 %%  {noreply, State};
@@ -206,17 +194,17 @@ handle_info(Info, State) ->
 % Description: Shutdown the server
 % Returns: any (ignored by gen_server)
 % --------------------------------------------------------------------
-terminate(_Reason, #{wsc_send_actor_pid := Pid} = State) ->
-  ?LOG({stop, State, Pid, self()}),
-%%  case erlang:is_pid(Pid) andalso erlang:is_process_alive(Pid) of
-%%    true ->
-%%      Pid ! close,
-%%      ok;
-%%    _ ->
-%%      ok
-%%  end,
-  ?WRITE_LOG("call_actor_stop", {close, State}),
-  ok;
+%%terminate(_Reason, #{wsc_send_actor_pid := Pid} = State) ->
+%%  ?LOG({stop, State, Pid, self()}),
+%%%%  case erlang:is_pid(Pid) andalso erlang:is_process_alive(Pid) of
+%%%%    true ->
+%%%%      Pid ! close,
+%%%%      ok;
+%%%%    _ ->
+%%%%      ok
+%%%%  end,
+%%  ?WRITE_LOG("call_actor_stop", {close, State}),
+%%  ok;
 terminate(_Reason, State) ->
   ?WRITE_LOG("call_actor_stop1", {close, State}),
   ?LOG({stop, State}),

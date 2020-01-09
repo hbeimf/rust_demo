@@ -32,7 +32,7 @@ start_link({PoolId, WsAddr}) ->
 
 
 
-init([{PoolId, WsAddr}|_], _ConnState) ->
+init([{PoolId, WsAddr} | _], _ConnState) ->
   ?WRITE_LOG("send_actor", {start, PoolId, WsAddr}),
   State = #{pool_id => PoolId, ws_addr => WsAddr},
   {ok, State}.
@@ -44,43 +44,14 @@ init([{PoolId, WsAddr}|_], _ConnState) ->
 %     {close, <<>>, "done"};
 
 websocket_handle({binary, CurrentPackage}, _ConnState, State) ->
-  % io:format("Client received binary here ~p~n", [Bin]),
-  % Decode = binary_to_term(CurrentPackage),
-  % {From, _Cmd, Payload} = glib_pb:decode_RpcPackage(CurrentPackage),
-
-  % {From, Cmd, Payload} = binary_to_term(CurrentPackage),
-  % -record(reply, {
-  % 	from,
-  %     reply_code,
-  %     reply_data
-  % }).
-
-  #reply{from = From, reply_code = _Cmd, reply_data = Payload} = binary_to_term(CurrentPackage),
-
-  % ?LOG({From, Cmd, Payload}),
-
-  safe_reply(From, Payload),
-
-  % case Cmd > 2000 of
-  %     true ->
-  %         From = binary_to_term(base64:decode(Key)),
-  %         ?LOG({receive_binary, CurrentPackage, {From, Cmd, binary_to_term(Payload)}}),
-
-  %         safe_reply(From, Payload),
-  %         ok;
-  %     _ ->
-  %         ?LOG({receive_binary, CurrentPackage, {binary_to_term(base64:decode(Key)), Cmd, binary_to_term(Payload)}}),
-  %         ok
-  % end,
-
-  % ?LOG({"binary recv: ", CurrentPackage}),
-  % PackageBin = <<LastPackage/binary, CurrentPackage/binary>>,
-  % case parse_package_from_gwc:parse_package(PackageBin, State) of
-  %     {ok, waitmore, NextBin} ->
-  %         {ok, State#state{data = NextBin}};
-  %     _ ->
-  %         {close, <<>>, "done"}
-  % end;
+  case binary_to_term(CurrentPackage) of
+    #reply{from = From, reply_code = _Cmd, reply_data = Payload} ->
+      safe_reply(From, Payload),
+      ok;
+    Any ->
+      ?LOG(Any),
+      ok
+  end,
   {ok, State};
 websocket_handle(Msg, _ConnState, State) ->
   ?LOG({msg, Msg}),

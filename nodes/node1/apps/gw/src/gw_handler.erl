@@ -27,62 +27,44 @@ init({tcp, http}, _Req, _Opts) ->
   {upgrade, protocol, cowboy_websocket}.
 
 websocket_init(_TransportName, Req, _Opts) ->
-  % erlang:start_timer(1000, self(), <<"Hello!">>),
-  % uid=0,
-  % islogin = false,
-  % stype =0,
-  % sid=0,
-  % data
-  % State = #state{uid = 0, islogin = false, stype = 0, sid = 0, data= <<>>},
-  % State = #state_game_server{proxy_id = 0, data= <<>>},
   State = ok,
   {ok, Req, State}.
 
-% websocket_handle({text, Msg}, Req, {_, Uid} = State) ->
-% 	?LOG({Uid, Msg}),
-% 	Clients = select(Uid),
-% 	?LOG(Clients),
-% 	broadcast(Clients, Msg),
-% 	{ok, Req, State};
-% {reply, {text, << "That's what she said! ", Msg/binary >>}, Req, State};
-
-
 websocket_handle({binary, Package}, Req, State) ->
-  % ?LOG({"binary recv: ", Package}),
-  % R = glibpack:unpackage(Package),
-  % ?LOG({unpackage,  R}),
-
-%%  gw_action:action(Package),
-
   case binary_to_term(Package) of
     #reply{from = From, reply_code = _Cmd, reply_data = Payload} ->
       safe_reply(From, Payload),
-      ok;
-    Any ->
-%%      ?LOG(Any),
-      gw_action:action(Package),
-      ok
-  end,
-  {ok, Req, State};
+      {ok, Req, State};
+    _Any ->
+      case gw_action:action(Package) of
+        {update_state, NewState} ->
+          {ok, Req, NewState};
+        Any ->
+          ?LOG(Any),
+          {ok, Req, State}
+      end
+  end;
 websocket_handle(Data, Req, State) ->
   ?LOG({"XXy", Data}),
   {ok, Req, State}.
 
-% websocket_info({broadcast, Msg}, Req, {_, Uid} = State) ->
-% 	?LOG({broadcast, Msg}),
-% 	{reply, {text, << "That's what she said! ", Msg/binary >>}, Req, State};
 websocket_info({reply, Reply}, Req, State) ->
   {reply, {binary, term_to_binary(Reply)}, Req, State};
 websocket_info({send, Package}, Req, State) ->
   {reply, {binary, Package}, Req, State};
 
 websocket_info({timeout, _Ref, Msg}, Req, State) ->
-  % erlang:start_timer(1000, self(), <<"How' you doin'?">>),
   {reply, {text, Msg}, Req, State};
 websocket_info(_Info, Req, State) ->
   {ok, Req, State}.
 
-websocket_terminate(_Reason, _Req, _State) ->
+websocket_terminate(_Reason, _Req, #{pool_id := PoolId, table_pools_id := Id} = State) ->
+  ?LOG({close, State}),
+  table_pools:delete(Id),
+  pools:update(PoolId),
+  ok;
+websocket_terminate(_Reason, _Req, State) ->
+  ?LOG({close, State}),
   ok.
 
 safe_reply(undefined, _Value) ->

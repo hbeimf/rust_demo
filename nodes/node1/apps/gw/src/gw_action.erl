@@ -20,8 +20,7 @@
 
 action(Package) ->
   #request{from = From, req_cmd = Cmd, req_data = ReqPackage} = binary_to_term(Package),
-  action(Cmd, ReqPackage, From),
-  ok.
+  action(Cmd, ReqPackage, From).
 
 action(ping, Req, From) ->
   ?LOG({ping, Req, From}),
@@ -45,7 +44,7 @@ action(register_gw, RegisterConfig, From) ->
   #{cluster_id := ClusterId,node_id := NodeId,size := Size, work_id := WorkId} = RegisterConfig,
   table_pools:add({ClusterId, NodeId, WorkId}, Size, self(), ClusterId),
   pools:create_pool(ClusterId),
-  ok;
+  {update_state, #{table_pools_id => {ClusterId, NodeId, WorkId}, pool_id => ClusterId}};
 
 action(Cmd, ReqPackage, From) ->
   ?LOG({Cmd, ReqPackage, From}),

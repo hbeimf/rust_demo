@@ -59,7 +59,7 @@ children(Pid) ->
   ignore |
   {error, Reason :: term()}).
 init([{PoolId}|_]) ->
-  ?LOG(PoolId),
+%%  ?LOG(PoolId),
 %%  WsAddr = pools:pool_addr(PoolId),
   PoolSpecs = {pools:pool_name(PoolId),{poolboy,start_link,
     [[{name,{local,pools:pool_name(PoolId)}},

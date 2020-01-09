@@ -50,7 +50,7 @@ update(PoolId) ->
     fun({_, Pid, _, _})->
       Pid ! update
     end, Works),
-  ?LOG(Works),
+%%  ?LOG(Works),
   ok.
 
 stop_pool(PoolId) ->
@@ -367,7 +367,7 @@ req(Cmd, Req) ->
   ReqPackage.
 
 get_pids(PoolId) ->
-  ?LOG(PoolId),
+%%  ?LOG(PoolId),
   PoolList = table_pools:select(PoolId),
   lists:foldl(
     fun(Pool, Reply) ->

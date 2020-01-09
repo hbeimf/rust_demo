@@ -72,7 +72,7 @@ init([[{PoolId}|_]|_]) ->
 
   % {ok, #{ws_pid => Pid}}.
   Pids = pools:get_pids(PoolId),
-  ?LOG(Pids),
+%%  ?LOG(Pids),
 
   {ok, #{pids => Pids, pool_id => PoolId}}.
 % --------------------------------------------------------------------
@@ -189,7 +189,7 @@ handle_info(stop, State) ->
   ?WRITE_LOG("call_actor_st", {stop, State}),
   {stop, normal, State};
 handle_info(update, #{pool_id := PoolId} = State) ->
-  ?LOG({update, State}),
+%%  ?LOG({update, State}),
 %%  #{pids => Pids, pool_id => PoolId}
   Pids = pools:get_pids(PoolId),
   State1 = maps:update(pids, Pids, State),

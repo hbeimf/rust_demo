@@ -86,19 +86,8 @@ init([[{PoolId}|_]|_]) ->
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
 
-handle_call({call, Cmd, ReqPackage}, From, #{wsc_send_actor_pid := Pid, ws_addr := WsAddr, pool_id := PoolId} = State) ->
-  % Key = base64:encode(term_to_binary(From)),
-  % Package = glib_pb:encode_RpcPackage(Key, Cmd, ReqPackage),
-  % Package = term_to_binary({Key, Cmd, ReqPackage}),
-  % Package = term_to_binary({From, Cmd, ReqPackage}),
+handle_call({call, Cmd, ReqPackage}, From, #{pids := [Pid|_Pids], pool_id := PoolId} = State) ->
 
-  % Package = term_to_binary(#{from => From, cmd => Cmd, req => ReqPackage}),
-  % Opts1 = #server_opts{port=80}.
-  % -record(request, {
-  % 	from,
-  % 	req_cmd,
-  % 	req_data
-  % }).
   Package = term_to_binary(#request{from = From, req_cmd = Cmd, req_data = ReqPackage}),
 
   case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
@@ -106,15 +95,9 @@ handle_call({call, Cmd, ReqPackage}, From, #{wsc_send_actor_pid := Pid, ws_addr 
       Pid ! {send, Package},
       {noreply, State};
     _ ->
-      case wsc_common_send_actor:start_link({PoolId, WsAddr}) of
-        {ok, NewPid} ->
-          NewPid ! {send, Package},
-          {noreply, #{wsc_send_actor_pid => NewPid, ws_addr => WsAddr, pool_id => PoolId}};
-        _ ->
-          ?WRITE_LOG("link_exception", {call, Cmd, ReqPackage}),
-          Reply = {false, wsc_send_actor_exception},
-          {reply, Reply, State}
-      end
+      ?WRITE_LOG("link_exception", {call, Cmd, ReqPackage}),
+      Reply = false,
+      {reply, Reply, State}
   end;
 handle_call(get_send_pid, _From, #{wsc_send_actor_pid := Pid} = State) ->
 %%  Reply = {send_pid, Pid},

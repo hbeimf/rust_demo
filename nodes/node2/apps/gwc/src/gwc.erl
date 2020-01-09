@@ -13,7 +13,7 @@
 -include_lib("glib/include/log.hrl").
 -include_lib("sys_log/include/write_log.hrl").
 
-ping() ->
+ping_pong() ->
   PoolId = 1,
   ReqPackage = ping,
   R = wsc_common:call(PoolId, ping, ReqPackage),
@@ -29,7 +29,7 @@ call_fun() ->
 
 
 
-cast() ->
+ping() ->
   Cmd = ping,
   Req = {cast_ping},
   PoolId = 1,

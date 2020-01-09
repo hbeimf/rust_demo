@@ -27,8 +27,14 @@ action(Package) ->
 % }).
 action(ping, Req, From) ->
   ?LOG({Req, From}),
-  Reply = #reply{from = From, reply_code = 1001, reply_data = pong},
-  self() ! {reply, Reply},
+  case From of
+    null ->
+      ok;
+    _ ->
+      Reply = #reply{from = From, reply_code = 1001, reply_data = pong},
+      self() ! {reply, Reply},
+      ok
+  end,
   ok;
 action(call_fun, {Mod, F, Params}, From) ->
 %%  Reply = Mon:F(),

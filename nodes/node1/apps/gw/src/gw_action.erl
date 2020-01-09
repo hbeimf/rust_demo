@@ -29,6 +29,9 @@ action(Package) ->
 %     reply_code,
 %     reply_data
 % }).
+action(cast_ping, Req, From) ->
+  ?LOG({cast_ping, Req, From, glib:date_str()}),
+  ok;
 action(ping, _, From) ->
   Reply = #reply{from = From, reply_code = 1001, reply_data = pong},
   self() ! {reply, Reply},

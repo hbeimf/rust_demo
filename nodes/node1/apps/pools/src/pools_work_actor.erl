@@ -85,9 +85,12 @@ init([[{PoolId}|_]|_]) ->
 %          {stop, Reason, Reply, gs_tcp_state}   | (terminate/2 is called)
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
-
-handle_call({call, Cmd, ReqPackage}, From, #{pids := [Pid|_Pids], pool_id := _PoolId} = State) ->
-
+handle_call({call, Cmd, ReqPackage}, _From, #{pids := [], pool_id := _PoolId} = State) ->
+  ?WRITE_LOG("no_link_exception", {call, Cmd, ReqPackage}),
+  Reply = false,
+  {reply, Reply, State};
+handle_call({call, Cmd, ReqPackage}, From, #{pids := Pids, pool_id := _PoolId} = State) ->
+  [Pid|_] = glib:shuffle_list(Pids),
   Package = term_to_binary(#request{from = From, req_cmd = Cmd, req_data = ReqPackage}),
 
   case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
@@ -95,13 +98,13 @@ handle_call({call, Cmd, ReqPackage}, From, #{pids := [Pid|_Pids], pool_id := _Po
       Pid ! {send, Package},
       {noreply, State};
     _ ->
-      ?WRITE_LOG("link_exception", {call, Cmd, ReqPackage}),
+      ?WRITE_LOG("link3_exception", {call, Cmd, ReqPackage}),
       Reply = false,
       {reply, Reply, State}
   end;
-handle_call(get_send_pid, _From, #{pids := Pid} = State) ->
+handle_call(get_send_pid, _From, #{pids := Pids} = State) ->
 %%  Reply = {send_pid, Pid},
-  {reply, Pid, State};
+  {reply, Pids, State};
 handle_call(_Request, _From, State) ->
   Reply = ok,
   {reply, Reply, State}.
@@ -114,15 +117,18 @@ handle_call(_Request, _From, State) ->
 %          {noreply, gs_tcp_state, Timeout} |
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
-handle_cast({send, Cmd, ReqPackage}, #{pids := [Pid|_Pids], pool_id := _PoolId} = State) ->
-%%  ?LOG({send, Cmd, ReqPackage}),
+handle_cast({send, Cmd, ReqPackage}, #{pids := [], pool_id := PoolId} = State) ->
+  ?WRITE_LOG("send_no_link_exception", {call, Cmd, ReqPackage, PoolId}),
+  {noreply, State};
+handle_cast({send, Cmd, ReqPackage}, #{pids := Pids, pool_id := _PoolId} = State) ->
+  [Pid|_] = glib:shuffle_list(Pids),
   Package = term_to_binary(#request{from = null, req_cmd = Cmd, req_data = ReqPackage}),
   case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
     true ->
       Pid ! {send, Package},
       {noreply, State};
     _ ->
-      ?WRITE_LOG("link_exception", { cast, Cmd, Package}),
+      ?WRITE_LOG("link2_exception", { cast, Cmd, Package}),
       {noreply, State}
   end;
 handle_cast(Msg, State) ->
@@ -137,15 +143,17 @@ handle_cast(Msg, State) ->
 %          {stop, Reason, gs_tcp_state}            (terminate/2 is called)
 % --------------------------------------------------------------------
 % % erlang:send_after(?TIMEOUT, self(), check_state), %
+
+handle_info({send, Package}, #{pids := [], pool_id := PoolId} = State) ->
+  ?WRITE_LOG("send1_no_link_exception", {send, Package, PoolId}),
+  {noreply, State};
 handle_info({send, Package}, #{pids := [Pid|_Pids], pool_id := _PoolId} = State) ->
-%%  ?LOG({send, Cmd, ReqPackage}),
-%%  Package = term_to_binary(#request{from = null, req_cmd = Cmd, req_data = ReqPackage}),
   case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
     true ->
       Pid ! {send, Package},
       {noreply, State};
     _ ->
-      ?WRITE_LOG("link_exception", {send, Package}),
+      ?WRITE_LOG("link1_exception", {send, Package}),
       {noreply, State}
   end;
 %%handle_info({reconnect, Addr}, #{wsc_send_actor_pid := Pid, ws_addr := WsAddr, pool_id := PoolId} = State) ->

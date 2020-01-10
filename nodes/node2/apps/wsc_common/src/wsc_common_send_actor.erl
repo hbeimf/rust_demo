@@ -76,8 +76,14 @@ websocket_info({text, Txt}, _ConnState, State) ->
   {reply, {text, Txt}, State}.
 
 websocket_terminate(_Reason, _ConnState, #{sup_pid := SupPid} = State) ->
-  SupPid ! link_closed,
-  ?WRITE_LOG("wsc_common_link_closed", {close, State}),
+  case erlang:is_pid(SupPid) andalso erlang:is_process_alive(SupPid) of
+    true ->
+      SupPid ! link_closed,
+      ok;
+    _ ->
+      ok
+  end,
+%%  ?WRITE_LOG("wsc_common_link_closed", {close, State}),
   ok;
 websocket_terminate(_Reason, _ConnState, State) ->
   % io:format("~nClient closed in state ~p wih reason ~p~n", [State, Reason]),

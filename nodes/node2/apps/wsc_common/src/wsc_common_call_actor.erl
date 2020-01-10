@@ -28,6 +28,8 @@
 -define(TIMER_SECONDS, 30000).  %
 -define(TIMEOUT, 1000).
 
+-define(reconnect_time, 1000).
+
 % --------------------------------------------------------------------
 % External exports
 % --------------------------------------------------------------------
@@ -93,16 +95,19 @@ handle_call({call, Cmd, ReqPackage}, From, #{wsc_send_actor_pid := Pid
 
   case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
     true ->
+      ?LOG(call),
       Pid ! {send, Package},
       {noreply, State};
     _ ->
       case wsc_common_send_actor:start_link({PoolId, WsAddr, Callback, self()}) of
         {ok, NewPid} ->
+          ?LOG(call1),
           send_init(NewPid, InitSend),
           NewPid ! {send, Package},
           State1 = maps:put(wsc_send_actor_pid, NewPid, State),
           {noreply, State1};
         _ ->
+          ?LOG(call2),
           ?WRITE_LOG("call_link_exception", {call, Cmd, ReqPackage}),
           Reply = {false, wsc_send_actor_exception},
           {reply, Reply, State}
@@ -178,19 +183,24 @@ handle_info({send, Package}, #{wsc_send_actor_pid := Pid
 %%init_send
 handle_info({init_send, Package}, #{wsc_send_actor_pid := Pid
   , ws_addr := WsAddr, pool_id := PoolId, call_back := Callback, init_send := _InitSend} = State) ->
-
+  ?LOG(State),
   case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
     true ->
+      ?LOG(p1),
       send_init(Pid, Package),
       State1 = maps:put(init_send, Package, State),
       {noreply, State1};
     _ ->
       case wsc_common_send_actor:start_link({PoolId, WsAddr, Callback, self()}) of
         {ok, NewPid} ->
+          ?LOG(p2),
           send_init(NewPid, Package),
           State1 = maps:put(init_send, Package, State),
-          {noreply, State1};
+          State2 = maps:put(wsc_send_actor_pid, NewPid, State1),
+          ?LOG(State2),
+          {noreply, State2};
         Any ->
+          ?LOG(p3),
           ?WRITE_LOG("link_exception", {Any, cast, Package}),
           {noreply, State}
       end
@@ -228,9 +238,31 @@ handle_info(stop, State) ->
 	{stop, normal, State};
 
 %%link_closed
-handle_info(link_closed, State) ->
-
-  {noreply, State};
+handle_info(link_closed, #{wsc_send_actor_pid := Pid
+  , ws_addr := WsAddr, pool_id := PoolId, call_back := Callback, init_send := InitSend} = State) ->
+  ?LOG({link_closed, self(), State}),
+  case erlang:is_pid(Pid) andalso erlang:is_process_alive(Pid) of
+    true ->
+      ?LOG(h1),
+      {noreply, State};
+    _ ->
+      ?LOG(h2),
+%%      case wsc_common_send_actor:start_link({PoolId, WsAddr, Callback, self()}) of
+%%        {ok, NewPid} ->
+%%          ?LOG(h3),
+%%          send_init(NewPid, InitSend),
+%%          State1 = maps:put(wsc_send_actor_pid, NewPid, State),
+%%          {noreply, State1};
+%%        Any ->
+%%          ?LOG({h4, Any}),
+%%%%          ?WRITE_LOG("link_closed_reconnect_exception", {Any, WsAddr}),
+%%          %% 启动一个计时器，一会再重试，
+%%          erlang:send_after(?reconnect_time, self(), link_closed),
+%%          {noreply, State}
+%%      end
+      {noreply, State}
+  end;
+%%  {noreply, State};
 handle_info(Info, State) ->
   ?WRITE_LOG("call_actor_stop_123", {stop, Info, State}),
   ?LOG({info, Info}),
@@ -269,12 +301,19 @@ code_change(_OldVsn, State, _Extra) ->
 
 
 % priv
-
-
-send_init(_NewPid, null) ->
+send_init(_Pid, null) ->
+  ?LOG(call3),
   ok;
-send_init(NewPid, InitSend) ->
-  NewPid ! {send, InitSend},
+send_init(Pid, InitSend) ->
+  case erlang:is_pid(Pid) andalso erlang:is_process_alive(Pid) of
+    true ->
+      ?LOG(call4),
+      Pid ! {send, InitSend},
+      ok;
+    _ ->
+      ?LOG(call5),
+      ok
+  end,
   ok.
 
 

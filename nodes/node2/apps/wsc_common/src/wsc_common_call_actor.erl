@@ -66,6 +66,7 @@ start_link(Params) ->
 %          {stop, Reason}
 % --------------------------------------------------------------------
 init([[{PoolId, WsAddr, Callback}|_]|_]) ->
+  process_flag(trap_exit, true),
   ?WRITE_LOG("call_actor", {start, PoolId, WsAddr,Callback, self()}),
 %%  ?LOG(WsAddr),
   % erlang:send_after(?TIMEOUT, self(), check_state), %
@@ -247,22 +248,28 @@ handle_info(link_closed, #{wsc_send_actor_pid := Pid
       {noreply, State};
     _ ->
       ?LOG(h2),
-%%      case wsc_common_send_actor:start_link({PoolId, WsAddr, Callback, self()}) of
-%%        {ok, NewPid} ->
-%%          ?LOG(h3),
-%%          send_init(NewPid, InitSend),
-%%          State1 = maps:put(wsc_send_actor_pid, NewPid, State),
-%%          {noreply, State1};
-%%        Any ->
-%%          ?LOG({h4, Any}),
-%%%%          ?WRITE_LOG("link_closed_reconnect_exception", {Any, WsAddr}),
-%%          %% 启动一个计时器，一会再重试，
-%%          erlang:send_after(?reconnect_time, self(), link_closed),
-%%          {noreply, State}
-%%      end
-      {noreply, State}
+      case wsc_common_send_actor:start_link({PoolId, WsAddr, Callback, self()}) of
+        {ok, NewPid} ->
+          ?LOG(h3),
+          send_init(NewPid, InitSend),
+          State1 = maps:put(wsc_send_actor_pid, NewPid, State),
+          {noreply, State1};
+        Any ->
+          ?LOG({h4, Any}),
+%%          ?WRITE_LOG("link_closed_reconnect_exception", {Any, WsAddr}),
+          %% 启动一个计时器，一会再重试，
+          erlang:send_after(?reconnect_time, self(), link_closed),
+          {noreply, State}
+      end
+%%      {noreply, State}
   end;
 %%  {noreply, State};
+
+%%{info,{'EXIT',<0.732.0>,remote}}
+handle_info({'EXIT',Pid,remote}, State) ->
+  ?LOG({Pid, State}),
+  self() ! link_closed,
+  {noreply, State};
 handle_info(Info, State) ->
   ?WRITE_LOG("call_actor_stop_123", {stop, Info, State}),
   ?LOG({info, Info}),

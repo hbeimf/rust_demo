@@ -33,6 +33,7 @@ start_link({PoolId, WsAddr, CallBack, SupPid}) ->
 
 
 init([{PoolId, WsAddr, CallBack, SupPid} | _], _ConnState) ->
+  process_flag(trap_exit, true),
   ?WRITE_LOG("send_actor", {start, PoolId, WsAddr}),
   State = #{pool_id => PoolId, ws_addr => WsAddr, call_back => CallBack, sup_pid => SupPid},
   {ok, State}.
@@ -69,16 +70,24 @@ websocket_info({send, Bin}, _ConnState, State) ->
   % ?LOG({send, Bin}),
   {reply, {binary, Bin}, State};
 websocket_info(close, _ConnState, _State) ->
-  % ?LOG({close}),
+
+  ?LOG({close}),
   {close, <<>>, "done"};
 websocket_info({text, Txt}, _ConnState, State) ->
   % ?LOG({text, Txt}),
-  {reply, {text, Txt}, State}.
+  {reply, {text, Txt}, State};
+websocket_info(Info, _ConnState, State) ->
+  ?LOG(Info),
+  {ok, State}.
+
 
 websocket_terminate(_Reason, _ConnState, #{sup_pid := SupPid} = State) ->
+  ?LOG(close1),
   case erlang:is_pid(SupPid) andalso erlang:is_process_alive(SupPid) of
     true ->
-      SupPid ! link_closed,
+      ?LOG(close33),
+%%      SupPid ! link_closed,
+      ?LOG(close3),
       ok;
     _ ->
       ok
@@ -86,6 +95,7 @@ websocket_terminate(_Reason, _ConnState, #{sup_pid := SupPid} = State) ->
 %%  ?WRITE_LOG("wsc_common_link_closed", {close, State}),
   ok;
 websocket_terminate(_Reason, _ConnState, State) ->
+  ?LOG(close2),
   % io:format("~nClient closed in state ~p wih reason ~p~n", [State, Reason]),
   % ?LOG({ws_terminate}),
 %%  ?WRITE_LOG("wsc_close", {State}),

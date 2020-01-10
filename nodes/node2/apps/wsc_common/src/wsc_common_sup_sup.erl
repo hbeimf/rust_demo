@@ -66,7 +66,7 @@ init([{PoolId, Callback}|_]) ->
   PoolSpecs = {wsc_common:pool_name(PoolId),{poolboy,start_link,
     [[{name,{local,wsc_common:pool_name(PoolId)}},
       {worker_module,wsc_common_call_actor},
-      {size,1},
+      {size,10},
       {max_overflow,30}],
       [{PoolId, WsAddr, Callback}]]},
     permanent,5000,worker,

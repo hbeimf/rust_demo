@@ -36,6 +36,24 @@ call_fun() ->
   ?LOG(R),
   ok.
 
+call_fun(PoolId) ->
+%%  PoolId = 1,
+  ReqPackage = {glib, replace, ["helloworld", "world", " you"]},
+  R = pools:call(PoolId, call_fun, ReqPackage),
+  ?LOG(R),
+  ok.
+
+
+test_call() ->
+  lists:foreach(
+    fun(Id) ->
+      ?LOG({test, Id}),
+      call_fun(1),
+      call_fun(2),
+      ok
+    end, lists:seq(1, 100000)).
+
+
 
 ping() ->
   Cmd = ping,

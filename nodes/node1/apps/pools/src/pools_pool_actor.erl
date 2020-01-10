@@ -26,13 +26,22 @@
 
 -record(state, {}).
 
--export([start_pool/1]).
+-export([start_pool/1, maybe_stop_pool/1]).
+
+
+-include_lib("glib/include/log.hrl").
+-include_lib("sys_log/include/write_log.hrl").
+-include_lib("glib/include/rr.hrl").
 
 %%%===================================================================
 %%% API
 %%%===================================================================
 start_pool(PoolId) ->
   gen_server:cast(?MODULE, {start_pool, PoolId}).
+
+maybe_stop_pool(PoolId) ->
+  gen_server:cast(?MODULE, {maybe_stop_pool, PoolId}).
+
 %%--------------------------------------------------------------------
 %% @doc
 %% Starts the server
@@ -97,6 +106,21 @@ handle_call(_Request, _From, State) ->
   {stop, Reason :: term(), NewState :: #state{}}).
 handle_cast({start_pool, PoolId}, State) ->
   pools:dynamic_start_pool(PoolId),
+  {noreply, State};
+handle_cast({maybe_stop_pool, PoolId}, State) ->
+  ?LOG({maybe_stop_pool, PoolId}),
+  case pools:is_pool_alive(PoolId) of
+    true ->
+      case pools:can_stop_pool(PoolId) of
+        true ->
+          pools:stop_pool(PoolId);
+        _ ->
+          ok
+      end;
+    _ ->
+      ok
+  end,
+%%  pools:info(),
   {noreply, State};
 handle_cast(_Request, State) ->
   {noreply, State}.

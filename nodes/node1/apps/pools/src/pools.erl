@@ -51,7 +51,26 @@ update(PoolId) ->
       Pid ! update
     end, Works),
 %%  ?LOG(Works),
+  pools_pool_actor:maybe_stop_pool(PoolId),
   ok.
+
+can_stop_pool(PoolId) ->
+  PoolInfo = info(PoolId),
+  R = lists:foldl(
+    fun(#{size := Size}, Reply) ->
+      case Size of
+        0 ->
+          Reply;
+        _ ->
+          [false|Reply]
+      end
+    end, [], PoolInfo),
+  case R of
+    [] ->
+      true;
+    _ ->
+      false
+  end.
 
 stop_pool(PoolId) ->
   ?LOG(PoolId),
@@ -380,15 +399,22 @@ get_pids(PoolId) ->
       end
     end, [], PoolList).
 
+info(PoolId) ->
+  Info = info(),
+  PoolName = pool_name(PoolId),
+  PoolInfo = glib:get_by_key(PoolName, Info, []),
+  ?LOG(PoolInfo),
+  PoolInfo.
+
 info() ->
   Status = status(),
-  ?LOG(Status),
+%%  ?LOG(Status),
   Show = lists:map(
     fun({_, P, _}) ->
       {P, works_info(P)}
     end, Status),
-  ?LOG(Show),
-  ok.
+%%  ?LOG(Show),
+  Show.
 
 works_info(PoolId) ->
   Works = works(PoolId),
@@ -396,8 +422,8 @@ works_info(PoolId) ->
 
 works_info([], Reply) ->
   Reply;
-works_info([{_, Pid, _, _}|OtherWork], Reply) ->
-  Reply1 = [work_info(Pid)|Reply],
+works_info([{_, Pid, _, _} | OtherWork], Reply) ->
+  Reply1 = [work_info(Pid) | Reply],
   works_info(OtherWork, Reply1).
 
 

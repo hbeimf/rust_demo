@@ -47,7 +47,7 @@ update() ->
 update(PoolId) ->
   Works = works(PoolId),
   lists:foreach(
-    fun({_, Pid, _, _})->
+    fun({_, Pid, _, _}) ->
       Pid ! update
     end, Works),
 %%  ?LOG(Works),
@@ -374,8 +374,33 @@ get_pids(PoolId) ->
       Pid = table_pools:get_client(Pool, pid),
       case erlang:is_pid(Pid) andalso erlang:is_process_alive(Pid) of
         true ->
-          [Pid|Reply];
+          [Pid | Reply];
         _ ->
           Reply
       end
     end, [], PoolList).
+
+info() ->
+  Status = status(),
+  ?LOG(Status),
+  Show = lists:map(
+    fun({_, P, _}) ->
+      {P, works_info(P)}
+    end, Status),
+  ?LOG(Show),
+  ok.
+
+works_info(PoolId) ->
+  Works = works(PoolId),
+  works_info(Works, []).
+
+works_info([], Reply) ->
+  Reply;
+works_info([{_, Pid, _, _}|OtherWork], Reply) ->
+  Reply1 = [work_info(Pid)|Reply],
+  works_info(OtherWork, Reply1).
+
+
+work_info(Pid) ->
+  Pids = gen_server:call(Pid, get_send_pid),
+  #{work_pid => Pid, send_pids => Pids}.

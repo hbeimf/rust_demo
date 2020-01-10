@@ -1,18 +1,24 @@
-node1:
+c11:
 	rm config.ini
-	cp ./config.node1.ini ./config.ini
-	./rebar3 shell --name node21@127.0.0.1 --setcookie node2
+	cp ./config.c11.ini ./config.ini
+	./rebar3 shell --name c11@127.0.0.1 --setcookie c1_cookie
 
-node2:
+c12:
 	rm config.ini
-	cp ./config.node2.ini ./config.ini
-	./rebar3 shell --name node22@127.0.0.1 --setcookie node2
+	cp ./config.c12.ini ./config.ini
+	./rebar3 shell --name c12@127.0.0.1 --setcookie c1_cookie
 
 
-node3:
+c21:
 	rm config.ini
-	cp ./config.node3.ini ./config.ini
-	./rebar3 shell --name node23@127.0.0.1 --setcookie node2
+	cp ./config.c21.ini ./config.ini
+	./rebar3 shell --name c21@127.0.0.1 --setcookie c2_cookie
+
+
+c22:
+	rm config.ini
+	cp ./config.c22.ini ./config.ini
+	./rebar3 shell --name c22@127.0.0.1 --setcookie c2_cookie
 
 
 stop:

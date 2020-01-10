@@ -403,4 +403,4 @@ works_info([{_, Pid, _, _}|OtherWork], Reply) ->
 
 work_info(Pid) ->
   Pids = gen_server:call(Pid, get_send_pid),
-  #{work_pid => Pid, send_pids => Pids}.
+  #{work_pid => Pid, send_pids => Pids, size => erlang:length(Pids)}.

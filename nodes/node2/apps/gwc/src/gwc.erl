@@ -29,7 +29,10 @@ t_send(PoolId) ->
   ok.
 
 t_call() ->
-
+  PoolId = 1,
+  ReqPackage = {glib, replace, ["helloworld", "world", " you"]},
+  R = wsc_common:call(PoolId, call_fun, ReqPackage),
+  ?LOG(R),
   ok.
 
 

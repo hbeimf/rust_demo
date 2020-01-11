@@ -48,8 +48,9 @@ action(register_gw, RegisterConfig, From, _State) ->
 
 
 
-action(pub, Req, From, State) ->
+action(pub, {Cmd, Req}, From, #{pool_id := PoolId} = State) ->
   ?LOG({pub, Req, From, State}),
+  pools:cast_other(PoolId, Cmd, Req),
   ok;
 
 action(send, Req, From, State) ->

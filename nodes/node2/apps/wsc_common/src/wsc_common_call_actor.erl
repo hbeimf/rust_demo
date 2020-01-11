@@ -96,7 +96,7 @@ handle_call({call, Cmd, ReqPackage}, From, #{wsc_send_actor_pid := Pid
 
   case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
     true ->
-      ?LOG(call),
+      % ?LOG(call),
       Pid ! {send, Package},
       {noreply, State};
     _ ->

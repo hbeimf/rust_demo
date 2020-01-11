@@ -30,15 +30,15 @@ t_pub(PoolId, Id) ->
 t_call() ->
   lists:foreach(
     fun(Id) ->
-      ?LOG({call, Id}),
-      t_call(1)
+      % ?LOG({call, Id}),
+      t_call(1, Id)
     end, lists:seq(1, 1000)),
   ok.
-t_call(PoolId) ->
+t_call(PoolId, Id) ->
 %%  PoolId = 1,
   ReqPackage = {glib, replace, ["helloworld", "world", " you"]},
   R = wsc_common:call(PoolId, call_fun, ReqPackage),
-  ?LOG(R),
+  ?LOG({Id, R}),
   ok.
 
 

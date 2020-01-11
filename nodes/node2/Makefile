@@ -21,6 +21,13 @@ c22:
 	./rebar3 shell --name c22@127.0.0.1 --setcookie c2_cookie
 
 
+c23:
+	rm config.ini
+	cp ./config.c23.ini ./config.ini
+	./rebar3 shell --name c23@127.0.0.1 --setcookie c2_cookie
+
+
+
 stop:
 	ps -efww|grep xgn.node|grep -v grep|cut -c 9-15|xargs kill -9
 

@@ -27,17 +27,6 @@ t_pub(PoolId, Id) ->
   wsc_common:pub(PoolId, Cmd, {pub, node(), Id, glib:date_str()}),
   ok.
 
-t_send() ->
-  lists:foreach(
-    fun(Id) ->
-      ?LOG({send, Id}),
-      t_send(1)
-    end, lists:seq(1, 1000)),
-  ok.
-t_send(PoolId) ->
-  wsc_common:send(PoolId, {send, test}),
-  ok.
-
 t_call() ->
   lists:foreach(
     fun(Id) ->
@@ -53,8 +42,17 @@ t_call(PoolId) ->
   ok.
 
 
-
-
+%% ===============================
+t_send() ->
+  lists:foreach(
+    fun(Id) ->
+      ?LOG({send, Id}),
+      t_send(1)
+    end, lists:seq(1, 1000)),
+  ok.
+t_send(PoolId) ->
+  wsc_common:send(PoolId, {send, test}),
+  ok.
 
 ping_pong() ->
   PoolId = 1,

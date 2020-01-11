@@ -121,12 +121,14 @@ handle_cast({send, Cmd, ReqPackage}, #{pids := [], pool_id := PoolId} = State) -
   ?WRITE_LOG("send_no_link_exception", {call, Cmd, ReqPackage, PoolId}),
   {noreply, State};
 handle_cast({send, Cmd, ReqPackage}, #{pids := Pids, pool_id := _PoolId} = State) ->
-  [Pid|_] = glib:shuffle_list(Pids),
+  % [Pid|_] = glib:shuffle_list(Pids),
+  [Pid|OtherPid] = Pids,
+  State1 = new_state(Pid, OtherPid, State),
   Package = term_to_binary(#request{from = null, req_cmd = Cmd, req_data = ReqPackage}),
   case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
     true ->
       Pid ! {send, Package},
-      {noreply, State};
+      {noreply, State1};
     _ ->
       ?WRITE_LOG("link2_exception", { cast, Cmd, Package}),
       {noreply, State}
@@ -229,7 +231,9 @@ code_change(_OldVsn, State, _Extra) ->
 
 % priv
 
-
+new_state(Pid, OtherPid, State) -> 
+  Pids = OtherPid ++ [Pid],
+  maps:put(pids, Pids, State).
 
 
 

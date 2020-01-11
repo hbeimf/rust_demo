@@ -16,6 +16,12 @@
 
 -define(TIMEOUT, 5000).
 
+pub(PoolId, Package) ->
+  cast(PoolId, pub, Package).
+
+send(PoolId, Package) ->
+  cast(PoolId, send, Package).
+
 start_pool() ->
   _Configs = config_list(),
   ok.

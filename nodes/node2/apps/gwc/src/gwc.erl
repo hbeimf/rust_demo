@@ -13,6 +13,28 @@
 -include_lib("glib/include/log.hrl").
 -include_lib("sys_log/include/write_log.hrl").
 
+
+t_pub() ->
+  t_pub(1).
+t_pub(PoolId) ->
+  wsc_common:pub(PoolId, {pub, test}),
+  ok.
+
+t_send() ->
+  t_send(1),
+  ok.
+t_send(PoolId) ->
+  wsc_common:send(PoolId, {send, test}),
+  ok.
+
+t_call() ->
+
+  ok.
+
+
+
+
+
 ping_pong() ->
   PoolId = 1,
   ReqPackage = ping,

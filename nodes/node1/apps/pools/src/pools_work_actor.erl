@@ -90,13 +90,16 @@ handle_call({call, Cmd, ReqPackage}, _From, #{pids := [], pool_id := _PoolId} = 
   Reply = false,
   {reply, Reply, State};
 handle_call({call, Cmd, ReqPackage}, From, #{pids := Pids, pool_id := _PoolId} = State) ->
-  [Pid|_] = glib:shuffle_list(Pids),
+  % [Pid|_] = glib:shuffle_list(Pids),
+  [Pid|OtherPid] = Pids,
+  State1 = new_state(Pid, OtherPid, State),
+  
   Package = term_to_binary(#request{from = From, req_cmd = Cmd, req_data = ReqPackage}),
 
   case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
     true ->
       Pid ! {send, Package},
-      {noreply, State};
+      {noreply, State1};
     _ ->
       ?WRITE_LOG("link3_exception", {call, Cmd, ReqPackage}),
       Reply = false,

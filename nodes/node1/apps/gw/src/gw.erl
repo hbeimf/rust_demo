@@ -44,6 +44,10 @@ call_fun(PoolId) ->
   ok.
 
 
+call_other() -> 
+  ReqPackage = {glib, replace, ["helloworld", "world", " you"]},
+  pools:call_other(1, call_fun, ReqPackage).
+
 test_call() ->
   lists:foreach(
     fun(Id) ->

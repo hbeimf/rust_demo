@@ -18,13 +18,13 @@ t_pub() ->
   lists:foreach(
     fun(Id) ->
       ?LOG({pub, Id}),
-      t_pub(1)
-    end, lists:seq(1, 1000)),
+      t_pub(1, Id)
+    end, lists:seq(1, 100)),
   ok.
 
-t_pub(PoolId) ->
+t_pub(PoolId, Id) ->
   Cmd = test_pub_cmd,
-  wsc_common:pub(PoolId, Cmd, {pub, test, glib:date_str()}),
+  wsc_common:pub(PoolId, Cmd, {pub, Id, glib:date_str()}),
   ok.
 
 t_send() ->

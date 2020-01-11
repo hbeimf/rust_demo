@@ -46,5 +46,5 @@ action(call_fun, {Mod, F, Params}, From) ->
   ok;
 
 action(Cmd, ReqPackage, From) ->
-  ?LOG({Cmd, ReqPackage, From}),
+  ?LOG({Cmd, ReqPackage, From, self()}),
   ok.

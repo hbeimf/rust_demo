@@ -72,9 +72,10 @@ init([[{PoolId}|_]|_]) ->
 
   % {ok, #{ws_pid => Pid}}.
   Pids = pools:get_pids(PoolId),
+  Pids1 = glib:shuffle_list(Pids),
 %%  ?LOG(Pids),
 
-  {ok, #{pids => Pids, pool_id => PoolId}}.
+  {ok, #{pids => Pids1, pool_id => PoolId}}.
 % --------------------------------------------------------------------
 % Function: handle_call/3
 % Description: Handling call messages
@@ -93,7 +94,7 @@ handle_call({call, Cmd, ReqPackage}, From, #{pids := Pids, pool_id := _PoolId} =
   % [Pid|_] = glib:shuffle_list(Pids),
   [Pid|OtherPid] = Pids,
   State1 = new_state(Pid, OtherPid, State),
-  
+
   Package = term_to_binary(#request{from = From, req_cmd = Cmd, req_data = ReqPackage}),
 
   case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of

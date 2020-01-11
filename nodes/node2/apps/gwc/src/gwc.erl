@@ -15,21 +15,38 @@
 
 
 t_pub() ->
-  t_pub(1).
+  lists:foreach(
+    fun(Id) ->
+      ?LOG({pub, Id}),
+      t_pub(1)
+    end, lists:seq(1, 1000)),
+  ok.
+
 t_pub(PoolId) ->
   Cmd = test_pub_cmd,
-  wsc_common:pub(PoolId, Cmd, {pub, test}),
+  wsc_common:pub(PoolId, Cmd, {pub, test, glib:date_str()}),
   ok.
 
 t_send() ->
-  t_send(1),
+  lists:foreach(
+    fun(Id) ->
+      ?LOG({send, Id}),
+      t_send(1)
+    end, lists:seq(1, 1000)),
   ok.
 t_send(PoolId) ->
   wsc_common:send(PoolId, {send, test}),
   ok.
 
 t_call() ->
-  PoolId = 1,
+  lists:foreach(
+    fun(Id) ->
+      ?LOG({call, Id}),
+      t_call(1)
+    end, lists:seq(1, 1000)),
+  ok.
+t_call(PoolId) ->
+%%  PoolId = 1,
   ReqPackage = {glib, replace, ["helloworld", "world", " you"]},
   R = wsc_common:call(PoolId, call_fun, ReqPackage),
   ?LOG(R),

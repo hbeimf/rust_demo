@@ -24,7 +24,7 @@ t_pub() ->
 
 t_pub(PoolId, Id) ->
   Cmd = test_pub_cmd,
-  wsc_common:pub(PoolId, Cmd, {pub, Id, glib:date_str()}),
+  wsc_common:pub(PoolId, Cmd, {pub, node(), Id, glib:date_str()}),
   ok.
 
 t_send() ->

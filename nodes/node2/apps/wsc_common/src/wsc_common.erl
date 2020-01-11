@@ -16,8 +16,8 @@
 
 -define(TIMEOUT, 5000).
 
-pub(PoolId, Package) ->
-  cast(PoolId, pub, Package).
+pub(PoolId, Cmd, Package) ->
+  cast(PoolId, pub, {Cmd, Package}).
 
 send(PoolId, Package) ->
   cast(PoolId, send, Package).

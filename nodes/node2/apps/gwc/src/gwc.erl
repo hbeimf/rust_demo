@@ -17,7 +17,8 @@
 t_pub() ->
   t_pub(1).
 t_pub(PoolId) ->
-  wsc_common:pub(PoolId, {pub, test}),
+  Cmd = test_pub_cmd,
+  wsc_common:pub(PoolId, Cmd, {pub, test}),
   ok.
 
 t_send() ->

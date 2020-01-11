@@ -145,7 +145,7 @@ set_config_list(PoolId, Addr) ->
 
 % {send, Cmd, ReqPackage}
 cast(PoolId, Cmd, Package) ->
-  ?LOG({cast, Cmd, Package}),
+%%  ?LOG({cast, Cmd, Package}),
   case is_pool_alive(PoolId) of
     true ->
       poolboy:transaction(wsc_common:pool_name(PoolId), fun(Worker) ->

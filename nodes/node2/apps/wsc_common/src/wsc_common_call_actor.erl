@@ -131,7 +131,7 @@ handle_call(_Request, _From, State) ->
 % --------------------------------------------------------------------
 handle_cast({send, Cmd, ReqPackage}, #{wsc_send_actor_pid := Pid
   , ws_addr := WsAddr, pool_id := PoolId, call_back := Callback, init_send := InitSend} = State) ->
-  ?LOG({send, Cmd, ReqPackage}),
+%%  ?LOG({send, Cmd, ReqPackage}),
   Package = term_to_binary(#request{from = null, req_cmd = Cmd, req_data = ReqPackage}),
   case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
     true ->

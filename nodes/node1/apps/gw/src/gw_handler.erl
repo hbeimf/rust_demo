@@ -36,11 +36,11 @@ websocket_handle({binary, Package}, Req, State) ->
       safe_reply(From, Payload),
       {ok, Req, State};
     _Any ->
-      case gw_action:action(Package) of
+      case gw_action:action(Package, State) of
         {update_state, NewState} ->
           {ok, Req, NewState};
-        Any ->
-          ?LOG(Any),
+        _ ->
+%%          ?LOG(Any),
           {ok, Req, State}
       end
   end;

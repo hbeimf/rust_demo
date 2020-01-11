@@ -40,7 +40,7 @@ call_fun(PoolId) ->
 %%  PoolId = 1,
   ReqPackage = {glib, replace, ["helloworld", "world", " you"]},
   R = pools:call(PoolId, call_fun, ReqPackage),
-  ?LOG(R),
+%%  ?LOG(R),
   ok.
 
 
@@ -51,7 +51,7 @@ test_call() ->
       call_fun(1),
       call_fun(2),
       ok
-    end, lists:seq(1, 100000)).
+    end, lists:seq(1, 1000000)).
 
 
 

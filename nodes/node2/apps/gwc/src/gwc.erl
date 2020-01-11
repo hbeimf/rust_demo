@@ -32,7 +32,7 @@ t_call() ->
     fun(Id) ->
       % ?LOG({call, Id}),
       t_call(1, Id)
-    end, lists:seq(1, 1000)),
+    end, lists:seq(1, 1000000)),
   ok.
 t_call(PoolId, Id) ->
 %%  PoolId = 1,

@@ -1,7 +1,11 @@
 run1:
+	rm config.ini
+	cp ./config.hub1.ini ./config.ini
 	./rebar3 shell --name run1@127.0.0.1 --setcookie node1_cookie
 
 run2:
+	rm config.ini
+	cp ./config.hub2.ini ./config.ini
 	./rebar3 shell --name run2@127.0.0.1 --setcookie node1_cookie
 
 

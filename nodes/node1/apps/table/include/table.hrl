@@ -17,5 +17,6 @@
   pool_id,
   pool_size,
   pid,
-  pool_group
+  pool_group,
+  node
 }).

@@ -391,7 +391,7 @@ get_pids(PoolId) ->
   lists:foldl(
     fun(Pool, Reply) ->
       Pid = table_pools:get_client(Pool, pid),
-      case erlang:is_pid(Pid) andalso erlang:is_process_alive(Pid) of
+      case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
         true ->
           [Pid | Reply];
         _ ->

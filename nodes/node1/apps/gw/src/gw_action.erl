@@ -50,7 +50,8 @@ action(call_fun, {Mod, F, Params} = ReqPackage, From, #{pool_id := PoolId} = Sta
 action(register_gw, RegisterConfig, From, _State) ->
   ?LOG({register_gw, RegisterConfig, From, self()}),
   #{cluster_id := ClusterId,node_id := NodeId,size := Size, work_id := WorkId} = RegisterConfig,
-  table_pools:add({ClusterId, NodeId, WorkId}, Size, self(), ClusterId),
+  Node = sys_config:get_config(node, node_id),
+  table_pools:add({ClusterId, NodeId, WorkId, Node}, Size, self(), ClusterId),
   pools:create_pool(ClusterId),
   {update_state, #{table_pools_id => {ClusterId, NodeId, WorkId}, pool_id => ClusterId}};
 

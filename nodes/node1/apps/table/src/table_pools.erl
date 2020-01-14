@@ -33,8 +33,10 @@ select() ->
   do(qlc:q([X || X <- mnesia:table(?TABLE)])).
 
 select(Key) ->
+  Node = sys_config:get_config(node, node_id),
   do(qlc:q([X || X <- mnesia:table(?TABLE),
     X#?TABLE.pool_group =:= Key
+    , X#?TABLE.node =:= Node  
   ])).
 
 %%-record(cluster, {
@@ -167,11 +169,13 @@ get_client(Client, pool_group) ->
 %%}).
 
 add(PoolId, PoolSize, Pid, PoolGroup) ->
+  Node = sys_config:get_config(node, node_id),
   Row = #?TABLE{
     pool_id = PoolId,
     pool_size = PoolSize,
     pid = Pid,
-    pool_group = PoolGroup
+    pool_group = PoolGroup,
+    node = Node
   },
 
   F = fun() ->
@@ -223,6 +227,8 @@ new_client(Client, pid, Val) ->
   Client#?TABLE{pid = Val};
 new_client(Client, pool_group, Val) ->
   Client#?TABLE{pool_group = Val};
+new_client(Client, node, Val) ->
+  Client#?TABLE{node = Val};
 new_client(Client, _, _) ->
   Client.
 

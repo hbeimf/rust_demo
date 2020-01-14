@@ -18,10 +18,10 @@ init() ->
   regiter_gw_2_gwc(),
   ok.
 
-regiter_gw_2_gwc() ->
-  #{pool_id := PoolId} = config(),
-  Works = wsc_common:works(PoolId),
-  register_gw_2_gwc(Works, erlang:length(Works), 1).
+% regiter_gw_2_gwc() ->
+%   #{pool_id := PoolId} = config(),
+%   Works = wsc_common:works(PoolId),
+%   register_gw_2_gwc(Works, erlang:length(Works), 1).
 
 register_gw_2_gwc([], _Size, _WorkId) ->
   ok;
@@ -31,10 +31,28 @@ register_gw_2_gwc([{_, Pid, _, _}|OtherWork], Size, WorkId) ->
   Pid ! {init_send, Register},
   register_gw_2_gwc(OtherWork, Size, WorkId+1).
 
-start_pool() ->
-  #{pool_id := PoolId, addr := Addr} = config(),
-  wsc_common:dynamic_start_pool(PoolId, Addr, gwc_action),
+regiter_gw_2_gwc() ->
+  ConfigList = glib_config:hubs(),
+  lists:foreach(fun(#{pool_id := PoolId, addr := _Addr}) -> 
+    Works = wsc_common:works(PoolId),
+    register_gw_2_gwc(Works, erlang:length(Works), 1)
+  end ,ConfigList),
   ok.
+
+
+% start_pool() ->
+%   #{pool_id := PoolId, addr := Addr} = config(),
+%   wsc_common:dynamic_start_pool(PoolId, Addr, gwc_action),
+%   ok.
+
+start_pool() -> 
+  ConfigList = glib_config:hubs(),
+  lists:foreach(
+    fun(#{pool_id := PoolId, addr := Addr}) -> 
+      ?LOG({PoolId, Addr}),
+      wsc_common:dynamic_start_pool(PoolId, Addr, gwc_action),
+      ok
+    end, ConfigList).
 
 %%config =================
 register_config(Size, WorkId) ->
@@ -45,8 +63,8 @@ register_config(Size, WorkId) ->
     , work_id => WorkId
   }.
 
-config() ->
-  #{
-    pool_id=>1,
-    addr=> sys_config:get_config(hub, addr)
-  }.
+% config() ->
+%   #{
+%     pool_id=>1,
+%     addr=> sys_config:get_config(hub, addr)
+%   }.

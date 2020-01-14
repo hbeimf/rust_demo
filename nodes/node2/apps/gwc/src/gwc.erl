@@ -22,7 +22,7 @@ t_pub(PoolId) ->
     fun(Id) ->
       ?LOG({pub, Id}),
       t_pub(PoolId, Id)
-    end, lists:seq(1, 1000000)),
+    end, lists:seq(1, 100000)),
   ok.
 
 t_pub(PoolId, Id) ->

@@ -15,10 +15,13 @@
 
 
 t_pub() ->
+  t_pub(1).
+
+t_pub(PoolId) ->
   lists:foreach(
     fun(Id) ->
       ?LOG({pub, Id}),
-      t_pub(1, Id)
+      t_pub(PoolId, Id)
     end, lists:seq(1, 1000000)),
   ok.
 

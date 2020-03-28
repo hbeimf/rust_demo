@@ -202,6 +202,54 @@ cast_pool(Pools, Cmd, Package) ->
     cast(PoolName, Cmd, Package)
                 end, Pools).
 
+% send(PoolId, Cmd, Package) ->
+%   case is_pool_alive(PoolId) of
+%     true ->
+%       poolboy:transaction(pool_name(PoolId), fun(Worker) ->
+%         Worker ! {send, Cmd, Package}
+%                                              end);
+%     _ ->
+%       ?WRITE_LOG("pool_exception", {PoolId, Cmd, Package}),
+%       false
+%   end.
+
+% send_all(Cmd, Package) ->
+%   Pools = all_pool(),
+%   send_pool(Pools, Cmd, Package).
+
+% send_other(PoolId, Cmd, Package) ->
+%   OtherPool = other_pool(PoolId),
+%   send_pool(OtherPool, Cmd, Package).
+
+% send_pool(Pools, Cmd, Package) ->
+%   lists:foreach(fun(PoolName) ->
+%     send(PoolName, Cmd, Package)
+%                 end, Pools).
+
+send(PoolId, Package) ->
+  case is_pool_alive(PoolId) of
+    true ->
+      poolboy:transaction(pool_name(PoolId), fun(Worker) ->
+        Worker ! {send, Package}
+                                             end);
+    _ ->
+      ?WRITE_LOG("pool_exception", {PoolId, Package}),
+      false
+  end.
+
+send_all(Package) ->
+  Pools = all_pool(),
+  send_pool(Pools, Package).
+
+send_other(PoolId, Package) ->
+  OtherPool = other_pool(PoolId),
+  send_pool(OtherPool, Package).
+
+send_pool(Pools, Package) ->
+  lists:foreach(fun(PoolName) ->
+    send(PoolName, Package)
+                end, Pools).
+
 %%wsc:rpc(1003, {glib, replace, ["helloworld", "world", " you"]}).
 rpc(PoolId, Req) ->
 %%  ?LOG({Cmd, Req}),

@@ -71,5 +71,8 @@ safe_reply(null, _Value) ->
   ok;
 safe_reply(undefined, _Value) ->
   ok;
+safe_reply(#{from :=From, pid := Pid}, Value)->
+  gen_server:reply(From, Value),
+  Pid ! close;
 safe_reply(From, Value) ->
   gen_server:reply(From, Value).

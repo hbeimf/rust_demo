@@ -42,6 +42,7 @@ children() ->
     [
         child_sup(pools_pool_sup)
         , child(pools_pool_actor)
+        , child_sup(pools_call_sup)
     ].
 
 child(Mod) ->

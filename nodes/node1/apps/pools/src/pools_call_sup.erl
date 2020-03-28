@@ -45,8 +45,8 @@ start_link() ->
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
   RestartStrategy = simple_one_for_one,
-  MaxRestarts = 6,
-  MaxSecondsBetweenRestarts = 3600,
+  MaxRestarts = 0,
+  MaxSecondsBetweenRestarts = 1,
 
   SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
 
@@ -61,14 +61,22 @@ init([]) ->
 
 children_list() -> 
 	[
-		child(pools_call_actor)
+		child1(pools_call_actor)
 	].
 
+child1(Mod) -> 
+  Restart = temporary,
+  Shutdown = brutal_kill,
+  Type = worker,
 
-child(Mod) ->
-	Child = {Mod, {Mod, start_link, []},
-               permanent, 5000, worker, [Mod]},
-               Child.
+  {Mod, {Mod, start_link, []},
+    Restart, Shutdown, Type, [Mod]}.
+
+
+% child(Mod) ->
+% 	Child = {Mod, {Mod, start_link, []},
+%                permanent, 5000, worker, [Mod]},
+%                Child.
 
 %%
 %%child_sup(Mod) ->

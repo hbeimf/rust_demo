@@ -11,6 +11,7 @@
 
 -define(TIMEOUT, 5000).
 
+% erlang:system_info(process_count).
 % pools_call:call().
 
 call() -> 
@@ -24,3 +25,27 @@ call({PoolId, Cmd, ReqPackage}) ->
 	% gen_server:call(Worker, {call, Cmd, ReqPackage}, ?TIMEOUT)
 	?LOG(R),
 	ok.
+
+% pools_call:call_all().
+call_all() ->
+	ReqPackage = {glib, replace, ["helloworld", "world", " you"]},
+	R = call_all({call_fun, ReqPackage}),
+	?LOG(R),
+	ok.
+
+call_all({Cmd, ReqPackage}) ->
+	Pools = pools:all_pool(),
+	?LOG(Pools),
+	lists:map(fun(PoolId) -> 
+		{ok, Pid} = pools_call_sup:start_actor(),
+		R = gen_server:call(Pid, {call, PoolId, Cmd, ReqPackage}, ?TIMEOUT),
+		R
+	end, Pools).
+
+
+% pools_call:cc().
+cc() -> 
+	lists:foreach(fun(Id) -> 
+		?LOG(Id),
+		call_all()
+	end, lists:seq(1, 100000)).

@@ -27,7 +27,7 @@
 -record(state, {}).
 
 % -export([start_pool/1, maybe_stop_pool/1]).
-
+-define(STOP, 10*1000). %清理5秒还没有login的链接
 
 -include_lib("glib/include/log.hrl").
 -include_lib("sys_log/include/write_log.hrl").
@@ -73,6 +73,7 @@ start_link() ->
   {stop, Reason :: term()} | ignore).
 init([]) ->
 	?LOG(start_call_actor),
+  erlang:send_after(?STOP, self(), close),
   {ok, #state{}}.
 
 %%--------------------------------------------------------------------
@@ -128,7 +129,8 @@ handle_cast(_Request, State) ->
   {noreply, NewState :: #state{}, timeout() | hibernate} |
   {stop, Reason :: term(), NewState :: #state{}}).
 handle_info(close, State) ->
-  % ?LOG(Info),
+  % ?LOG(close),
+  % ?WRITE_LOG("close", {close, call_actor}),
   {stop, normal, State};
 handle_info(Info, State) ->
   ?LOG(Info),
@@ -148,7 +150,8 @@ handle_info(Info, State) ->
 -spec(terminate(Reason :: (normal | shutdown | {shutdown, term()} | term()),
     State :: #state{}) -> term()).
 terminate(_Reason, _State) ->
-  ?LOG(stop),
+  % ?LOG(stop),
+  % ?WRITE_LOG("close", {close, call_actor}),
   ok.
 
 %%--------------------------------------------------------------------

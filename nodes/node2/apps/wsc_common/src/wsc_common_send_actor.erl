@@ -15,6 +15,10 @@
 -include_lib("glib/include/rr.hrl").
 -include_lib("sys_log/include/write_log.hrl").
 
+-define(TIMEOUT, 2*60*1000).
+% -define(TIMEOUT, 2*1000).
+
+
 -export([
   start_link/1,
   init/2,
@@ -36,6 +40,7 @@ init([{PoolId, WsAddr, CallBack, SupPid} | _], _ConnState) ->
   process_flag(trap_exit, true),
   ?WRITE_LOG("send_actor", {start, PoolId, WsAddr}),
   State = #{pool_id => PoolId, ws_addr => WsAddr, call_back => CallBack, sup_pid => SupPid},
+  erlang:start_timer(?TIMEOUT, self(), heart_beat),
   {ok, State}.
 
 % websocket_handle({pong, _}, _ConnState, State) ->
@@ -76,6 +81,14 @@ websocket_info(close, _ConnState, _State) ->
 websocket_info({text, Txt}, _ConnState, State) ->
   % ?LOG({text, Txt}),
   {reply, {text, Txt}, State};
+
+
+websocket_info({timeout, _Ref, heart_beat}, _ConnState, State) ->
+  % ?LOG(heart_beat),
+  erlang:start_timer(?TIMEOUT, self(), heart_beat),
+  Bin = term_to_binary(#request{from = null, req_cmd = ping, req_data = hb}),
+  % {ok, State};
+  {reply, {binary, Bin}, State};
 websocket_info(Info, _ConnState, State) ->
   ?LOG(Info),
   {ok, State}.

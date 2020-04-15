@@ -56,8 +56,10 @@ start_pool() ->
 
 %%config =================
 register_config(Size, WorkId) ->
+  ClusterId = cluster(sys_config:get_config(node, cluster_id)),
   #{
-    cluster_id => sys_config:get_config(node, cluster_id)
+    % cluster_id => sys_config:get_config(node, cluster_id)
+    cluster_id => ClusterId
     , node_id => sys_config:get_config(node, node_id)
     , size => Size
     , work_id => WorkId
@@ -68,3 +70,30 @@ register_config(Size, WorkId) ->
 %     pool_id=>1,
 %     addr=> sys_config:get_config(hub, addr)
 %   }.
+
+
+cluster(1) ->
+  pool_gw_1;
+cluster(2) ->
+  pool_gw_2;
+cluster(3) ->
+  pool_gw_3;
+cluster(4) ->
+  pool_gw_4;
+cluster(5) ->
+  pool_gw_5;
+cluster(6) ->
+  pool_gw_6;
+cluster(7) ->
+  pool_gw_7;
+cluster(8) ->
+  pool_gw_8;
+cluster(9) ->
+  pool_gw_9;
+cluster(10) ->
+  pool_gw_10;
+cluster(_) ->
+  pool_gw_100.
+
+
+  

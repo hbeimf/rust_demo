@@ -339,7 +339,7 @@ status() ->
 started_pool() ->
 %%  Status = status(),
   Children = pools_pool_sup:children(),
-%%  ?LOG(Children),
+ % ?LOG(Children),
   lists:foldl(
     fun({_, Pid, _, _} = _Child, Reply) ->
       [{PoolName, _PoolPid, _, _} | _] = pools_sup_sup:children(Pid),

@@ -23,7 +23,7 @@ action(Package, State) ->
   action(Cmd, ReqPackage, From, State).
 
 action(ping, Req, From, _State) ->
-  ?LOG({ping, Req, From}),
+  % ?LOG({ping, Req, From}),
   case From of
     null ->
       ok;

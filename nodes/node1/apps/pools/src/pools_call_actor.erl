@@ -72,7 +72,7 @@ start_link() ->
   {ok, State :: #state{}} | {ok, State :: #state{}, timeout() | hibernate} |
   {stop, Reason :: term()} | ignore).
 init([]) ->
-	?LOG(start_call_actor),
+	% ?LOG(start_call_actor),
   erlang:send_after(?STOP, self(), close),
   {ok, #state{}}.
 
@@ -92,7 +92,7 @@ init([]) ->
   {stop, Reason :: term(), Reply :: term(), NewState :: #state{}} |
   {stop, Reason :: term(), NewState :: #state{}}).
 handle_call({call, PoolId, Cmd, ReqPackage}, From, State) ->
-    ?LOG({call, PoolId, ReqPackage}),
+    % ?LOG({call, PoolId, ReqPackage}),
     Package = term_to_binary(#request{from = #{from => From, pid => self()}, req_cmd = Cmd, req_data = ReqPackage}),
     pools:send(PoolId, Package),
     {noreply, State};

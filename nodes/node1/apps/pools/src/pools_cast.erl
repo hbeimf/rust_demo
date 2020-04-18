@@ -1,6 +1,6 @@
 % pools_call.erl
 
--module(pools_call).
+-module(pools_cast).
 -author("mm").
 
 -compile(export_all).
@@ -14,48 +14,44 @@
 % erlang:system_info(process_count).
 % pools_call:call().
 
-test_call() -> 
+test_cast() -> 
 	ReqPackage = {glib, replace, ["helloworld", "world", " you"]},
   	% R = pools:call(PoolId, call_fun, ReqPackage),
-	call({1, call_fun, ReqPackage}).
+	cast({1, ping, ReqPackage}).
 
-call({PoolId, Cmd, ReqPackage}) -> 
-	{ok, Pid} = pools_call_sup:start_actor(),
-	R = gen_server:call(Pid, {call, PoolId, Cmd, ReqPackage}, ?TIMEOUT),
-	% gen_server:call(Worker, {call, Cmd, ReqPackage}, ?TIMEOUT)
-	% ?LOG(R),
-	R.
+cast({PoolId, Cmd, Package}) -> 
+	pools:cast(PoolId, Cmd, Package).
 
-% pools_call:call_all().
-test_call_gw_all() ->
+% % pools_call:call_all().
+test_cast_gw_all() ->
 	ReqPackage = {glib, replace, ["helloworld", "world", " you"]},
 	Pools = pool_gw(),
-	R = call_all(Pools, {call_fun, ReqPackage}),
+	R = cast_all(Pools, {ping, ReqPackage}),
 	?LOG(R),
 	ok.
 
-call_all([], {_Cmd, _ReqPackage}) -> 
+cast_all([], {_Cmd, _ReqPackage}) -> 
 	ok;
-call_all(Pools, {Cmd, ReqPackage}) ->
+cast_all(Pools, {Cmd, ReqPackage}) ->
 	lists:map(fun(PoolId) -> 
 		% {ok, Pid} = pools_call_sup:start_actor(),
 		% R = gen_server:call(Pid, {call, PoolId, Cmd, ReqPackage}, ?TIMEOUT),
 		% R
-		call({PoolId, Cmd, ReqPackage})
+		cast({PoolId, Cmd, ReqPackage})
 	end, Pools).
 
 
-% pools_call:cc().
+% pools_cast:cc().
 cc() -> 
 	lists:foreach(fun(Id) -> 
 		?LOG(Id),
-		test_call_gw_all()
+		test_cast_gw_all()
 	end, lists:seq(1, 1000)).
 
 cc(T) -> 
 	lists:foreach(fun(Id) -> 
 		?LOG(Id),
-		test_call_gw_all()
+		test_cast_gw_all()
 	end, lists:seq(1, T)).
 
 % % pools_call:group_pool().

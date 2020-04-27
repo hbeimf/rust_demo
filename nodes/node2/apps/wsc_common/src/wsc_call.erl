@@ -1,4 +1,5 @@
 % wsc_common_call.erl
+% git config --global credential.helper store
 -module(wsc_call).
 
 -compile(export_all).

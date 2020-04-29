@@ -34,18 +34,18 @@ action(ping, Req, From, _State) ->
   ok;
 
 
-% action(call_fun, ReqPackage, From, #{pool_id := PoolId} = State) ->
-%   R = pools:call(PoolId, call_fun, ReqPackage),
-%   % R = erlang:apply(Mod, F, Params),
-%   Reply = #reply{from = From, reply_code = 1004, reply_data = R},
-%   self() ! {reply, Reply},
-%   ok;
-
 action(call_fun, {Mod, F, Params} = ReqPackage, From, #{pool_id := PoolId} = State) ->
-  R = pools:call_other(PoolId, call_fun, ReqPackage),
+  % R = pools:call(PoolId, call_fun, ReqPackage),
+  R = erlang:apply(Mod, F, Params),
   Reply = #reply{from = From, reply_code = 1004, reply_data = R},
   self() ! {reply, Reply},
   ok;
+
+% action(call_fun, {Mod, F, Params} = ReqPackage, From, #{pool_id := PoolId} = State) ->
+%   R = pools:call_other(PoolId, call_fun, ReqPackage),
+%   Reply = #reply{from = From, reply_code = 1004, reply_data = R},
+%   self() ! {reply, Reply},
+%   ok;
 
 action(register_gw, RegisterConfig, From, _State) ->
   ?LOG({register_gw, RegisterConfig, From, self()}),

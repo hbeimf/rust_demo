@@ -19,8 +19,19 @@
 pub(PoolId, Cmd, Package) ->
   cast(PoolId, pub, {Cmd, Package}).
 
+% send(PoolId, Package) ->
+%   cast(PoolId, send, Package).
+
 send(PoolId, Package) ->
-  cast(PoolId, send, Package).
+  case is_pool_alive(PoolId) of
+    true ->
+       poolboy:transaction(wsc_common:pool_name(PoolId), fun(Worker) ->
+              Worker ! {send, Package}
+      end);
+    _ ->
+      ?WRITE_LOG("pool_exception", {PoolId, Package}),
+      false
+  end.
 
 start_pool() ->
   _Configs = config_list(),

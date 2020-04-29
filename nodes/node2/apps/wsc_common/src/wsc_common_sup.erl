@@ -42,6 +42,7 @@ children() ->
     [
         child_sup(wsc_common_pool_sup)
         , child(wsc_common_pool_actor)
+         , child_sup(wsc_call_sup)
     ].
 
 child(Mod) ->

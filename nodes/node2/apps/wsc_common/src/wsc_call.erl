@@ -10,14 +10,15 @@
 
 -define(TIMEOUT, 5000).
 
+% wsc_call:test_call().
 test_call() -> 
 	ReqPackage = {glib, replace, ["helloworld", "world", " you"]},
   	% R = pools:call(PoolId, call_fun, ReqPackage),
 	call({1, call_fun, ReqPackage}).
 
 call({PoolId, Cmd, ReqPackage}) -> 
-	{ok, Pid} = pools_call_sup:start_actor(),
+	{ok, Pid} = wsc_call_sup:start_actor(),
 	R = gen_server:call(Pid, {call, PoolId, Cmd, ReqPackage}, ?TIMEOUT),
 	% gen_server:call(Worker, {call, Cmd, ReqPackage}, ?TIMEOUT)
-	% ?LOG(R),
+	?LOG(R),
 	R.

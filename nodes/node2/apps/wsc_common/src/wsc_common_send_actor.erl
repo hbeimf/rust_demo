@@ -53,6 +53,7 @@ websocket_handle({binary, CurrentPackage}, _ConnState, #{call_back := CallBack} 
   case binary_to_term(CurrentPackage) of
     #reply{from = From, reply_code = _Cmd, reply_data = Payload} ->
       safe_reply(From, Payload),
+      % ?LOG({reply, From, Payload}),
       ok;
     _Any ->
 %%      ?LOG(Any),
@@ -119,5 +120,14 @@ safe_reply(null, _Value) ->
   ok;
 safe_reply(undefined, _Value) ->
   ok;
+safe_reply(#{from := From, pid := Pid}, Value) ->
+  gen_server:reply(From, Value),
+  case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of 
+    true -> 
+      Pid ! close,
+      ok;
+      _ -> 
+      ok
+    end;
 safe_reply(From, Value) ->
   gen_server:reply(From, Value).

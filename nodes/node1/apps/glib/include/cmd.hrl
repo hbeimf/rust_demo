@@ -1,8 +1,7 @@
--ifndef(CMD_TCPC).
--define(CMD_TCPC,true).
+-ifndef(CMD).
+-define(CMD,true).
 
--define(CMD_1000, 1000).  %% 
- 
-
+-define(CMD_CALL, 10001).  %% 
+-define(CMD_CALL_REPLY, 10002).  %% 
 
 -endif.

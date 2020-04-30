@@ -16,6 +16,15 @@ test_call() ->
   	% R = pools:call(PoolId, call_fun, ReqPackage),
 	call({1, call_fun, ReqPackage}).
 
+% erlang:system_info(process_count).
+% wsc_call:test().
+test() -> 
+	lists:foreach(fun(Index) -> 
+		?LOG({index, Index}),
+		test_call()
+	end, lists:seq(1, 1000)).
+
+
 call({PoolId, Cmd, ReqPackage}) -> 
 	{ok, Pid} = wsc_call_sup:start_actor(),
 	R = gen_server:call(Pid, {call, PoolId, Cmd, ReqPackage}, ?TIMEOUT),

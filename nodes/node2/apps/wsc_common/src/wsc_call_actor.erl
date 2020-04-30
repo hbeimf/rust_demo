@@ -129,7 +129,7 @@ handle_cast(_Request, State) ->
   {noreply, NewState :: #state{}, timeout() | hibernate} |
   {stop, Reason :: term(), NewState :: #state{}}).
 handle_info(close, State) ->
-  ?LOG(close),
+  % ?LOG(close),
   % ?WRITE_LOG("close", {close, call_actor}),
   {stop, normal, State};
 handle_info(Info, State) ->

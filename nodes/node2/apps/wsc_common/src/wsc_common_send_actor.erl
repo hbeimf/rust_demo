@@ -50,16 +50,17 @@ init([{PoolId, WsAddr, CallBack, SupPid} | _], _ConnState) ->
 %     {close, <<>>, "done"};
 
 websocket_handle({binary, CurrentPackage}, _ConnState, #{call_back := CallBack} = State) ->
-  case binary_to_term(CurrentPackage) of
-    #reply{from = From, reply_code = _Cmd, reply_data = Payload} ->
-      safe_reply(From, Payload),
-      % ?LOG({reply, From, Payload}),
-      ok;
-    _Any ->
-%%      ?LOG(Any),
-      CallBack:action(CurrentPackage),
-      ok
-  end,
+%   case binary_to_term(CurrentPackage) of
+%     #reply{from = From, reply_code = _Cmd, reply_data = Payload} ->
+%       safe_reply(From, Payload),
+%       % ?LOG({reply, From, Payload}),
+%       ok;
+%     _Any ->
+% %%      ?LOG(Any),
+%       CallBack:action(CurrentPackage),
+%       ok
+%   end,
+  CallBack:action(CurrentPackage),
   {ok, State};
 websocket_handle(Msg, _ConnState, State) ->
   ?LOG({msg, Msg}),
@@ -69,9 +70,10 @@ websocket_handle(Msg, _ConnState, State) ->
   % {reply, {text, <<"hello, this is message #", BinInt/binary >>}, State + 1}.
   {ok, State}.
 
-websocket_info({reply, Term}, _ConnState, State) ->
+websocket_info({reply, Bin}, _ConnState, State) ->
   % ?LOG({reply, Bin}),
-  {reply, {binary, term_to_binary(Term)}, State};
+  % {reply, {binary, term_to_binary(Term)}, State};
+  {reply, {binary, Bin}, State};
 websocket_info({send, Bin}, _ConnState, State) ->
   % ?LOG({send, Bin}),
   {reply, {binary, Bin}, State};

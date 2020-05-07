@@ -12,6 +12,7 @@
 
 -include_lib("glib/include/log.hrl").
 -include_lib("sys_log/include/write_log.hrl").
+-include_lib("glib/include/cmd.hrl").
 
 init() ->
   start_pool(),
@@ -28,7 +29,8 @@ register_gw_2_gwc([], _Size, _WorkId) ->
 register_gw_2_gwc([{_, Pid, _, _}|OtherWork], Size, WorkId) ->
   RegisterConfig = register_config(Size, WorkId),
   Register = wsc_common:req(register_gw, RegisterConfig),
-  Pid ! {init_send, Register},
+  Msg = glib_pb:encode_Msg(?CMD_REGISTER, Register),
+  Pid ! {init_send, Msg},
   register_gw_2_gwc(OtherWork, Size, WorkId+1).
 
 regiter_gw_2_gwc() ->

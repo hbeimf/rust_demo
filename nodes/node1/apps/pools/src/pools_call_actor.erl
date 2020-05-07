@@ -32,6 +32,7 @@
 -include_lib("glib/include/log.hrl").
 -include_lib("sys_log/include/write_log.hrl").
 -include_lib("glib/include/rr.hrl").
+-include_lib("glib/include/cmd.hrl").
 
 %%%===================================================================
 %%% API
@@ -93,7 +94,9 @@ init([]) ->
   {stop, Reason :: term(), NewState :: #state{}}).
 handle_call({call, PoolId, Cmd, ReqPackage}, From, State) ->
     % ?LOG({call, PoolId, ReqPackage}),
-    Package = term_to_binary(#request{from = #{from => From, pid => self()}, req_cmd = Cmd, req_data = ReqPackage}),
+    MsgBody = term_to_binary(#request{from = #{from => From, pid => self()}, req_cmd = Cmd, req_data = ReqPackage}),
+    Package = glib_pb:encode_Msg(?CMD_CALL_FUN, MsgBody),
+
     pools:send(PoolId, Package),
     {noreply, State};
   % {reply, reply_here, State};

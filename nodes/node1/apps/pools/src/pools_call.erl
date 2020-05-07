@@ -26,7 +26,7 @@ call({PoolId, Cmd, ReqPackage}) ->
 	% ?LOG(R),
 	R.
 
-% pools_call:call_all().
+% pools_call:test_call_gw_all().
 test_call_gw_all() ->
 	ReqPackage = {glib, replace, ["helloworld", "world", " you"]},
 	Pools = pool_gw(),

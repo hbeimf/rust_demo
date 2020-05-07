@@ -31,19 +31,19 @@ websocket_init(_TransportName, Req, _Opts) ->
   {ok, Req, State}.
 
 websocket_handle({binary, Package}, Req, State) ->
-  case binary_to_term(Package) of
-    #reply{from = From, reply_code = _Cmd, reply_data = Payload} ->
-      safe_reply(From, Payload),
-      {ok, Req, State};
-    _Any ->
+  % case binary_to_term(Package) of
+  %   #reply{from = From, reply_code = _Cmd, reply_data = Payload} ->
+  %     safe_reply(From, Payload),
+  %     {ok, Req, State};
+  %   _Any ->
       case gw_action:action(Package, State) of
         {update_state, NewState} ->
           {ok, Req, NewState};
         _ ->
 %%          ?LOG(Any),
           {ok, Req, State}
-      end
-  end;
+      end;
+  % end;
 websocket_handle(Data, Req, State) ->
   ?LOG({"XXy", Data}),
   {ok, Req, State}.
@@ -67,12 +67,12 @@ websocket_terminate(_Reason, _Req, State) ->
   ?LOG({close, State}),
   ok.
 
-safe_reply(null, _Value) ->
-  ok;
-safe_reply(undefined, _Value) ->
-  ok;
-safe_reply(#{from :=From, pid := Pid}, Value)->
-  gen_server:reply(From, Value),
-  Pid ! close;
-safe_reply(From, Value) ->
-  gen_server:reply(From, Value).
+% safe_reply(null, _Value) ->
+%   ok;
+% safe_reply(undefined, _Value) ->
+%   ok;
+% safe_reply(#{from :=From, pid := Pid}, Value)->
+%   gen_server:reply(From, Value),
+%   Pid ! close;
+% safe_reply(From, Value) ->
+%   gen_server:reply(From, Value).

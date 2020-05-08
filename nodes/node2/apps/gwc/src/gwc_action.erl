@@ -31,6 +31,15 @@ action(?CMD_CALL_FUN, Package) ->
   Bin = glib_pb:encode_Msg(?CMD_CALL_FUN_REPLY, MsgBody),
   self() ! {reply, Bin},
   ok;
+
+action(?CMD_CALL_FUN_REPLY, Package) ->
+  % ?LOG({?CMD_CALL_FUN_REPLY, Package}),
+  #reply{from = From, reply_code = _Cmd, reply_data = Payload} = binary_to_term(Package),
+  % ?LOG(#{from => From, payload => Payload}),
+  % #{from => {{<0.517.0>,#Ref<0.0.1.8353>},<0.828.0>},payload => "hello you"}
+  glib:safe_reply(From, Payload),
+  ok;
+
 action(Action, Package) -> 
   ?LOG({action, Action, Package}),
   ok.

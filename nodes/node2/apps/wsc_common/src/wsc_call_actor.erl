@@ -92,12 +92,12 @@ init([]) ->
   {noreply, NewState :: #state{}, timeout() | hibernate} |
   {stop, Reason :: term(), Reply :: term(), NewState :: #state{}} |
   {stop, Reason :: term(), NewState :: #state{}}).
-handle_call({call, PoolId, Cmd, ReqPackage}, From, State) ->
+handle_call({call, PoolId, _Cmd, ReqPackage}, From, State) ->
     ?LOG({call, PoolId, ReqPackage}),
-    Package = term_to_binary(#request{from = #{from => From, pid => self()}, req_cmd = Cmd, req_data = ReqPackage}),
+    % Package = term_to_binary(#request{from = #{from => From, pid => self()}, req_cmd = Cmd, req_data = ReqPackage}),
     
-    % MsgBody = term_to_binary(#{from=> {From, self()}, req => ReqPackage}),
-    % Package = glib_pb:encode_Msg(?CMD_CALL, MsgBody),
+    MsgBody = term_to_binary(#{from=> #{from => From, pid => self()}, req => ReqPackage}),
+    Package = glib_pb:encode_Msg(?CMD_CALL_FUN, MsgBody),
 
     wsc_common:send(PoolId, Package),
   % {reply, reply_here, State};

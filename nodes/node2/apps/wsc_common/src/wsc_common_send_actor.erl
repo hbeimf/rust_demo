@@ -120,18 +120,18 @@ websocket_terminate(_Reason, _ConnState, State) ->
   ?WRITE_LOG("send_actor_close", {close, State}),
   ok.
 
-safe_reply(null, _Value) ->
-  ok;
-safe_reply(undefined, _Value) ->
-  ok;
-safe_reply(#{from := From, pid := Pid}, Value) ->
-  gen_server:reply(From, Value),
-  case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of 
-    true -> 
-      Pid ! close,
-      ok;
-      _ -> 
-      ok
-    end;
-safe_reply(From, Value) ->
-  gen_server:reply(From, Value).
+% safe_reply(null, _Value) ->
+%   ok;
+% safe_reply(undefined, _Value) ->
+%   ok;
+% safe_reply(#{from := From, pid := Pid}, Value) ->
+%   gen_server:reply(From, Value),
+%   case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of 
+%     true -> 
+%       Pid ! close,
+%       ok;
+%       _ -> 
+%       ok
+%     end;
+% safe_reply(From, Value) ->
+%   gen_server:reply(From, Value).

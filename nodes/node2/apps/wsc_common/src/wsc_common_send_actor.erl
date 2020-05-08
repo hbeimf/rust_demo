@@ -14,6 +14,7 @@
 -include_lib("glib/include/log.hrl").
 -include_lib("glib/include/rr.hrl").
 -include_lib("sys_log/include/write_log.hrl").
+-include_lib("glib/include/cmd.hrl").
 
 -define(TIMEOUT, 2*60*1000).
 % -define(TIMEOUT, 2*1000).
@@ -89,8 +90,9 @@ websocket_info({text, Txt}, _ConnState, State) ->
 websocket_info({timeout, _Ref, heart_beat}, _ConnState, State) ->
   % ?LOG(heart_beat),
   erlang:start_timer(?TIMEOUT, self(), heart_beat),
-  Bin = term_to_binary(#request{from = null, req_cmd = ping, req_data = hb}),
+  MsgBody = term_to_binary(#request{from = null, req_cmd = ping, req_data = hb}),
   % {ok, State};
+  Bin = glib_pb:encode_Msg(?CMD_PING, MsgBody),
   {reply, {binary, Bin}, State};
 websocket_info(Info, _ConnState, State) ->
   ?LOG(Info),

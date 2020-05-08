@@ -49,7 +49,7 @@ websocket_handle(Data, Req, State) ->
   {ok, Req, State}.
 
 websocket_info({reply, Reply}, Req, State) ->
-  {reply, {binary, term_to_binary(Reply)}, Req, State};
+  {reply, {binary, Reply}, Req, State};
 websocket_info({send, Package}, Req, State) ->
   {reply, {binary, Package}, Req, State};
 

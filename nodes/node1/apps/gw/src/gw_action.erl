@@ -44,7 +44,17 @@ action(Msg, State) ->
 %   Reply = #reply{from = From, reply_code = 1004, reply_data = R},
 %   self() ! {reply, Reply},
 %   ok;
-
+action(?CMD_CALL_FUN, Package, _State) -> 
+  % #request{from = From, req_cmd = _Cmd, req_data = {Mod, F, Params}} = binary_to_term(Package),
+  #{from := From, req := {Mod, F, Params}} = binary_to_term(Package),
+  R = erlang:apply(Mod, F, Params),
+  % Reply = #reply{from = From, reply_code = 1004, reply_data = R},
+  % self() ! {reply, Reply},
+  ?LOG({reply, R}),
+  MsgBody = term_to_binary(#reply{from = From, reply_code = 1004, reply_data = R}),
+  Reply = glib_pb:encode_Msg(?CMD_CALL_FUN_REPLY, MsgBody),
+  self() ! {reply, Reply},
+  ok;
 % % action(call_fun, {Mod, F, Params} = ReqPackage, From, #{pool_id := PoolId} = State) ->
 % %   R = pools:call_other(PoolId, call_fun, ReqPackage),
 % %   Reply = #reply{from = From, reply_code = 1004, reply_data = R},

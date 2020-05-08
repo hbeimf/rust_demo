@@ -451,7 +451,7 @@ info(PoolId) ->
   Info = info(),
   PoolName = pool_name(PoolId),
   PoolInfo = glib:get_by_key(PoolName, Info, []),
-  ?LOG(PoolInfo),
+  % ?LOG(PoolInfo),
   PoolInfo.
 
 info() ->

@@ -50,7 +50,7 @@ action(?CMD_CALL_FUN, Package, _State) ->
   R = erlang:apply(Mod, F, Params),
   % Reply = #reply{from = From, reply_code = 1004, reply_data = R},
   % self() ! {reply, Reply},
-  ?LOG({reply, R}),
+  ?LOG({reply, R, glib:date_str()}),
   MsgBody = term_to_binary(#reply{from = From, reply_code = 1004, reply_data = R}),
   Reply = glib_pb:encode_Msg(?CMD_CALL_FUN_REPLY, MsgBody),
   self() ! {reply, Reply},
@@ -80,7 +80,8 @@ action(?CMD_REGISTER, Package, _State) ->
 %   table_pools:add({ClusterId, NodeId, WorkId, Node}, Size, self(), ClusterId),
 %   pools:create_pool(ClusterId),
 %   {update_state, #{table_pools_id => {ClusterId, NodeId, WorkId}, pool_id => ClusterId}};
-
+action(?CMD_PING, _Package, _State) ->
+  ok;
 action(Cmd, Package, _State) -> 
   ?LOG({Cmd, Package}),
   ok.

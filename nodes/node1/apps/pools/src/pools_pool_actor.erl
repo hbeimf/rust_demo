@@ -108,7 +108,7 @@ handle_cast({start_pool, PoolId}, State) ->
   pools:dynamic_start_pool(PoolId),
   {noreply, State};
 handle_cast({maybe_stop_pool, PoolId}, State) ->
-  ?LOG({maybe_stop_pool, PoolId}),
+  % ?LOG({maybe_stop_pool, PoolId}),
   case pools:is_pool_alive(PoolId) of
     true ->
       case pools:can_stop_pool(PoolId) of

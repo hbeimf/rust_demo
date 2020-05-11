@@ -10,7 +10,7 @@ $ make init
 
 3,
 cd apps
-$ mix new main_app
+$ mix new main_app --sup
 
 
 

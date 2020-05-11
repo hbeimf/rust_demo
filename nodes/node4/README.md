@@ -6,7 +6,13 @@
 mix new --umbrella node4
 
 2,
-$ mix release.init
+$ make init
+
+3,
+cd apps
+$ mix new main_app
+
+
 
 
 

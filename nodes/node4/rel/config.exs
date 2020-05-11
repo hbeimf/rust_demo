@@ -44,10 +44,11 @@ end
 # when running `mix release`, the first release in the file
 # will be used by default
 
-release :node4 do
+release :main_app do
   set version: "0.1.0"
   set applications: [
     :runtime_tools,
+    main_app: :permanent
 
   ]
 end

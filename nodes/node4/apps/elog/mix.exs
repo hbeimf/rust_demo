@@ -1,9 +1,9 @@
-defmodule MainApp.Mixfile do
+defmodule Elog.Mixfile do
   use Mix.Project
 
   def project do
     [
-      app: :main_app,
+      app: :elog,
       version: "0.1.0",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
@@ -18,8 +18,7 @@ defmodule MainApp.Mixfile do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
-      mod: {MainApp.Application, []}
+      extra_applications: [:logger]
     ]
   end
 
@@ -29,9 +28,6 @@ defmodule MainApp.Mixfile do
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
       # {:sibling_app_in_umbrella, in_umbrella: true},
-      {:glib, path: "../../erlang_apps/glib"},
-      {:sys_log, path: "../../erlang_apps/sys_log"},
-      {:elog, in_umbrella: true}
     ]
   end
 end

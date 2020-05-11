@@ -44,7 +44,9 @@ slave:
 	rm -rf ./$(PROJECT_SLAVE)
 
 
-init: release_init
+init: 
+	mix deps.get
+	mix compile
 
 release_init:
 	mix deps.get

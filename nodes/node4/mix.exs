@@ -20,7 +20,13 @@ defmodule Node4.Mixfile do
   #
   # Dependencies listed here are available only for this project
   # and cannot be accessed from applications inside the apps folder
+
+  # doc 
+  # https://github.com/bitwalker/distillery/tree/1.5.x
   defp deps do
-    []
+    [
+
+      {:distillery, "~> 1.5.2", runtime: false}
+    ]
   end
 end

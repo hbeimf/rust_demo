@@ -18,7 +18,7 @@ defmodule Elog do
 
   defmacro log(log_file, log_conntent) do 
     quote do 
-      :sys_log.write_line(__MODULE__,  __ENV__.line, unquote(log_file), unquote(log_conntent))
+      :sys_log.write_line(__ENV__.file,  __ENV__.line, unquote(log_file), unquote(log_conntent))
     end
     
   end

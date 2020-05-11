@@ -184,24 +184,24 @@ handle_info({send, Package}, #{wsc_send_actor_pid := Pid
 %%init_send
 handle_info({init_send, Package}, #{wsc_send_actor_pid := Pid
   , ws_addr := WsAddr, pool_id := PoolId, call_back := Callback, init_send := _InitSend} = State) ->
-  ?LOG(State),
+  % ?LOG(State),
   case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of
     true ->
-      ?LOG(p1),
+      % ?LOG(p1),
       send_init(Pid, Package),
       State1 = maps:put(init_send, Package, State),
       {noreply, State1};
     _ ->
       case wsc_common_send_actor:start_link({PoolId, WsAddr, Callback, self()}) of
         {ok, NewPid} ->
-          ?LOG(p2),
+          % ?LOG(p2),
           send_init(NewPid, Package),
           State1 = maps:put(init_send, Package, State),
           State2 = maps:put(wsc_send_actor_pid, NewPid, State1),
-          ?LOG(State2),
+          % ?LOG(State2),
           {noreply, State2};
         Any ->
-          ?LOG(p3),
+          % ?LOG(p3),
           ?WRITE_LOG("link_exception", {Any, cast, Package}),
           {noreply, State}
       end
@@ -309,12 +309,12 @@ code_change(_OldVsn, State, _Extra) ->
 
 % priv
 send_init(_Pid, null) ->
-  ?LOG(call3),
+  % ?LOG(call3),
   ok;
 send_init(Pid, InitSend) ->
   case erlang:is_pid(Pid) andalso erlang:is_process_alive(Pid) of
     true ->
-      ?LOG(call4),
+      % ?LOG(call4),
       Pid ! {send, InitSend},
       ok;
     _ ->

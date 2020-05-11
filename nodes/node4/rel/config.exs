@@ -30,13 +30,13 @@ environment :dev do
   # dev mode.
   set dev_mode: true
   set include_erts: false
-  set cookie: :"~YQ=wuq;Wc6cpc%qUhlt{B?t(5]Xvp~Qz2yAd~f6Wep4YxD92$)4cMb?tDlYR)06"
+  set cookie: :"rlubA(0OV:^9K$p5IfNxC<ca(Xzb97su,jzd,qHfLfSd/6wg|tM.Pt]9|likxPU<"
 end
 
 environment :prod do
   set include_erts: true
   set include_src: false
-  set cookie: :"=.]bFv5$NI*r4>/_GA}dJ~Vf_%2M;ESQHfFUSb>7]ca*lg7_?MB=HkYW0|mo:xZw"
+  set cookie: :"b`PdV$3,vnUd<[4x6I`>w}V=*qM0)WM&wXiF5[a@vybXd,c97/bR97d_k|]ljOHF"
 end
 
 # You may define one or more releases in this file.
@@ -49,7 +49,6 @@ release :node4 do
   set applications: [
     :runtime_tools,
     main_app: :permanent
-
   ]
 end
 

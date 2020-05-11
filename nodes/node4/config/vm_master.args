@@ -1,0 +1,15 @@
+-name <%= release_name %>@127.0.0.1
+
+## -setcookie ${NODE_COOKIE}
+-setcookie <%= release_name %>_cookie
+
++K true
++A30
+
++swt low 
++sbwt none 
++P 1000000 
+-smp enable 
++S 16 
++sub true
+

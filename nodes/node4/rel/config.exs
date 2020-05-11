@@ -39,10 +39,27 @@ environment :prod do
   set cookie: :"b`PdV$3,vnUd<[4x6I`>w}V=*qM0)WM&wXiF5[a@vybXd,c97/bR97d_k|]ljOHF"
 end
 
+environment :master do
+  set include_erts: true
+  set include_src: false
+  set cookie: :"zrY/QSYYve.KqMZ5Wn*aCI*^(?0(GV0hS:wtD2`As~7iv^E5<iGR3^ebCM~5vTNl"
+  set vm_args: "config/vm_master.args"
+end
+
+environment :slave do
+  set include_erts: true
+  set include_src: false
+  set cookie: :"zrY/QSYYve.KqMZ5Wn*aCI*^(?0(GV0hS:wtD2`As~7iv^E5<iGR3^ebCM~5vTNl"
+  set vm_args: "config/vm_slave.args"
+end
+
 # You may define one or more releases in this file.
 # If you have not set a default release, or selected one
 # when running `mix release`, the first release in the file
 # will be used by default
+
+# [kernel,stdlib,compiler,elixir,iex,mix,crypto,asn1,public_key,ssl,inets,hex,
+#  logger,esnowflake,zucchini,glib,main_app]
 
 release :node4 do
   set version: "0.1.0"

@@ -20,8 +20,14 @@ defmodule Elog do
     quote do 
       :sys_log.write_line(__ENV__.file,  __ENV__.line, unquote(log_file), unquote(log_conntent))
     end
-    
   end
+  
+  defmacro log_json(log_file, log_json) do 
+    quote do 
+      :sys_log.write_json(__ENV__.file,  __ENV__.line,  unquote(log_file), unquote(log_json))
+    end
+  end
+  
 
   # https://elixir-lang.net/gettingStarted/macros.html
   # defmacro my_macro(a, b, c) do

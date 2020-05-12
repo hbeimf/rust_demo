@@ -1,5 +1,7 @@
 defmodule Gwc.GwcInit do
     require Elog
+    require Eglib
+    
 
     @moduledoc """
     Documentation for Gwc.

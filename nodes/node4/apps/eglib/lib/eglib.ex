@@ -16,8 +16,15 @@ defmodule Eglib do
     :world
   end
 
+  @cmd_REGISTER 10000
+
+  defmacro cmd_REGISTER, do: @cmd_REGISTER
+
+
+
+  
   # Eglib.cmd_REGISTER
-  def cmd_REGISTER, do: 10000
+  # def cmd_REGISTER, do: 10000
  
 
 end

@@ -513,23 +513,19 @@ get_by_key(Key, TupleList, Default) ->
 			Default
 	end.
 
-shuffle_list(L) ->
-	% ?LOG(L),
-	% Len = length(L),
-	NL = lists:map(fun(X) ->
-		<<A:32,_B:32,_C:32>> = crypto:strong_rand_bytes(12),
-		{A, X}
-								 end, L),
-	NLL = lists:sort(NL),
-	% ?LOG({NL, NLL}),
-	[ V || {_,V} <- NLL].
-
 safe_reply(null, _Value) ->
   ok;
 safe_reply(undefined, _Value) ->
   ok;
-safe_reply(#{from :=From, pid := Pid}, Value)->
+safe_reply(#{from := From, pid := Pid}, Value) ->
   gen_server:reply(From, Value),
-  Pid ! close;
+  case erlang:is_pid(Pid) andalso glib:is_pid_alive(Pid) of 
+    true -> 
+      Pid ! close,
+      ok;
+      _ -> 
+      ok
+    end;
 safe_reply(From, Value) ->
   gen_server:reply(From, Value).
+

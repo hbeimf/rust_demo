@@ -7,8 +7,7 @@
    [kernel,
     stdlib,
     inets,
-    esnowflake,
-    zucchini
+    esnowflake
    ]},
   {env,[]},
   {modules, []},

@@ -1,0 +1,33 @@
+% wsc_common_call.erl
+% git config --global credential.helper store
+-module(wsc_call).
+
+-compile(export_all).
+
+-include_lib("glib/include/log.hrl").
+-include_lib("sys_log/include/write_log.hrl").
+-include_lib("glib/include/rr.hrl").
+
+-define(TIMEOUT, 5000).
+
+% wsc_call:test_call().
+test_call() -> 
+	ReqPackage = {glib, replace, ["helloworld", "world", " you"]},
+  	% R = pools:call(PoolId, call_fun, ReqPackage),
+	call({1, call_fun, ReqPackage}).
+
+% erlang:system_info(process_count).
+% wsc_call:test().
+test() -> 
+	lists:foreach(fun(Index) -> 
+		?LOG({index, Index}),
+		test_call()
+	end, lists:seq(1, 1000)).
+
+
+call({PoolId, Cmd, ReqPackage}) -> 
+	{ok, Pid} = wsc_call_sup:start_actor(),
+	R = gen_server:call(Pid, {call, PoolId, Cmd, ReqPackage}, ?TIMEOUT),
+	% gen_server:call(Worker, {call, Cmd, ReqPackage}, ?TIMEOUT)
+	?LOG(R),
+	R.

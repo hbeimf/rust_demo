@@ -3,5 +3,7 @@
   "distillery": {:hex, :distillery, "1.5.5", "c6132d5c0152bdce6850fb6c942d58f1971b169b6965d908dc4e8767cfa51a95", [:mix], [], "hexpm", "ddc86cf2c660a52a4ddc50fe408b9fc066d8a8e2d34e5db8a916366b92048831"},
   "esnowflake": {:hex, :esnowflake, "0.2.0", "083bb3ebaa4f7db24e935d70ef5ce33c84817a484b28daed8292e29253e19642", [:rebar3], [], "hexpm", "1c5165d71de62b3c16f5216d970530956977bb4865c6c1cf2904c5eb8a2f5b0c"},
   "jsx": {:hex, :jsx, "2.9.0", "d2f6e5f069c00266cad52fb15d87c428579ea4d7d73a33669e12679e203329dd", [:mix, :rebar3], [], "hexpm", "8ee1db1cabafdd578a2776a6aaae87c2a8ce54b47b59e9ec7dab5d7eb71cd8dc"},
+  "poolboy": {:git, "https://github.com/devinus/poolboy.git", "3bb48a893ff5598f7c73731ac17545206d259fac", [tag: "1.5.1"]},
   "ranch": {:hex, :ranch, "1.3.2", "e4965a144dc9fbe70e5c077c65e73c57165416a901bd02ea899cfd95aa890986", [:rebar3], [], "hexpm", "6e56493a862433fccc3aca3025c946d6720d8eedf6e3e6fb911952a7071c357f"},
+  "websocket_client": {:git, "https://github.com/hbeimf/websocket_client.git", "9a6f65d05ebf2725d62fb19262b21f1805a59fbf", [branch: "master"]},
   "zucchini": {:git, "https://github.com/hbeimf/zucchini.git", "429c9e0f9f67911c1825fbebff7d0fdc59e56b90", [tag: "master"]}}

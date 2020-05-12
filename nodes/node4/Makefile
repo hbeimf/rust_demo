@@ -67,3 +67,8 @@ push:
 	git add .
 	git commit -m 'pu'
 	git push
+
+clean:
+	rm -rf ./_build/
+	rm -rf ./deps
+	

@@ -46,6 +46,9 @@ slave:
 
 init: 
 	mix deps.get
+	mix deps.compile glib
+	mix deps.compile sys_log
+	mix deps.compile wsc_common
 	mix compile
 
 release_init:

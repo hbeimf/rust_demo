@@ -16,6 +16,12 @@ defmodule Elog do
     :world
   end
 
+  defmacro print(conn) do 
+    quote do 
+      :io.format("~n==========================~n~p~n", [%{ :file => __ENV__.file, :line => __ENV__.line, :log => unquote(conn) }])
+    end
+  end
+
   defmacro log(log_file, log_conntent) do 
     quote do 
       :sys_log.write_line(__ENV__.file,  __ENV__.line, unquote(log_file), unquote(log_conntent))

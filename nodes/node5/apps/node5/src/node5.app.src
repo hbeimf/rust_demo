@@ -5,7 +5,8 @@
   {mod, { node5_app, []}},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
+    app_ex
    ]},
   {env,[]},
   {modules, []},

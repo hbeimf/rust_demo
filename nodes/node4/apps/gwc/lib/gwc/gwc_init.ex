@@ -62,6 +62,12 @@ defmodule Gwc.GwcInit do
     #       end, ConfigList).
     def start_pool() do 
         Elog.print('start_pool')
+        config_list = :glib_config.hubs()
+        :lists.foreach(fn (%{pool_id: v_pool_id, addr: v_addr}) -> 
+            Elog.print({v_pool_id, v_addr})
+            :wsc_common.dynamic_start_pool(v_pool_id, v_addr, :gwc_action)
+            :ok
+        end, config_list)
     end
       
     #   %%config =================

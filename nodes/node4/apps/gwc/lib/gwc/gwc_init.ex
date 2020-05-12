@@ -28,6 +28,7 @@ defmodule Gwc.GwcInit do
         # Elog.log('GwcInit', {:log_test, 1, 2})
         # Elog.print({:log_test, 1, 2})
         start_pool()
+        regiter_gw_2_gwc()
         :init
     end  
  
@@ -48,7 +49,7 @@ defmodule Gwc.GwcInit do
         #     Register = wsc_common:req(register_gw, RegisterConfig),
         register = :wsc_common.req(:register_gw, register_config)
         #     Msg = glib_pb:encode_Msg(?CMD_REGISTER, Register),
-        msg = :glib_pb.encode_Msg(10000, register)
+        msg = :glib_pb.encode_Msg(Eglib.cmd_REGISTER, register)
         #     Pid ! {init_send, Msg},
         send pid, {:init_send, msg}
         #     register_gw_2_gwc(OtherWork, Size, WorkId+1).
@@ -62,10 +63,10 @@ defmodule Gwc.GwcInit do
     #       register_gw_2_gwc(Works, erlang:length(Works), 1)
     #     end ,ConfigList),
     #     ok.
-    def regiter_gw_2_gwc([], _, _) do 
+    def regiter_gw_2_gwc() do 
         config_list = :glib_config.hubs()
-        :lists.foreach(fn(%{pool_id: v_pool_id, addr: v_addr}) -> 
-            works = :wdc_common.works(v_pool_id)
+        :lists.foreach(fn(%{pool_id: v_pool_id, addr: _v_addr}) -> 
+            works = :wsc_common.works(v_pool_id)
             register_gw_2_gwc(works, :erlang.length(works), 1)
         end, config_list)
     end

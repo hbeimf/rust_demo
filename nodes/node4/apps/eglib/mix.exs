@@ -1,9 +1,9 @@
-defmodule Gwc.Mixfile do
+defmodule Eglib.Mixfile do
   use Mix.Project
 
   def project do
     [
-      app: :gwc,
+      app: :eglib,
       version: "0.1.0",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
@@ -18,8 +18,7 @@ defmodule Gwc.Mixfile do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
-      mod: {Gwc.Application, []}
+      extra_applications: [:logger]
     ]
   end
 
@@ -29,11 +28,6 @@ defmodule Gwc.Mixfile do
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
       # {:sibling_app_in_umbrella, in_umbrella: true},
-      {:glib, path: "../../erlang_apps/glib"},
-      {:sys_log, path: "../../erlang_apps/sys_log"},
-      {:wsc_common, path: "../../erlang_apps/wsc_common"},
-      {:elog, in_umbrella: true},
-      {:eglib, in_umbrella: true}
     ]
   end
 end

@@ -54,6 +54,7 @@ defmodule Gwc.GwcAction do
     #     % #{from => {{<0.517.0>,#Ref<0.0.1.8353>},<0.828.0>},payload => "hello you"}
     #     glib:safe_reply(From, Payload),
     #     ok;
+    # :wsc_call.test()
     def action(Eglib.cmd_CALL_FUN_REPLY, package) do
         # Elog.print({Eglib.cmd_CALL_FUN_REPLY, package})
         {_, from, _, payload} = :erlang.binary_to_term(package)

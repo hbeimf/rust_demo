@@ -65,7 +65,34 @@ release :node4 do
   set version: "0.1.0"
   set applications: [
     :runtime_tools,
-    main_app: :permanent
+    main_app: :permanent,
+    eglib: :permanent,
+    elog: :permanent,
+    game_server: :permanent,
+    gwc: :permanent,
+    glib: :permanent,
+    sys_log: :permanent,
+    wsc_common: :permanent,
+    esnowflake: :permanent,
+    zucchini: :permanent,
+    poolboy: :permanent,
+    jsx: :permanent,
+    websocket_client: :permanent,
+    cowboy: :permanent,
+    cowlib: :permanent,
+    ranch: :permanent,
+    logger: :permanent,
+    # hex: :permanent,
+    inets: :permanent,
+    ssl: :permanent,
+    public_key: :permanent,
+    asn1: :permanent,
+    crypto: :permanent,
+    # mix: :permanent,
+    # iex: :permanent,
+    elixir: :permanent,
+    compiler: :permanent,
+    stdlib: :permanent,
+    kernel: :permanent
   ]
 end
-

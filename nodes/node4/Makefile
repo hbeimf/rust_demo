@@ -30,7 +30,9 @@ master:
 	rm -rf ./tar/*
 	MIX_ENV=master mix release --env=master --verbose
 	mkdir $(PROJECT_MASTER)
+	mkdir -p $(PROJECT_MASTER)/log
 	cp ./config/config_master.ini ./$(PROJECT_MASTER)/config.ini
+	cp ./hubs.config ./$(PROJECT_MASTER)/hubs.config
 	tar zxvf 	_build/master/rel/$(NODENAME)/releases/$(VERSION)/$(NODENAME).tar.gz -C ./$(PROJECT_MASTER)/
 	tar czvf  ./tar/$(PROJECT_MASTER).tar.gz ./$(PROJECT_MASTER) 
 	rm -rf ./$(PROJECT_MASTER)

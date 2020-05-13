@@ -6,7 +6,7 @@ static ERL_NIF_TERM hello(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 }
 
 // test_so_func
-static ERL_NIF_TERM test_so_func(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[])
+static ERL_NIF_TERM add(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[])
 {
         int a;
         int b;
@@ -39,7 +39,7 @@ static ERL_NIF_TERM test_so_func(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[])
 static ErlNifFunc nif_funcs[] =
 {
 	{"hello", 0, hello},
-	{"test_so_func", 2, test_so_func}
+	{"add", 2, add}
 };
 
 ERL_NIF_INIT(nif_fun, nif_funcs,NULL,NULL,NULL,NULL)

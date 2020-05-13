@@ -140,17 +140,17 @@ defmodule Gwc.GwcInit do
     #     pool_gw_100.
 
     # Gwc.GwcInit.cluster(2)
-    def cluster(1), do: :pool_gw_1 
-    def cluster(2), do: :pool_gw_2
-    def cluster(3), do: :pool_gw_3 
-    def cluster(4), do: :pool_gw_4 
-    def cluster(5), do: :pool_gw_5 
-    def cluster(6), do: :pool_gw_6 
-    def cluster(7), do: :pool_gw_7 
-    def cluster(8), do: :pool_gw_8 
-    def cluster(9), do: :pool_gw_9 
-    def cluster(10), do: :pool_gw_10 
-    def cluster(_), do: :pool_gw_100 
+    def cluster(1), do: :pool_ex_node_1 
+    def cluster(2), do: :pool_ex_node_2
+    def cluster(3), do: :pool_ex_node_3 
+    def cluster(4), do: :pool_ex_node_4 
+    def cluster(5), do: :pool_ex_node_5 
+    def cluster(6), do: :pool_ex_node_6 
+    def cluster(7), do: :pool_ex_node_7 
+    def cluster(8), do: :pool_ex_node_8 
+    def cluster(9), do: :pool_ex_node_9 
+    def cluster(10), do: :pool_ex_node_10 
+    def cluster(_), do: :pool_ex_node_100 
         
 
         

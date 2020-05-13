@@ -36,7 +36,7 @@ static ERL_NIF_TERM add(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[])
 static ErlNifFunc nif_funcs[] =
 {
 	{"hello", 0, hello},
-	{"add", 2, add}
+	{ "add" ,  2, add}
 };
 
 ERL_NIF_INIT(nif_fun, nif_funcs,NULL,NULL,NULL,NULL)

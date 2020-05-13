@@ -18,7 +18,7 @@ static ERL_NIF_TERM add(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[])
         if(!enif_get_int(env, argv[1], &b))
                 return enif_make_badarg(env);
 
-        ERL_NIF_TERM res = enif_make_list(env, 0);
+        ERL_NIF_TERM res = enif_make_int(env, 0);
 
 	void* handle;
 	typedef int (*FPTR)(int,int);
@@ -30,7 +30,8 @@ static ERL_NIF_TERM add(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[])
 
         // int r;
         // r = a + b;
-        res = enif_make_list_cell(env, enif_make_int(env, result), res);
+        // res = enif_make_list_cell(env, enif_make_int(env, result), res);
+	res = enif_make_int(env, result);
         return res;
 
 

@@ -1,3 +1,5 @@
+#include <dlfcn.h>
+
 #include "erl_nif.h"
 
 static ERL_NIF_TERM hello(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
@@ -18,10 +20,20 @@ static ERL_NIF_TERM add(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[])
 
         ERL_NIF_TERM res = enif_make_list(env, 0);
 
-        int r;
-        r = a + b;
-        res = enif_make_list_cell(env, enif_make_int(env, r), res);
+	void* handle;
+	typedef int (*FPTR)(int,int);
+
+	handle = dlopen("./test_so.so", 1);
+	FPTR fptr = (FPTR)dlsym(handle, "add");
+
+	int result = (*fptr)(a,b);
+
+        // int r;
+        // r = a + b;
+        res = enif_make_list_cell(env, enif_make_int(env, result), res);
         return res;
+
+
 
         // else
         // {

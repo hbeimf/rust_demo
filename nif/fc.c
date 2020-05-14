@@ -38,30 +38,44 @@ static ERL_NIF_TERM hello(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 // // % bool
 // // create_fish_control(_FilePath_Char, _TableId_Int) ->
 // // 	"NIF library not loaded".
-// static ERL_NIF_TERM create_fish_control(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[])
-// {
-// 	int filePath;
-// 	int tableId;
-// 	if(!enif_get_string(env, argv[0], &filePath))
-// 		return enif_make_badarg(env);
+static ERL_NIF_TERM create_fish_control(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[])
+{
+	// char db_name[4096];
 
-// 	if(!enif_get_int(env, argv[1], &tableId))
-// 		return enif_make_badarg(env);
+	//     if(!enif_get_string(env, argv[1], db_name, sizeof(db_name), ERL_NIF_LATIN1) ||
+	//        !enif_is_list(env, argv[2]))
+	//     {
+	//         return enif_make_badarg(env);
+	//     }   // if
 
-// 	ERL_NIF_TERM res = enif_make_int(env, 0);
 
-// 	void* handle;
-// 	typedef int (*FPTR)(char *, int);
+	char filePath[4096];
+	int tableId;
+	// if(!enif_get_string(env, argv[0], &filePath))
+	// 	return enif_make_badarg(env);
 
-// 	handle = dlopen("./fishcontrol.so", 1);
-// 	FPTR fptr = (FPTR)dlsym(handle, "CreateFishControl");
+	if(!enif_get_string(env, argv[0], filePath, sizeof(filePath), ERL_NIF_LATIN1))
+	{
+		return enif_make_badarg(env);
+	}   // if
 
-// 	int result = (*fptr)(filePath, tableId);
+	if(!enif_get_int(env, argv[1], &tableId))
+		return enif_make_badarg(env);
 
-// 	res = enif_make_int(env, result);
-// 	return res;
+	ERL_NIF_TERM res = enif_make_int(env, 0);
 
-// }
+	void* handle;
+	typedef int (*FPTR)(char *, int);
+
+	handle = dlopen("./fishcontrol.so", 1);
+	FPTR fptr = (FPTR)dlsym(handle, "CreateFishControl");
+
+	int result = (*fptr)(filePath, tableId);
+
+	res = enif_make_int(env, result);
+	return res;
+
+}
 
 
 // % void
@@ -275,7 +289,7 @@ static ErlNifFunc nif_funcs[] =
 {
 	{"hello", 0, hello},
 	// { "add" ,  2, add},
-	// {"create_fish_control", 2, create_fish_control},
+	{"create_fish_control", 2, create_fish_control},
 	{"save_to_file", 1, save_to_file},
 	{"save_and_release", 1, save_and_release},
 	{"catch_fish", 4, catch_fish},

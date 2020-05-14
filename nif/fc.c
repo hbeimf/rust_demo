@@ -250,12 +250,32 @@ static ERL_NIF_TERM chou_fang(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[])
 // % char
 // get_inner_data(_TableId_Int) -> 
 // 	"NIF library not loaded".
+static ERL_NIF_TERM get_inner_data(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[])
+{
+	int tableId;
+	
+	if(!enif_get_int(env, argv[0], &tableId))
+		return enif_make_badarg(env);
 
+	ERL_NIF_TERM res = enif_make_int(env, 0);
+
+	void* handle;
+	typedef char* (*FPTR)(int);
+
+	handle = dlopen("./fishcontrol.so", 1);
+	FPTR fptr = (FPTR)dlsym(handle, "GetInnerData");
+
+	// int result = (*fptr)(filePath, tableId);
+	char* result = (*fptr)(tableId);
+
+	// res = enif_make_int(env, result);
+	return res;
+}
 static ErlNifFunc nif_funcs[] =
 {
 	{"hello", 0, hello},
 	// { "add" ,  2, add},
-	// {"create_fish_control", 2, create_fish_control}
+	// {"create_fish_control", 2, create_fish_control},
 	{"save_to_file", 1, save_to_file},
 	{"save_and_release", 1, save_and_release},
 	{"catch_fish", 4, catch_fish},
@@ -267,3 +287,4 @@ static ErlNifFunc nif_funcs[] =
 ERL_NIF_INIT(fc, nif_funcs,NULL,NULL,NULL,NULL)
 
 // gcc -fPIC -shared -o fc.so fc.c -I /usr/local/erlang_18.3/lib/erlang/usr/include
+// https://blog.csdn.net/vihbc/article/details/20390599

@@ -281,7 +281,8 @@ static ErlNifFunc nif_funcs[] =
 	{"catch_fish", 4, catch_fish},
 	{"set_difficulty", 3, set_difficulty},
 	{"set_place_type", 2, set_place_type},
-	{"chou_fang", 2, chou_fang}
+	{"chou_fang", 2, chou_fang},
+	{"get_inner_data", 1, get_inner_data}
 };
 
 ERL_NIF_INIT(fc, nif_funcs,NULL,NULL,NULL,NULL)

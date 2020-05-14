@@ -10,6 +10,7 @@
         , table
         , gw
         , pools
+        , fish_control
       ]},
     {env, []},
     {modules, []},

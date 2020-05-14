@@ -1,9 +1,28 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
 #include <dlfcn.h>
 
 #include "erl_nif.h"
 
+void write_log(char *filename, char *buf, int len) 
+{
+	FILE *out;
+
+	if((out = fopen(filename,"wb")) == NULL){
+		return;
+	}
+
+	fwrite(buf,sizeof(char),len,out);
+	fclose(out);
+}
+
 static ERL_NIF_TERM hello(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 {
+	char * pp = "hello world!";
+	write_log("/erlang/log/nif_log.txt", pp, strlen(pp)); 
+
 	return enif_make_string(env, "Hello world!", ERL_NIF_LATIN1);
 }
 
@@ -34,33 +53,29 @@ static ERL_NIF_TERM hello(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 // }
 
 
-// // % =====================================
-// // % bool
-// // create_fish_control(_FilePath_Char, _TableId_Int) ->
-// // 	"NIF library not loaded".
+// extern "C" bool CreateFishControl(const char* filepath, int tableid);
+// fc:create_fish_control("/erlang/create_fish_control_call.txt", 1).
 static ERL_NIF_TERM create_fish_control(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[])
 {
-	// char db_name[4096];
-
-	//     if(!enif_get_string(env, argv[1], db_name, sizeof(db_name), ERL_NIF_LATIN1) ||
-	//        !enif_is_list(env, argv[2]))
-	//     {
-	//         return enif_make_badarg(env);
-	//     }   // if
-
 
 	char filePath[4096];
 	int tableId;
-	// if(!enif_get_string(env, argv[0], &filePath))
-	// 	return enif_make_badarg(env);
 
 	if(!enif_get_string(env, argv[0], filePath, sizeof(filePath), ERL_NIF_LATIN1))
 	{
 		return enif_make_badarg(env);
 	}   // if
 
+	// log 参数 1日志 
+	write_log("/erlang/log/create_fish_control_filePath.txt", filePath, strlen(filePath)); 
+
 	if(!enif_get_int(env, argv[1], &tableId))
 		return enif_make_badarg(env);
+
+	// log 参数2日志 ==========================
+	char str1[25];
+	sprintf(str1,"%d",tableId);
+	write_log("/erlang/log/create_fish_control_tableId.txt", str1, strlen(str1)); 
 
 	ERL_NIF_TERM res = enif_make_int(env, 0);
 
@@ -71,6 +86,11 @@ static ERL_NIF_TERM create_fish_control(ErlNifEnv *env, int argc, ERL_NIF_TERM a
 	FPTR fptr = (FPTR)dlsym(handle, "CreateFishControl");
 
 	int result = (*fptr)(filePath, tableId);
+
+	// log 返回结果记录日志 ==========================
+	char str2[25];
+	sprintf(str2,"%d",result);
+	write_log("/erlang/log/create_fish_control_result.txt", str2, strlen(str2)); 
 
 	res = enif_make_int(env, result);
 	return res;

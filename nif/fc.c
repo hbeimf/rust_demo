@@ -19,8 +19,8 @@ void write_log(char *filename, char *buf, int len)
 
 static ERL_NIF_TERM hello(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 {
-	char * pp = "hello world!";
-	write_log("/erlang/log/nif_log.txt", pp, strlen(pp)); 
+	// char * pp = "hello world!";
+	// write_log("/erlang/log/nif_log.txt", pp, strlen(pp)); 
 
 	return enif_make_string(env, "Hello world!", ERL_NIF_LATIN1);
 }
@@ -38,16 +38,16 @@ static ERL_NIF_TERM create_fish_control(ErlNifEnv *env, int argc, ERL_NIF_TERM a
 		return enif_make_badarg(env);
 	}
 
-	// log 参数 1日志 
-	write_log("/erlang/log/create_fish_control_filePath.txt", filePath, strlen(filePath)); 
+	// // log 参数 1日志 
+	// write_log("/erlang/log/create_fish_control_filePath.txt", filePath, strlen(filePath)); 
 
 	if(!enif_get_int(env, argv[1], &tableId))
 		return enif_make_badarg(env);
 
-	// log 参数2日志 ==========================
-	char str1[25];
-	sprintf(str1,"%d",tableId);
-	write_log("/erlang/log/create_fish_control_tableId.txt", str1, strlen(str1)); 
+	// // log 参数2日志 ==========================
+	// char str1[25];
+	// sprintf(str1,"%d",tableId);
+	// write_log("/erlang/log/create_fish_control_tableId.txt", str1, strlen(str1)); 
 
 	ERL_NIF_TERM res = enif_make_int(env, 0);
 
@@ -59,10 +59,10 @@ static ERL_NIF_TERM create_fish_control(ErlNifEnv *env, int argc, ERL_NIF_TERM a
 
 	int result = (*fptr)(filePath, tableId);
 
-	// log 返回结果记录日志 ==========================
-	char str2[25];
-	sprintf(str2,"%d",result);
-	write_log("/erlang/log/create_fish_control_result.txt", str2, strlen(str2)); 
+	// // log 返回结果记录日志 ==========================
+	// char str2[25];
+	// sprintf(str2,"%d",result);
+	// write_log("/erlang/log/create_fish_control_result.txt", str2, strlen(str2)); 
 
 	res = enif_make_int(env, result);
 	return res;
@@ -78,10 +78,10 @@ static ERL_NIF_TERM save_to_file(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[])
 	if(!enif_get_int(env, argv[0], &tableId))
 		return enif_make_badarg(env);
 
-	// log 参数1日志 ==========================
-	char str1[25];
-	sprintf(str1,"%d",tableId);
-	write_log("/erlang/log/save_to_file_tableId.txt", str1, strlen(str1)); 
+	// // log 参数1日志 ==========================
+	// char str1[25];
+	// sprintf(str1,"%d",tableId);
+	// write_log("/erlang/log/save_to_file_tableId.txt", str1, strlen(str1)); 
 
 	ERL_NIF_TERM res = enif_make_int(env, 0);
 
@@ -104,10 +104,10 @@ static ERL_NIF_TERM save_and_release(ErlNifEnv *env, int argc, ERL_NIF_TERM argv
 	if(!enif_get_int(env, argv[0], &tableId))
 		return enif_make_badarg(env);
 
-	// log 参数1日志 ==========================
-	char str1[25];
-	sprintf(str1,"%d",tableId);
-	write_log("/erlang/log/save_and_release_tableId.txt", str1, strlen(str1)); 
+	// // log 参数1日志 ==========================
+	// char str1[25];
+	// sprintf(str1,"%d",tableId);
+	// write_log("/erlang/log/save_and_release_tableId.txt", str1, strlen(str1)); 
 
 	ERL_NIF_TERM res = enif_make_int(env, 0);
 
@@ -137,35 +137,35 @@ static ERL_NIF_TERM catch_fish(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[])
 	if(!enif_get_int(env, argv[0], &tableId))
 		return enif_make_badarg(env);
 
-	// log 参数1日志 ==========================
-	char str1[25];
-	sprintf(str1,"%d",tableId);
-	write_log("/erlang/log/save_and_release_tableId.txt", str1, strlen(str1)); 
+	// // log 参数1日志 ==========================
+	// char str1[25];
+	// sprintf(str1,"%d",tableId);
+	// write_log("/erlang/log/save_and_release_tableId.txt", str1, strlen(str1)); 
 
 
 	if(!enif_get_int(env, argv[1], &who))
 		return enif_make_badarg(env);
 
-	// log 参数2日志 ==========================
-	char str2[25];
-	sprintf(str2,"%d",who);
-	write_log("/erlang/log/save_and_release_who.txt", str2, strlen(str2)); 
+	// // log 参数2日志 ==========================
+	// char str2[25];
+	// sprintf(str2,"%d",who);
+	// write_log("/erlang/log/save_and_release_who.txt", str2, strlen(str2)); 
 
 	if(!enif_get_int(env, argv[2], &bulletCoin))
 		return enif_make_badarg(env);
 
-	// log 参数3日志 ==========================
-	char str3[25];
-	sprintf(str3,"%d", bulletCoin);
-	write_log("/erlang/log/save_and_release_bulletCoin.txt", str3, strlen(str3)); 
+	// // log 参数3日志 ==========================
+	// char str3[25];
+	// sprintf(str3,"%d", bulletCoin);
+	// write_log("/erlang/log/save_and_release_bulletCoin.txt", str3, strlen(str3)); 
 
 	if(!enif_get_int(env, argv[3], &fishCoin))
 		return enif_make_badarg(env);
 
-	// log 参数4日志 ==========================
-	char str4[25];
-	sprintf(str4,"%d", fishCoin);
-	write_log("/erlang/log/save_and_release_fishCoin.txt", str4, strlen(str4)); 
+	// // log 参数4日志 ==========================
+	// char str4[25];
+	// sprintf(str4,"%d", fishCoin);
+	// write_log("/erlang/log/save_and_release_fishCoin.txt", str4, strlen(str4)); 
 
 
 	ERL_NIF_TERM res = enif_make_int(env, 0);
@@ -179,10 +179,10 @@ static ERL_NIF_TERM catch_fish(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[])
 	// int result = (*fptr)(filePath, tableId);
 	int result = (*fptr)(tableId, who, bulletCoin, fishCoin);
 
-	// log 返回日志 ==========================
-	char str5[25];
-	sprintf(str5,"%d", result);
-	write_log("/erlang/log/save_and_release_result.txt", str5, strlen(str5)); 
+	// // log 返回日志 ==========================
+	// char str5[25];
+	// sprintf(str5,"%d", result);
+	// write_log("/erlang/log/save_and_release_result.txt", str5, strlen(str5)); 
 
 	res = enif_make_int(env, result);
 	return res;
@@ -200,28 +200,28 @@ static ERL_NIF_TERM set_difficulty(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[]
 	if(!enif_get_int(env, argv[0], &tableId))
 		return enif_make_badarg(env);
 
-	// log 参数1日志 ==========================
-	char str1[25];
-	sprintf(str1,"%d",tableId);
-	write_log("/erlang/log/set_difficulty_tableId.txt", str1, strlen(str1)); 
+	// // log 参数1日志 ==========================
+	// char str1[25];
+	// sprintf(str1,"%d",tableId);
+	// write_log("/erlang/log/set_difficulty_tableId.txt", str1, strlen(str1)); 
 
 
 	if(!enif_get_int(env, argv[1], &level))
 		return enif_make_badarg(env);
 
-	// log 参数2日志 ==========================
-	char str2[25];
-	sprintf(str2,"%d",level);
-	write_log("/erlang/log/set_difficulty_level.txt", str2, strlen(str2)); 
+	// // log 参数2日志 ==========================
+	// char str2[25];
+	// sprintf(str2,"%d",level);
+	// write_log("/erlang/log/set_difficulty_level.txt", str2, strlen(str2)); 
 
 
 	if(!enif_get_int(env, argv[2], &dif))
 		return enif_make_badarg(env);
 
-	// log 参数3日志 ==========================
-	char str3[25];
-	sprintf(str3,"%d",dif);
-	write_log("/erlang/log/set_difficulty_dif.txt", str3, strlen(str3)); 
+	// // log 参数3日志 ==========================
+	// char str3[25];
+	// sprintf(str3,"%d",dif);
+	// write_log("/erlang/log/set_difficulty_dif.txt", str3, strlen(str3)); 
 
 	ERL_NIF_TERM res = enif_make_int(env, 0);
 
@@ -233,10 +233,10 @@ static ERL_NIF_TERM set_difficulty(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[]
 
 	int result = (*fptr)(tableId, level, dif);
 
-	// log 返回日志 ==========================
-	char str5[25];
-	sprintf(str5,"%d", result);
-	write_log("/erlang/log/set_difficulty_result.txt", str5, strlen(str5)); 
+	// // log 返回日志 ==========================
+	// char str5[25];
+	// sprintf(str5,"%d", result);
+	// write_log("/erlang/log/set_difficulty_result.txt", str5, strlen(str5)); 
 
 	res = enif_make_int(env, result);
 	return res;
@@ -253,19 +253,19 @@ static ERL_NIF_TERM set_place_type(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[]
 	if(!enif_get_int(env, argv[0], &tableId))
 		return enif_make_badarg(env);
 
-	// log 参数1日志 ==========================
-	char str1[25];
-	sprintf(str1,"%d",tableId);
-	write_log("/erlang/log/set_place_type_tableId.txt", str1, strlen(str1)); 
+	// // log 参数1日志 ==========================
+	// char str1[25];
+	// sprintf(str1,"%d",tableId);
+	// write_log("/erlang/log/set_place_type_tableId.txt", str1, strlen(str1)); 
 
 
 	if(!enif_get_int(env, argv[1], &pt))
 		return enif_make_badarg(env);
 
-	// log 参数2日志 ==========================
-	char str2[25];
-	sprintf(str2,"%d", pt);
-	write_log("/erlang/log/set_place_type_pt.txt", str2, strlen(str2)); 
+	// // log 参数2日志 ==========================
+	// char str2[25];
+	// sprintf(str2,"%d", pt);
+	// write_log("/erlang/log/set_place_type_pt.txt", str2, strlen(str2)); 
 
 	ERL_NIF_TERM res = enif_make_int(env, 0);
 
@@ -277,10 +277,10 @@ static ERL_NIF_TERM set_place_type(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[]
 
 	int result = (*fptr)(tableId, pt);
 
-	// log 反回结果日志 ==========================
-	char str3[25];
-	sprintf(str3,"%d", result);
-	write_log("/erlang/log/set_place_type_result.txt", str3, strlen(str3)); 
+	// // log 反回结果日志 ==========================
+	// char str3[25];
+	// sprintf(str3,"%d", result);
+	// write_log("/erlang/log/set_place_type_result.txt", str3, strlen(str3)); 
 
 	res = enif_make_int(env, result);
 	return res;
@@ -297,18 +297,18 @@ static ERL_NIF_TERM chou_fang(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[])
 	if(!enif_get_int(env, argv[0], &tableId))
 		return enif_make_badarg(env);
 
-	// log 参数1日志 ==========================
-	char str1[25];
-	sprintf(str1,"%d",tableId);
-	write_log("/erlang/log/chou_fang_tableId.txt", str1, strlen(str1)); 
+	// // log 参数1日志 ==========================
+	// char str1[25];
+	// sprintf(str1,"%d",tableId);
+	// write_log("/erlang/log/chou_fang_tableId.txt", str1, strlen(str1)); 
 
 	if(!enif_get_int(env, argv[1], &coinNum))
 		return enif_make_badarg(env);
 
-	// log 参数2日志 ==========================
-	char str2[25];
-	sprintf(str2,"%d",coinNum);
-	write_log("/erlang/log/chou_fang_coinNum.txt", str2, strlen(str2)); 
+	// // log 参数2日志 ==========================
+	// char str2[25];
+	// sprintf(str2,"%d",coinNum);
+	// write_log("/erlang/log/chou_fang_coinNum.txt", str2, strlen(str2)); 
 
 	ERL_NIF_TERM res = enif_make_int(env, 0);
 
@@ -321,10 +321,10 @@ static ERL_NIF_TERM chou_fang(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[])
 	// int result = (*fptr)(filePath, tableId);
 	int result = (*fptr)(tableId, coinNum);
 
-	// log 反回结果日志 ==========================
-	char str3[25];
-	sprintf(str3,"%d",result);
-	write_log("/erlang/log/chou_fang_result.txt", str3, strlen(str3)); 
+	// // log 反回结果日志 ==========================
+	// char str3[25];
+	// sprintf(str3,"%d",result);
+	// write_log("/erlang/log/chou_fang_result.txt", str3, strlen(str3)); 
 
 	res = enif_make_int(env, result);
 	return res;
@@ -340,10 +340,10 @@ static ERL_NIF_TERM get_inner_data(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[]
 	if(!enif_get_int(env, argv[0], &tableId))
 		return enif_make_badarg(env);
 
-	// log 参数1日志 ==========================
-	char str1[25];
-	sprintf(str1,"%d",tableId);
-	write_log("/erlang/log/get_inner_data_tableId.txt", str1, strlen(str1)); 
+	// // log 参数1日志 ==========================
+	// char str1[25];
+	// sprintf(str1,"%d",tableId);
+	// write_log("/erlang/log/get_inner_data_tableId.txt", str1, strlen(str1)); 
 
 	void* handle;
 	typedef char* (*FPTR)(int);
@@ -353,8 +353,8 @@ static ERL_NIF_TERM get_inner_data(ErlNifEnv *env, int argc, ERL_NIF_TERM argv[]
 
 	char* result = (*fptr)(tableId);
 
-	// log 返回结果日志 ==========================
-	write_log("/erlang/log/get_inner_data_result.txt", result, strlen(result)); 
+	// // log 返回结果日志 ==========================
+	// write_log("/erlang/log/get_inner_data_result.txt", result, strlen(result)); 
 
 	ERL_NIF_TERM res = enif_make_string(env, result, ERL_NIF_LATIN1);
 	return res;
